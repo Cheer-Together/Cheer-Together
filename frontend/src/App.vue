@@ -19,6 +19,10 @@
     font-weight: 400;
     font-style: normal;
 }
+:root {
+  --main-color: #2E6AFD;
+  --sub-color: #F2F8FF;
+}
 
 body {
   font-family: 'MICEGothic';
