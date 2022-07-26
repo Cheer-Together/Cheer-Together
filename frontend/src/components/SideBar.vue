@@ -1,7 +1,7 @@
 <template>
   <div class="SideBar">
     <!-- 홈 -->
-    <div class="SideBar-item">
+    <div class="SideBar-item" @click="this.$router.push({name:'MainPage'})">
       <v-icon class="SideBar-item-icon">
         mdi-home
       </v-icon>
@@ -43,7 +43,7 @@
       K리그 1
     </div>
     <!-- 경기 일정 -->
-    <div class="SideBar-item">
+    <div class="SideBar-item" @click="this.$router.push({name:'Schedule'})">
       <v-icon class="SideBar-item-icon">
         mdi-calendar-month-outline
       </v-icon>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <!-- 커뮤니티 -->
-    <div class="SideBar-item">
+    <div class="SideBar-item" @click="this.$router.push({name:'ArticleView'})">
       <v-icon class="SideBar-item-icon">
         mdi-account-group
       </v-icon>
