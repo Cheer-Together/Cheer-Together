@@ -67,9 +67,9 @@
 
 </script>
 
-<style >
+<style>
 .SideBar {
-  width: 210px;
+  min-width: 210px;
   min-height: 889px;
   max-height: 3000px;
   border-right: 1px solid var(--main-color);
@@ -97,10 +97,11 @@
   align-items: center;
 }
 .SideBar-subtitle {
-  margin: 10px 0 0 60px;
+  font-size: 13px;
+  margin: 10px 80px 0 60px;
 }
 .SideBar-subtitle:hover {
   color: var(--main-color);
-  cursor:pointer
+  cursor:pointer;
 }
 </style>
