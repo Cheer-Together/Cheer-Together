@@ -30,6 +30,9 @@
   text-align: center;
   background-color: var(--sub-color);
 }
+.FavoriteTeam-section:hover {
+  cursor: pointer;
+}
 .FavoriteTeam-section-title {
   padding-top: 78px ;
 }
