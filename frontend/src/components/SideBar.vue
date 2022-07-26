@@ -1,6 +1,65 @@
 <template>
   <div class="SideBar">
-    사이드 바
+    <!-- 홈 -->
+    <div class="SideBar-item">
+      <v-icon class="SideBar-item-icon">
+        mdi-home
+      </v-icon>
+      <div class="SideBar-item-title">
+        홈
+      </div>
+    </div>
+    <!-- 실시간 집관 -->
+    <div class="SideBar-item">
+      <v-icon class="SideBar-item-icon">
+        mdi-video-outline
+      </v-icon>
+      <div class="SideBar-item-title">
+        실시간 집관
+      </div>
+    </div>
+    <!-- 프리미어리그 -->
+    <div class="SideBar-subtitle">
+      프리미어리그
+    </div>
+    <!-- 라리가 -->
+    <div class="SideBar-subtitle">
+      라리가
+    </div>
+    <!-- 세리에 A -->
+    <div class="SideBar-subtitle">
+      세리에 A
+    </div>
+    <!-- 분데스리가 -->
+    <div class="SideBar-subtitle">
+      분데스리가
+    </div>
+    <!-- 리그 1 -->
+    <div class="SideBar-subtitle">
+      리그 1
+    </div>
+    <!-- K리그 1 -->
+    <div class="SideBar-subtitle">
+      K리그 1
+    </div>
+    <!-- 경기 일정 -->
+    <div class="SideBar-item">
+      <v-icon class="SideBar-item-icon">
+        mdi-calendar-month-outline
+      </v-icon>
+      <div class="SideBar-item-title">
+        경기 일정
+      </div>
+    </div>
+    <!-- 커뮤니티 -->
+    <div class="SideBar-item">
+      <v-icon class="SideBar-item-icon">
+        mdi-account-group
+      </v-icon>
+      <div class="SideBar-item-title">
+        커뮤니티
+      </div>
+    </div>
   </div>
 </template>
 
@@ -13,6 +72,35 @@
   width: 210px;
   min-height: 889px;
   max-height: 3000px;
-  background-color: blueviolet;
+  border-right: 1px solid var(--main-color);
+}
+.SideBar-item {
+  font-size: 15px;
+  margin: 15px 12px 0px 28px;
+  padding: 11px 0px;
+}
+.SideBar-item:hover {
+  background-color: var(--sub-color);
+  cursor:pointer;
+}
+.SideBar-item-icon {
+  width: 22px;
+  height: 22px;
+  font-size: 22px;
+  margin-right: 10px;
+}
+.SideBar-item-title{
+  display: inline;
+  width: 138px;
+  height: 38px;
+  font-size: 15px;
+  align-items: center;
+}
+.SideBar-subtitle {
+  margin: 10px 0 0 60px;
+}
+.SideBar-subtitle:hover {
+  color: var(--main-color);
+  cursor:pointer
 }
 </style>
