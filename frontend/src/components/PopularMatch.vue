@@ -100,4 +100,40 @@ const popularThumbnail = {
   background-color: #222222;
   color: #ffffff;
 }
+@media (max-width: 1580px) {
+.PopularMatch {
+  margin-bottom: 16px;
+}
+.PopularMatch-title {
+  font-size: 15px;
+}
+.PopularMatch-section {
+  margin-top: 8px;
+  width: 1300px;
+  height: 150px;
+  overflow-x: hidden;
+}
+.PopularMatch-section-title {
+  padding-top: 78px ;
+}
+.PopularMatch-section-item {
+  width: 248px;
+  height: 150px;
+  margin-left: 15px;
+}
+.PopularMatch-section-item-image{
+  height: 130px;
+}
+.PopularMatch-section-item-image img {
+  width: 248px;
+  height: 130px;
+}
+.PopularMatch-section-item-title {
+  font-size: 12px;
+  width: 248px;
+  height: 20px;
+  background-color: #222222;
+  color: #ffffff;
+}
+}
 </style>
