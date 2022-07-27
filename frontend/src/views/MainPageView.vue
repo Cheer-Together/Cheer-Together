@@ -20,7 +20,7 @@ import TodayMatchList from "../components/TodayMatchList.vue"
 
 <style>
 .MainPage {
-  margin: 50px 0 0 65px;
+  margin: 130px 0 0 275px;
 }
 
 </style>

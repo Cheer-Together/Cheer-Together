@@ -26,7 +26,7 @@
               <v-icon style="width:10px; font-size:20px; margin-right: 5px;">
                 mdi-chevron-left
               </v-icon>
-                07.26 <span style="font-size:10px;">(금)</span>
+                07.26 <span style="font-size:10px;">(화)</span>
               <v-icon style="width:10px; font-size:20px; margin-left: 5px;">
                 mdi-chevron-right
               </v-icon>
@@ -35,7 +35,7 @@
           <!-- 내부 경기 상세 내용 -->
           <div class="TodayMatchList-item-match">
             <div class="TodayMatchList-item-match-team1">
-              <div style="margin-right:10px">
+              <div style="margin-right:5px">
                 맨체스터 유나이티드
               </div>
               <img :src="premierLeague.맨유" width="25">
@@ -52,14 +52,19 @@
             </div>
 
             <div class="TodayMatchList-item-match-team2">
-              토트넘 훗스퍼
+              <img :src="premierLeague.토트넘" width="25">
+              <div style="margin-left:5px">
+                토트넘 훗스퍼
+              </div>
             </div>
           </div>
 
           <div class="TodayMatchList-item-match">
             <div class="TodayMatchList-item-match-team1">
-              아스날
-              <img src="">
+              <div style="margin-right:5px">
+                아스날
+              </div>
+              <img :src="premierLeague.아스날" width="25">
             </div>
 
             <div class="TodayMatchList-item-match-versus">
@@ -73,14 +78,19 @@
             </div>
 
             <div class="TodayMatchList-item-match-team2">
-              에버튼
+              <img :src="premierLeague.에버튼" width="25">
+              <div style="margin-left:5px">
+                에버튼
+              </div>
             </div>
           </div>
 
           <div class="TodayMatchList-item-match">
             <div class="TodayMatchList-item-match-team1">
-              첼시
-              <img src="">
+              <div style="margin-right:5px">
+                첼시
+              </div>
+              <img :src="premierLeague.첼시" width="25">
             </div>
 
             <div class="TodayMatchList-item-match-versus">
@@ -94,14 +104,19 @@
             </div>
 
             <div class="TodayMatchList-item-match-team2">
-              왓포드
+              <img :src="premierLeague.리즈유나이티드" width="25">
+              <div style="margin-left:5px">
+                리즈 유나이티드
+              </div>
             </div>
           </div>
 
           <div class="TodayMatchList-item-match">
             <div class="TodayMatchList-item-match-team1">
-              레스터 시티
-              <img src="">
+              <div style="margin-right:5px">
+                레스터 시티
+              </div>
+              <img :src="premierLeague.레스터시티" width="25">
             </div>
 
             <div class="TodayMatchList-item-match-versus">
@@ -115,14 +130,19 @@
             </div>
 
             <div class="TodayMatchList-item-match-team2">
-              사우스 햄튼
+              <img :src="premierLeague.사우스햄튼" width="25">
+              <div style="margin-left:5px">
+                사우스 햄튼
+              </div>
             </div>
           </div>
           
           <div class="TodayMatchList-item-match">
             <div class="TodayMatchList-item-match-team1">
-              맨체스터 시티
-              <img src="">
+              <div style="margin-right:5px">
+                멘체스터 시티
+              </div>
+              <img :src="premierLeague.맨체스터시티" width="25">
             </div>
 
             <div class="TodayMatchList-item-match-versus">
@@ -136,7 +156,10 @@
             </div>
 
             <div class="TodayMatchList-item-match-team2">
-              아스톤 빌라
+              <img :src="premierLeague.아스톤빌라" width="25">
+              <div style="margin-left:5px">
+                아스톤 빌라
+              </div>
             </div>
           </div>
         </div>
@@ -164,7 +187,7 @@
               <v-icon style="width:10px; font-size:20px; margin-right: 5px;">
                 mdi-chevron-left
               </v-icon>
-                07.26 <span style="font-size:10px;">(금)</span>
+                07.26 <span style="font-size:10px;">(화)</span>
               <v-icon style="width:10px; font-size:20px; margin-left: 5px;">
                 mdi-chevron-right
               </v-icon>
@@ -198,7 +221,7 @@
               <v-icon style="width:10px; font-size:20px; margin-right: 5px;">
                 mdi-chevron-left
               </v-icon>
-                07.26 <span style="font-size:10px;">(금)</span>
+                07.26 <span style="font-size:10px;">(화)</span>
               <v-icon style="width:10px; font-size:20px; margin-left: 5px;">
                 mdi-chevron-right
               </v-icon>
@@ -211,12 +234,6 @@
         </div>
       </div>
       <!-- 분데스리가 -->
-      <!-- <div class="TodayMatchList-section-item">
-        <div class="TodayMatchList-section-title">
-          분데스리가
-        </div>
-
-      </div> -->
     </div>
   </div>
 </template>
@@ -224,16 +241,15 @@
 <script setup>
 const premierLeague = {
   맨유: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  토트넘: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  아스날: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  에버튼: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  첼시: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  왓포드: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  레스터시티: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  사우스햄튼: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  맨체스터시티: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-  아스톤빌라: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-
+  토트넘: require('../assets/image/프리미어리그/토트넘로고.png'),
+  아스날: require('../assets/image/프리미어리그/아스날.png'),
+  에버튼: require('../assets/image/프리미어리그/에버튼.png'),
+  첼시: require('../assets/image/프리미어리그/첼시.png'),
+  리즈유나이티드: require('../assets/image/프리미어리그/리즈유나이티드.png'),
+  레스터시티: require('../assets/image/프리미어리그/레스터시티.png'),
+  사우스햄튼: require('../assets/image/프리미어리그/사우스햄튼.png'),
+  맨체스터시티: require('../assets/image/프리미어리그/맨체스터시티.png'),
+  아스톤빌라: require('../assets/image/프리미어리그/아스톤빌라.png'),
 }
 </script>
 
@@ -303,8 +319,12 @@ const premierLeague = {
   width: 113px;
 }
 .TodayMatchList-item-match-team2 {
+  display: flex;
   width:200px;
-  text-align: start;
+  height: 25px;
+  justify-content: flex-start;
+  align-items: center;
+
 }
 .TodayMatchList-item-match-none {
   text-align: center;
