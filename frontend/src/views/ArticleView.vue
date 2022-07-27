@@ -2,70 +2,13 @@
   <NavBar/>
   <div style="display:flex;">
     <SideBar/>
-    <ArticleForm v-if="toggle"/>
-    <div v-if="!toggle" class="community-main">
-      <div style="display:flex; justify-content: space-between; height:60px">
-        <div style="width:200px;">
-          <v-select
-          :items="items"
-          label="리그 분류"
-          dense
-          solo
-          ></v-select>
-        </div>
-        <div>
-          <v-btn @click="toggle=true" style="height:34px; margin-left:20px">글 작성하기</v-btn>
-        </div>
-      </div>
-      <div style="display:flex; height:38px; margin:0; text-align: center; align-items: center; border-bottom: 1px solid #bcbcbc;">
-        <div style="width:100px">
-          <p>리그</p>
-        </div>
-        <div style="width:380px">
-          <p>제목</p>
-        </div>
-        <div style="width:100px">
-          <p>등록일</p>
-        </div>
-        <div style="width:130px">
-          <p>작성자</p>
-        </div>
-        <div style="width:80px">
-          <p>조회수</p>
-        </div>
-      </div>
-
-      <div v-for="article in articles" :key="article.article_id" style="display:flex; height:36px; margin:0; text-align: center; align-items: center;">
-        <div style="width:100px">
-          <p>{{article.category}}</p>
-        </div>
-        <div class="article-list" style="width:380px">
-          <p>{{article.title}}</p>
-        </div>
-        <div style="width:100px">
-          <p>{{article.updated_date}}</p>
-        </div>
-        <div style="width:130px">
-          <p>{{article.author}}</p>
-        </div>
-        <div style="width:80px">
-          <p>{{article.recommended}}</p>
-        </div>
-      </div>
-
-      <div style="display:flex; text-align: center; align-items: center; width:600px; height:36px; margin: 20px auto;">
-        <input type="text" size="34px" maxlength="30" placeholder=" 검색할 내용을 입력하세요." style="width:480px; height:34px; border-radius:5px; border: 1px solid #bcbcbc;">
-        <v-btn style="height:34px; margin-left:20px">검색</v-btn>
-      </div>
-      <div style="width:280px; height:32px; margin: 10px auto;">
-        <p>페이지네이션</p>
-      </div>
-    </div>
+    <ArticleForm v-if="communityStore.toggle"/>
+    <ArticleList v-if="!communityStore.toggle"/>
 
     <div class="community-side">
 
       <div style="height:30px; border-bottom: 1px solid #bcbcbc; font-size: 20px;">
-        <p>오늘의 뉴우스</p>
+        <p>오늘의 뉴스</p>
       </div>
       <div v-for="item in news" :key="item.news_id" style="display:flex; height:30px; align-items: center; font-size: 14px;">
         <div class="maincolor" style="width:24px; text-align: center;">
@@ -77,7 +20,7 @@
       </div>
 
       <div style="margin:60px 0 20px; height:30px; border-bottom: 1px solid #bcbcbc; font-size: 20px;">
-        <p>오늘경기</p>
+        <p>오늘의 경기</p>
       </div>
       <div v-for="match in matches" :key="match.id" style="display:flex; width:350px; height:60px;">
         <div style="display:flex; width:110px; height:40px; font-size: 11px; align-items: center; justify-content: flex-end;">
@@ -111,36 +54,10 @@
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import ArticleForm from "../components/ArticleForm.vue"
-import { ref } from "vue"
-const toggle = ref(false)
-const items = [
-  {title: '프리미어리그'},
-  {title: '라리가'},
-  {title: '세리에A'},
-  {title: '분데스리가'},
-  {title: '리그 1'},
-  {title: 'K리그'},
-]
+import ArticleList from "../components/ArticleList.vue"
+import { useCommunityStore } from "@/store"
 
-// 아마 article을 DB에서 가져올듯함, 지금은 그냥 값 일일히 넣어보기
-const articles = [
-  {
-    article_id: 0,
-    category: '프리미어리그',
-    title: '사람가면나쁘다',
-    updated_date: '8:37',
-    author: '닭다리도둑',
-    recommended: 27
-  },
-  {
-    article_id: 1,
-    category: '라리가',
-    title: '이기는팀이우리팀',
-    updated_date: '8:32',
-    author: '아카페라모카라때',
-    recommended: 5
-  }
-]
+const communityStore = useCommunityStore()
 
 // 아마 뉴스API로 가져올듯? 지금은 그냥 값 넣어보기
 const news = [
@@ -222,15 +139,15 @@ const matches = [
 </script>
 
 <style>
-.community-main {
-  width: 790px;
-  margin-top: 60px;
-  margin-left: 80px;
-}
 .community-side {
   width: 350px;
-  margin-top: 60px;
+  margin-top: 140px;
   margin-left: 80px;
+}
+@media (max-width: 1580px) {
+.community-side {
+  margin-top: 120px;
+  }
 }
 .article-list:hover {
   color: var(--main-color);
