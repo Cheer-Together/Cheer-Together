@@ -4,20 +4,33 @@
       스포츠 뉴스
     </div>
     <div class="mainNews-section">
-      <div class="">
+      <div class="mainNews-item" v-for="news in mainPageStore.mainNews" :key="news.id">
+        <img :src="news.img" class="mainNews-item-image">
 
+        <div class="mainNews-item-section">
+          <div class="mainNews-item-title">
+            {{ news.title }}
+          </div>
+          <div class="mainNews-item-content">
+            {{ news.content }}
+          </div>
+
+        </div>
       </div>
+
     </div>
   </div>
 </template>
 
 <script setup>
+import { useMainPageStore } from "@/store"
 
+const mainPageStore = useMainPageStore()
 </script>
 
 <style>
 .mainNews {
-  margin-bottom: 40px;
+  margin-bottom: 100px;
 }
 .mainNews-title {
   font-size: 18px;
@@ -26,8 +39,36 @@
 .mainNews-section {
   margin-top: 11px;
   width: 1580px;
-  text-align: center;
-  background-color: var(--sub-color);
+}
+.mainNews-item{
+  width: 1580px;
+  height: 200px;
+  margin-bottom: 30px;
+  display: flex;
+  border-bottom: 1px solid black;
+}
+.mainNews-item-image {
+  width: 300px;
+  height: 170px;
+  margin-right: 78px;
+}
+.mainNews-item-title{
+  width: 1200px;
+  font-size: 20px;
+  font-family: 'MICEGothic Bold';
+  margin-bottom: 10px;
+}
+.mainNews-item-content {
+  display: -webkit-box;
+  width: 1200px;
+  height: 135px;
+  white-space: normal;
+  font-size: 15px;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  text-overflow: ellipsis;	
+  overflow: hidden; 
+  word-break: break-all;
 }
 
 </style>
