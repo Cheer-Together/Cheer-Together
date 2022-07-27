@@ -73,6 +73,8 @@
   min-height: 889px;
   max-height: 3000px;
   border-right: 1px solid var(--main-color);
+  position: fixed;
+  top: 80px;
 }
 .SideBar-item {
   font-size: 15px;
@@ -103,5 +105,35 @@
 .SideBar-subtitle:hover {
   color: var(--main-color);
   cursor:pointer;
+}
+
+@media (max-width: 1580px) {
+.SideBar {
+  min-width: 150px;
+  top: 60px;
+}
+.SideBar-item {
+  font-size: 12px;
+  margin: 15px 0px 0px 14px;
+  padding: 5px 0px;
+}
+.SideBar-item-icon {
+  width: 15px;
+  height: 15px;
+  font-size: 15px;
+  margin-right: 5px;
+}
+.SideBar-item-title{
+  display: inline;
+  width: 100px;
+  height: 38px;
+  font-size: 12px;
+  align-items: center;
+}
+.SideBar-subtitle {
+  font-size: 6px;
+  margin: 10px 20px 0 40px;
+}
+
 }
 </style>
