@@ -22,5 +22,9 @@ import TodayMatchList from "../components/TodayMatchList.vue"
 .MainPage {
   margin: 130px 0 0 275px;
 }
-
+@media (max-width: 1580px) {
+.MainPage {
+  margin: 90px 0 0 200px;
+}
+}
 </style>

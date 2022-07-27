@@ -36,4 +36,21 @@
 .FavoriteTeam-section-title {
   padding-top: 78px ;
 }
+
+@media (max-width: 1580px) {
+.FavoriteTeam {
+  margin-bottom: 16px;
+}
+.FavoriteTeam-title {
+  font-size: 15px;
+}
+.FavoriteTeam-section {
+  margin-top: 8px;
+  width: 1300px;
+  height: 170px;
+}
+.FavoriteTeam-section-title {
+  padding-top: 78px ;
+}
+}
 </style>

@@ -164,7 +164,6 @@
           </div>
         </div>
       </div>
-
       <!-- 라리가 -->
       <div class="TodayMatchList-section-item">
         <!-- 리그 이름 + 더보기 있는 영역 -->
@@ -329,5 +328,27 @@ const premierLeague = {
 .TodayMatchList-item-match-none {
   text-align: center;
   margin-top: 10px;
+}
+@media (max-width: 1580px) {
+.TodayMatchList {
+  margin-bottom: 16px;
+}
+.TodayMatchList-title {
+  font-size: 15px;
+}
+.TodayMatchList-section {
+  margin-top: 8px;
+  width: 1300px;
+  font-size: 15px;
+}
+.TodayMatchList-item-section {
+  width: 420px;
+}
+.TodayMatchList-item-section-header {
+  width: 418px;
+}
+.TodayMatchList-item-match {
+  font-size:12px;
+}
 }
 </style>
