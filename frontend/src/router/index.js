@@ -10,8 +10,8 @@ const routes = [
     component: MainPageView
   },
   {
-    path: '/articleview',
-    name: 'ArticleView',
+    path: '/article',
+    name: 'Article',
     component: ArticleView
   },
   {
