@@ -52,7 +52,7 @@
       </div>
     </div>
     <!-- 커뮤니티 -->
-    <div class="sideBar-item" @click="this.$router.push({name:'ArticleView'})">
+    <div class="sideBar-item" @click="this.$router.push({name:'Article'})">
       <v-icon class="sideBar-item-icon">
         mdi-account-group
       </v-icon>

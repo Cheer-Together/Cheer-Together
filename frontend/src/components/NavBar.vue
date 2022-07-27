@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-const navBarLogo = require('../assets/image/임시로고.png');
+const navBarLogo = require('../assets/image/로고.png');
 </script>
 
 <style>
