@@ -1,6 +1,6 @@
 <template>
   <div class="NavBar">
-    <img :src="navBarLogo" width="80" class="NavBar-logo">
+    <img :src="navBarLogo" class="NavBar-logo">
     <div class="NavBar-items">
       <div class="NavBar-item">
         로그인
@@ -24,13 +24,17 @@ const navBarLogo = require('../assets/image/임시로고.png');
 
 <style>
 .NavBar {
+  width: 100%;
   height: 80px;
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid var(--main-color);
+  position: fixed;
+  background-color: #ffffff;
 }
 .NavBar-logo {
   margin-left: 30px;
+  width: 80px;
 }
 .NavBar-items {
   display: flex;
@@ -41,5 +45,24 @@ const navBarLogo = require('../assets/image/임시로고.png');
   height: 18px;
   text-align: center;
   margin: auto 0;
+}
+
+@media (max-width: 1580px) {
+.NavBar {
+  height: 60px;
+}
+.NavBar-logo {
+  margin-left: 20px;
+  width: 60px;
+}
+.NavBar-items {
+  display: flex;
+  margin-right: 30px;
+}
+.NavBar-item {
+  font-size: 12px;
+  width: 80px;
+  height: 18px;
+}
 }
 </style>
