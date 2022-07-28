@@ -26,10 +26,7 @@
     </div>
     <div class="write-bottom">
       <v-btn @click="communityStore.communityToggle()" class="write-button">취소하기</v-btn>
-      <v-btn @click="communityStore.communityToggle()" class="write-button">작성완료</v-btn>
-    </div>
-    <div>
-      <a>{{category}}</a>
+      <v-btn @click="completeButton()" class="write-button">작성완료</v-btn>
     </div>
   </div>
 </template>
@@ -38,7 +35,7 @@
 import { useCommunityStore } from "@/store"
 import { ref } from 'vue'
 
-const category = ref('')
+const category = ref('분류 없음')
 const title = ref('')
 const content = ref('')
 const communityStore = useCommunityStore()
@@ -51,13 +48,28 @@ const categories = [
   {title: '리그 1'},
   {title: 'K리그'},
 ]
+
+// 가상의 사용자 정보
 const accountInfo = {
   id: 134,
   name: '작성자 이름',
   password: '********'
 }
-const today = new Date();
-const now = today.toLocaleString();
+const time = new Date();
+const now = time.toLocaleString();
+
+// 일단 store에 저장 (나중에 DB에 저장할 예정)
+function completeButton() {
+  const contents = {
+    category,
+    title,
+    content,
+    updated_date: `${time.getHours()}:${time.getMinutes()}`,
+    author: accountInfo.name,
+  }
+  communityStore.writeArticle(contents)
+  communityStore.communityToggle()
+}
 </script>
 
 <style>
