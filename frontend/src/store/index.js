@@ -54,7 +54,7 @@ export const useCommunityStore = defineStore('community', {
           article_id: 0,
           category: '프리미어리그',
           title: '사람가면나쁘다',
-          content: '내용은없다',
+          content: '문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인',
           updated_date: '8:37',
           author: '닭다리도둑',
           recommended: 27
