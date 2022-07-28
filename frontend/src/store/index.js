@@ -48,6 +48,7 @@ export const useCommunityStore = defineStore('community', {
   state: () => (
     { 
       toggle: false,
+      ids: 2,
       articles : [
         {
           article_id: 0,
@@ -78,5 +79,16 @@ export const useCommunityStore = defineStore('community', {
         this.toggle = true
       }
     },
+    writeArticle(contents) {
+      this.articles.push({
+        article_id: this.ids++,
+        category: contents.category,
+        title: contents.title,
+        content: contents.content,
+        updated_date: contents.updated_date,
+        author: contents.author,
+        recommended: 0
+      })
+    }
   },
 })
