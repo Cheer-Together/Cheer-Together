@@ -63,9 +63,9 @@ const maincontent = maincontents[0]
   margin-left: 300px;
 }
 @media (max-width: 1580px) {
-.community-main {
-  margin-top: 120px;
-  margin-left: 200px;
+  .community-main {
+    margin-top: 120px;
+    margin-left: 200px;
   }
 }
 </style>

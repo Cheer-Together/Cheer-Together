@@ -3,7 +3,7 @@
   <div style="display:flex;">
     <SideBar/>
     <ArticleForm v-if="communityStore.toggle"/>
-    <ArticleList v-if="!communityStore.toggle"/>
+    <ArticleList v-else/>
     <ArticleSides/>
   </div>
 </template>
@@ -15,8 +15,8 @@ import ArticleForm from "../components/ArticleForm.vue"
 import ArticleList from "../components/ArticleList.vue"
 import { useCommunityStore } from "@/store"
 import ArticleSides from "../components/ArticleSides.vue"
-
 const communityStore = useCommunityStore()
+communityStore.communityMounted()
 </script>
 
 <style>
@@ -26,8 +26,8 @@ const communityStore = useCommunityStore()
   margin-left: 80px;
 }
 @media (max-width: 1580px) {
-.community-side {
-  margin-top: 120px;
+  .community-side {
+    margin-top: 120px;
   }
 }
 .article-list { 

@@ -129,8 +129,8 @@ const matches = [
   margin-left: 80px;
 }
 @media (max-width: 1580px) {
-.community-side {
-  margin-top: 120px;
+  .community-side {
+    margin-top: 120px;
   }
 }
 .article-list { 
