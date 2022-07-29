@@ -72,6 +72,9 @@ export const useCommunityStore = defineStore('community', {
     }
   ),
   actions: {
+    communityMounted() {
+      this.toggle = false
+    },
     communityToggle() {
       if (this.toggle) {
         this.toggle = false
@@ -90,5 +93,27 @@ export const useCommunityStore = defineStore('community', {
         recommended: 0
       })
     }
+  },
+})
+export const useAccountStore = defineStore('account', {
+  state: () => ({ 
+    loginDialog: false,
+    token: ''
+  }),
+  getters: {
+  },
+  actions: {
+    loginDialogToggle(){
+      if (!this.token) {
+        if (this.loginDialog) {
+          this.loginDialog = false
+        } else {
+          this.loginDialog = true
+        }
+      }
+    },
+    loginAccount(array) {
+      this.token = array[0]
+    },
   },
 })
