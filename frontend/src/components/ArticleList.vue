@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!toggle" class="community-main">
+  <div class="community-main">
     <div style="display:flex; justify-content: space-between; height:60px">
       <div style="width:200px;">
         <v-select
@@ -10,7 +10,7 @@
         ></v-select>
       </div>
       <div>
-        <v-btn @click="communityStore.communityToggle()" style="height:40px; margin-left:20px">글 작성하기</v-btn>
+        <v-btn @click="writeButton()" style="height:40px; margin-left:20px">글 작성하기</v-btn>
       </div>
     </div>
     <div style="display:flex; height:38px; margin:0; text-align: center; align-items: center; border-bottom: 1px solid #bcbcbc;">
@@ -23,7 +23,7 @@
       <div style="width:100px">
         <p>{{article.category}}</p>
       </div>
-      <div class="article-list" style="width:380px">
+      <div @click="toArticleDetail(article.article_id)" class="article-list" style="width:380px">
         <p>{{article.title}}</p>
       </div>
       <div style="width:100px">
@@ -38,7 +38,7 @@
     </div>
 
     <div style="display:flex; text-align: center; align-items: center; width:600px; height:36px; margin: 20px auto;">
-      <input type="text" size="34px" maxlength="30" placeholder=" 검색할 내용을 입력하세요." style="width:480px; height:34px; border-radius:5px; border: 1px solid #bcbcbc;">
+      <input type="text" placeholder=" 검색할 내용을 입력하세요." style="width:480px; height:34px; border-radius:5px; border: 1px solid #bcbcbc;">
       <v-btn style="height:34px; margin-left:20px">검색</v-btn>
     </div>
     <div style="width:280px; height:32px; margin: 10px auto;">
@@ -48,9 +48,16 @@
 </template>
 
 <script setup>
-import { useCommunityStore } from "@/store"
-
+import { useAccountStore, useCommunityStore } from "@/store"
+import router from "@/router"
 const communityStore = useCommunityStore()
+const accountStore = useAccountStore()
+function writeButton() {
+  if (accountStore.token) {
+    communityStore.communityToggle()
+  }
+  accountStore.loginDialogToggle()
+}
 
 const items = [
   {title: '전체보기'},
@@ -83,6 +90,9 @@ const headers = [
     style: {width:'80px'},
   },
 ]
+function toArticleDetail(id) {
+  router.push({name: 'ArticleDetail', params: { articleid: id }})
+}
 </script>
 
 <style>
@@ -92,9 +102,9 @@ const headers = [
   margin-left: 300px;
 }
 @media (max-width: 1580px) {
-.community-main {
-  margin-top: 120px;
-  margin-left: 200px;
+  .community-main {
+    margin-top: 120px;
+    margin-left: 200px;
   }
 }
 </style>

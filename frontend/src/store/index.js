@@ -91,12 +91,13 @@ export const useCommunityStore = defineStore('community', {
   state: () => (
     { 
       toggle: false,
+      ids: 2,
       articles : [
         {
           article_id: 0,
           category: '프리미어리그',
           title: '사람가면나쁘다',
-          content: '내용은없다',
+          content: '문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인',
           updated_date: '8:37',
           author: '닭다리도둑',
           recommended: 27
@@ -114,12 +115,48 @@ export const useCommunityStore = defineStore('community', {
     }
   ),
   actions: {
+    communityMounted() {
+      this.toggle = false
+    },
     communityToggle() {
       if (this.toggle) {
         this.toggle = false
       } else {
         this.toggle = true
       }
+    },
+    writeArticle(contents) {
+      this.articles.push({
+        article_id: this.ids++,
+        category: contents.category,
+        title: contents.title,
+        content: contents.content,
+        updated_date: contents.updated_date,
+        author: contents.author,
+        recommended: 0
+      })
+    }
+  },
+})
+export const useAccountStore = defineStore('account', {
+  state: () => ({ 
+    loginDialog: false,
+    token: ''
+  }),
+  getters: {
+  },
+  actions: {
+    loginDialogToggle(){
+      if (!this.token) {
+        if (this.loginDialog) {
+          this.loginDialog = false
+        } else {
+          this.loginDialog = true
+        }
+      }
+    },
+    loginAccount(array) {
+      this.token = array[0]
     },
   },
 })
