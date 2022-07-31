@@ -51,6 +51,7 @@ public class MemberService implements UserDetailsService {
 			.orElseThrow(() -> new UsernameNotFoundException(EMAIL_NOT_FOUND_ERROR_MESSAGE));
 	}
 
+	@Transactional(readOnly = true)
 	public void checkDuplicateEmail(String email) {
 		boolean isDuplicated = memberRepository.findByEmail(email).isPresent();
 		if (isDuplicated) {
