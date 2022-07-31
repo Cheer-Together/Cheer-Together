@@ -12,6 +12,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
+
 @Entity
 public class Member implements UserDetails {
 
@@ -24,6 +26,21 @@ public class Member implements UserDetails {
 	private String profileImage;
 	private String role;
 	private String myInfo;
+
+	public Member(String email, String nickname, String password, String profileImage, String role, String myInfo) {
+		this.email = email;
+		this.nickname = nickname;
+		this.password = password;
+		this.profileImage = profileImage;
+		this.role = role;
+		this.myInfo = myInfo;
+	}
+
+	public static Member from(MemberJoinRequest memberJoinRequest) {
+		return new Member(memberJoinRequest.getEmail(), memberJoinRequest.getNickname(),
+			memberJoinRequest.getPassword(), memberJoinRequest.getProfileImage(), memberJoinRequest.getRole(),
+			memberJoinRequest.getMyInfo());
+	}
 
 	public boolean confirmPassword(String password) {
 		return this.password.equals(password);
