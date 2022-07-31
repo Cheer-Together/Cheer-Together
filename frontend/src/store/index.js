@@ -1,14 +1,57 @@
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('counter', {
-  state: () => ({ count: 0 }),
+// export const useCounterStore = defineStore('counter', {
+//   state: () => ({ count: 0 }),
+//   getters: {
+//     double: state => state.count * 2,
+//   },
+//   actions: {
+//     increment() {
+//       this.count++
+//     },
+//   },
+// })
+export const useSignupStore = defineStore('signup', {
+  state: () => ({
+    favoriteLeague: false,
+    favoriteTeam: false,
+    bigLeagues: {
+      프리미어리그: {
+        id: 0,
+        img: require('../assets/image/6대리그/프리미어리그.jpg'),
+        title: '프리미어리그',
+      },
+      라리가: {
+        id: 1,
+        img: require('../assets/image/6대리그/라리가로고.png'),
+        title: '라리가',
+      },
+      세리에A: {
+        id: 2,
+        img: require('../assets/image/6대리그/세리에A로고.jpg'),
+        title: '세리에A',
+      },
+      분데스리가: {
+        id: 3,
+        img: require('../assets/image/6대리그/분데스리가.png'),
+        title: '분데스리가',
+      },
+      리그1: {
+        id: 4,
+        img: require('../assets/image/6대리그/리그1로고.png'),
+        title: '리그1',
+      },
+      K리그1: {
+        id: 5,
+        img: require('../assets/image/6대리그/K리그1.png'),
+        title: 'K리그1',
+      },
+    },
+    selectLeague: [] 
+  }),
   getters: {
-    double: state => state.count * 2,
   },
   actions: {
-    increment() {
-      this.count++
-    },
   },
 })
 export const useMainPageStore = defineStore('mainpage', {
