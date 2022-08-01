@@ -3,15 +3,6 @@
     <v-row
       justify="center"
     >
-      <!-- 바깥에 있는 버튼 -->
-      <v-btn
-        color="primary"
-        class="ma-2"
-        @click="accountStore.loginDialogToggle()"
-      >
-        Open Dialog 1
-      </v-btn>
-
       <!-- 여기부터 모달창 -->
       <v-dialog
         v-model="accountStore.loginDialog"
