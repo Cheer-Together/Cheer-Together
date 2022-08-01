@@ -147,12 +147,10 @@ export const useAccountStore = defineStore('account', {
   },
   actions: {
     loginDialogToggle(){
-      if (!this.token) {
-        if (this.loginDialog) {
-          this.loginDialog = false
-        } else {
-          this.loginDialog = true
-        }
+      if (this.loginDialog) {
+        this.loginDialog = false
+      } else {
+        this.loginDialog = true
       }
     },
     loginAccount(array) {
