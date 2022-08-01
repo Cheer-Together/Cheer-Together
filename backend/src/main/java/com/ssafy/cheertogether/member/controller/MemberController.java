@@ -17,6 +17,8 @@ import com.ssafy.cheertogether.member.dto.MemberLoginRequest;
 import com.ssafy.cheertogether.member.service.EmailService;
 import com.ssafy.cheertogether.member.service.MemberService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,23 +33,28 @@ public class MemberController {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@GetMapping("/validate/duplicated")
+	@ApiOperation(value = "이메일 중복 확인", notes = "회원가입 시 이메일 중복 확인")
 	public ResponseEntity<String> checkDuplicateEmail(@RequestParam String email) {
 		memberService.checkDuplicateEmail(email);
 		return new ResponseEntity<>(CREATABLE_EMAIL_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 
 	@GetMapping("/authenticate/email")
-	public ResponseEntity<String> sendEmail(@RequestParam String email) {
+	@ApiOperation(value = "이메일 인증", notes = "이메일 인증을 위한 인증코드 메일 전송")
+	public ResponseEntity<String> sendEmail(
+		@ApiParam(value = "이메일", required = true, example = "choijoohee@naver.com") @RequestParam String email) {
 		return new ResponseEntity<>(emailService.sendMail(email), HttpStatus.OK);
 	}
 
 	@PostMapping("/join")
+	@ApiOperation(value = "회원가입", notes = "회원 가입 - 회원 등록")
 	public ResponseEntity<String> join(@RequestBody MemberJoinRequest memberJoinRequest) {
 		memberService.join(memberJoinRequest);
 		return new ResponseEntity<>(JOIN_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 
 	@PostMapping("/login")
+	@ApiOperation(value = "로그인", notes = "로그인")
 	public ResponseEntity<String> login(@RequestBody MemberLoginRequest memberLoginRequest) {
 		log.info("email = " + memberLoginRequest.getEmail() + " password = " + memberLoginRequest.getPassword());
 		memberService.login(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
