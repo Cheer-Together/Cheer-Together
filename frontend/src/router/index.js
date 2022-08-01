@@ -3,7 +3,7 @@ import MainPageView from '../views/MainPageView.vue'
 import ArticleView from '../views/ArticleView.vue'
 import ScheduleView from '../views/ScheduleView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
-import SignUpView from '../views/SignUpView.vue'
+import SignupView from '../views/SignupView.vue'
 
 const routes = [
   {
@@ -29,7 +29,7 @@ const routes = [
   {
     path: '/signup',
     name: 'Signup',
-    component: SignUpView
+    component: SignupView
   },
 ]
 
