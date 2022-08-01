@@ -4,6 +4,7 @@ import ArticleView from '../views/ArticleView.vue'
 import ScheduleView from '../views/ScheduleView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
 import SignupView from '../views/SignupView.vue'
+import { useAccountStore } from "@/store"
 
 const routes = [
   {
@@ -36,6 +37,21 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const accountStore = useAccountStore()
+  const token = accountStore.token
+
+  //authPages에 로그인이 필요한 RouterView를 등록하면 됨
+  const authPages = ['ArticleDetail',]
+
+  const isAuthRequired = authPages.includes(to.name)
+  if (isAuthRequired && !token) {
+    accountStore.loginDialogToggle()
+  } else {
+    next()
+  }
 })
 
 export default router

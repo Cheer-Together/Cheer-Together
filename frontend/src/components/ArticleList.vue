@@ -55,8 +55,9 @@ const accountStore = useAccountStore()
 function writeButton() {
   if (accountStore.token) {
     communityStore.communityToggle()
+  } else {
+    accountStore.loginDialogToggle()
   }
-  accountStore.loginDialogToggle()
 }
 
 const items = [
