@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
+import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
 
@@ -24,6 +25,12 @@ import lombok.RequiredArgsConstructor;
 public class MemberService implements UserDetailsService {
 
 	private final MemberRepository memberRepository;
+
+	public MemberResponse findMember(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
+		return new MemberResponse(member);
+	}
 
 	/**
 	 * 회원 가입
@@ -66,5 +73,9 @@ public class MemberService implements UserDetailsService {
 		Member findMember = memberRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
 		findMember.update(memberModifyRequest);
+	}
+
+	public void delete(Long id) {
+		memberRepository.deleteById(id);
 	}
 }

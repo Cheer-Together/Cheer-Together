@@ -10,5 +10,6 @@ public class MemberConstant {
 
 	public static final String CREATABLE_EMAIL_RESPONSE_MESSAGE = "사용 가능한 이메일입니다.";
 	public static final String JOIN_SUCCESS_RESPONSE_MESSAGE = "회원가입을 축하드립니다.";
-	public static final String MODIFY_SUCCESS_RESPONSE_MESSAGE = "회원 수정 완료";
+	public static final String MODIFY_SUCCESS_RESPONSE_MESSAGE = "회원 수정이 완료되었습니다.";
+	public static final String WITHDRAW_SUCCESS_RESPONSE_MESSAGE = "회원 탈퇴가 완료되었습니다.";
 }
