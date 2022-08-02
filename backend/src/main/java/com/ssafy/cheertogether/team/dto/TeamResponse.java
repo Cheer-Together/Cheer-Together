@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder(builderMethodName = "teamResponseBuilder")
 public class TeamResponse {
 
+	private String leagueName;
 	private String name;
 	private String logo;
 	private String code;
@@ -20,6 +21,7 @@ public class TeamResponse {
 
 	public static TeamResponse from(final Team team) {
 		return TeamResponse.teamResponseBuilder()
+			.leagueName(team.getLeague().getName())
 			.name(team.getName())
 			.logo(team.getLogo())
 			.code(team.getCode())

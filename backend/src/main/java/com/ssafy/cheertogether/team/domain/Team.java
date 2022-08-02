@@ -1,11 +1,13 @@
 package com.ssafy.cheertogether.team.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ssafy.cheertogether.league.domain.League;
 
 import lombok.Getter;
@@ -18,8 +20,9 @@ public class Team {
 	@GeneratedValue
 	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "api_id")
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "league_id")
+	@JsonBackReference
 	private League league;
 
 	private String name;
