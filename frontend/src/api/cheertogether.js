@@ -6,7 +6,8 @@ const MEMBERS = 'members/'
 export default {
   members: {
     emailAuth: () => HOST + MEMBERS + 'authenticate/email',
-
+    emailDoubleCheck: () => HOST + MEMBERS + 'validate/duplicated',
+    signUp: () => HOST + MEMBERS + 'join',
   },
   article: {
 

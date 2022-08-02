@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
 import cheertogether from '@/api/cheertogether'
+import Swal from 'sweetalert2'
 
 export const useSignupStore = defineStore('signup', {
   state: () => ({
@@ -38,7 +39,134 @@ export const useSignupStore = defineStore('signup', {
         title: 'K리그1',
       },
     },
-    selectLeague: [] 
+    selectLeague: [],
+    selectTeam: [],
+    selectFavoriteTeam: '프리미어리그',
+    selectFavoriteTeams: [
+      {
+        name: '프리미어리그',
+      },
+      {
+        name: '라리가'
+      },
+      {
+        name: '세리에A'
+      },
+      {
+        name: '분데스리가'
+      },
+      {
+        name: '리그1'
+      },
+      {
+        name: 'k리그1'
+      },
+    ],
+    premierLeague: [
+     {
+        id: 0,
+        name: '본머스',
+        img: require('../assets/image/프리미어리그/본머스.png'),
+      },
+      {
+        id: 1,
+        name: '아스날',
+        img: require('../assets/image/프리미어리그/아스날.png'),
+      },
+      {
+        id: 2,
+        name: '아스톤 빌라',
+        img: require('../assets/image/프리미어리그/아스톤빌라.png'),
+
+      },
+      {
+        id: 3,
+        name: '브렌트포드',
+        img: require('../assets/image/프리미어리그/브렌트포드.png'),
+
+      },
+      {
+        id: 4,
+        name: '브라이튼 앤 호브 알비온',
+        img: require('../assets/image/프리미어리그/브라이튼앤호브알비온.png'),
+
+      },
+      {
+        id: 5,
+        name: '첼시',
+        img: require('../assets/image/프리미어리그/첼시.png'),
+      },
+      {
+        id: 6,
+        name: '크리스탈 팰리스',
+        img: require('../assets/image/프리미어리그/크리스탈팰리스.png'),
+      },
+      {
+        id: 7,
+        name: '에버튼',
+        img: require('../assets/image/프리미어리그/에버튼.png'),
+      },
+      {
+        id: 8,
+        name: '풀럼',
+        img: require('../assets/image/프리미어리그/풀럼.png'),
+      },
+      {
+        id: 9,
+        name: '리즈 유나이티드',
+        img: require('../assets/image/프리미어리그/리즈유나이티드.png'),
+      },
+      {
+        id: 10,
+        name: '레스터 시티',
+        img: require('../assets/image/프리미어리그/레스터시티.png'),
+      },
+      {
+        id: 11,
+        name: '리버풀',
+        img: require('../assets/image/프리미어리그/브렌트포드.png'),
+      },
+      {
+        id: 12,
+        name: '맨체스터 시티',
+        img: require('../assets/image/프리미어리그/맨체스터시티.png'),
+      },
+      {
+        id: 13,
+        name: '맨체스터 유나이티드',
+        img: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
+      },
+      {
+        id: 14,
+        name: '뉴캐슬 유나이티드',
+        img: require('../assets/image/프리미어리그/뉴캐슬유나이티드.png'),
+      },
+      {
+        id: 15,
+        name: '노팅엄 포레스트',
+        img: require('../assets/image/프리미어리그/노팅엄포레스트.png'),
+      },
+      {
+        id: 16,
+        name: '사우스햄튼',
+        img: require('../assets/image/프리미어리그/사우스햄튼.png'),
+      },
+      {
+        id: 17,
+        name: '토트넘 훗스퍼',
+        img: require('../assets/image/프리미어리그/토트넘로고.png'),
+      },
+      {
+        id: 18,
+        name: '웨스트햄 유나이티드',
+        img: require('../assets/image/프리미어리그/웨스트햄유나이티드.png'),
+      },
+      {
+        id: 19,
+        name: '울버햄튼 원더러스',
+        img: require('../assets/image/프리미어리그/울버햄튼원더러스.png'),
+      }
+    ],
   }),
   getters: {
   },
@@ -132,22 +260,53 @@ export const useCommunityStore = defineStore('community', {
 export const useAccountStore = defineStore('account', {
   state: () => ({ 
     loginDialog: false,
-    token: ''
+    token: '',
+    emailDoubleChecked: false,
+    emailAuthCodeChecked: false,
+    emailAuthCode: 'AAAAAAAAAAA',
+    passwordAccordance: '',
+    passwordAccordance2: '',
+    isPushEmail: false,
+    isAllowPassword: false,
+    isShowPasswordError: '',
   }),
   getters: {
   },
   actions: {
+    /*
+      회원가입 시 사용하는 함수들
+    */
+    checkEmail(email) {
+      /*
+        이메일 유효성 검사
+        들어온 값이 @ .com 의 올바른 형식인지 판단
+        성공하면
+          유효한 이메일이기 때문에 중복체크 함수로 이동
+        실패하면
+          실패 alert
+      */
+      const validateEmail = /^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\.[A-Za-z0-9\\-]+/
+
+      if (validateEmail.test(email)) {
+          this.emailDoubleCheck(email)
+          return
+      }
+      Swal.fire({
+        icon: 'error',
+        title: '유효한 이메일 형식이 아닙니다.',
+      })
+    }, 
+
     emailAuth(email) {
       /* 
-      POST: 사용자 입력정보를 signup URL로 보내기
+      GET: 사용자에게 이메일 인증을 보냄
         성공하면
-          응답 토큰 저장
-          현재 사용자 정보 받기
-          메인 페이지(MovieListView)로 이동
+          해당 메일에 인증코드를 발송하고
+          emailAuthCode를 인증코드로 변환
         실패하면
           에러 메시지 표시
       */
-     console.log('여기까지 됨?')
+
       axios({
         url: cheertogether.members.emailAuth(),
         method: 'GET',
@@ -157,15 +316,135 @@ export const useAccountStore = defineStore('account', {
       })
         .then(res => {
           console.log(res.data)
+          this.emailAuthCode = res.data
         })
         .catch(err => {
           console.log(err)
-
-          // commit('SET_AUTH_ERROR', err.response.data)
         })
     },
 
+    emailDoubleCheck(email) {
+      /* 
+      GET: 이메일 중복 체크
+        성공하면
+          중복 확인 완료 alert
+          이메일로 인증번호 전송
+        실패하면
+          400 에러: 이미 가입한 이메일로 에러 표시
+          그 외 에러: 아직 미정
+      */
+      axios({
+        url: cheertogether.members.emailDoubleCheck(),
+        method: 'GET',
+        params: {
+          email: email,
+        }  
+      })
+        .then(res => {
+          console.log(res)
+          this.emailDoubleChecked = true
+          Swal.fire({
+            icon: 'success',
+            title: '중복 확인 완료',
+          })
+        })
+        .catch(err => {
+          if (err.response.status === 400) {
+            Swal.fire({
+              icon: 'error',
+              title: '이미 가입한 이메일 입니다.',
+            })
+          }
+          else {
+            Swal.fire({
+              icon: 'error',
+              title: '일단 400 외의 에러',
+            })
+          }
+          
+        })
+    },    
 
+    emailAuthCodeCheck(inputCode) {
+      /* 
+      인증 코드 확인
+        성공하면
+
+        실패하면
+
+      */
+     console.log(this.emailAuthCode)
+     console.log(inputCode)
+      if (this.emailAuthCode === inputCode) {
+        this.emailAuthCodeChecked = true
+
+        Swal.fire({
+          icon: 'success',
+          title: '인증 성공',
+        })
+      }
+      else {
+        Swal.fire({
+          icon: 'error',
+          title: '인증 실패',
+        })
+      }
+    }, 
+    
+    checkPassword(password) {
+        /*
+        비밀번호 유효성 검사
+        영어, 숫자, 특수문자 조합 8- 20자 
+        성공하면
+          유효한 비밀번호이기 때문에 중복체크 함수로 이동
+        실패하면
+          실패 alert
+      */
+      const validatePassword = /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+]).{8,20}$/
+
+      if (validatePassword.test(password)) {
+        this.isAllowPassword == true
+        this.isShowPasswordError = false
+        console.log('ㄴㄴㄴ')
+        return
+    }
+    this.isShowPasswordError = true
+    console.log(this.isShowPasswordError)
+    },
+
+    signUp(userInfo) {
+      /* 
+      GET: 이메일 중복 체크
+        성공하면
+
+        실패하면
+
+      */
+      axios({
+        url: cheertogether.members.signUp(),
+        method: 'POST',
+        data: {
+          email : userInfo.email,
+          myInfo : userInfo.myInfo,
+          nickname : userInfo.nickname,
+          password : userInfo.password,
+          profileImage : '.',
+          role : 'user'
+        }  
+      })
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+          
+        })
+    },
+    /*
+       로그인 시 사용하는 함수들
+    */
+
+    // 일단 대기
 
     loginDialogToggle(){
       if (this.loginDialog) {

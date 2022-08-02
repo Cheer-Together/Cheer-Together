@@ -7,28 +7,77 @@
         
       </div>
       <!-- 이메일 -->
-      <div class="signup-range">
+      <div class="signup-range" v-if="!accountStore.emailDoubleChecked">
         <div class="signup-range-title">
           이메일
         </div>
         <div style="position: relative;">
-          <input type="email" class="signup-range-input">
-          <button class="signup-range-button">
+          <input type="email" class="signup-range-input" v-model="credentialsSignup.email" maxlength="40">
+          <button class="signup-range-button" @click.prevent="accountStore.checkEmail(credentialsSignup.email)">
             중복 확인
           </button>
         </div>
       </div>
+
+      <!-- 이메일 유효성 검사 + 가입하지 않은 이메일  -->
+      <div class="signup-range" v-if="accountStore.emailDoubleChecked">
+        <div class="signup-range-title">
+          이메일
+        </div>
+        <div style="position: relative;">
+          <div type="email" class="signup-range-input checked-input" style="padding-top:10px">
+            {{ credentialsSignup.email }}
+            <button class="signup-range-button checked">
+              <v-icon class="sideBar-item-icon">
+                mdi-check-bold
+              </v-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="err-password-accordance" v-if="accountStore.emailDoubleChecked" style="color: var(--main-color)">
+        사용 가능한 이메일입니다.
+      </div>
       <!-- 이메일 인증번호 -->
-      <div class="signup-range">
+      <div class="signup-range" v-if="!accountStore.emailAuthCodeChecked">
         <div class="signup-range-title">
           이메일 인증번호
         </div>
         <div style="position: relative;">
-          <input type="text" class="signup-range-input">
-          <button class="signup-range-button">
+          <input type="text" class="signup-range-input" maxlength="10" v-model="userInputEmailAuthCode">
+          <button v-if="!accountStore.isPushEmail" class="signup-range-button" @click.prevent="pushEmail(credentialsSignup.email)" style="background-color:brown;">
+            보내기 
+          <v-icon>
+            mdi-send
+          </v-icon>
+          </button>
+
+          <button v-else class="signup-range-button" @click.prevent="accountStore.emailAuthCodeCheck(userInputEmailAuthCode)">
             확인
           </button>
         </div>
+      </div>
+
+      <!-- 이메일 인증번호 + 가입하지 않은 이메일  -->
+      <div class="signup-range" v-if="accountStore.emailAuthCodeChecked">
+        <div class="signup-range-title">
+          이메일 인증번호
+        </div>
+        <div style="position: relative;">
+          <div type="text" class="signup-range-input checked-input" style="padding-top:10px">
+            {{userInputEmailAuthCode }}
+            <button class="signup-range-button checked">
+              <v-icon class="sideBar-item-icon">
+                mdi-check-bold
+              </v-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="err-password-accordance" v-if="accountStore.emailAuthCodeChecked" style="color: var(--main-color)">
+        인증되었습니다.
       </div>
       <!-- 닉네임 -->
       <div class="signup-range">
@@ -36,17 +85,26 @@
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="signup-range-input">
+          <input type="text" class="signup-range-input" maxlength="40">
         </div>
       </div>
+
       <!-- 비밀번호 -->
       <div class="signup-range">
         <div class="signup-range-title">
           비밀번호
         </div>
         <div style="position: relative;">
-          <input type="password" class="signup-range-input">
+          <input type="password" class="signup-range-input" maxlength="20" v-model="accountStore.passwordAccordance" @blur="accountStore.checkPassword(accountStore.passwordAccordance)">
         </div>
+      </div>
+
+      <div class="err-password-accordance"  v-if="accountStore.isShowPasswordError === true">
+        올바르지 않은 비밀번호입니다. 영어, 숫자, 특수문자 조합 8- 20자
+      </div>
+
+      <div class="err-password-accordance"  v-if="accountStore.isShowPasswordError === false" style="color: var(--main-color)">
+        올바른 비밀번호입니다.
       </div>
       <!-- 비밀번호 확인 -->
       <div class="signup-range">
@@ -54,9 +112,14 @@
           비밀번호 확인
         </div>
         <div style="position: relative;">
-          <input type="password" class="signup-range-input">
+          <input type="password" class="signup-range-input" maxlength="20" v-model="accountStore.passwordAccordance2">
         </div>
       </div>
+
+      <div v-if="accountStore.passwordAccordance2 != '' && accountStore.passwordAccordance != accountStore.passwordAccordance2" class="err-password-accordance">
+        비밀번호가 일치하지 않습니다.
+      </div>
+      
       <!-- 본인 소개 -->
       <div class="signup-range signup-range-introduce" >
         <div class="signup-range-title">
@@ -123,8 +186,39 @@
             <!-- 모달 창 -->
             <FavoriteTeamModal/>
           </v-dialog>
-       
+          <div v-if="signupStore.selectTeam.length !== 0" class="signup-favorite-league">
+            <div class="signup-favorite-league-item">
+              <img :src="signupStore.selectTeam[0].img" class="signup-favorite-league-image">
+              <div class="signup-favorite-league-item-title">
+                {{ signupStore.selectTeam[0].name }}
+              </div>
+            </div>
+
+            <div class="signup-favorite-league-item" v-if="signupStore.selectTeam.length >= 2" >
+              <img :src="signupStore.selectTeam[1].img" class="signup-favorite-league-image">
+              <div class="signup-favorite-league-item-title">
+                {{ signupStore.selectTeam[1].name }}
+              </div>
+            </div>
+
+            <div class="signup-favorite-league-item" v-if="signupStore.selectTeam.length == 3" >
+              <img :src="signupStore.selectTeam[2].img" class="signup-favorite-league-image">
+              <div class="signup-favorite-league-item-title">
+                {{ signupStore.selectTeam[2].name }}
+              </div>
+            </div>
+          </div>  
         </div>
+      </div>
+
+      <!-- 회원 가입!! -->
+      <div class="signup-range-bottom">
+        <button class="signup-submit-button"  @click="this.$router.push({name:'MainPage'})">
+          이전
+        </button>
+        <button class="signup-submit-button next" @click.prevent="changeSignUp(credentialsSignup)">
+          다음
+        </button>
       </div>
     </div>
   </div>
@@ -136,8 +230,73 @@ import SideBar from "../components/SideBar.vue"
 import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
 import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
 import { useSignupStore } from "@/store"
+import { useAccountStore } from "@/store"
+import Swal from 'sweetalert2'
 
 const signupStore = useSignupStore()
+const accountStore = useAccountStore()
+
+// 회원가입 시 변수 초기화 영역
+accountStore.emailDoubleChecked = false ;
+accountStore.emailAuthCode = 'AAAAAAAAAAA';
+accountStore.emailAuthCodeChecked = false;
+accountStore.passwordAccordance = '';
+accountStore.passwordAccordance2 = '';
+accountStore.isPushEmail = false;
+accountStore.isShowPasswordError = '';
+let userInputEmailAuthCode = ''
+let credentialsSignup = {
+  email: "",
+  myInfo: "",
+  nickname: "",
+  password: '',
+  profileImage: '.',
+  role: 'user'
+}
+const pushEmail = (email) => {
+  if (!accountStore.emailDoubleChecked){
+    Swal.fire({
+      icon: 'error',
+      title: '이메일 중복을 확인 하세요!',
+    })
+  }
+  else {
+    accountStore.isPushEmail = true
+    accountStore.emailAuth(email)
+  }
+}
+
+const changeSignUp = (credentialsSignup) => {
+  if (!accountStore.emailDoubleChecked) {
+    Swal.fire({
+      icon: 'error',
+      title: '이메일 중복을 확인 하세요!',
+    })
+  }
+  else if (!accountStore.emailAuthCodeChecked) {
+    Swal.fire({
+      icon: 'error',
+      title: '인증번호를 입력하세요!',
+    })
+  }
+  else if (accountStore.isAllowPassword) {
+    Swal.fire({
+      icon: 'error',
+      title: '비밀번호를 입력하세요!',
+    })
+  }
+  else if (accountStore.passwordAccordance == accountStore.passwordAccordance2) {
+    Swal.fire({
+      icon: 'error',
+      title: '비밀번호가 일치하지 않습니다!',
+    })
+  }
+  else {
+    credentialsSignup.password = accountStore.passwordAccordance
+
+    accountStore.signUp(credentialsSignup)
+  }
+}
 </script>
 <style>
 .signup {
@@ -163,7 +322,8 @@ const signupStore = useSignupStore()
   border: 1px solid #D9D9D9;
   white-space: nowrap;
   padding-left: 10px;
-  padding: 0 10px;
+  padding-right: 120px;
+  
 }
 .signup-range-button {
   position: absolute;
@@ -175,6 +335,20 @@ const signupStore = useSignupStore()
   color: white;
   border-radius: 5px;
   font-size: 13px;
+}
+.checked-input {
+  background-color: darkgrey;
+  color: black;
+  border: 1px solid black;
+}
+.checked {
+  background-color: #1EC800;
+  border: 1px solid black;
+}
+.err-password-accordance {
+  text-align: center;
+  color: red;
+  margin-bottom: 10px;
 }
 .signup-range-input-introduce{
   width: 420px;
@@ -204,6 +378,25 @@ const signupStore = useSignupStore()
   height: 12px;
   text-align: center;
   font-size: 12px;
+}
+.signup-range-bottom {
+  width: 420px;
+  height: 83px;
+  font-size: 21px;
+  margin: 40px auto 20px;
+  display: flex;
+  justify-content: space-around;
+}
+.signup-submit-button {
+  font-family: 'MICEGothic Bold';
+  width: 200px;
+  height: 50px;
+  background-color: #D9D9D9;
+  border-radius: 5px;
+}
+.next {
+  background-color: var(--main-color);
+  color: white;
 }
 @media (max-width: 1580px) {
 .signup {

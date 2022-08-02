@@ -52,7 +52,7 @@
 import { useSignupStore } from "@/store"
 
 const signupStore = useSignupStore()
-
+signupStore.selectFavoriteTeam = '프리미어리그'
 const addSelectLeague = (bigLeague) => {
   console.log(bigLeague)
   if (signupStore.selectLeague.length < 3){
