@@ -13,14 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder(builderMethodName = "leagueBuilder")
 public class LeagueResponse {
 
-	private Long id;
 	private String name;
 	private String logo;
 	private int apiId;
 
 	public static LeagueResponse from(final League league) {
 		return LeagueResponse.leagueBuilder()
-			.id(league.getId())
 			.name(league.getName())
 			.logo(league.getLogo())
 			.apiId(league.getApiId())
