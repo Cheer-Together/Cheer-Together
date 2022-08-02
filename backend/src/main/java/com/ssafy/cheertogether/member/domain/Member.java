@@ -13,8 +13,16 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
+import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
+
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member implements UserDetails {
 
 	@Id
@@ -27,6 +35,7 @@ public class Member implements UserDetails {
 	private String role;
 	private String myInfo;
 
+	@Builder
 	public Member(String email, String nickname, String password, String profileImage, String role, String myInfo) {
 		this.email = email;
 		this.nickname = nickname;
@@ -37,13 +46,34 @@ public class Member implements UserDetails {
 	}
 
 	public static Member from(MemberJoinRequest memberJoinRequest) {
-		return new Member(memberJoinRequest.getEmail(), memberJoinRequest.getNickname(),
-			memberJoinRequest.getPassword(), memberJoinRequest.getProfileImage(), memberJoinRequest.getRole(),
-			memberJoinRequest.getMyInfo());
+		return Member.builder()
+			.email(memberJoinRequest.getEmail())
+			.nickname(memberJoinRequest.getNickname())
+			.password(memberJoinRequest.getPassword())
+			.profileImage(memberJoinRequest.getProfileImage())
+			.role(memberJoinRequest.getRole())
+			.myInfo(memberJoinRequest.getMyInfo())
+			.build();
+	}
+
+	public static Member from(MemberModifyRequest modifyRequest) {
+		return Member.builder()
+			.nickname(modifyRequest.getNickname())
+			.password(modifyRequest.getPassword())
+			.profileImage(modifyRequest.getProfileImage())
+			.myInfo(modifyRequest.getMyInfo())
+			.build();
 	}
 
 	public boolean confirmPassword(String password) {
 		return this.password.equals(password);
+	}
+
+	public void update(MemberModifyRequest memberModifyRequest) {
+		nickname = memberModifyRequest.getNickname();
+		password = memberModifyRequest.getPassword();
+		profileImage = memberModifyRequest.getProfileImage();
+		myInfo = memberModifyRequest.getProfileImage();
 	}
 
 	@Override
