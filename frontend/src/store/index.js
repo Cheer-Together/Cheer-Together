@@ -132,7 +132,7 @@ export const useCommunityStore = defineStore('community', {
 export const useAccountStore = defineStore('account', {
   state: () => ({ 
     loginDialog: false,
-    token: ''
+    isLogin: sessionStorage.getItem("token")??false
   }),
   getters: {
   },
@@ -165,17 +165,45 @@ export const useAccountStore = defineStore('account', {
         })
     },
 
-
-
+    
     loginDialogToggle(){
-      if (this.loginDialog) {
-        this.loginDialog = false
-      } else {
-        this.loginDialog = true
+      /* 
+      세션 스토리지에 토큰이 존재하지 않을 경우 (비 로그인 유저인 경우)
+      로그인 모달을 열거나 닫습니다.
+      */
+      if(!sessionStorage.getItem("token"))
+      {
+        if (this.loginDialog) {
+          this.loginDialog = false
+        } else {
+          this.loginDialog = true
+        }
       }
     },
-    loginAccount(array) {
-      this.token = array[0]
+
+   
+    loginAccount(user) {
+      /*
+      email과 password를 담은 user: Object를 입력받아 로그인을 시도합니다.
+      로그인에 성공한 경우 응답(토큰)을 세션 스토리지에 저장합니다.
+      TODO : 로그인에 실패한 경우 에러 메세지 표시, 로그인에 성공한 경우 유저 정보를 모아 스토어에 저장
+      */
+      console.log(user)
+      axios({
+        url: cheertogether.members.login(),
+        method: 'POST',
+        data: user
+      }).then(res => {
+          sessionStorage.setItem('token', res.data)
+          this.isLogin = true
+          console.log(res.data)
+      }).catch(err => {
+          console.log(err)
+      })
     },
+    logoutAccount() {
+      sessionStorage.removeItem('token')
+      this.isLogin = false
+    }
   },
 })

@@ -41,7 +41,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const accountStore = useAccountStore()
-  const token = accountStore.token
+  const token = sessionStorage.getItem('token')
 
   //authPages에 로그인이 필요한 RouterView를 등록하면 됨
   const authPages = ['ArticleDetail',]

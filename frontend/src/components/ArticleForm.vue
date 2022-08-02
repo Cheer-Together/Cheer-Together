@@ -59,7 +59,7 @@ function completeButton() {
     title,
     content,
     updated_date: `${time.getHours()}:${time.getMinutes()}`,
-    author: accountStore.token,
+    author: '작성자 이름'
   }
   communityStore.writeArticle(contents)
   communityStore.communityToggle()
