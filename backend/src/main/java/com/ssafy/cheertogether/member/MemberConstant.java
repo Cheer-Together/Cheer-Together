@@ -1,6 +1,6 @@
 package com.ssafy.cheertogether.member;
 
-public class MemberConstant {
+public final class MemberConstant {
 	public static final String DUPLICATED_EMAIL_ERROR_MESSAGE = "이미 존재하는 이메일입니다.";
 	public static final String SEND_EMAIL_ERROR_MESSAGE = "이메일 전송에 실패하였습니다.";
 	public static final String MISMATCH_EMAIL_ERROR_MESSAGE = "가입되지 않은 이메일입니다.";
