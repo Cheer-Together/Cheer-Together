@@ -65,8 +65,10 @@ public class MemberService implements UserDetailsService {
 
 	@Transactional(readOnly = true)
 	public void checkDuplicateEmail(String email) {
-		memberRepository.findByEmail(email)
-			.orElseThrow(DuplicatedEmailException::new);
+		boolean isDuplicated = memberRepository.findByEmail(email).isPresent();
+		if(isDuplicated) {
+			throw new DuplicatedEmailException();
+		}
 	}
 
 	public void update(Long id, MemberModifyRequest memberModifyRequest) {
