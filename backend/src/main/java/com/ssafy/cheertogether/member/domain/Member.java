@@ -112,4 +112,8 @@ public class Member implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+
+	public void setTempPassword(String tempPassword) {
+		password = tempPassword;
+	}
 }

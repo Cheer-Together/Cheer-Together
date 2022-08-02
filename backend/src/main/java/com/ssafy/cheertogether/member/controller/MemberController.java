@@ -24,7 +24,6 @@ import com.ssafy.cheertogether.member.service.MemberService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,16 +45,17 @@ public class MemberController {
 
 	@GetMapping("/validate/duplicated")
 	@ApiOperation(value = "이메일 중복 확인", notes = "회원가입 시 이메일 중복 확인")
-	public ResponseEntity<String> checkDuplicateEmail(@RequestParam String email) {
+	public ResponseEntity<String> checkDuplicateEmail(
+		@ApiParam(value = "이메일", required = true, example = "choijoohee@naver.com") @RequestParam String email) {
 		memberService.checkDuplicateEmail(email);
-		return new ResponseEntity<>(CREATABLE_EMAIL_RESPONSE_MESSAGE, HttpStatus.OK);
+		return new ResponseEntity<>(CREATABLE_EMAIL_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 
 	@GetMapping("/authenticate/email")
 	@ApiOperation(value = "이메일 인증", notes = "이메일 인증을 위한 인증코드 메일 전송")
-	public ResponseEntity<String> sendEmail(
+	public ResponseEntity<String> authenticateEmail(
 		@ApiParam(value = "이메일", required = true, example = "choijoohee@naver.com") @RequestParam String email) {
-		return new ResponseEntity<>(emailService.sendMail(email), HttpStatus.OK);
+		return new ResponseEntity<>(emailService.sendAuthenticationMail(email), HttpStatus.OK);
 	}
 
 	@PostMapping("/join")
@@ -86,4 +86,14 @@ public class MemberController {
 		memberService.delete(id);
 		return new ResponseEntity<>(WITHDRAW_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
+
+	@GetMapping("/find/password")
+	@ApiOperation(value = "비밀번호 찾기", notes = "등록한 이메일로 임시 비밀번호를 전송")
+	public ResponseEntity<String> findPassword(
+		@ApiParam(value = "이메일", required = true, example = "choijoohee@naver.com") @RequestParam String email) {
+		String tempPassword = memberService.findPassword(email);
+		emailService.sendTempPassword(email, tempPassword);
+		return new ResponseEntity<>(FIND_PASSWORD_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+	}
+
 }
