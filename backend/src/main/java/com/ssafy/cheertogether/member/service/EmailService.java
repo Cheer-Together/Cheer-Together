@@ -20,6 +20,10 @@ import lombok.RequiredArgsConstructor;
 public class EmailService {
 	private final JavaMailSender javaMailSender;
 
+	/**
+	 * 이메일 인증을 받고자하는 사용자 이메일에 인증코드를 보낸다.
+	 * @param toEmail 인증코드를 받을 사용자 이메일
+	 */
 	public String sendAuthenticationMail(String toEmail) {
 		String certifiedCode = getCertifiedCode();
 		String content = setAuthenticateEmailContent(certifiedCode);
@@ -27,15 +31,22 @@ public class EmailService {
 		return certifiedCode;
 	}
 
+	/**
+	 * 임시 비밀번호를 사용자의 이메일로 전송
+	 * @param toEmail 임시 비밀번호를 받을 사용자 이메일
+	 * @param tempPassword 임시 비밀번호(영문,숫자,기호 포함 20자리 랜덤값)
+	 */
 	public void sendTempPassword(String toEmail, String tempPassword) {
 		sendMail(toEmail, "같이집관 임시 비밀번호 발급", setTempPasswordEmailContent(tempPassword));
 	}
 
 	/**
-	 * 이메일 인증을 받고자하는 사용자 이메일에 인증코드를 보낸다.
-	 * @param toEmail 인증코드를 받을 사용자 이메일
+	 * 이메일 전송
+	 * @param toEmail 전송할 이메일
+	 * @param subject 이메일 제목
+	 * @param content 이메일 내용
 	 */
-	public void sendMail(String toEmail, String subject, String content) {
+	private void sendMail(String toEmail, String subject, String content) {
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "UTF-8");
 

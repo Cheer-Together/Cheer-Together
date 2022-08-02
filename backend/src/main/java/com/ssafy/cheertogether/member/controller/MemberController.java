@@ -45,7 +45,8 @@ public class MemberController {
 
 	@GetMapping("/validate/duplicated")
 	@ApiOperation(value = "이메일 중복 확인", notes = "회원가입 시 이메일 중복 확인")
-	public ResponseEntity<String> checkDuplicateEmail(@RequestParam String email) {
+	public ResponseEntity<String> checkDuplicateEmail(
+		@ApiParam(value = "이메일", required = true, example = "choijoohee@naver.com") @RequestParam String email) {
 		memberService.checkDuplicateEmail(email);
 		return new ResponseEntity<>(CREATABLE_EMAIL_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
@@ -88,7 +89,8 @@ public class MemberController {
 
 	@GetMapping("/find/password")
 	@ApiOperation(value = "비밀번호 찾기", notes = "등록한 이메일로 임시 비밀번호를 전송")
-	public ResponseEntity<String> findPassword(@RequestParam String email) {
+	public ResponseEntity<String> findPassword(
+		@ApiParam(value = "이메일", required = true, example = "choijoohee@naver.com") @RequestParam String email) {
 		String tempPassword = memberService.findPassword(email);
 		emailService.sendTempPassword(email, tempPassword);
 		return new ResponseEntity<>(FIND_PASSWORD_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
