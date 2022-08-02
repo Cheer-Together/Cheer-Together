@@ -36,8 +36,8 @@ public class LeagueService {
 	 * 리그 api id를 통한 리그 정보 조회
 	 */
 	public LeagueResponse findByApiId(int apiId) {
-		leagueRepository.findLeagueByApiId(apiId)
+		League league = leagueRepository.findLeagueByApiId(apiId)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE));
-		return LeagueResponse.from(leagueRepository.findLeagueByApiId(apiId).get());
+		return LeagueResponse.from(league);
 	}
 }
