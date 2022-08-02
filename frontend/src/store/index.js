@@ -1,16 +1,7 @@
 import { defineStore } from 'pinia'
+import axios from 'axios'
+import cheertogether from '@/api/cheertogether'
 
-// export const useCounterStore = defineStore('counter', {
-//   state: () => ({ count: 0 }),
-//   getters: {
-//     double: state => state.count * 2,
-//   },
-//   actions: {
-//     increment() {
-//       this.count++
-//     },
-//   },
-// })
 export const useSignupStore = defineStore('signup', {
   state: () => ({
     favoriteLeague: false,
@@ -146,6 +137,36 @@ export const useAccountStore = defineStore('account', {
   getters: {
   },
   actions: {
+    emailAuth(email) {
+      /* 
+      POST: 사용자 입력정보를 signup URL로 보내기
+        성공하면
+          응답 토큰 저장
+          현재 사용자 정보 받기
+          메인 페이지(MovieListView)로 이동
+        실패하면
+          에러 메시지 표시
+      */
+     console.log('여기까지 됨?')
+      axios({
+        url: cheertogether.members.emailAuth(),
+        method: 'GET',
+        params: {
+          email: email,
+        }  
+      })
+        .then(res => {
+          console.log(res.data)
+        })
+        .catch(err => {
+          console.log(err)
+
+          // commit('SET_AUTH_ERROR', err.response.data)
+        })
+    },
+
+
+
     loginDialogToggle(){
       if (this.loginDialog) {
         this.loginDialog = false
