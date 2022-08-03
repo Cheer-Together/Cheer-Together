@@ -15,6 +15,7 @@ public class TeamResponse {
 
 	private String leagueName;
 	private String name;
+	private String hanName;
 	private String logo;
 	private String code;
 	private int apiId;
@@ -23,6 +24,7 @@ public class TeamResponse {
 		return TeamResponse.teamResponseBuilder()
 			.leagueName(team.getLeague().getName())
 			.name(team.getName())
+			.hanName(team.getHanName())
 			.logo(team.getLogo())
 			.code(team.getCode())
 			.apiId(team.getApiId())
