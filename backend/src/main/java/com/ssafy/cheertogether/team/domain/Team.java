@@ -31,4 +31,5 @@ public class Team {
 	private String logo;
 	private String code;
 	private int apiId;
+	private String hanName;
 }
