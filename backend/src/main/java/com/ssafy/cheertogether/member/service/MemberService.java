@@ -19,6 +19,7 @@ import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
+import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
 
@@ -32,6 +33,13 @@ public class MemberService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 	private final LeagueRepository leagueRepository;
 	private final FavoriteLeagueRepository favoriteLeagueRepository;
+
+	@Transactional(readOnly = true)
+	public MemberResponse findMember(Long id) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
+		return new MemberResponse(member);
+	}
 
 	/**
 	 * 회원 가입
@@ -87,7 +95,6 @@ public class MemberService implements UserDetailsService {
 				FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId).get()));
 		}
 		findMember.setFavoriteLeagueList(favoriteLeagueList);
-
 	}
 
 	public void delete(Long id) {
