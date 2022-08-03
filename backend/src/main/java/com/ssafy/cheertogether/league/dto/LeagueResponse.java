@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 public class LeagueResponse {
 
 	private String name;
+	private String hanName;
 	private String logo;
 	private int apiId;
 	private List<Team> teamList;
@@ -24,6 +25,7 @@ public class LeagueResponse {
 	public static LeagueResponse from(final League league) {
 		return LeagueResponse.leagueBuilder()
 			.name(league.getName())
+			.hanName(league.getHanName())
 			.logo(league.getLogo())
 			.apiId(league.getApiId())
 			.teamList(league.getTeamList())
