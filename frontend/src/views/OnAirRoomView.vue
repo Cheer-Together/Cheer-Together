@@ -6,7 +6,7 @@
       <!-- 헤더 -->
       <div class="onair-header">
         <div>
-          <h1>실시간 집관 페이지</h1>
+          <h1>프리미어리그</h1>
         </div>
         <div class="onair-header-boxes">
           <div>

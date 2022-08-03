@@ -10,16 +10,16 @@
       </div>
     </div>
     <!-- 실시간 집관 -->
-    <div class="sideBar-item">
+    <div class="sideBar-item" @click="this.$router.push({name: 'Onair'})">
       <v-icon class="sideBar-item-icon">
         mdi-video-outline
       </v-icon>
-      <div class="sideBar-item-title">
+      <div class="sideBar-item-title" >
         실시간 집관
       </div>
     </div>
     <!-- 프리미어리그 -->
-    <div class="sideBar-subtitle">
+    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair'})">
       프리미어리그
     </div>
     <!-- 라리가 -->
