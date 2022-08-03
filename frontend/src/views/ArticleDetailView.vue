@@ -29,7 +29,7 @@
         </div>
       </div>
       <div style="display:flex; align-items: center; width:790px; height:36px; margin: 20px 10px 25px;">
-        <input type="text" size="34px" maxlength="30" placeholder=" 여기에 댓글을 달아주세요." style="width:650px; height:34px; border-radius:5px; border: 1px solid #bcbcbc;">
+        <input type="text" maxlength="30" placeholder=" 여기에 댓글을 달아주세요." style="width:650px; height:34px; border-radius:5px; border: 1px solid #bcbcbc;">
         <v-btn style="height:34px; margin-left:20px">댓글작성</v-btn>
       </div>
     </div>
