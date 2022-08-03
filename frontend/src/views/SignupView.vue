@@ -3,8 +3,7 @@
     <div style="display:flex;">
     <SideBar/>
     <div class="signup">
-      <div class="signup-image">
-        
+      <div class="signup-image" >
       </div>
       <!-- 이메일 -->
       <div class="signup-range" v-if="!accountStore.emailDoubleChecked">
@@ -133,10 +132,8 @@
       <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 리그
-           <!-- <button style="border:1px solid black;" @click="signupStore.toggleFavoriteLeague()">click me</button> -->
-
           <v-dialog
-            v-model="signupStore.favoriteLeague"
+            v-model="leagueStore.favoriteLeague"
           >
             <template v-slot:activator="{ props }">
               <v-icon class="sideBar-item-icon" v-bind="props">
@@ -146,25 +143,25 @@
             <!-- 모달 창 -->
             <FavoriteLeagueModal/>
           </v-dialog>
-          <div v-if="signupStore.selectLeague.length !== 0" class="signup-favorite-league">
+          <div v-if="leagueStore.selectLeague.length !== 0" class="signup-favorite-league">
             <div class="signup-favorite-league-item">
-              <img :src="signupStore.selectLeague[0].img" class="signup-favorite-league-image">
+              <img :src="leagueStore.selectLeague[0].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ signupStore.selectLeague[0].title }}
+                {{ leagueStore.selectLeague[0].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="signupStore.selectLeague.length >= 2" >
-              <img :src="signupStore.selectLeague[1].img" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="leagueStore.selectLeague.length >= 2" >
+              <img :src="leagueStore.selectLeague[1].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ signupStore.selectLeague[1].title }}
+                {{ leagueStore.selectLeague[1].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="signupStore.selectLeague.length == 3" >
-              <img :src="signupStore.selectLeague[2].img" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="leagueStore.selectLeague.length == 3" >
+              <img :src="leagueStore.selectLeague[2].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ signupStore.selectLeague[2].title }}
+                {{ leagueStore.selectLeague[2].hanName }}
               </div>
             </div>
           </div>        
@@ -176,7 +173,7 @@
         <div class="signup-range-title">
           좋아하는 팀    
           <v-dialog
-            v-model="signupStore.favoriteTeam"
+            v-model="leagueStore.favoriteTeam"
           >
             <template v-slot:activator="{ props }">
               <v-icon class="sideBar-item-icon" v-bind="props">
@@ -186,25 +183,25 @@
             <!-- 모달 창 -->
             <FavoriteTeamModal/>
           </v-dialog>
-          <div v-if="signupStore.selectTeam.length !== 0" class="signup-favorite-league">
+          <div v-if="leagueStore.selectTeam.length !== 0" class="signup-favorite-league">
             <div class="signup-favorite-league-item">
-              <img :src="signupStore.selectTeam[0].img" class="signup-favorite-league-image">
+              <img :src="leagueStore.selectTeam[0].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ signupStore.selectTeam[0].name }}
+                {{ leagueStore.selectTeam[0].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="signupStore.selectTeam.length >= 2" >
-              <img :src="signupStore.selectTeam[1].img" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="leagueStore.selectTeam.length >= 2" >
+              <img :src="leagueStore.selectTeam[1].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ signupStore.selectTeam[1].name }}
+                {{ leagueStore.selectTeam[1].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="signupStore.selectTeam.length == 3" >
-              <img :src="signupStore.selectTeam[2].img" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="leagueStore.selectTeam.length == 3" >
+              <img :src="leagueStore.selectTeam[2].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ signupStore.selectTeam[2].name }}
+                {{ leagueStore.selectTeam[2].hanName }}
               </div>
             </div>
           </div>  
@@ -229,11 +226,11 @@ import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
 import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
-import { useSignupStore } from "@/store"
 import { useAccountStore } from "@/store"
+import { useLeagueStore } from "@/store"
 import Swal from 'sweetalert2'
 
-const signupStore = useSignupStore()
+const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()
 
 // 회원가입 시 변수 초기화 영역
@@ -244,6 +241,9 @@ accountStore.passwordAccordance = '';
 accountStore.passwordAccordance2 = '';
 accountStore.isPushEmail = false;
 accountStore.isShowPasswordError = '';
+leagueStore.selectLeague = []
+leagueStore.selectTeam = []
+
 let userInputEmailAuthCode = ''
 let credentialsSignup = {
   email: "",
@@ -253,6 +253,7 @@ let credentialsSignup = {
   profileImage: '.',
   role: 'user'
 }
+
 const pushEmail = (email) => {
   if (!accountStore.emailDoubleChecked){
     Swal.fire({
@@ -285,7 +286,7 @@ const changeSignUp = (credentialsSignup) => {
       title: '비밀번호를 입력하세요!',
     })
   }
-  else if (accountStore.passwordAccordance == accountStore.passwordAccordance2) {
+  else if (accountStore.passwordAccordance != accountStore.passwordAccordance2) {
     Swal.fire({
       icon: 'error',
       title: '비밀번호가 일치하지 않습니다!',
@@ -293,7 +294,9 @@ const changeSignUp = (credentialsSignup) => {
   }
   else {
     credentialsSignup.password = accountStore.passwordAccordance
-
+    accountStore.passwordAccordance = ''
+    accountStore.passwordAccordance2 = ''
+    
     accountStore.signUp(credentialsSignup)
   }
 }
@@ -309,6 +312,7 @@ const changeSignUp = (credentialsSignup) => {
   border-radius: 200px;
   border: 1px solid #D9D9D9;
   margin: 0 auto 35px;
+  padding-top: 85px;
 }
 .signup-range {
   width: 420px;
