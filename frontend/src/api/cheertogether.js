@@ -9,6 +9,9 @@ export default {
     emailDoubleCheck: () => HOST + MEMBERS + 'validate/duplicated',
     signUp: () => HOST + MEMBERS + 'join',
   },
+  league: {
+    leaguesAll: () => HOST + 'leagues',
+  },
   article: {
 
   },

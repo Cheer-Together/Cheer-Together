@@ -458,3 +458,54 @@ export const useAccountStore = defineStore('account', {
     },
   },
 })
+export const useLeagueStore = defineStore('league', {
+  state: () => ({ 
+    leagues: [
+      {
+        logo: '',
+      }
+    ]
+    }
+  ),
+  actions: {
+    leaguesAll () {
+      /*
+      앱 시작할 때 실행 시키고, 전체 데이터를 leagues에 담는다.
+      */
+      axios({
+        url: cheertogether.league.leaguesAll(),
+        method: 'GET',
+      })
+        .then(res => {
+          console.log(res.data)
+          this.leagues = res.data
+
+          this.leagues.forEach( league => {
+            if (league.name === 'Premier League') {
+              league.name = '프리미어리그'
+            }
+            else if (league.name === 'La Liga') {
+              league.name = '라리가'
+            }
+            else if (league.name === 'Serie A') {
+              league.name = '세리에A'
+            }
+            else if (league.name === 'Bundesliga') {
+              league.name = '분데스리가'
+            }
+            else if (league.name === 'Ligue 1') {
+              league.name = '리그 1'
+            }
+            else if (league.name === 'K League 1') {
+              league.name = 'K리그1'
+            }
+          });
+
+
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+  },
+})

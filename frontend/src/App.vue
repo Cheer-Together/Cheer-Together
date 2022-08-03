@@ -5,6 +5,10 @@
 
 <script setup>
 import LoginView from "./views/LoginView.vue"
+import { useLeagueStore } from "@/store"
+
+const leagueStore = useLeagueStore()
+leagueStore.leaguesAll() 
 </script>
 
 <style>
