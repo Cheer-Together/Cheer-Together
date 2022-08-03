@@ -2,10 +2,11 @@
   <NavBar/>
   <div style="display:flex;">
     <SideBar/>
-    <div class="MainPage">
+    <div class="mainPage">
       <FavoriteTeam/>
       <PopularMatch/>
       <TodayMatchList/>
+      <MainNews/>
     </div>
   </div>
 </template>
@@ -16,11 +17,16 @@ import SideBar from "../components/SideBar.vue"
 import FavoriteTeam from "../components/FavoriteTeam.vue"
 import PopularMatch from "../components/PopularMatch.vue"
 import TodayMatchList from "../components/TodayMatchList.vue"
+import MainNews from "../components/MainNews.vue"
 </script>
 
 <style>
-.MainPage {
-  margin: 50px 0 0 65px;
+.mainPage {
+  margin: 130px 0 0 275px;
 }
-
+@media (max-width: 1580px) {
+.mainPage {
+  margin: 90px 0 0 200px;
+}
+}
 </style>

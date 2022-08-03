@@ -83,20 +83,28 @@
           </div>
         </div>
 
-        <div class="schedule-list-items">
+        <div class="schedule-list-items" v-for="match in matches" :key="match.date">
           <div class="schedule-date">
-            <p>8월 1일</p>
+            <p>{{ match.date }}</p>
           </div>
           <div class="schedule-time">
-            <p>00:30</p>
+            <p>{{ match.time }}</p>
           </div>
           <div class="schedule-stadium">
-            <p>Selhurst Park</p>
+            <p>{{ match.stadium }}</p>
           </div>
           <div class="schedule-matches">
-            <p>팰리스 VS 아스널</p>
+            <div v-if="!!match.time">
+              <p>{{ match.team1 }}</p>
+              <img :src="match.team1_logo" class="team-logo">
+              <p>VS</p> 
+              <img :src="match.team2_logo" class="team-logo">
+              <p>{{ match.team2 }}</p>
+            </div>
+            <div v-if="!match.time" class="no-match">경기가 없습니다.</div>
           </div>
         </div>
+        
 
       </div>
     </div>
@@ -106,12 +114,41 @@
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
+// import { ref } from 'vue'
+
+const matches = [
+  {
+    date: '8월 1일',
+    time: '00:30',
+    stadium: 'Selhurst Park',
+    team1: '크리스탈팰리스',
+    team2: '아스날',
+    team1_logo: require('../assets/image/프리미어리그/크리스탈팰리스.png'),
+    team2_logo: require('../assets/image/프리미어리그/아스날.png')
+  },
+  {
+    date: '8월 2일',
+    time: '',
+    stadium: '',
+    team1: '',
+    team2: ''
+  },
+  {
+    date: '8월 3일',
+    time: '',
+    stadium: '',
+    team1: '',
+    team2: ''
+  },
+
+]
+
 </script>
 
 <style>
 .schedule-page{
-  margin-top: 50px;
-  margin-left: 65px;
+  margin-top: 130px;
+  margin-left: 470px;
 }
 
 .schedule-page-leagues {
@@ -119,27 +156,37 @@ import SideBar from "../components/SideBar.vue"
   width: 1000px;
   height: 50px;
   background-color: var(--sub-color);
-  
+  margin: 0 auto;
 }
 
 .schedule-page-league-items{
-  margin-left: 65px;
+  width: calc(1000px / 6);
   margin-top: 8px;
   font-size: 25px;
+  text-align: center;
+}
+
+.schedule-page-select {
+  margin: 50px auto;
+  width: 1000px;
 }
 
 .schedule-page-season-select {
-  margin-top: 40px;
-  margin-left: 400px;
+  text-align: center;
 }
 
 .schedule-page-month-select {
   display: flex;
-  margin-left: 100px;
+  width: 1000px;
+  height: 70px;
+  justify-content: space-evenly;
+  margin: 10px 0;
+  
 }
 
 .schedule-page-month-item {
-  margin: 5px 40px 40px 5px;
+  text-align: center;
+  margin-top: 25px;
 }
 
 .schedule-page-month-item .item-active {
@@ -150,35 +197,59 @@ import SideBar from "../components/SideBar.vue"
   color: #2E6AFD
 }
 
+.schedule-list {
+  width: 1000px;
+}
+
 .schedule-list-title {
   display: flex;
   border-bottom: 1px solid #bcbcbc
 }
 
-
 .schedule-list-items {
   display: flex;
   margin-top: 5px;
+  border-bottom: 1px solid #d1cfcf;
 }
 
 .schedule-date {
   width: 140px;
   text-align: center;
+  margin: auto;
 }
 
 .schedule-time {
   width: 80px;
   text-align: center;
+  margin: auto;
 }
 
 .schedule-stadium {
   width: 230px;
   text-align: center;
+  margin: auto;
 }
 
 .schedule-matches {
   width: 700px;
   text-align: center;
+  margin: auto;
 }
+
+.schedule-matches div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.schedule-matches .team-logo {
+  width: 35px;
+  height: 35px;
+}
+
+.schedule-matches .no-match {
+  color: #a7a4a4
+}
+
 
 </style>

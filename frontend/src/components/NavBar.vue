@@ -1,45 +1,75 @@
 <template>
-  <div class="NavBar">
-    <img :src="navBarLogo" width="80" class="NavBar-logo">
-    <div class="NavBar-items">
-      <div class="NavBar-item">
+  <div class="navBar">
+    <img :src="navBarLogo" class="navBar-logo">
+    <div class="navBar-items">
+      <div v-if="accountStore.isLogin" @click="accountStore.logoutAccount()" class="navBar-item">
+        로그아웃
+      </div>
+      <div v-else @click="accountStore.loginDialogToggle()" class="navBar-item">
         로그인
       </div>
-      <div class="NavBar-item">
+      <div class="navBar-item" @click="this.$router.push({ name:'Signup', })">
         회원가입
       </div>
       <div>
-        {{ token }}
       </div>
-      <!-- <v-icon>
-        mdi-account
-      </v-icon> -->
     </div>
   </div>
 </template>
 
 <script setup>
-const navBarLogo = require('../assets/image/임시로고.png');
+import { useAccountStore } from '@/store'
+const accountStore = useAccountStore()
+const navBarLogo = require('../assets/image/로고.png');
 </script>
 
 <style>
-.NavBar {
+.navBar {
+  width: 100%;
   height: 80px;
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid var(--main-color);
+  position: fixed;
+  background-color: #ffffff;
+  top: 0;
+  z-index: 1;
 }
-.NavBar-logo {
+.navBar-logo {
   margin-left: 30px;
+  width: 80px;
 }
-.NavBar-items {
+.navBar-items {
   display: flex;
   margin-right: 100px;
 }
-.NavBar-item {
+.navBar-item {
   width: 100px;
   height: 18px;
   text-align: center;
   margin: auto 0;
+}
+.navBar-item:hover {
+  color: var(--main-color);
+  cursor: pointer;
+}
+
+@media (max-width: 1580px) {
+.navBar {
+  height: 60px;
+}
+.navBar-logo {
+  margin-left: 20px;
+  width: 60px;
+}
+.navBar-items {
+  display: flex;
+  margin-right: 30px;
+}
+.navBar-item {
+  font-size: 12px;
+  width: 80px;
+  height: 18px;
+}
 }
 </style>
