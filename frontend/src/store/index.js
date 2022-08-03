@@ -100,6 +100,7 @@ export const useAccountStore = defineStore('account', {
     isPushEmail: false,
     isAllowPassword: false,
     isShowPasswordError: '',
+    myImage: '',
   }),
   getters: {
   },

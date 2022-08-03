@@ -1,10 +1,27 @@
 <template>
   <NavBar/>  
-    <div style="display:flex;">
+  <div style="display:flex;">
     <SideBar/>
     <div class="signup">
-      <div class="signup-image" >
+      <div class="signup-image" v-if="!accountStore.myImage">
+        <label for="input-file" style="padding:66px 30px 66px 35px;">
+          <v-icon class="sideBar-item-icon">
+            mdi-image-search
+          </v-icon>
+          이미지 올리기
+        </label>
+
       </div>
+
+      <div v-if="accountStore.myImage" class="signup-image" :style="{'background-image': `url(${accountStore.myImage})`}">
+        <label for="input-file" style="padding:66px 150px 66px 35px;">
+          &nbsp;
+        </label>
+      </div>
+
+
+      <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'>
+
       <!-- 이메일 -->
       <div class="signup-range" v-if="!accountStore.emailDoubleChecked">
         <div class="signup-range-title">
@@ -250,9 +267,15 @@ let credentialsSignup = {
   myInfo: "",
   nickname: "",
   password: '',
-  profileImage: '.',
+  profileImage: '',
   role: 'user'
 }
+
+const onInputImage = (e) => {
+  let url = URL.createObjectURL(e.target.files[0])
+  accountStore.myImage = url
+}
+
 
 const pushEmail = (email) => {
   if (!accountStore.emailDoubleChecked){
@@ -294,9 +317,10 @@ const changeSignUp = (credentialsSignup) => {
   }
   else {
     credentialsSignup.password = accountStore.passwordAccordance
+    credentialsSignup.profileImage = accountStore.myImage
     accountStore.passwordAccordance = ''
     accountStore.passwordAccordance2 = ''
-    
+    accountStore.myImage = ''
     accountStore.signUp(credentialsSignup)
   }
 }
@@ -313,6 +337,12 @@ const changeSignUp = (credentialsSignup) => {
   border: 1px solid #D9D9D9;
   margin: 0 auto 35px;
   padding-top: 85px;
+  background-size: cover;
+  background-repeat:no-repeat ;
+  background-position: center;
+}
+.signup-image:hover {
+  cursor: pointer;
 }
 .signup-range {
   width: 420px;
