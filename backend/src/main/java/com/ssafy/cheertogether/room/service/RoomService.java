@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.cheertogether.room.domain.Room;
 import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
+import com.ssafy.cheertogether.room.dto.RoomModifyRequest;
 import com.ssafy.cheertogether.room.dto.RoomResponse;
 import com.ssafy.cheertogether.room.repository.RoomRepository;
 
@@ -44,5 +45,11 @@ public class RoomService {
 
 	public void createRoom(RoomCreateRequest roomCreateRequest) {
 		roomRepository.save(Room.from(roomCreateRequest));
+	}
+
+	public void modifyRoom(RoomModifyRequest modifyRequest) {
+		Room room = roomRepository.findById(modifyRequest.getId())
+			.orElseThrow(() -> new IllegalArgumentException(MODIFY_ROOM_ERROR_MESSAGE));
+		room.update(modifyRequest);
 	}
 }

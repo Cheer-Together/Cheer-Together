@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
+import com.ssafy.cheertogether.room.dto.RoomModifyRequest;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -52,6 +53,10 @@ public class Room {
 			.build();
 	}
 
-	public void update() {
+	public void update(RoomModifyRequest roomModifyRequest) {
+		matchId = roomModifyRequest.getMatchId();
+		name = roomModifyRequest.getName();
+		status = roomModifyRequest.getStatus();
+		password = roomModifyRequest.getPassword();
 	}
 }
