@@ -540,3 +540,29 @@ export const useLeagueStore = defineStore('league', {
     }
   },
 })
+export const useScheduleStore = defineStore('schedule', {
+  state: () => ({
+    schedules: []
+  }),
+  actions: {
+    clickLeague(event) {
+      const activeTag = document.querySelector('.league-active')
+      activeTag.classList.remove('league-active')
+      const clickedTag = event.target
+      clickedTag.classList.add('league-active')
+      const activeMonthTag = document.querySelector('.item-active')
+      activeMonthTag.classList.remove('item-active')
+      const firstMonthTag = document.querySelector('.schedule-page-month-item p')
+      firstMonthTag.classList.add('item-active')
+      // axios({})
+    },
+
+    clickMonth (event) {
+      const activeTag = document.querySelector('.item-active')
+      activeTag.classList.remove('item-active')
+      const clickedTag = event.target
+      clickedTag.classList.add('item-active')
+      // axios({})
+    }
+  }
+})
