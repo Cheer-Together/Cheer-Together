@@ -1,5 +1,6 @@
 <template>
   <v-card class="favorite-league-modal">
+    <!-- 헤더 영역 -->
     <div class="favorite-league-modal-title">
       좋아하는 리그
     </div>
@@ -125,6 +126,7 @@ const addSelectLeague = (bigLeague) => {
 .favorite-league-modal-footer {
   border-top: 1px solid black;
   display: flex;
+  position: relative;
 }
 .favorite-league-modal-footer-item {
   margin: 15px 20px;
@@ -148,5 +150,14 @@ const addSelectLeague = (bigLeague) => {
   background-color: #0066A2;
   border-radius: 5px;
   right: 15px;
+}
+@media (max-width: 1580px) {
+  .favorite-league-modal {
+    transform: scale(0.8);
+    min-height: 720px;
+  }
+  .favorite-league-modal-section {
+    min-height: 440px;
+  }
 }
 </style>

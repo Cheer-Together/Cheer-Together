@@ -14,7 +14,10 @@
     <!-- 리그 선택 영역 -->
     <div class="favorite-team-modal-select-buttons">
       <div v-for="selectFavoriteTeams in signupStore.selectFavoriteTeams" :key="selectFavoriteTeams.name" class="favorite-team-modal-select-button" @click="changeLeague(selectFavoriteTeams.name)">
-        {{ selectFavoriteTeams.name }}
+        <p v-if="signupStore.selectFavoriteTeam == selectFavoriteTeams.name" class="active-button"> {{ selectFavoriteTeams.name }} </p >
+        <p v-else class="passive-button"> {{ selectFavoriteTeams.name }} </p >
+        
+       
       </div>
     </div>
     <!-- 리그 영역 -->
@@ -130,11 +133,8 @@ const changeLeague = (name) => {
   font-size: 18px;
   margin: 10px 25px;
   text-align: center;
-  border: 1px solid var(--main-color);
-  border-radius: 5px;
   font-family: 'MICEGothic Bold';
-  color: var(--main-color);
-  background-color: var(--sub-color);
+
 }
 .favorite-team-modal-teams-section {
   width: 600px;
@@ -190,5 +190,17 @@ const changeLeague = (name) => {
   background-color: #0066A2;
   border-radius: 5px;
   right: 15px;
+}
+.active-button {
+  background-color: var(--main-color);
+  color: white;
+  border-radius: 5px;
+}
+.passive-button {
+  background-color: var(--sub-color);
+  border: 1px solid var(--main-color);
+  color: var(--main-color);
+  border-radius: 5px;
+
 }
 </style>
