@@ -53,7 +53,7 @@ import router from "@/router"
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
 function writeButton() {
-  if (accountStore.token) {
+  if (accountStore.isLogin) {
     communityStore.communityToggle()
   } else {
     accountStore.loginDialogToggle()

@@ -18,18 +18,18 @@
                 <p>로그인 후 이용하실 수 있습니다.</p>
               </div>
               <div style="margin-top:20px">
-                <input v-model="id" type="text" placeholder=" 아이디" style="width:340px; height:50px; border-radius:1px; border: 1px solid #bcbcbc;">
+                <input v-model="loginId" type="text" placeholder=" 아이디" style="width:340px; height:50px; border-radius:1px; border: 1px solid #bcbcbc;">
               </div>
               <div style="margin-top:20px">
-                <input v-model="password" type="password" placeholder=" 비밀번호" style="width:340px; height:50px; border-radius:1px; border: 1px solid #bcbcbc;">
+                <input v-model="loginPassword" type="password" placeholder=" 비밀번호" style="width:340px; height:50px; border-radius:1px; border: 1px solid #bcbcbc;">
               </div>
               <v-btn
                 style="margin-top:22px; color:white;"
                 color="#2E6AFD"
                 width="340px"
-                @click="loginButton()"
+                @click.prevent="loginButton()"
               >
-              로그인
+                로그인
               </v-btn>
               <div style="margin-top: 70px;">
                 <p>아이디 찾기 | 비밀번호 찾기 | 회원가입</p>
@@ -38,7 +38,7 @@
                 style="margin-top:22px;  color:white;"
                 color="#1EC800"
                 width="340px"
-                @click="social='네이버', dialog2=true"
+                @click.prevent="social='네이버', dialog2=true"
               >
               네이버로 로그인
               </v-btn>
@@ -46,7 +46,7 @@
                 style="margin-top:22px;"
                 color="#FEE500"
                 width="340px"
-                @click="social='카카오', dialog2=true"
+                @click.prevent="social='카카오', dialog2=true"
               >
               카카오로 로그인
               </v-btn>
@@ -61,7 +61,6 @@
             >
               Close
             </v-btn>
-            <p>{{id}} | {{password}} | {{accountStore.token}}</p>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -121,13 +120,16 @@ import { useAccountStore } from "@/store"
 const accountStore = useAccountStore()
 const dialog2 = ref(false) // 아이디, 비밀번호 잘못 입력시
 const dialog3 = ref(false) // 추후에 소셜 로그인을 위한 모달
-const id = ref('')
-const password = ref('')
+const loginId = ref('')
+const loginPassword = ref('')
 const social = ref('')
 function loginButton() {
-  if (this.id&&this.password) {
+  if (this.loginId&&this.loginPassword) {
+    const user = {email:this.loginId, password:this.loginPassword}
+    accountStore.loginAccount(user)
     accountStore.loginDialogToggle()
-    accountStore.loginAccount([this.id, this.password])
+    this.loginId = ''
+    this.loginPassword = ''
   } else {
     this.dialog3 = true
   }
