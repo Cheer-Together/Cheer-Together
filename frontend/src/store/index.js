@@ -229,7 +229,7 @@ export const useCommunityStore = defineStore('community', {
           updated_date: '8:32',
           author: '아카페라모카라때',
           recommended: 5
-        }
+        },
       ]
     }
   ),
@@ -486,6 +486,19 @@ export const useAccountStore = defineStore('account', {
     logoutAccount() {
       sessionStorage.removeItem('token')
       this.isLogin = false
+    },
+    findPassword(email) {
+      axios({
+        url: cheertogether.members.findPassword(),
+        method: 'GET',
+        params: {
+          email: email,
+        }  
+      }).then(res => {
+          console.log(res.data)
+      }).catch(err => {
+          console.log(err)
+      })
     }
   },
 })

@@ -9,6 +9,7 @@ export default {
     emailDoubleCheck: () => HOST + MEMBERS + 'validate/duplicated',
     signUp: () => HOST + MEMBERS + 'join',
     login: () => HOST + MEMBERS + 'login',
+    findPassword: () => HOST + MEMBERS + 'find/password'
   },
   league: {
     leaguesAll: () => HOST + 'leagues',
