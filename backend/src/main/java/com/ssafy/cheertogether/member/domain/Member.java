@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 
@@ -35,6 +39,9 @@ public class Member implements UserDetails {
 	private String profileImage;
 	private String role;
 	private String myInfo;
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
 
 	@Builder
 	public Member(String email, String nickname, String password, String profileImage, String role, String myInfo) {
@@ -75,6 +82,10 @@ public class Member implements UserDetails {
 		password = memberModifyRequest.getPassword();
 		profileImage = memberModifyRequest.getProfileImage();
 		myInfo = memberModifyRequest.getProfileImage();
+	}
+
+	public void setFavoriteLeagueList(List<FavoriteLeague> favoriteLeagueList) {
+		this.favoriteLeagueList = favoriteLeagueList;
 	}
 
 	@Override

@@ -3,7 +3,10 @@ package com.ssafy.cheertogether.member.service;
 import static com.ssafy.cheertogether.member.MemberConstant.*;
 
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,6 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
+import com.ssafy.cheertogether.favorite.repository.FavoriteLeagueRepository;
+import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
@@ -26,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 public class MemberService implements UserDetailsService {
 
 	private final MemberRepository memberRepository;
+	private final LeagueRepository leagueRepository;
+	private final FavoriteLeagueRepository favoriteLeagueRepository;
 
 	@Transactional(readOnly = true)
 	public MemberResponse findMember(Long id) {
@@ -39,7 +47,15 @@ public class MemberService implements UserDetailsService {
 	 * @param memberJoinRequest 회원가입 요청 폼
 	 */
 	public void join(MemberJoinRequest memberJoinRequest) {
-		memberRepository.save(Member.from(memberJoinRequest));
+		Member member = Member.from(memberJoinRequest);
+		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
+		favoriteLeagueList.addAll(memberJoinRequest
+			.getFavoriteLeagueList()
+			.stream()
+			.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+			.collect(Collectors.toList()));
+		member.setFavoriteLeagueList(favoriteLeagueList);
+		memberRepository.save(member);
 	}
 
 	/**
@@ -66,7 +82,7 @@ public class MemberService implements UserDetailsService {
 	@Transactional(readOnly = true)
 	public void checkDuplicateEmail(String email) {
 		boolean isDuplicated = memberRepository.findByEmail(email).isPresent();
-		if(isDuplicated) {
+		if (isDuplicated) {
 			throw new DuplicatedEmailException();
 		}
 	}
@@ -75,6 +91,14 @@ public class MemberService implements UserDetailsService {
 		Member findMember = memberRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
 		findMember.update(memberModifyRequest);
+		favoriteLeagueRepository.deleteFavoriteLeagueByMember_Email(findMember.getEmail());
+		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
+		favoriteLeagueList.addAll(memberModifyRequest
+			.getFavoriteLeagueList()
+			.stream()
+			.map(leagueApiId -> FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+			.collect(Collectors.toList()));
+		findMember.setFavoriteLeagueList(favoriteLeagueList);
 	}
 
 	public void delete(Long id) {
