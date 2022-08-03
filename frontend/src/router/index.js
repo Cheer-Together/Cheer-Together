@@ -34,7 +34,7 @@ const routes = [
     component: SignupView
   },
   {
-    path: '/onair',
+    path: '/onair/:leaguename',
     name: 'Onair',
     component: OnAirRoomView
   },
