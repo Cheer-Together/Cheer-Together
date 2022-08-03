@@ -6,6 +6,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,9 +49,11 @@ public class MemberService implements UserDetailsService {
 	public void join(MemberJoinRequest memberJoinRequest) {
 		Member member = Member.from(memberJoinRequest);
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
-		for (Integer leagueApiId : memberJoinRequest.getFavoriteLeagueList()) {
-			favoriteLeagueList.add(FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()));
-		}
+		favoriteLeagueList.addAll(memberJoinRequest
+			.getFavoriteLeagueList()
+			.stream()
+			.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+			.collect(Collectors.toList()));
 		member.setFavoriteLeagueList(favoriteLeagueList);
 		memberRepository.save(member);
 	}
@@ -90,10 +93,11 @@ public class MemberService implements UserDetailsService {
 		findMember.update(memberModifyRequest);
 		favoriteLeagueRepository.deleteFavoriteLeagueByMember_Email(findMember.getEmail());
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
-		for (Integer leagueApiId : memberModifyRequest.getFavoriteLeagueList()) {
-			favoriteLeagueList.add(
-				FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId).get()));
-		}
+		favoriteLeagueList.addAll(memberModifyRequest
+			.getFavoriteLeagueList()
+			.stream()
+			.map(leagueApiId -> FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+			.collect(Collectors.toList()));
 		findMember.setFavoriteLeagueList(favoriteLeagueList);
 	}
 
