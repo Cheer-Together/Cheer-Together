@@ -2,7 +2,10 @@
   <div class="navBar">
     <img :src="navBarLogo" class="navBar-logo">
     <div class="navBar-items">
-      <div class="navBar-item">
+      <div v-if="accountStore.isLogin" @click="accountStore.logoutAccount()" class="navBar-item">
+        로그아웃
+      </div>
+      <div v-else @click="accountStore.loginDialogToggle()" class="navBar-item">
         로그인
       </div>
       <div class="navBar-item" @click="this.$router.push({ name:'Signup', })">
@@ -15,6 +18,8 @@
 </template>
 
 <script setup>
+import { useAccountStore } from '@/store'
+const accountStore = useAccountStore()
 const navBarLogo = require('../assets/image/로고.png');
 </script>
 
