@@ -70,8 +70,7 @@
 <style>
 .sideBar {
   min-width: 210px;
-  min-height: 889px;
-  max-height: 3000px;
+  height:100%;
   border-right: 1px solid var(--main-color);
   position: fixed;
   top: 80px;
