@@ -4,6 +4,7 @@ import ArticleView from '../views/ArticleView.vue'
 import ScheduleView from '../views/ScheduleView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
 import SignupView from '../views/SignupView.vue'
+import OnAirRoomView from '../views/OnAirRoomView.vue'
 import { useAccountStore } from "@/store"
 
 const routes = [
@@ -31,6 +32,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: SignupView
+  },
+  {
+    path: '/onair',
+    name: 'Onair',
+    component: OnAirRoomView
   },
 ]
 
