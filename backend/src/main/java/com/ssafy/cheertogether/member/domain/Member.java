@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 
 @Entity
@@ -26,6 +30,9 @@ public class Member implements UserDetails {
 	private String profileImage;
 	private String role;
 	private String myInfo;
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
 
 	public Member(String email, String nickname, String password, String profileImage, String role, String myInfo) {
 		this.email = email;
@@ -46,6 +53,20 @@ public class Member implements UserDetails {
 		return this.password.equals(password);
 	}
 
+<<<<<<< Updated upstream
+=======
+	public void update(MemberModifyRequest memberModifyRequest) {
+		nickname = memberModifyRequest.getNickname();
+		password = memberModifyRequest.getPassword();
+		profileImage = memberModifyRequest.getProfileImage();
+		myInfo = memberModifyRequest.getProfileImage();
+	}
+
+	public void setFavoriteLeagueList(List<FavoriteLeague> favoriteLeagueList) {
+		this.favoriteLeagueList = favoriteLeagueList;
+	}
+
+>>>>>>> Stashed changes
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
