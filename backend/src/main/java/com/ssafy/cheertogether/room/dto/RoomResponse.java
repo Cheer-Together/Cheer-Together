@@ -14,7 +14,7 @@ public class RoomResponse {
 	private final String password;
 	private final String managerId;
 
-	public RoomResponse(Room room){
+	public RoomResponse(Room room) {
 		roomId = room.getId();
 		matchId = room.getMatchId();
 		name = room.getName();

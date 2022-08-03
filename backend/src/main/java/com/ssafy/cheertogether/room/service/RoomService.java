@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.cheertogether.room.domain.Room;
+import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
 import com.ssafy.cheertogether.room.dto.RoomResponse;
 import com.ssafy.cheertogether.room.repository.RoomRepository;
 
@@ -41,5 +42,7 @@ public class RoomService {
 		return new RoomResponse(room);
 	}
 
-	
+	public void createRoom(RoomCreateRequest roomCreateRequest) {
+		roomRepository.save(Room.from(roomCreateRequest));
+	}
 }
