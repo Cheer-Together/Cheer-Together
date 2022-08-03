@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
+import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 
 @Entity
 public class Member implements UserDetails {
@@ -53,8 +54,6 @@ public class Member implements UserDetails {
 		return this.password.equals(password);
 	}
 
-<<<<<<< Updated upstream
-=======
 	public void update(MemberModifyRequest memberModifyRequest) {
 		nickname = memberModifyRequest.getNickname();
 		password = memberModifyRequest.getPassword();
@@ -66,7 +65,6 @@ public class Member implements UserDetails {
 		this.favoriteLeagueList = favoriteLeagueList;
 	}
 
->>>>>>> Stashed changes
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();

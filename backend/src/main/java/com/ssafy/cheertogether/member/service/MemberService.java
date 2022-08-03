@@ -2,14 +2,11 @@ package com.ssafy.cheertogether.member.service;
 
 import static com.ssafy.cheertogether.member.MemberConstant.*;
 
-<<<<<<< Updated upstream
-=======
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
->>>>>>> Stashed changes
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +18,7 @@ import com.ssafy.cheertogether.favorite.repository.FavoriteLeagueRepository;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
+import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
 
@@ -77,8 +75,6 @@ public class MemberService implements UserDetailsService {
 			throw new DuplicatedEmailException();
 		}
 	}
-<<<<<<< Updated upstream
-=======
 
 	public void update(Long id, MemberModifyRequest memberModifyRequest) {
 		Member findMember = memberRepository.findById(id)
@@ -87,7 +83,8 @@ public class MemberService implements UserDetailsService {
 		favoriteLeagueRepository.deleteFavoriteLeagueByMember_Email(findMember.getEmail());
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
 		for (Integer leagueApiId : memberModifyRequest.getFavoriteLeagueList()) {
-			favoriteLeagueList.add(FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId).get()));
+			favoriteLeagueList.add(
+				FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId).get()));
 		}
 		findMember.setFavoriteLeagueList(favoriteLeagueList);
 
@@ -125,5 +122,4 @@ public class MemberService implements UserDetailsService {
 		}
 		return sb.toString();
 	}
->>>>>>> Stashed changes
 }
