@@ -319,8 +319,8 @@ export const useAccountStore = defineStore('account', {
       sessionStorage.removeItem('token')
       this.isLogin = false
       Swal.fire({
-        icon: 'logout',
-        title: '로그아웃',
+        icon: 'success',
+        title: '성공적으로 로그아웃 되었습니다.',
       })
     },
     findPassword(email) {

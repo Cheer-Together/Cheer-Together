@@ -11,18 +11,17 @@
         ></v-select>
       </div>
       <div>
-        <input v-model="title" type="text" placeholder=" 제목을 입력하세요." style="width:580px; height:40px; border-radius:5px; border: 1px solid #bcbcbc;">
+        <input v-model="title" type="text" placeholder=" 제목을 입력하세요." class="write-title">
       </div>
     </div>
 
     <div class="write-author">
       <div style="width:34px; height:34px; background-color: aquamarine; margin:0 10px 0 10px;">
       </div>
-
       <a>{{accountStore.token}} | {{ now }}</a>
     </div>
     <div style="width:790px; margin-bottom: 15px;">
-      <textarea v-model="content" placeholder="내용을 입력하세요. 우측 하단을 드래그하여 높이를 변경할 수 있습니다." style="width:790px; height:300px; border-radius:5px; border: 1px solid #bcbcbc;"></textarea>
+      <textarea v-model="content" placeholder="내용을 입력하세요. 우측 하단을 드래그하여 높이를 변경할 수 있습니다." class="write-content"></textarea>
     </div>
     <div class="write-bottom">
       <v-btn @click="communityStore.communityToggle()" class="write-button">취소하기</v-btn>
@@ -100,5 +99,17 @@ function completeButton() {
 .write-button {
   height:34px; 
   margin:0 10px 0 10px;
+}
+.write-title {
+  width:580px;
+  height:40px;
+  border-radius:5px;
+  border: 1px solid #bcbcbc;
+}
+.write-content {
+  width:790px;
+  height:300px;
+  border-radius:5px;
+  border: 1px solid #bcbcbc;
 }
 </style>

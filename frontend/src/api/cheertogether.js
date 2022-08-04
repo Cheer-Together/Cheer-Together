@@ -1,4 +1,4 @@
-const HOST = 'http://i7b204.p.ssafy.io/cheertogether/'
+const HOST = 'https://i7b204.p.ssafy.io/cheertogether/'
 
 const MEMBERS = 'members/'
 // const article = 'article/'

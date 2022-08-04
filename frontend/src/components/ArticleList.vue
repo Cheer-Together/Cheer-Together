@@ -1,6 +1,6 @@
 <template>
   <div class="community-main">
-    <div style="display:flex; justify-content: space-between; height:60px">
+    <div class="community-list-top">
       <div style="width:200px;">
         <v-select
         :items="items"
@@ -13,13 +13,13 @@
         <v-btn @click="writeButton()" style="height:40px; margin-left:20px">글 작성하기</v-btn>
       </div>
     </div>
-    <div style="display:flex; height:38px; margin:0; text-align: center; align-items: center; border-bottom: 1px solid #bcbcbc;">
+    <div class="community-list-header">
       <div v-for="header in headers" :key="header.name" :style="header.style">
         {{header.name}}
       </div>
     </div>
 
-    <div v-for="article in pagedArticles" :key="article.article_id" style="display:flex; height:36px; margin:0; text-align: center; align-items: center;">
+    <div v-for="article in pagedArticles" :key="article.article_id" class="community-list-articles">
       <div style="width:100px">
         <p>{{article.category}}</p>
       </div>
@@ -37,11 +37,11 @@
       </div>
     </div>
 
-    <div style="display:flex; text-align: center; align-items: center; width:600px; height:36px; margin: 20px auto;">
-      <input type="text" placeholder=" 검색할 내용을 입력하세요." style="width:480px; height:34px; border-radius:5px; border: 1px solid #bcbcbc;">
+    <div class="community-list-search">
+      <input type="text" placeholder=" 검색할 내용을 입력하세요." class="community-list-searchbar">
       <v-btn style="height:34px; margin-left:20px">검색</v-btn>
     </div>
-    <div class="text-center">
+    <div>
       <v-pagination
         v-model="page"
         :length="pageLength"
@@ -61,9 +61,8 @@ const { articles } = communityStore
 
 // 페이지네이션
 const page = ref(1)
-const pageLength = ref(parseInt(articles.length/15)+1)
-const pagedArticles = ref({})
-pagedArticles.value = articles.filter(article => article.article_id < 15)
+const pageLength = ref(parseInt((articles.length-1)/15)+1)
+const pagedArticles = ref(articles.filter(article => article.article_id < 15))
 watchEffect(() => {
     pagedArticles.value = articles.filter(article => {if (article.article_id >= 15*(page.value-1)) {if (article.article_id < 15*page.value) {return true}}})
 })
@@ -116,6 +115,40 @@ function toArticleDetail(id) {
   width: 790px;
   margin-top: 140px;
   margin-left: 300px;
+}
+.community-list-top {
+  display:flex;
+  justify-content: space-between;
+  height:60px;
+}
+.community-list-header {
+  display:flex;
+  height:38px;
+  margin:0;
+  text-align: center;
+  align-items: center;
+  border-bottom: 1px solid #bcbcbc;
+}
+.community-list-articles {
+  display:flex;
+  height:36px;
+  margin:0;
+  text-align: center;
+  align-items: center;
+}
+.community-list-search {
+  display:flex;
+  text-align: center;
+  align-items: center;
+  width:600px;
+  height:36px;
+  margin: 20px auto;
+}
+.community-list-searchbar {
+  width:480px;
+  height:34px;
+  border-radius:5px;
+  border: 1px solid #bcbcbc;
 }
 @media (max-width: 1580px) {
   .community-main {

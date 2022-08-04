@@ -9,21 +9,21 @@
       >
         <v-card>
           <v-card-text>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width:550px; height:100px; margin-top: 50px">
-                <div style="height:80px; width:80px; background-color: aquamarine; margin: auto;">
-                </div>
+            <div class="login-dialog">
+              <div class="login-dialog-logo">
+                <img :src="loginLogo" class="login-logo">
               </div>
-              <div style="height:20px; font-size:18px; margin-top: 10px;">
+              <div class="login-dialog-info">
                 <p>로그인 후 이용하실 수 있습니다.</p>
               </div>
               <div style="margin-top:20px">
-                <input v-model="loginId" type="text" placeholder=" 아이디" style="width:340px; height:50px; border-radius:1px; border: 1px solid #bcbcbc;">
+                <input v-model="loginId" type="text" placeholder=" 아이디" class="login-dialog-textinput">
               </div>
               <div style="margin-top:20px">
-                <input v-model="loginPassword" type="password" placeholder=" 비밀번호" style="width:340px; height:50px; border-radius:1px; border: 1px solid #bcbcbc;">
+                <input v-model="loginPassword" @keyup.enter="loginButton()" type="password" placeholder=" 비밀번호" class="login-dialog-textinput">
               </div>
               <v-btn
+                v-if="isValidId"
                 style="margin-top:22px; color:white;"
                 color="#2E6AFD"
                 width="340px"
@@ -31,13 +31,21 @@
               >
                 로그인
               </v-btn>
+              <v-btn
+                v-else
+                style="margin-top:22px;"
+                width="340px"
+                disabled
+              >
+                아이디가 유효하지 않습니다.
+              </v-btn>
               <div style="margin-top: 70px;">
                 <a class="word-link">아이디 찾기</a><a> | </a>
-                <a class="word-link" @click.prevent="passwordModalBtn()">비밀번호 찾기</a><a> | </a>
-                <a class="word-link" @click.prevent="toSignupBtn()">회원가입</a>
+                <a class="word-link" @click="passwordModalBtn()">비밀번호 찾기</a><a> | </a>
+                <a class="word-link" @click="toSignupBtn()">회원가입</a>
               </div>
               <v-btn
-                style="margin-top:22px;  color:white;"
+                style="margin-top:22px; color:white;"
                 color="#1EC800"
                 width="340px"
                 @click.prevent="social='네이버', dialog2=true"
@@ -100,7 +108,7 @@
             <span>에러 표시용 모달</span>
           </v-card-title>
           <v-card-text>
-            아이디와 비밀번호를 입력해주세요
+            {{errorText}}
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -120,23 +128,30 @@
       >
         <v-card>
           <v-card-text>
-            <div style="display: flex; flex-direction: column; align-items: center;">
-              <div style="width:340px; height:30px; font-size:24px; margin-top: 10px; text-align:left">
+            <div class="login-dialog">
+              <div class="password-dialog-top">
                 <p>비밀번호를 재설정합니다.</p>
               </div>
-              <div style="width:340px; height:20px; font-size:18px; margin-top: 40px;">
+              <div class="password-dialog-info">
                 <a>가입하신 계정의 이메일을 입력해 주세요</a>
               </div>
               <div style="margin-top:20px">
-                <input v-model="findPasswordEmail" type="text" placeholder=" 이메일" style="width:340px; height:50px; border-radius:1px; border: 1px solid #bcbcbc;">
+                <input v-model="findPasswordEmail" type="text" placeholder=" 이메일" class="password-dialog-textinput">
               </div>
-              <v-btn
+              <v-btn v-if="isVaildEmail"
                 style="margin-top:20px; color:white;"
                 color="#2E6AFD"
                 width="340px"
                 @click.prevent="findPasswordBtn()"
               >
                 다음
+              </v-btn>
+              <v-btn v-else
+                style="margin-top:20px;"
+                width="340px"
+                disabled
+              >
+                유효한 이메일을 입력하세요
               </v-btn>
             </div>
           </v-card-text>
@@ -156,46 +171,102 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref,watchEffect } from 'vue'
 import { useAccountStore } from "@/store"
-import router from '@/router/index.js';
+import router from '@/router/index.js'
 const accountStore = useAccountStore()
-const dialog2 = ref(false) // 아이디, 비밀번호 잘못 입력시
-const dialog3 = ref(false) // 추후에 소셜 로그인을 위한 모달
+const dialog2 = ref(false) // 추후에 소셜 로그인을 위한 모달
+const dialog3 = ref(false) // 에러 발생시 모달
 const findPasswordModal = ref(false)
 const findPasswordEmail = ref('')
 const loginId = ref('')
 const loginPassword = ref('')
 const social = ref('')
+const loginLogo = require('../assets/image/로고.png');
+const isVaildEmail = ref(false)
+const isValidId = ref(false)
+const errorText = ref('')
 function loginButton() {
-  if (this.loginId&&this.loginPassword) {
-    const user = {email:this.loginId, password:this.loginPassword}
+  if (loginId.value&&loginPassword.value) {
+    const user = {email:loginId.value, password:loginPassword.value}
     accountStore.loginAccount(user)
     accountStore.loginDialogToggle()
-    this.loginId = ''
-    this.loginPassword = ''
+    loginId.value = ''
+    loginPassword.value = ''
   } else {
-    this.dialog3 = true
+    errorText.value = '아이디와 비밀번호 형식이 올바르지 않습니다.'
+    dialog3.value = true
   }
 }
 function passwordModalBtn() {
-  this.findPasswordModal = true
+  findPasswordModal.value = true
 }
 function findPasswordBtn() {
-  accountStore.findPassword(this.findPasswordEmail)
-  this.findPasswordEmail = ''
+  accountStore.findPassword(findPasswordEmail.value)
+  findPasswordEmail.value = ''
 }
+watchEffect(() => {
+    const emailRule = /^([0-9a-zA-Z_.-]+)@([0-9a-zA-Z_-]+)(\.[0-9a-zA-Z_-]+){1,2}$/
+    isVaildEmail.value = emailRule.test(findPasswordEmail.value)
+    isValidId.value = emailRule.test(loginId.value)
+})
 function toSignupBtn() {
   accountStore.loginDialogToggle()
-  this.loginId = ''
-  this.loginPassword = ''
+  loginId.value = ''
+  loginPassword.value = ''
   router.push({name: 'Signup'})
 }
 </script>
 
 <style>
+.login-dialog {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.login-dialog-logo {
+  display: flex;
+  justify-content: center;
+  width:550px;
+  height:140px;
+  margin-top: 10px;
+}
+.login-dialog-info {
+  height:20px;
+  font-size:18px;
+  margin-top: 10px;
+}
+.login-dialog-textinput {
+  width:340px;
+  height:50px;
+  border-radius:1px;
+  border: 1px solid #bcbcbc;
+}
+.password-dialog-top {
+  width:340px;
+  height:30px;
+  font-size:24px;
+  margin-top: 10px;
+  text-align:left
+}
+.password-dialog-info {
+  width:340px;
+  height:20px;
+  font-size:18px;
+  margin-top: 40px;
+}
+.password-dialog-textinput {
+  width:340px;
+  height:50px;
+  border-radius:1px;
+  border: 1px solid #bcbcbc;
+}
 .word-link:hover {
   color: var(--main-color);
-  cursor:pointer
+  cursor: pointer
+}
+.login-logo {
+  width: 140px;
+  height: 140px;
 }
 </style>
