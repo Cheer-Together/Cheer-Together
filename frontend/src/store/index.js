@@ -318,6 +318,10 @@ export const useAccountStore = defineStore('account', {
     logoutAccount() {
       sessionStorage.removeItem('token')
       this.isLogin = false
+      Swal.fire({
+        icon: 'success',
+        title: '성공적으로 로그아웃 되었습니다.',
+      })
     },
     findPassword(email) {
       axios({
