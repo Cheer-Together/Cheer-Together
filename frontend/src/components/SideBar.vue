@@ -19,27 +19,27 @@
       </div>
     </div>
     <!-- 프리미어리그 -->
-    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
+    <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
       프리미어리그
     </div>
     <!-- 라리가 -->
-    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'La_Liga'} })">
+    <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
       라리가
     </div>
     <!-- 세리에 A -->
-    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Serie_A'} })">
+    <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
       세리에 A
     </div>
     <!-- 분데스리가 -->
-    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Bundesliga'} })">
+    <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
       분데스리가
     </div>
     <!-- 리그 1 -->
-    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Ligue_1'} })">
+    <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
       리그 1
     </div>
     <!-- K리그 1 -->
-    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'K_league'} })">
+    <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
       K리그 1
     </div>
     <!-- 경기 일정 -->
@@ -64,7 +64,8 @@
 </template>
 
 <script setup>
-
+import { useOnAirStore } from '../store/index.js'
+const onairStore = useOnAirStore();
 </script>
 
 <style>
@@ -104,6 +105,9 @@
 .sideBar-subtitle:hover {
   color: var(--main-color);
   cursor:pointer;
+}
+.sideBar-subtitle-active {
+  color: #2E6AFD;
 }
 
 @media (max-width: 1580px) {

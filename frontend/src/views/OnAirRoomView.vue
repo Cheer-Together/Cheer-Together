@@ -11,7 +11,7 @@
         <div class="onair-header-boxes">
           <!-- 검색 도구 -->
           <div class="search-box">
-            <button class="btn-search"><i class="fas fa-search"></i></button>
+            <button class="btn-search"><v-icon>mdi-magnify</v-icon></button>
             <input type="text" class="input-search" placeholder="Type to Search...">
           </div>
 
@@ -24,7 +24,7 @@
       </div>
 
       <!-- 응원방 목록 -->
-      <RoomsList/>
+      <RoomsList :key="$route.fullPath"/>
       
 
     </div>
