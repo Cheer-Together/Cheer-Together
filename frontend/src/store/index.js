@@ -35,7 +35,6 @@ export const useMainPageStore = defineStore('mainpage', {
       ]
     }
   ),
-
 })
 export const useCommunityStore = defineStore('community', {
   state: () => (
@@ -404,6 +403,6 @@ export const useNavbarStore = defineStore('navbar', {
 export const useMatchScreenStore = defineStore('match', {
   state: () => (
     { 
-      isClickChatting: false,
+      isClickChatting: '',
     })
 })
