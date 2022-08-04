@@ -4,6 +4,7 @@ import cheertogether from '@/api/cheertogether'
 import Swal from 'sweetalert2'
 import router from '@/router/index.js';
 
+
 export const useMainPageStore = defineStore('mainpage', {
   state: () => (
     { 
@@ -394,6 +395,84 @@ export const useScheduleStore = defineStore('schedule', {
     }
   }
 })
+
+export const useOnAirStore = defineStore('onair', {
+  state: () => ({
+    rooms: [],
+    tmp_pl: [{id: '1', name : 'premierLeague1'},
+              {id: '2', name : 'premierLeague2'},
+              {id: '3', name : 'premierLeague3'},
+              {id: '4', name : 'premierLeague4'},
+              {id: '5', name : 'premierLeague5'},
+              {id: '6', name : 'premierLeague6'},
+              {id: '7', name : 'premierLeague7'},
+              {id: '8', name : 'premierLeague8'},
+              ],
+    tmp_laliga: [{id: '1', name : 'laliga-1'},
+                  {id: '2', name : 'laliga-2'},
+                  {id: '3', name : 'laliga-3'},
+                  {id: '4', name : 'laliga-4'},],
+    tmp_serie: [{id: '5', name : 'serie_A-1'},
+                {id: '6', name : 'serie_A-2'},
+                {id: '7', name : 'serie_A-3'},
+                {id: '8', name : 'serie_A-4'},
+                {id: '9', name : 'serie_A-5'},],
+    tmp_bundesliga: [{id: '10', name : 'bundesliga-1'},
+                    {id: '11', name : 'bundesliga-2'},
+                    {id: '12', name : 'bundesliga-3'},
+                    {id: '13', name : 'bundesliga-4'},
+                    {id: '14', name : 'bundesliga-5'},
+                    {id: '15', name : 'bundesliga-6'},
+                    {id: '16', name : 'bundesliga-7'},
+                    {id: '17', name : 'bundesliga-8'},
+                    {id: '18', name : 'bundesliga-9'},
+                    {id: '19', name : 'bundesliga-10'},
+                    {id: '20', name : 'bundesliga-11'},],
+    tmp_ligue1: [{id: '5', name : 'ligue_1-1'},
+                  {id: '6', name : 'ligue_1-2'},
+                  {id: '7', name : 'ligue_1-3'},],
+    tmp_k_league: [{id: '5', name : 'K_league-1'},
+                    {id: '6', name : 'K_league-2'},]
+  }),
+  actions: {
+    moveLeagueRooms(event){
+      const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
+      if(document.querySelector('.sideBar-subtitle-active')){
+        const fromSubtitle = document.querySelector('.sideBar-subtitle-active')
+        fromSubtitle.classList.remove('sideBar-subtitle-active')
+      }
+      const toSubtitle = event.target
+      toSubtitle.classList.add('sideBar-subtitle-active')
+      for(let league of leagues){
+        if(league === toSubtitle.innerText) {
+          this.fetchRooms(toSubtitle.innerText)
+          router.push({name: 'Onair' , params: {leaguename: `${toSubtitle.innerText}`} })
+        }
+      }
+      
+    },
+
+    fetchRooms(leagueName){
+      
+      if (leagueName === '프리미어리그'){
+        this.rooms = this.tmp_pl
+      } else if (leagueName === '라리가'){
+        this.rooms = this.tmp_laliga
+      } else if (leagueName === '세리에 A'){
+        this.rooms = this.tmp_serie
+      } else if (leagueName === '분데스리가'){
+        this.rooms = this.tmp_bundesliga
+      } else if (leagueName === '리그 1'){
+        this.rooms = this.tmp_ligue1
+      } else if (leagueName === 'K리그 1'){
+        this.rooms = this.tmp_k_league
+      }
+    },
+
+    
+  }
+})
+
 export const useNavbarStore = defineStore('navbar', {
   state: () => (
     { 
@@ -406,3 +485,4 @@ export const useMatchScreenStore = defineStore('match', {
       isClickChatting: '',
     })
 })
+
