@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.cheertogether.game.domain.Game;
+import com.ssafy.cheertogether.game.repository.GameRepository;
 import com.ssafy.cheertogether.room.domain.Room;
 import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
 import com.ssafy.cheertogether.room.dto.RoomModifyRequest;
@@ -22,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class RoomService {
 
 	private final RoomRepository roomRepository;
+	private final GameRepository gameRepository;
 
 	@Transactional(readOnly = true)
 	public List<RoomResponse> findRooms() {
@@ -37,10 +40,10 @@ public class RoomService {
 	}
 
 	@Transactional(readOnly = true)
-	public RoomResponse findRoomByMatchId(Long matchId) {
-		Room room = roomRepository.findByMatchId(matchId)
+	public List<RoomResponse> findRoomByMatchId(Long matchId) {
+		Game match = gameRepository.findGameById(matchId)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_MATCH_ID_ERROR_MESSAGE));
-		return new RoomResponse(room);
+		return match.getRoomList().stream().map(RoomResponse::new).collect(Collectors.toList());
 	}
 
 	public void createRoom(RoomCreateRequest roomCreateRequest) {
