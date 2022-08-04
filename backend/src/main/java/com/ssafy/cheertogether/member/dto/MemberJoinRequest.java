@@ -13,4 +13,5 @@ public class MemberJoinRequest {
 	private String role;
 	private String myInfo;
 	private List<Integer> favoriteLeagueList;
+	private List<Integer> favoriteTeamList;
 }

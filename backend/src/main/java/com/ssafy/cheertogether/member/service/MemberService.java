@@ -15,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
+import com.ssafy.cheertogether.favorite.domain.FavoriteTeam;
 import com.ssafy.cheertogether.favorite.repository.FavoriteLeagueRepository;
+import com.ssafy.cheertogether.favorite.repository.FavoriteTeamRepository;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
@@ -24,6 +26,7 @@ import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
+import com.ssafy.cheertogether.team.repository.TeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,6 +38,8 @@ public class MemberService implements UserDetailsService {
 	private final MemberRepository memberRepository;
 	private final LeagueRepository leagueRepository;
 	private final FavoriteLeagueRepository favoriteLeagueRepository;
+	private final TeamRepository teamRepository;
+	private final FavoriteTeamRepository favoriteTeamRepository;
 
 	@Transactional(readOnly = true)
 	public MemberResponse findMember(Long id) {
@@ -50,12 +55,23 @@ public class MemberService implements UserDetailsService {
 	public void join(MemberJoinRequest memberJoinRequest) {
 		Member member = Member.from(memberJoinRequest);
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
-		favoriteLeagueList.addAll(memberJoinRequest
-			.getFavoriteLeagueList()
-			.stream()
-			.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()))
-			.collect(Collectors.toList()));
+		if (!memberJoinRequest.getFavoriteLeagueList().isEmpty()) {
+			favoriteLeagueList.addAll(memberJoinRequest
+				.getFavoriteLeagueList()
+				.stream()
+				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+				.collect(Collectors.toList()));
+		}
 		member.setFavoriteLeagueList(favoriteLeagueList);
+		List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
+		if (!memberJoinRequest.getFavoriteTeamList().isEmpty()) {
+			favoriteTeamList.addAll(memberJoinRequest
+				.getFavoriteTeamList()
+				.stream()
+				.map(teamApiId -> FavoriteTeam.from(member, teamRepository.findTeamByApiId(teamApiId).get()))
+				.collect(Collectors.toList()));
+		}
+		member.setFavoriteTeamList(favoriteTeamList);
 		memberRepository.save(member);
 	}
 
@@ -93,14 +109,27 @@ public class MemberService implements UserDetailsService {
 		Member findMember = memberRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
 		findMember.update(memberModifyRequest);
-		favoriteLeagueRepository.deleteFavoriteLeagueByMember_Email(findMember.getEmail());
+		favoriteLeagueRepository.deleteFavoriteLeagueByMember_Id(findMember.getId());
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
-		favoriteLeagueList.addAll(memberModifyRequest
-			.getFavoriteLeagueList()
-			.stream()
-			.map(leagueApiId -> FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId).get()))
-			.collect(Collectors.toList()));
+		if (!memberModifyRequest.getFavoriteLeagueList().isEmpty()) {
+			favoriteLeagueList.addAll(memberModifyRequest
+				.getFavoriteLeagueList()
+				.stream()
+				.map(leagueApiId -> FavoriteLeague.from(findMember,
+					leagueRepository.findLeagueByApiId(leagueApiId).get()))
+				.collect(Collectors.toList()));
+		}
 		findMember.setFavoriteLeagueList(favoriteLeagueList);
+		favoriteTeamRepository.deleteFavoriteTeamByMember_Id(findMember.getId());
+		List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
+		if (!memberModifyRequest.getFavoriteTeamList().isEmpty()) {
+			favoriteTeamList.addAll(memberModifyRequest
+				.getFavoriteTeamList()
+				.stream()
+				.map(teamApiId -> FavoriteTeam.from(findMember, teamRepository.findTeamByApiId(teamApiId).get()))
+				.collect(Collectors.toList()));
+		}
+		findMember.setFavoriteTeamList(favoriteTeamList);
 	}
 
 	public void delete(Long id) {

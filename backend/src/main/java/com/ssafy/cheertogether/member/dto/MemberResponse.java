@@ -3,6 +3,7 @@ package com.ssafy.cheertogether.member.dto;
 import java.util.List;
 
 import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
+import com.ssafy.cheertogether.favorite.domain.FavoriteTeam;
 import com.ssafy.cheertogether.member.domain.Member;
 
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class MemberResponse {
 	private final String role;
 	private final String myInfo;
 	private final List<FavoriteLeague> favoriteLeagueList;
+	private final List<FavoriteTeam> favoriteTeamList;
 
 	public MemberResponse(Member member) {
 		email = member.getEmail();
@@ -23,5 +25,6 @@ public class MemberResponse {
 		role = member.getRole();
 		myInfo = member.getMyInfo();
 		favoriteLeagueList = member.getFavoriteLeagueList();
+		favoriteTeamList = member.getFavoriteTeamList();
 	}
 }

@@ -11,4 +11,5 @@ public class MemberModifyRequest {
 	private String profileImage;
 	private String myInfo;
 	private List<Integer> favoriteLeagueList;
+	private List<Integer> favoriteTeamList;
 }
