@@ -5,7 +5,7 @@
       좋아하는 리그
     </div>
     <button @click="leagueStore.favoriteLeague = false" style="position:absolute; top:0; right:0;">
-      <v-icon v-bind="props">
+      <v-icon v-bind="props = false">
         mdi-close-box
       </v-icon>
     </button>
@@ -57,7 +57,6 @@ const leagueStore = useLeagueStore()
 
 leagueStore.selectFavoriteTeam = '프리미어리그'
 const addSelectLeague = (bigLeague) => {
-  console.log(bigLeague)
   if (leagueStore.selectLeague.length < 3){
     if (leagueStore.selectLeague.includes(bigLeague)) {
       const smallNumberIndex = leagueStore.selectLeague.indexOf(bigLeague);
