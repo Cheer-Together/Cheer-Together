@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div v-for="article in communityStore.articles" :key="article.article_id" style="display:flex; height:36px; margin:0; text-align: center; align-items: center;">
+    <div v-for="article in pagedArticles" :key="article.article_id" style="display:flex; height:36px; margin:0; text-align: center; align-items: center;">
       <div style="width:100px">
         <p>{{article.category}}</p>
       </div>
@@ -41,17 +41,32 @@
       <input type="text" placeholder=" 검색할 내용을 입력하세요." style="width:480px; height:34px; border-radius:5px; border: 1px solid #bcbcbc;">
       <v-btn style="height:34px; margin-left:20px">검색</v-btn>
     </div>
-    <div style="width:280px; height:32px; margin: 10px auto;">
-      <p>페이지네이션</p>
+    <div class="text-center">
+      <v-pagination
+        v-model="page"
+        :length="pageLength"
+        rounded="circle"
+      ></v-pagination>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useAccountStore, useCommunityStore } from "@/store"
+import { ref, watchEffect } from "vue"
 import router from "@/router"
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
+const { articles } = communityStore
+
+// 페이지네이션
+const page = ref(1)
+const pageLength = ref(parseInt(articles.length/15)+1)
+const pagedArticles = ref({})
+pagedArticles.value = articles.filter(article => article.article_id < 15)
+watchEffect(() => {
+    pagedArticles.value = articles.filter(article => {if (article.article_id >= 15*(page.value-1)) {if (article.article_id < 15*page.value) {return true}}})
+})
 function writeButton() {
   if (accountStore.isLogin) {
     communityStore.communityToggle()
