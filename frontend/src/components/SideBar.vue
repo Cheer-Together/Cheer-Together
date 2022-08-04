@@ -10,7 +10,7 @@
       </div>
     </div>
     <!-- 실시간 집관 -->
-    <div class="sideBar-item" @click="this.$router.push({name: 'Onair'})">
+    <div class="sideBar-item" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
       <v-icon class="sideBar-item-icon">
         mdi-video-outline
       </v-icon>
@@ -19,27 +19,27 @@
       </div>
     </div>
     <!-- 프리미어리그 -->
-    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair'})">
+    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
       프리미어리그
     </div>
     <!-- 라리가 -->
-    <div class="sideBar-subtitle">
+    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'La_Liga'} })">
       라리가
     </div>
     <!-- 세리에 A -->
-    <div class="sideBar-subtitle">
+    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Serie_A'} })">
       세리에 A
     </div>
     <!-- 분데스리가 -->
-    <div class="sideBar-subtitle">
+    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Bundesliga'} })">
       분데스리가
     </div>
     <!-- 리그 1 -->
-    <div class="sideBar-subtitle">
+    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Ligue_1'} })">
       리그 1
     </div>
     <!-- K리그 1 -->
-    <div class="sideBar-subtitle">
+    <div class="sideBar-subtitle" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'K_league'} })">
       K리그 1
     </div>
     <!-- 경기 일정 -->
