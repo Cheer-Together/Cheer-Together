@@ -9,12 +9,12 @@ import lombok.Getter;
 
 @Getter
 public class MemberResponse {
-	private String email;
-	private String nickname;
-	private String profileImage;
-	private String role;
-	private String myInfo;
-	private List<FavoriteLeague> favoriteLeagueList;
+	private final String email;
+	private final String nickname;
+	private final String profileImage;
+	private final String role;
+	private final String myInfo;
+	private final List<FavoriteLeague> favoriteLeagueList;
 
 	public MemberResponse(Member member) {
 		email = member.getEmail();
