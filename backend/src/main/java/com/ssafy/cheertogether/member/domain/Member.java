@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
+import com.ssafy.cheertogether.favorite.domain.FavoriteTeam;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 
@@ -42,6 +43,9 @@ public class Member implements UserDetails {
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	@JsonManagedReference
+	private List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
 
 	@Builder
 	public Member(String email, String nickname, String password, String profileImage, String role, String myInfo) {
@@ -86,6 +90,10 @@ public class Member implements UserDetails {
 
 	public void setFavoriteLeagueList(List<FavoriteLeague> favoriteLeagueList) {
 		this.favoriteLeagueList = favoriteLeagueList;
+	}
+
+	public void setFavoriteTeamList(List<FavoriteTeam> favoriteTeamList) {
+		this.favoriteTeamList = favoriteTeamList;
 	}
 
 	@Override
