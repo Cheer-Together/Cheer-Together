@@ -3,7 +3,7 @@
     <div class="favoriteTeam-title">
       좋아하는 팀
     </div>
-    <div class="favoriteTeam-section">
+    <div class="favoriteTeam-section" @click="accountStore.loginDialogToggle()">
       <div class="favoriteTeam-section-title">
         로그인 후 이용해 주세요!
       </div>
@@ -12,7 +12,8 @@
 </template>
 
 <script setup>
-
+import { useAccountStore } from '@/store'
+const accountStore = useAccountStore()
 </script>
 
 <style>

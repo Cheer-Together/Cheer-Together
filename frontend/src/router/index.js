@@ -5,6 +5,7 @@ import ScheduleView from '../views/ScheduleView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
 import SignupView from '../views/SignupView.vue'
 import OnAirRoomView from '../views/OnAirRoomView.vue'
+import MatchScreenView from '../views/MatchScreenView.vue'
 import { useAccountStore } from "@/store"
 
 const routes = [
@@ -37,6 +38,11 @@ const routes = [
     path: '/onair/:leaguename',
     name: 'Onair',
     component: OnAirRoomView
+  },
+  {
+    path: '/matchscreen',
+    name: 'MatchScreen',
+    component: MatchScreenView
   },
 ]
 

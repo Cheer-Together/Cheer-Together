@@ -5,7 +5,7 @@
     </div>
     <div class="popularMatch-section">
       <!-- 첫 번째 -->
-      <div class="popularMatch-section-item">
+      <div class="popularMatch-section-item" @click="this.$router.push({ name:'MatchScreen', })">
         <div class="popularMatch-section-item-image">
           <img :src="popularThumbnail.first" width="300" height="150">
         </div>
