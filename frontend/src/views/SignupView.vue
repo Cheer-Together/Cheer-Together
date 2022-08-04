@@ -101,7 +101,7 @@
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="signup-range-input" maxlength="40">
+          <input type="text" class="signup-range-input" maxlength="40" v-model="credentialsSignup.nickname">
         </div>
       </div>
 
@@ -142,7 +142,7 @@
           본인 소개
         </div>
         <div style="position: relative;">
-          <textarea cols="21" rows="5" class="signup-range-input-introduce"></textarea>
+          <textarea cols="21" rows="5" class="signup-range-input-introduce" v-model="credentialsSignup.myInfo"></textarea>
         </div>
       </div>
       <!-- 좋아하는 리그 -->
@@ -264,6 +264,8 @@ leagueStore.selectTeam = []
 let userInputEmailAuthCode = ''
 let credentialsSignup = {
   email: "",
+  favoriteLeagueList: [ 
+  ],
   myInfo: "",
   nickname: "",
   password: '',
@@ -272,10 +274,10 @@ let credentialsSignup = {
 }
 
 const onInputImage = (e) => {
+  console.log(e.target.files[0])
   let url = URL.createObjectURL(e.target.files[0])
   accountStore.myImage = url
 }
-
 
 const pushEmail = (email) => {
   if (!accountStore.emailDoubleChecked){
@@ -316,11 +318,28 @@ const changeSignUp = (credentialsSignup) => {
     })
   }
   else {
+    // 사용한 피니아 변수들 감기
     credentialsSignup.password = accountStore.passwordAccordance
     credentialsSignup.profileImage = accountStore.myImage
+
+    if (leagueStore.selectLeague.length == 3) {
+      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId, leagueStore.selectLeague[1].apiId, leagueStore.selectLeague[2].apiId]
+    }
+    else if (leagueStore.selectLeague.length == 2) {
+      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId, leagueStore.selectLeague[1].apiId ]
+    }
+    else if (leagueStore.selectLeague.length == 1) {
+      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId]
+    }
+
+    // 사용한 피니아 변수들 초기화
     accountStore.passwordAccordance = ''
     accountStore.passwordAccordance2 = ''
     accountStore.myImage = ''
+    leagueStore.selectLeague = []
+    leagueStore.selectTeam = []
+
+    // 회원가입 진행
     accountStore.signUp(credentialsSignup)
   }
 }

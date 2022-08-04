@@ -28,7 +28,9 @@ leagueStore.leaguesAll()
   --main-color: #2E6AFD;
   --sub-color: #F2F8FF;
 }
-
+label:hover {
+  cursor: pointer;
+}
 body {
   font-family: 'MICEGothic';
   margin: 0;

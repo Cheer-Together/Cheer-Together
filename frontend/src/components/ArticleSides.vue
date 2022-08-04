@@ -1,6 +1,6 @@
 <template>
   <div class="community-side">
-    <div class="community-sides-top">
+    <div class="community-news-top">
       <p>오늘의 뉴스</p>
     </div>
     <div v-for="item in news" :key="item.news_id" class="community-news">
@@ -12,8 +12,9 @@
       </div>
     </div>
 
-    <div class="community-sides-top" style="margin:60px 0 20px;">
-      <p>오늘의 경기</p>
+    <div class="community-matches-top">
+      <p style="font-size: 20px;">오늘의 경기</p>
+      <p class="word-link" @click="this.$router.push({ name: 'Schedule',})" style="font-size: 14px;">자세히 보기</p>
     </div>
     <div v-for="match in matches" :key="match.id" class="community-matches">
       <div class="community-matches-teamname" style="justify-content: flex-end;">
@@ -24,10 +25,10 @@
       <div style="width:40px; height:40px; background-color: aquamarine;">
       </div>
       <div style="width:50px; height:60px;">
-        <div style="display:flex; justify-content: center; height:10px; font-size: 10px;">
+        <div class="community-matches-time">
           {{match.time}}
         </div>
-        <div style="display:flex; justify-content: center; height:50px;">
+        <div class="community-matches-versus">
           <p>vs</p>
         </div>
       </div>
@@ -143,10 +144,18 @@ const matches = [
   color: var(--main-color);
   cursor:pointer
 }
-.community-sides-top {
+.community-news-top {
   height:30px; 
   border-bottom: 1px solid #bcbcbc; 
   font-size: 20px;
+}
+.community-matches-top {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin:60px 0 20px;
+  height:30px;
+  border-bottom: 1px solid #bcbcbc;
 }
 .community-news {
   display:flex; 
@@ -166,7 +175,19 @@ const matches = [
   font-size: 11px; 
   align-items: center; 
 }
-.maincolor {
+.community-matches-time {
+  display:flex;
+  justify-content: center;
+  height:10px;
+  font-size: 10px;
+}
+.community-matches-versus {
+  display:flex;
+  justify-content: center;
+  height:50px;
+}
+.word-link:hover {
   color: var(--main-color);
+  cursor: pointer
 }
 </style>
