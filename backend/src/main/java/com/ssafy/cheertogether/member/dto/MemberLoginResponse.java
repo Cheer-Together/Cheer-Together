@@ -9,7 +9,8 @@ import com.ssafy.cheertogether.member.domain.Member;
 import lombok.Getter;
 
 @Getter
-public class MemberResponse {
+public class MemberLoginResponse {
+	private final Long id;
 	private final String email;
 	private final String nickname;
 	private final String profileImage;
@@ -17,14 +18,20 @@ public class MemberResponse {
 	private final String myInfo;
 	private final List<FavoriteLeague> favoriteLeagueList;
 	private final List<FavoriteTeam> favoriteTeamList;
+	private String jwtToken;
 
-	public MemberResponse(Member member) {
+	public MemberLoginResponse(Member member) {
+		id = member.getId();
 		email = member.getEmail();
 		nickname = member.getNickname();
-		profileImage = member.getProfileImage();
+		profileImage = member.getNickname();
 		role = member.getRole();
 		myInfo = member.getMyInfo();
 		favoriteLeagueList = member.getFavoriteLeagueList();
 		favoriteTeamList = member.getFavoriteTeamList();
+	}
+
+	public void setJwtToken(String jwtToken) {
+		this.jwtToken = jwtToken;
 	}
 }
