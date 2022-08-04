@@ -252,15 +252,17 @@ export const useAccountStore = defineStore('account', {
         실패하면
 
       */
+      console.log(userInfo)
       axios({
         url: cheertogether.members.signUp(),
         method: 'POST',
         data: {
           email : userInfo.email,
+          favoriteLeagueList : userInfo.favoriteLeagueList,
           myInfo : userInfo.myInfo,
           nickname : userInfo.nickname,
           password : userInfo.password,
-          profileImage : '.',
+          profileImage : userInfo.profileImage,
           role : 'user'
         }  
       })
@@ -294,8 +296,7 @@ export const useAccountStore = defineStore('account', {
         }
       }
     },
-
-   
+  
     loginAccount(user) {
       /*
       email과 password를 담은 user: Object를 입력받아 로그인을 시도합니다.
@@ -318,6 +319,10 @@ export const useAccountStore = defineStore('account', {
     logoutAccount() {
       sessionStorage.removeItem('token')
       this.isLogin = false
+      Swal.fire({
+        icon: 'logout',
+        title: '로그아웃',
+      })
     },
     findPassword(email) {
       axios({
@@ -389,4 +394,16 @@ export const useScheduleStore = defineStore('schedule', {
       // axios({})
     }
   }
+})
+export const useNavbarStore = defineStore('navbar', {
+  state: () => (
+    { 
+      isClickProfile: false,
+    })
+})
+export const useMatchScreenStore = defineStore('match', {
+  state: () => (
+    { 
+      isClickChatting: false,
+    })
 })
