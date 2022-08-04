@@ -2,177 +2,8 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import cheertogether from '@/api/cheertogether'
 import Swal from 'sweetalert2'
+import router from '@/router/index.js';
 
-export const useSignupStore = defineStore('signup', {
-  state: () => ({
-    favoriteLeague: false,
-    favoriteTeam: false,
-    bigLeagues: {
-      프리미어리그: {
-        id: 0,
-        img: require('../assets/image/6대리그/프리미어리그.jpg'),
-        title: '프리미어리그',
-      },
-      라리가: {
-        id: 1,
-        img: require('../assets/image/6대리그/라리가로고.png'),
-        title: '라리가',
-      },
-      세리에A: {
-        id: 2,
-        img: require('../assets/image/6대리그/세리에A로고.jpg'),
-        title: '세리에A',
-      },
-      분데스리가: {
-        id: 3,
-        img: require('../assets/image/6대리그/분데스리가.png'),
-        title: '분데스리가',
-      },
-      리그1: {
-        id: 4,
-        img: require('../assets/image/6대리그/리그1로고.png'),
-        title: '리그1',
-      },
-      K리그1: {
-        id: 5,
-        img: require('../assets/image/6대리그/K리그1.png'),
-        title: 'K리그1',
-      },
-    },
-    selectLeague: [],
-    selectTeam: [],
-    selectFavoriteTeam: '프리미어리그',
-    selectFavoriteTeams: [
-      {
-        name: '프리미어리그',
-      },
-      {
-        name: '라리가'
-      },
-      {
-        name: '세리에A'
-      },
-      {
-        name: '분데스리가'
-      },
-      {
-        name: '리그1'
-      },
-      {
-        name: 'k리그1'
-      },
-    ],
-    premierLeague: [
-     {
-        id: 0,
-        name: '본머스',
-        img: require('../assets/image/프리미어리그/본머스.png'),
-      },
-      {
-        id: 1,
-        name: '아스날',
-        img: require('../assets/image/프리미어리그/아스날.png'),
-      },
-      {
-        id: 2,
-        name: '아스톤 빌라',
-        img: require('../assets/image/프리미어리그/아스톤빌라.png'),
-
-      },
-      {
-        id: 3,
-        name: '브렌트포드',
-        img: require('../assets/image/프리미어리그/브렌트포드.png'),
-
-      },
-      {
-        id: 4,
-        name: '브라이튼 앤 호브 알비온',
-        img: require('../assets/image/프리미어리그/브라이튼앤호브알비온.png'),
-
-      },
-      {
-        id: 5,
-        name: '첼시',
-        img: require('../assets/image/프리미어리그/첼시.png'),
-      },
-      {
-        id: 6,
-        name: '크리스탈 팰리스',
-        img: require('../assets/image/프리미어리그/크리스탈팰리스.png'),
-      },
-      {
-        id: 7,
-        name: '에버튼',
-        img: require('../assets/image/프리미어리그/에버튼.png'),
-      },
-      {
-        id: 8,
-        name: '풀럼',
-        img: require('../assets/image/프리미어리그/풀럼.png'),
-      },
-      {
-        id: 9,
-        name: '리즈 유나이티드',
-        img: require('../assets/image/프리미어리그/리즈유나이티드.png'),
-      },
-      {
-        id: 10,
-        name: '레스터 시티',
-        img: require('../assets/image/프리미어리그/레스터시티.png'),
-      },
-      {
-        id: 11,
-        name: '리버풀',
-        img: require('../assets/image/프리미어리그/브렌트포드.png'),
-      },
-      {
-        id: 12,
-        name: '맨체스터 시티',
-        img: require('../assets/image/프리미어리그/맨체스터시티.png'),
-      },
-      {
-        id: 13,
-        name: '맨체스터 유나이티드',
-        img: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-      },
-      {
-        id: 14,
-        name: '뉴캐슬 유나이티드',
-        img: require('../assets/image/프리미어리그/뉴캐슬유나이티드.png'),
-      },
-      {
-        id: 15,
-        name: '노팅엄 포레스트',
-        img: require('../assets/image/프리미어리그/노팅엄포레스트.png'),
-      },
-      {
-        id: 16,
-        name: '사우스햄튼',
-        img: require('../assets/image/프리미어리그/사우스햄튼.png'),
-      },
-      {
-        id: 17,
-        name: '토트넘 훗스퍼',
-        img: require('../assets/image/프리미어리그/토트넘로고.png'),
-      },
-      {
-        id: 18,
-        name: '웨스트햄 유나이티드',
-        img: require('../assets/image/프리미어리그/웨스트햄유나이티드.png'),
-      },
-      {
-        id: 19,
-        name: '울버햄튼 원더러스',
-        img: require('../assets/image/프리미어리그/울버햄튼원더러스.png'),
-      }
-    ],
-  }),
-  getters: {
-  },
-  actions: {
-  },
-})
 export const useMainPageStore = defineStore('mainpage', {
   state: () => (
     { 
@@ -269,7 +100,7 @@ export const useAccountStore = defineStore('account', {
     isPushEmail: false,
     isAllowPassword: false,
     isShowPasswordError: '',
-
+    myImage: '',
   }),
   getters: {
   },
@@ -415,7 +246,7 @@ export const useAccountStore = defineStore('account', {
 
     signUp(userInfo) {
       /* 
-      GET: 이메일 중복 체크
+      POST: 회원 가입
         성공하면
 
         실패하면
@@ -435,6 +266,7 @@ export const useAccountStore = defineStore('account', {
       })
         .then(res => {
           console.log(res)
+          router.push({name:'MainPage'})
         })
         .catch(err => {
           console.log(err)
@@ -505,10 +337,12 @@ export const useAccountStore = defineStore('account', {
 export const useLeagueStore = defineStore('league', {
   state: () => ({ 
     leagues: [
-      {
-        logo: '',
-      }
-    ]
+    ],
+    selectLeague: [],
+    selectTeam: [],
+    selectFavoriteTeam: '프리미어리그',
+    favoriteLeague: false,
+    favoriteTeam: false,
     }
   ),
   actions: {
@@ -523,33 +357,36 @@ export const useLeagueStore = defineStore('league', {
         .then(res => {
           console.log(res.data)
           this.leagues = res.data
-
-          this.leagues.forEach( league => {
-            if (league.name === 'Premier League') {
-              league.name = '프리미어리그'
-            }
-            else if (league.name === 'La Liga') {
-              league.name = '라리가'
-            }
-            else if (league.name === 'Serie A') {
-              league.name = '세리에A'
-            }
-            else if (league.name === 'Bundesliga') {
-              league.name = '분데스리가'
-            }
-            else if (league.name === 'Ligue 1') {
-              league.name = '리그 1'
-            }
-            else if (league.name === 'K League 1') {
-              league.name = 'K리그1'
-            }
-          });
-
-
         })
         .catch(err => {
           console.log(err)
         })
     }
   },
+})
+export const useScheduleStore = defineStore('schedule', {
+  state: () => ({
+    schedules: []
+  }),
+  actions: {
+    clickLeague(event) {
+      const activeTag = document.querySelector('.league-active')
+      activeTag.classList.remove('league-active')
+      const clickedTag = event.target
+      clickedTag.classList.add('league-active')
+      const activeMonthTag = document.querySelector('.item-active')
+      activeMonthTag.classList.remove('item-active')
+      const firstMonthTag = document.querySelector('.schedule-page-month-item p')
+      firstMonthTag.classList.add('item-active')
+      // axios({})
+    },
+
+    clickMonth (event) {
+      const activeTag = document.querySelector('.item-active')
+      activeTag.classList.remove('item-active')
+      const clickedTag = event.target
+      clickedTag.classList.add('item-active')
+      // axios({})
+    }
+  }
 })
