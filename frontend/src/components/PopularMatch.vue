@@ -1,59 +1,61 @@
 <template>
-  <div class="PopularMatch">
-    <div class="PopularMatch-title">
+  <div class="popularMatch">
+    <div class="popularMatch-title">
       실시간 인기 응원방
     </div>
-    <div class="PopularMatch-section">
+    <div class="popularMatch-section">
       <!-- 첫 번째 -->
-      <div class="PopularMatch-section-item">
-        <div class="PopularMatch-section-item-image">
-          <img :src="popularThumbnail.first" width="300" height="150">
+      <div class="popularMatch-section-item" @click="router.push({ name:'MatchScreen', })">
+        <div class="popularMatch-section-item-image">
+          <img :src="popularThumbnail.first">
         </div>
-        <div class="PopularMatch-section-item-title">
+        <div class="popularMatch-section-item-title">
           [K리그] 제주 VS 전북 명경기
         </div>
       </div>
       <!-- 두 번째 -->
-      <div class="PopularMatch-section-item">
-        <div class="PopularMatch-section-item-image">
+      <div class="popularMatch-section-item">
+        <div class="popularMatch-section-item-image">
           <img :src="popularThumbnail.second" width="300" height="150">
         </div>
-        <div class="PopularMatch-section-item-title">
+        <div class="popularMatch-section-item-title">
           박지성 골!!! 한국축구 짱
         </div>
       </div>
       <!-- 세 번째 -->
-      <div class="PopularMatch-section-item">
-        <div class="PopularMatch-section-item-image">
+      <div class="popularMatch-section-item">
+        <div class="popularMatch-section-item-image">
           <img :src="popularThumbnail.third" width="300" height="150">
         </div>
-        <div class="PopularMatch-section-item-title">
+        <div class="popularMatch-section-item-title">
           손흥민의 찰칵
         </div>
       </div>
       <!-- 네 번째 -->
-      <div class="PopularMatch-section-item">
-        <div class="PopularMatch-section-item-image">
+      <div class="popularMatch-section-item">
+        <div class="popularMatch-section-item-image">
           <img :src="popularThumbnail.fourth" width="300" height="150">
         </div>
-        <div class="PopularMatch-section-item-title">
+        <div class="popularMatch-section-item-title">
           손흥민의 호우!!!!!
         </div>
       </div>
       <!-- 다섯 번째 -->
-      <div class="PopularMatch-section-item">
-        <div class="PopularMatch-section-item-image">
+      <!-- <div class="popularMatch-section-item">
+        <div class="popularMatch-section-item-image">
           <img :src="popularThumbnail.fifth" width="300" height="150">
         </div>
-        <div class="PopularMatch-section-item-title">
+        <div class="popularMatch-section-item-title">
           손흥민의 너로 정했다
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script setup>
+import router from '@/router'
+
 const popularThumbnail = {
   first: require('../assets/image/메인페이지/인기응원방썸네일1.png'),
   second: require('../assets/image/메인페이지/인기응원방썸네일2.jpg'),
@@ -64,40 +66,79 @@ const popularThumbnail = {
 </script>
 
 <style>
-.PopularMatch {
-  margin-bottom: 21px;
+.popularMatch {
+  margin-bottom: 40px;
 }
-.PopularMatch-title {
-  font-size: 18px;
+.popularMatch-title {
+  font-size: 24px;
   padding: 5.5px 0;
 }
-.PopularMatch-section {
+.popularMatch-section {
   margin-top: 11px;
   width: 1580px;
-  height: 170px;
+  min-height: 240px;
+  max-height: 480px;
   text-align: center;
-  background-color: var(--sub-color);
   display: flex;
+  flex-wrap: wrap;
 }
-.PopularMatch-section-item {
-  width: 300px;
-  height: 170px;
-  margin-left: 20px;
+.popularMatch-section-item {
+  width: 375px;
+  height: 220px;
+  margin: 0 20px 20px 0 ;
+  border-radius: 10px;
+  overflow: hidden;
 }
-.PopularMatch-section-item:hover {
+.popularMatch-section-item:hover {
   cursor: pointer;
 }
-.PopularMatch-section-item:first-child {
-  margin: 0px;
+
+.popularMatch-section-item-image, .popularMatch-section-item-image img {
+  width: 375px;
+  height: 190px;
 }
-.PopularMatch-section-item-image {
+.popularMatch-section-item-title {
+  font-size: 16px;
+  width: 375px;
+  height: 30px;
+  background-color: var(--main-color);
+  color: #ffffff;
+  padding-top: 2px;
+}
+@media (max-width: 1580px) {
+.popularMatch {
+  margin-bottom: 16px;
+}
+.popularMatch-title {
+  font-size: 15px;
+}
+.popularMatch-section {
+  margin-top: 8px;
+  width: 1300px;
   height: 150px;
+  overflow-x: hidden;
 }
-.PopularMatch-section-item-title {
+.popularMatch-section-title {
+  padding-top: 78px ;
+}
+.popularMatch-section-item {
+  width: 248px;
+  height: 150px;
+  margin-left: 15px;
+}
+.popularMatch-section-item-image{
+  height: 130px;
+}
+.popularMatch-section-item-image img {
+  width: 248px;
+  height: 130px;
+}
+.popularMatch-section-item-title {
   font-size: 12px;
-  width: 300px;
+  width: 248px;
   height: 20px;
   background-color: #222222;
   color: #ffffff;
+}
 }
 </style>
