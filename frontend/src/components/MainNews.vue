@@ -33,7 +33,7 @@ const mainPageStore = useMainPageStore()
   margin-bottom: 100px;
 }
 .mainNews-title {
-  font-size: 18px;
+  font-size: 24px;
   padding: 5.5px 0;
 }
 .mainNews-section {

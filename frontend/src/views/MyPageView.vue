@@ -9,7 +9,7 @@
         <div style="display:flex;">
           <!-- 프로필 이미지 -->
           <div class="mypage-header-image">
-            <img :src="user.profileImage" alt="" width="150" height="150">
+            <img :src="user.profileImage" alt="" width="200" height="200">
           </div>
           <!-- 닉네임 소개 -->
           <div>
@@ -290,14 +290,14 @@ const user = {
 }
 .mypage-header {
   margin: 50px auto;
-  width: 1000px;
+  width: 1300px;
   height: 350px;
   border-bottom: 1px solid #b6b9ba;
   padding: 75px 0 0 42.5px;
 }
 .mypage-header-image {
-  width: 150px;
-  height: 150px;
+  width: 200px;
+  height: 200px;
   border-radius: 150px;
   border: 1px solid #b6b9ba;
   margin-right:50px;
@@ -307,28 +307,32 @@ const user = {
   padding: 7px;
   width: 300px;
   height: 50px;
-  font-size: 28px;
+  font-size: 32px;
 }
 .mypage-header-info {
   margin-top: 30px;
   padding: 10px;
-  width: 700px;
-  height: 110px;
-  font-size: 15px;
+  width: 940px;
+  height: 120px;
+  font-size: 17px;
   background-color: var( --sub-color );
 }
 .mypage-header-editinfo {
-  margin: 20px 30px 0 auto;
+  margin: 20px 40px 0 auto;
   padding: 5px;
-  width: 100px;
-  height: 30px;
+  width: 160px;
+  height: 37px;
   background-color: blanchedalmond;
   border-radius: 30px;
-  font-size: 12px;
+  font-size: 18px;
+  text-align: center;
+}
+.mypage-header-editinfo:hover {
+  cursor: pointer;
 }
 .mypage-section {
   margin: 0 auto;
-  width: 1000px;
+  width: 1300px;
   height: 700px;
 }
 .mypage-section-favorite-league {
