@@ -4,27 +4,27 @@
     <SideBar/>
     <div class="schedule-page">
       <div class="schedule-page-leagues">
-        <div class="schedule-page-league-items">
+        <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
           <p class="league-active">프리미어리그</p>
         </div>
 
-        <div class="schedule-page-league-items">
+        <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
           <p>라리가</p>
         </div>
         
-        <div class="schedule-page-league-items">
+        <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
           <p>세리에 A</p>
         </div>
 
-        <div class="schedule-page-league-items">
+        <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
           <p>분데스리가</p>
         </div>
 
-        <div class="schedule-page-league-items">
+        <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
           <p>리그 1</p>
         </div>
 
-        <div class="schedule-page-league-items">
+        <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
           <p>K리그</p>
         </div>
       </div>
@@ -34,34 +34,34 @@
           22/23 시즌
         </h1>
         <div class="schedule-page-month-select">
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p class="item-active">22년 8월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>9월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>10월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>11월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>12월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>23년 1월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>2월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>3월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>4월</p>
           </div>
-          <div class="schedule-page-month-item">
+          <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
             <p>5월</p>
           </div>
         </div>
@@ -114,7 +114,7 @@
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
-// import { ref } from 'vue'
+import { useScheduleStore } from  '../store/index.js'
 
 const matches = [
   {
@@ -143,6 +143,8 @@ const matches = [
 
 ]
 
+const scheduleStore = useScheduleStore();
+
 </script>
 
 <style>
@@ -164,6 +166,7 @@ const matches = [
   margin-top: 8px;
   font-size: 25px;
   text-align: center;
+  cursor: pointer;
 }
 
 .schedule-page-select {
@@ -187,6 +190,7 @@ const matches = [
 .schedule-page-month-item {
   text-align: center;
   margin-top: 25px;
+  cursor: pointer;
 }
 
 .schedule-page-month-item .item-active {
@@ -251,5 +255,11 @@ const matches = [
   color: #a7a4a4
 }
 
+@media (max-width: 1580px) {
+  .schedule-page {
+    margin-top: 100px;
+    margin-left: 330px;
+  }
+}
 
 </style>
