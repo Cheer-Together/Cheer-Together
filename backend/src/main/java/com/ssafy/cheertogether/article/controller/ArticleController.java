@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.cheertogether.article.dto.ArticleModifyRequest;
 import com.ssafy.cheertogether.article.dto.ArticleRegisterRequest;
 import com.ssafy.cheertogether.article.dto.ArticleResponse;
+import com.ssafy.cheertogether.article.dto.ReplyRequest;
 import com.ssafy.cheertogether.article.service.ArticleService;
 
 import io.swagger.annotations.ApiOperation;
@@ -35,8 +36,8 @@ public class ArticleController {
 
 	@PostMapping
 	@ApiOperation(value = "글 등록", notes = "게시판 - 글 등록")
-	public ResponseEntity<String> regist(@RequestBody ArticleRegisterRequest articleRegisterRequest) {
-		articleService.regist(articleRegisterRequest);
+	public ResponseEntity<String> regist(@RequestBody ArticleRegisterRequest articleRegisterRequest, @ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
+		articleService.regist(articleRegisterRequest, jwtToken);
 		return new ResponseEntity<>(REGIST_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 
@@ -89,4 +90,24 @@ public class ArticleController {
 		return new ResponseEntity<>(articleService.unLike(articleId, jwtToken), HttpStatus.OK);
 	}
 
+	@PostMapping("/{articleId}/reply")
+	@ApiOperation(value = "게시글 댓글 등록", notes = "게시판 - 게시글 댓글 등록")
+	public ResponseEntity<String> registReply(@PathVariable Long articleId, @RequestBody ReplyRequest replyRequest) {
+		articleService.replyRegist(articleId, replyRequest);
+		return new ResponseEntity<>(REGIST_REPLY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+	}
+
+	@PostMapping("/reply/{replyId}")
+	@ApiOperation(value = "게시글 댓글 수정", notes = "게시판 - 게시글 댓글 수정")
+	public ResponseEntity<String> modifyReply(@PathVariable Long replyId, @RequestBody ReplyRequest replyRequest) {
+		articleService.replyModify(replyId, replyRequest);
+		return new ResponseEntity<>(MODIFY_REPLY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/reply/{replyId}")
+	@ApiOperation(value = "게시글 댓글 삭제", notes = "게시판 - 게시글 댓글 삭제")
+	public ResponseEntity<String> deleteReply(@PathVariable Long replyId) {
+		articleService.replyDelete(replyId);
+		return new ResponseEntity<>(DELETE_REPLY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+	}
 }

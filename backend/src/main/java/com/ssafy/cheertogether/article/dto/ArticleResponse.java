@@ -2,8 +2,10 @@ package com.ssafy.cheertogether.article.dto;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 import com.ssafy.cheertogether.article.domain.Article;
+import com.ssafy.cheertogether.article.domain.Reply;
 import com.ssafy.cheertogether.league.domain.League;
 import com.ssafy.cheertogether.league.dto.LeagueResponse;
 import com.ssafy.cheertogether.league.dto.LeagueResponseExceptTeamList;
@@ -23,6 +25,7 @@ public class ArticleResponse {
 	private Long likes;
 	private Long unlike;
 	private Long hit;
+	private List<Reply> replyList;
 
 	public ArticleResponse (Article article) {
 		this.id = article.getId();
@@ -34,5 +37,6 @@ public class ArticleResponse {
 		this.likes = article.getLikes();
 		this.unlike = article.getUnlike();
 		this.hit = article.getHit();
+		this.replyList = article.getReplyList();
 	}
 }

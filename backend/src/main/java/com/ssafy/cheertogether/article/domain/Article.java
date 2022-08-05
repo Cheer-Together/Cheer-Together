@@ -3,6 +3,8 @@ package com.ssafy.cheertogether.article.domain;
 import java.sql.Timestamp;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,10 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ssafy.cheertogether.article.dto.ArticleModifyRequest;
 import com.ssafy.cheertogether.article.dto.ArticleRegisterRequest;
 import com.ssafy.cheertogether.league.domain.League;
@@ -53,6 +57,9 @@ public class Article {
 	private Long unlike;
 	@ColumnDefault("0")
 	private Long hit;
+	@OneToMany(mappedBy = "article")
+	@JsonManagedReference
+	private List<Reply> replyList = new ArrayList<>();
 
 	@Builder
 	private Article(Member member, League league, String title, String content, Long likes, Long unlike, Long hit) {
