@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import com.ssafy.cheertogether.article.dto.ArticleModifyRequest;
 import com.ssafy.cheertogether.article.dto.ArticleRegisterRequest;
 import com.ssafy.cheertogether.league.domain.League;
 import com.ssafy.cheertogether.member.domain.Member;
@@ -78,5 +79,22 @@ public class Article {
 
 	public void setCreateDate() {
 		this.createDate = Timestamp.from(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toInstant());
+	}
+
+	public void update(ArticleModifyRequest articleModifyRequest) {
+		this.title = articleModifyRequest.getTitle();
+		this.content = articleModifyRequest.getContent();
+	}
+
+	public void uphit() {
+		this.hit++;
+	}
+
+	public void uplikes() {
+		this.likes++;
+	}
+
+	public void unlike() {
+		this.unlike++;
 	}
 }
