@@ -1,53 +1,103 @@
 <template>
-  <div class="navBar">
-    <img :src="navBarLogo" class="navBar-logo" @click="this.$router.push({ name:'MainPage', })">
-    <div class="navBar-items">
-      <div v-if="accountStore.isLogin" class="navBar-item-login">
-        <img :src="user.profileImage" class="navBar-profile-image" >
-        <div class="navBar-profile-nickname">
-          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;r">{{ user.nickname}}</span>
-          
-          <v-icon class="navBar-profile-icon" @click="navbarStore.isClickProfile = !navbarStore.isClickProfile">
-            mdi-chevron-down
-          </v-icon>
+  <NavBar/>
+  <div style="display:flex;">
+    <SideBar/>
+    <div class="mypage">
+      <!-- 헤더 -->
+      <div class="mypage-header">
+        <!-- 이미지 닉네임 소개 -->
+        <div style="display:flex;">
+          <!-- 프로필 이미지 -->
+          <div class="mypage-header-image">
+            <img :src="user.profileImage" alt="" width="150" height="150">
+          </div>
+          <!-- 닉네임 소개 -->
+          <div>
+            <!-- 닉네임 -->
+            <div class="mypage-header-nickname">
+              {{ user.nickname }}
+            </div>
+            <!-- 소개 -->
+            <div class="mypage-header-info">
+              <!-- {{ user.myInfo }} -->
+              일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
+            </div>
+          </div>
         </div>
-      </div>
-      <div v-if="navbarStore.isClickProfile" class="navBar-profile-dropdown">
-        <div @click="this.$router.push({ name:'Mypage', params: { userid: 30 } })">
+        <!-- 회원정보수정 -->
+        <div  class="mypage-header-editinfo">
           <v-icon>
-            mdi-account-circle
+            mdi-pencil-box
           </v-icon>
-          내정보
-        </div>
-        <div @click="myLogout">
-          <v-icon>
-            mdi-logout
-          </v-icon>
-          로그아웃
+          회원정보수정
         </div>
       </div>
-      <div v-if="!accountStore.isLogin" @click="accountStore.loginDialogToggle()" class="navBar-item-notlogin">
-        로그인
-      </div>
-      <div v-if="!accountStore.isLogin" class="navBar-item-notlogin" @click="this.$router.push({ name:'Signup', })">
-        회원가입
-      </div>
-      
-      <div>
+      <!-- 본문 -->
+      <div class="mypage-section">
+
+        <!-- 좋아하는 리그 -->
+        <div class="mypage-section-favorite-league">
+          <div class="mypage-section-favorite-league-title">
+            {{ user.nickname }}님이 좋아하는 리그
+          </div>
+          <div style="display:flex;">
+            <div class="mypage-favorite-league" v-for="favoriteLeague in user.favoriteLeagueList" :key="favoriteLeague.id">
+            <img :src="favoriteLeague.league.logo" alt="" >
+            <div class="mypage-favorite-league-title">
+              {{ favoriteLeague.league.hanName }}
+            </div>
+          </div>
+          </div>
+        </div>
+
+        <!-- 좋아하는 팀 -->
+        <div class="mypage-section-favorite-league">
+          <div class="mypage-section-favorite-league-title">
+            {{ user.nickname }}님이 좋아하는 팀
+          </div>
+          <div style="display:flex;">
+            <div class="mypage-favorite-league" v-for="favoriteLeague in user.favoriteLeagueList" :key="favoriteLeague.id">
+              <img :src="favoriteLeague.league.logo" alt="" >
+              <div class="mypage-favorite-league-title">
+                {{ favoriteLeague.league.hanName }}
+            </div>
+            </div>
+                        <div class="mypage-favorite-league" v-for="favoriteLeague in user.favoriteLeagueList" :key="favoriteLeague.id">
+              <img :src="favoriteLeague.league.logo" alt="" >
+              <div class="mypage-favorite-league-title">
+                {{ favoriteLeague.league.hanName }}
+            </div>
+            </div>
+                        <div class="mypage-favorite-league" v-for="favoriteLeague in user.favoriteLeagueList" :key="favoriteLeague.id">
+              <img :src="favoriteLeague.league.logo" alt="" >
+              <div class="mypage-favorite-league-title">
+                {{ favoriteLeague.league.hanName }}
+            </div>
+            </div>
+                        <div class="mypage-favorite-league" v-for="favoriteLeague in user.favoriteLeagueList" :key="favoriteLeague.id">
+              <img :src="favoriteLeague.league.logo" alt="" >
+              <div class="mypage-favorite-league-title">
+                {{ favoriteLeague.league.hanName }}
+            </div>
+            </div>
+                        <div class="mypage-favorite-league" v-for="favoriteLeague in user.favoriteLeagueList" :key="favoriteLeague.id">
+              <img :src="favoriteLeague.league.logo" alt="" >
+              <div class="mypage-favorite-league-title">
+                {{ favoriteLeague.league.hanName }}
+            </div>
+            </div>
+            
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { useAccountStore } from '@/store'
-import { useNavbarStore } from '@/store'
-
-const navbarStore = useNavbarStore()
-const accountStore = useAccountStore()
-const navBarLogo = require('../assets/image/로고.png');
-
-navbarStore.isClickProfile = false
+import NavBar from "../components/NavBar.vue"
+import SideBar from "../components/SideBar.vue"
 
 const user = {
   email: "tjdjer5@tjdejr.com",
@@ -231,117 +281,78 @@ const user = {
 
   ]
 }
-const myLogout = () => {
-  navbarStore.isClickProfile = false
-  accountStore.logoutAccount()
-}
 </script>
 
 <style>
-.navBar {
+.mypage {
   width: 100%;
-  height: 80px;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid var(--main-color);
-  position: fixed;
-  background-color: #ffffff;
-  top: 0;
-  z-index: 1;
+  margin: 80px 0 0 210px;
 }
-.navBar-logo {
-  margin-left: 30px;
-  width: 80px;
+.mypage-header {
+  margin: 50px auto;
+  width: 1000px;
+  height: 350px;
+  border-bottom: 1px solid #b6b9ba;
+  padding: 75px 0 0 42.5px;
 }
-.navBar-logo:hover {
-  cursor: pointer;
+.mypage-header-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 150px;
+  border: 1px solid #b6b9ba;
+  margin-right:50px;
+  overflow: hidden;
 }
-.navBar-profile-image {
-  width: 35px;
-  border: 1px solid var( --main-color);
-  border-radius: 50px;
+.mypage-header-nickname {
+  padding: 7px;
+  width: 300px;
+  height: 50px;
+  font-size: 28px;
 }
-.navBar-profile-nickname {
-  width: 90px;
-  text-align: start;
-  margin-left: 10px;
+.mypage-header-info {
+  margin-top: 30px;
+  padding: 10px;
+  width: 700px;
+  height: 110px;
   font-size: 15px;
+  background-color: var( --sub-color );
 }
-.navBar-profile-icon:hover {
-  cursor: pointer;
-}
-.navBar-items {
-  display: flex;
-  margin-right: 100px;
-  position: relative;
-}
-.navBar-item {
+.mypage-header-editinfo {
+  margin: 20px 30px 0 auto;
+  padding: 5px;
   width: 100px;
-  height: 18px;
-  text-align: center;
+  height: 30px;
+  background-color: blanchedalmond;
+  border-radius: 30px;
+  font-size: 12px;
 }
-.navBar-item-login {
-  display: flex;
+.mypage-section {
+  margin: 0 auto;
+  width: 1000px;
+  height: 700px;
+}
+.mypage-section-favorite-league {
+  padding: 10px;
+  height: 300px;
+}
+.mypage-section-favorite-league-title {
+  font-size: 25px;
+  font-family: var(--bold-font);
+}
+.mypage-favorite-league {
+  margin: 20px;
   width: 150px;
-  height: 80px;
-  align-items: center;
+  height: 150px;
+}
+.mypage-favorite-league-title {
+  margin-top: 10px;
   font-size: 18px;
-}
-.navBar-item-notlogin{
-  width: 100px;
-  height: 18px;
-  text-align: center;
-  margin: auto 0;
-}
-.navBar-item:hover, .navBar-item-notlogin:hover {
-  color: var(--main-color);
-  cursor: pointer;
-}
-.navBar-profile-dropdown {
   width: 150px;
-  position: absolute;
-  right: 30px;
-  top: 60px;
-  border: 1px solid #ecf0f5;
-  color: #5f60639b;
-  background-color: #ffffff;
-  border-radius: 10px;
-  z-index: 2;
-  display: flex;
-}
-.navBar-profile-dropdown div {
-  width: 75px;
-  height: 40px;
-  font-size: 12px;
   text-align: center;
-  padding-top: 10px;
 }
-.navBar-profile-dropdown div:first-child {
-  border-right: 1px solid #ecf0f5;
-}
-.navBar-profile-dropdown div:hover {
-  cursor: pointer;
-}
+.mypage-section-favorite-team {
+    padding: 10px;
+  height: 300px;
 
-@media (max-width: 1580px) {
-.navBar {
-  height: 60px;
-}
-.navBar-logo {
-  margin-left: 20px;
-  width: 60px;
-}
-.navBar-items {
-  display: flex;
-  margin-right: 30px;
-}
-.navBar-item {
-  font-size: 12px;
-  width: 80px;
-  height: 18px;
-}
-.navBar-item-login{
-  height: 60px;
-}
 }
 </style>
