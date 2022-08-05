@@ -28,7 +28,7 @@ public class LeagueService {
 	public List<LeagueResponse> findAll() {
 		List<League> leagueList = leagueRepository.findAll();
 		List<LeagueResponse> leagueResponseList = new ArrayList<>();
-		leagueResponseList.addAll(leagueList.stream().map(LeagueResponse::from).collect(Collectors.toList()));
+		leagueResponseList.addAll(leagueList.stream().map(league -> new LeagueResponse(league)).collect(Collectors.toList()));
 		return leagueResponseList;
 	}
 
@@ -38,6 +38,6 @@ public class LeagueService {
 	public LeagueResponse findByApiId(int apiId) {
 		League league = leagueRepository.findLeagueByApiId(apiId)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE));
-		return LeagueResponse.from(league);
+		return new LeagueResponse(league);
 	}
 }

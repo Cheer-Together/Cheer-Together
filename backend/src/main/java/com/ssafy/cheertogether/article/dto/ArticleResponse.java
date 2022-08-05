@@ -5,17 +5,18 @@ import java.util.Date;
 
 import com.ssafy.cheertogether.article.domain.Article;
 import com.ssafy.cheertogether.league.domain.League;
+import com.ssafy.cheertogether.league.dto.LeagueResponse;
+import com.ssafy.cheertogether.league.dto.LeagueResponseExceptTeamList;
 import com.ssafy.cheertogether.member.domain.Member;
+import com.ssafy.cheertogether.member.dto.MemberResponse;
 
 import lombok.Getter;
 
 @Getter
 public class ArticleResponse {
 	private Long id;
-	private String memberNickName;
-	private String memberEmail;
-	private String leagueName;
-	private int leagueApiId;
+	private MemberResponse memberResponse;
+	private LeagueResponseExceptTeamList leagueResponseExceptTeamList;
 	private String title;
 	private String content;
 	private Timestamp createDate;
@@ -23,12 +24,10 @@ public class ArticleResponse {
 	private Long unlike;
 	private Long hit;
 
-	public ArticleResponse (Article article, Member member, League league) {
+	public ArticleResponse (Article article) {
 		this.id = article.getId();
-		this.memberNickName = member.getNickname();
-		this.memberEmail = member.getEmail();
-		this.leagueName = league.getHanName();
-		this.leagueApiId = league.getApiId();
+		this.memberResponse = new MemberResponse(article.getMember());
+		this.leagueResponseExceptTeamList = new LeagueResponseExceptTeamList(article.getLeague());
 		this.title = article.getTitle();
 		this.content = article.getContent();
 		this.createDate = article.getCreateDate();

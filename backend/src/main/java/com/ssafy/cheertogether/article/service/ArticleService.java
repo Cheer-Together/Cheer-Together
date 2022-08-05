@@ -37,7 +37,7 @@ public class ArticleService {
 		return articleRepository
 			.findAll()
 			.stream()
-			.map(article -> new ArticleResponse(article, article.getMember(), article.getLeague()))
+			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
 	}
 
@@ -45,7 +45,7 @@ public class ArticleService {
 		return articleRepository
 			.findArticlesByLeague_ApiId(leagueApiId)
 			.stream()
-			.map(article -> new ArticleResponse(article, article.getMember(), article.getLeague()))
+			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
 	}
 
@@ -53,7 +53,7 @@ public class ArticleService {
 		return articleRepository
 			.findArticlesByTitleContainingOrContentContaining(keyword, keyword)
 			.stream()
-			.map(article -> new ArticleResponse(article, article.getMember(), article.getLeague()))
+			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
 	}
 }
