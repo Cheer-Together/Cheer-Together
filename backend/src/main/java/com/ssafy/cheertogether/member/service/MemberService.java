@@ -91,9 +91,9 @@ public class MemberService implements UserDetailsService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		return memberRepository.findByEmail(email)
-			.orElseThrow(() -> new UsernameNotFoundException(EMAIL_NOT_FOUND_ERROR_MESSAGE));
+	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+		return memberRepository.findById(Long.parseLong(id))
+			.orElseThrow(() -> new UsernameNotFoundException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
 	}
 
 	@Transactional(readOnly = true)
