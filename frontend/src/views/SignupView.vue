@@ -258,6 +258,7 @@ accountStore.passwordAccordance = '';
 accountStore.passwordAccordance2 = '';
 accountStore.isPushEmail = false;
 accountStore.isShowPasswordError = '';
+accountStore.myImage  = ''
 leagueStore.selectLeague = []
 leagueStore.selectTeam = []
 

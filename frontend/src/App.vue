@@ -25,8 +25,11 @@ leagueStore.leaguesAll()
     font-style: normal;
 }
 :root {
-  --main-color: #2E6AFD;
-  --sub-color: #F2F8FF;
+  /* --main-color: #2E6AFD;
+  --sub-color: #F2F8FF; */
+  --main-color: #826b5f;
+  --sub-color: #dcccc4;
+  --bold-font: 'MICEGothic Bold';
 }
 label:hover {
   cursor: pointer;
