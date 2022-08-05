@@ -1,4 +1,4 @@
-package com.ssafy.cheertogether.match.domain;
+package com.ssafy.cheertogether.game.domain;
 
 import java.time.LocalDateTime;
 
@@ -12,14 +12,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import com.ssafy.cheertogether.match.dto.MatchModifyRequest;
+import com.ssafy.cheertogether.game.dto.GameModifyRequest;
 import com.ssafy.cheertogether.team.domain.Team;
 
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Match {
+public class Game {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -36,18 +36,18 @@ public class Match {
 	private String stadium;
 
 	@Enumerated(EnumType.STRING)
-	private MatchStatus status;
+	private GameStatus status;
 
 	private Integer homeScore;
 	private Integer awayScore;
 	private Long apiId;
 
-	public void updateMatchInfos(MatchModifyRequest matchModifyRequest) {
-		kickoff = matchModifyRequest.getKickoff();
-		stadium = matchModifyRequest.getStadium();
-		status = matchModifyRequest.getStatus();
-		homeScore = matchModifyRequest.getHomeScore();
-		awayScore = matchModifyRequest.getAwayScore();
-		apiId = matchModifyRequest.getApiId();
+	public void updateGameInfos(GameModifyRequest gameModifyRequest) {
+		kickoff = gameModifyRequest.getKickoff();
+		stadium = gameModifyRequest.getStadium();
+		status = gameModifyRequest.getStatus();
+		homeScore = gameModifyRequest.getHomeScore();
+		awayScore = gameModifyRequest.getAwayScore();
+		apiId = gameModifyRequest.getApiId();
 	}
 }
