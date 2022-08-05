@@ -13,82 +13,91 @@
     </div>
     <!-- 리그 선택 영역 -->
     <div class="favorite-team-modal-select-buttons">
-      <div v-for="selectFavoriteTeams in signupStore.selectFavoriteTeams" :key="selectFavoriteTeams.name" class="favorite-team-modal-select-button" @click="changeLeague(selectFavoriteTeams.name)">
-        <p v-if="signupStore.selectFavoriteTeam == selectFavoriteTeams.name" class="active-button"> {{ selectFavoriteTeams.name }} </p >
-        <p v-else class="passive-button"> {{ selectFavoriteTeams.name }} </p >
+      <div v-for="bigleague in leagueStore.leagues" :key="bigleague.apiId" class="favorite-team-modal-select-button" @click="changeLeague(bigleague.hanName)">
+        <p v-if="leagueStore.selectFavoriteTeam == bigleague.hanName" class="active-button"> {{ bigleague.hanName }} </p >
+        <p v-else class="passive-button"> {{ bigleague.hanName }} </p >
         
        
       </div>
     </div>
     <!-- 리그 영역 -->
-    <div v-for="mymyteam in signupStore.selectFavoriteTeams" :key="mymyteam.name">
-      <div class="favorite-team-modal-teams-section-area" v-if="mymyteam.name == signupStore.selectFavoriteTeam">
+    <div v-for="leagueSelected in leagueStore.leagues" :key="leagueSelected.apiId">
+      <div class="favorite-team-modal-teams-section-area" v-if="leagueSelected.hanName == leagueStore.selectFavoriteTeam">
         <div class="favorite-team-modal-teams-section">
-          <div v-for="myTeams in signupStore.premierLeague" :key="myTeams.name" class="favorite-team-modal-team" @click="addSelectTeam(myTeams)"> 
-            <img :src="myTeams.img" width="80" height="80">
-            {{ myTeams.name }}
+          <div v-for="LeagueSelectedTeam in leagueSelected.teamList" :key="LeagueSelectedTeam.id" class="favorite-team-modal-team" @click="addSelectTeam(LeagueSelectedTeam)">
+            <img :src="LeagueSelectedTeam.logo" width="80" height="80">
+            <div>{{ LeagueSelectedTeam.hanName }}</div>
           </div>
 
         </div>
-        <div v-if="signupStore.selectTeam.length !== 0" style="height: 200px;">
+        <div v-if="leagueStore.selectTeam.length !== 0" style="height: 200px;">
 
         </div>
       </div>
     </div>
 
     <!-- 푸터 영역 -->
-    <div v-if="signupStore.selectTeam.length !== 0" class="favorite-team-modal-footer">
-      <div class="favorite-team-modal-footer-item">
-        <img :src="signupStore.selectTeam[0].img" class="favorite-team-modal-footer-image">
+    <div v-if="leagueStore.selectTeam.length !== 0" class="favorite-team-modal-footer">
+      <div class="favorite-team-modal-footer-item" @click="spliceTeam(leagueStore.selectTeam[0])">
+        <img :src="leagueStore.selectTeam[0].logo" class="favorite-team-modal-footer-image">
         <div class="favorite-team-modal-footer-item-title">
-          {{ signupStore.selectTeam[0].name }}
+          {{ leagueStore.selectTeam[0].hanName }}
         </div>
       </div>
 
-      <div class="favorite-team-modal-footer-item" v-if="signupStore.selectTeam.length >= 2" >
-        <img :src="signupStore.selectTeam[1].img" class="favorite-team-modal-footer-image">
+      <div class="favorite-team-modal-footer-item" v-if="leagueStore.selectTeam.length >= 2" @click="spliceTeam(leagueStore.selectTeam[1])">
+        <img :src="leagueStore.selectTeam[1].logo" class="favorite-team-modal-footer-image">
         <div class="favorite-team-modal-footer-item-title">
-          {{ signupStore.selectTeam[1].name }}
+          {{ leagueStore.selectTeam[1].hanName }}
         </div>
       </div>
 
-      <div class="favorite-team-modal-footer-item" v-if="signupStore.selectTeam.length == 3" >
-        <img :src="signupStore.selectTeam[2].img" class="favorite-team-modal-footer-image">
+      <div class="favorite-team-modal-footer-item" v-if="leagueStore.selectTeam.length == 3" @click="spliceTeam(leagueStore.selectTeam[2])">
+        <img :src="leagueStore.selectTeam[2].logo" class="favorite-team-modal-footer-image">
         <div class="favorite-team-modal-footer-item-title">
-          {{ signupStore.selectTeam[2].name }}
+          {{ leagueStore.selectTeam[2].hanName }}
         </div>
       </div>
 
-      <button class="save-button" @click="signupStore.favoriteTeam = false">저장</button>
+      <button class="save-button" @click="leagueStore.favoriteTeam = false">저장</button>
     </div>
   </v-card>
 </template>
 
 <script setup>
-import { useSignupStore } from "@/store"
+import { useLeagueStore } from "@/store"
 
-const signupStore = useSignupStore()
+const leagueStore = useLeagueStore()
+
+
 
 const addSelectTeam = (myTeam) => {
-  if (signupStore.selectTeam.length < 3){
-    if (signupStore.selectTeam.includes(myTeam)) {
-      const smallNumberIndex = signupStore.selectTeam.indexOf(myTeam);
-      signupStore.selectTeam.splice(smallNumberIndex, 1)
+  if (leagueStore.selectTeam.length < 3){
+    if (leagueStore.selectTeam.includes(myTeam)) {
+      const smallNumberIndex = leagueStore.selectTeam.indexOf(myTeam);
+      leagueStore.selectTeam.splice(smallNumberIndex, 1)
     }
     else {
-      signupStore.selectTeam.push(myTeam);
+      leagueStore.selectTeam.push(myTeam);
     }
   }
-  else if (signupStore.selectTeam.length === 3) {
-    if (signupStore.selectTeam.includes(myTeam)) {
-      const smallNumberIndex = signupStore.selectTeam.indexOf(myTeam);
-      signupStore.selectTeam.splice(smallNumberIndex, 1)
+  else if (leagueStore.selectTeam.length === 3) {
+    if (leagueStore.selectTeam.includes(myTeam)) {
+      const smallNumberIndex = leagueStore.selectTeam.indexOf(myTeam);
+      leagueStore.selectTeam.splice(smallNumberIndex, 1)
     }
   }
 }
 
+const spliceTeam = (myTeam) => {
+      if (leagueStore.selectTeam.includes(myTeam)) {
+      const smallNumberIndex = leagueStore.selectTeam.indexOf(myTeam);
+      leagueStore.selectTeam.splice(smallNumberIndex, 1)
+    }
+}
+
 const changeLeague = (name) => {
-  signupStore.selectFavoriteTeam = name
+  leagueStore.selectFavoriteTeam = name
 }
 </script>
 
@@ -142,8 +151,7 @@ const changeLeague = (name) => {
   display: flex;
   flex-wrap: wrap;
   padding: 0px 50px;
-  word-break: keep-all;
-  
+  font-size: 14px;
 }
 .favorite-team-modal-teams-section-area {
   overflow-y: scroll;
@@ -169,7 +177,7 @@ const changeLeague = (name) => {
   background-color: white;
 }
 .favorite-team-modal-footer-item {
-  margin: 10px 20px 50px 20px;
+  margin: 10px 20px 30px 20px;
 }
 .favorite-team-modal-footer-image {
   width: 70px;

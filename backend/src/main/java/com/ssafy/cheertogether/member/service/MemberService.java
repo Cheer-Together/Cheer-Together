@@ -21,7 +21,6 @@ import com.ssafy.cheertogether.favorite.repository.FavoriteTeamRepository;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
-import com.ssafy.cheertogether.member.dto.MemberLoginResponse;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
@@ -82,19 +81,19 @@ public class MemberService implements UserDetailsService {
 	 *
 	 */
 	@Transactional(readOnly = true)
-	public MemberLoginResponse login(String email, String password) {
+	public Long login(String email, String password) {
 		Member findMember = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_EMAIL_ERROR_MESSAGE));
 		if (!findMember.confirmPassword(password)) {
 			throw new IllegalArgumentException(MISMATCH_PASSWORD_ERROR_MESSAGE);
 		}
-		return new MemberLoginResponse(findMember);
+		return findMember.getId();
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		return memberRepository.findByEmail(email)
-			.orElseThrow(() -> new UsernameNotFoundException(EMAIL_NOT_FOUND_ERROR_MESSAGE));
+	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+		return memberRepository.findById(Long.parseLong(id))
+			.orElseThrow(() -> new UsernameNotFoundException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
 	}
 
 	@Transactional(readOnly = true)

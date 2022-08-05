@@ -2,177 +2,9 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 import cheertogether from '@/api/cheertogether'
 import Swal from 'sweetalert2'
+import router from '@/router/index.js';
 
-export const useSignupStore = defineStore('signup', {
-  state: () => ({
-    favoriteLeague: false,
-    favoriteTeam: false,
-    bigLeagues: {
-      프리미어리그: {
-        id: 0,
-        img: require('../assets/image/6대리그/프리미어리그.jpg'),
-        title: '프리미어리그',
-      },
-      라리가: {
-        id: 1,
-        img: require('../assets/image/6대리그/라리가로고.png'),
-        title: '라리가',
-      },
-      세리에A: {
-        id: 2,
-        img: require('../assets/image/6대리그/세리에A로고.jpg'),
-        title: '세리에A',
-      },
-      분데스리가: {
-        id: 3,
-        img: require('../assets/image/6대리그/분데스리가.png'),
-        title: '분데스리가',
-      },
-      리그1: {
-        id: 4,
-        img: require('../assets/image/6대리그/리그1로고.png'),
-        title: '리그1',
-      },
-      K리그1: {
-        id: 5,
-        img: require('../assets/image/6대리그/K리그1.png'),
-        title: 'K리그1',
-      },
-    },
-    selectLeague: [],
-    selectTeam: [],
-    selectFavoriteTeam: '프리미어리그',
-    selectFavoriteTeams: [
-      {
-        name: '프리미어리그',
-      },
-      {
-        name: '라리가'
-      },
-      {
-        name: '세리에A'
-      },
-      {
-        name: '분데스리가'
-      },
-      {
-        name: '리그1'
-      },
-      {
-        name: 'k리그1'
-      },
-    ],
-    premierLeague: [
-     {
-        id: 0,
-        name: '본머스',
-        img: require('../assets/image/프리미어리그/본머스.png'),
-      },
-      {
-        id: 1,
-        name: '아스날',
-        img: require('../assets/image/프리미어리그/아스날.png'),
-      },
-      {
-        id: 2,
-        name: '아스톤 빌라',
-        img: require('../assets/image/프리미어리그/아스톤빌라.png'),
 
-      },
-      {
-        id: 3,
-        name: '브렌트포드',
-        img: require('../assets/image/프리미어리그/브렌트포드.png'),
-
-      },
-      {
-        id: 4,
-        name: '브라이튼 앤 호브 알비온',
-        img: require('../assets/image/프리미어리그/브라이튼앤호브알비온.png'),
-
-      },
-      {
-        id: 5,
-        name: '첼시',
-        img: require('../assets/image/프리미어리그/첼시.png'),
-      },
-      {
-        id: 6,
-        name: '크리스탈 팰리스',
-        img: require('../assets/image/프리미어리그/크리스탈팰리스.png'),
-      },
-      {
-        id: 7,
-        name: '에버튼',
-        img: require('../assets/image/프리미어리그/에버튼.png'),
-      },
-      {
-        id: 8,
-        name: '풀럼',
-        img: require('../assets/image/프리미어리그/풀럼.png'),
-      },
-      {
-        id: 9,
-        name: '리즈 유나이티드',
-        img: require('../assets/image/프리미어리그/리즈유나이티드.png'),
-      },
-      {
-        id: 10,
-        name: '레스터 시티',
-        img: require('../assets/image/프리미어리그/레스터시티.png'),
-      },
-      {
-        id: 11,
-        name: '리버풀',
-        img: require('../assets/image/프리미어리그/브렌트포드.png'),
-      },
-      {
-        id: 12,
-        name: '맨체스터 시티',
-        img: require('../assets/image/프리미어리그/맨체스터시티.png'),
-      },
-      {
-        id: 13,
-        name: '맨체스터 유나이티드',
-        img: require('../assets/image/프리미어리그/맨체스터유나이티드.png'),
-      },
-      {
-        id: 14,
-        name: '뉴캐슬 유나이티드',
-        img: require('../assets/image/프리미어리그/뉴캐슬유나이티드.png'),
-      },
-      {
-        id: 15,
-        name: '노팅엄 포레스트',
-        img: require('../assets/image/프리미어리그/노팅엄포레스트.png'),
-      },
-      {
-        id: 16,
-        name: '사우스햄튼',
-        img: require('../assets/image/프리미어리그/사우스햄튼.png'),
-      },
-      {
-        id: 17,
-        name: '토트넘 훗스퍼',
-        img: require('../assets/image/프리미어리그/토트넘로고.png'),
-      },
-      {
-        id: 18,
-        name: '웨스트햄 유나이티드',
-        img: require('../assets/image/프리미어리그/웨스트햄유나이티드.png'),
-      },
-      {
-        id: 19,
-        name: '울버햄튼 원더러스',
-        img: require('../assets/image/프리미어리그/울버햄튼원더러스.png'),
-      }
-    ],
-  }),
-  getters: {
-  },
-  actions: {
-  },
-})
 export const useMainPageStore = defineStore('mainpage', {
   state: () => (
     { 
@@ -204,7 +36,6 @@ export const useMainPageStore = defineStore('mainpage', {
       ]
     }
   ),
-
 })
 export const useCommunityStore = defineStore('community', {
   state: () => (
@@ -229,7 +60,7 @@ export const useCommunityStore = defineStore('community', {
           updated_date: '8:32',
           author: '아카페라모카라때',
           recommended: 5
-        }
+        },
       ]
     }
   ),
@@ -269,7 +100,7 @@ export const useAccountStore = defineStore('account', {
     isPushEmail: false,
     isAllowPassword: false,
     isShowPasswordError: '',
-
+    myImage: '',
   }),
   getters: {
   },
@@ -415,26 +246,29 @@ export const useAccountStore = defineStore('account', {
 
     signUp(userInfo) {
       /* 
-      GET: 이메일 중복 체크
+      POST: 회원 가입
         성공하면
 
         실패하면
 
       */
+      console.log(userInfo)
       axios({
         url: cheertogether.members.signUp(),
         method: 'POST',
         data: {
           email : userInfo.email,
+          favoriteLeagueList : userInfo.favoriteLeagueList,
           myInfo : userInfo.myInfo,
           nickname : userInfo.nickname,
           password : userInfo.password,
-          profileImage : '.',
+          profileImage : userInfo.profileImage,
           role : 'user'
         }  
       })
         .then(res => {
           console.log(res)
+          router.push({name:'MainPage'})
         })
         .catch(err => {
           console.log(err)
@@ -462,8 +296,7 @@ export const useAccountStore = defineStore('account', {
         }
       }
     },
-
-   
+  
     loginAccount(user) {
       /*
       email과 password를 담은 user: Object를 입력받아 로그인을 시도합니다.
@@ -476,26 +309,51 @@ export const useAccountStore = defineStore('account', {
         method: 'POST',
         data: user
       }).then(res => {
-          sessionStorage.setItem('token', res.data)
+          sessionStorage.setItem('token', res.data.jwtToken)
           this.isLogin = true
           console.log(res.data)
       }).catch(err => {
           console.log(err)
       })
     },
+    kakaoLogin() {
+      const API_KEY = process.env.VUE_APP_KAKAO_LOGIN_API_KEY;
+      const REDIRECT_URI = process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI;
+      const url = "https://kauth.kakao.com/oauth/authorize?client_id=" + decodeURIComponent(API_KEY) + "&redirect_uri=" + decodeURIComponent(REDIRECT_URI) + "&response_type=code";
+      window.location.replace(url);
+    },
     logoutAccount() {
       sessionStorage.removeItem('token')
       this.isLogin = false
+      Swal.fire({
+        icon: 'success',
+        title: '성공적으로 로그아웃 되었습니다.',
+      })
+    },
+    findPassword(email) {
+      axios({
+        url: cheertogether.members.findPassword(),
+        method: 'GET',
+        params: {
+          email: email,
+        }  
+      }).then(res => {
+          console.log(res.data)
+      }).catch(err => {
+          console.log(err)
+      })
     }
   },
 })
 export const useLeagueStore = defineStore('league', {
   state: () => ({ 
     leagues: [
-      {
-        logo: '',
-      }
-    ]
+    ],
+    selectLeague: [],
+    selectTeam: [],
+    selectFavoriteTeam: '프리미어리그',
+    favoriteLeague: false,
+    favoriteTeam: false,
     }
   ),
   actions: {
@@ -510,29 +368,6 @@ export const useLeagueStore = defineStore('league', {
         .then(res => {
           console.log(res.data)
           this.leagues = res.data
-
-          this.leagues.forEach( league => {
-            if (league.name === 'Premier League') {
-              league.name = '프리미어리그'
-            }
-            else if (league.name === 'La Liga') {
-              league.name = '라리가'
-            }
-            else if (league.name === 'Serie A') {
-              league.name = '세리에A'
-            }
-            else if (league.name === 'Bundesliga') {
-              league.name = '분데스리가'
-            }
-            else if (league.name === 'Ligue 1') {
-              league.name = '리그 1'
-            }
-            else if (league.name === 'K League 1') {
-              league.name = 'K리그1'
-            }
-          });
-
-
         })
         .catch(err => {
           console.log(err)
@@ -540,3 +375,127 @@ export const useLeagueStore = defineStore('league', {
     }
   },
 })
+export const useScheduleStore = defineStore('schedule', {
+  state: () => ({
+    schedules: []
+  }),
+  actions: {
+    clickLeague(event) {
+      const activeTag = document.querySelector('.league-active')
+      activeTag.classList.remove('league-active')
+      const clickedTag = event.target
+      clickedTag.classList.add('league-active')
+      const activeMonthTag = document.querySelector('.item-active')
+      activeMonthTag.classList.remove('item-active')
+      const firstMonthTag = document.querySelector('.schedule-page-month-item p')
+      firstMonthTag.classList.add('item-active')
+      // axios({})
+    },
+
+    clickMonth (event) {
+      const activeTag = document.querySelector('.item-active')
+      activeTag.classList.remove('item-active')
+      const clickedTag = event.target
+      clickedTag.classList.add('item-active')
+      // axios({})
+    }
+  }
+})
+
+export const useOnAirStore = defineStore('onair', {
+  state: () => ({
+    rooms: [],
+    makeRoomDialog: false,
+    tmp_pl: [{id: '1', name : 'premierLeague1'},
+              {id: '2', name : 'premierLeague2'},
+              {id: '3', name : 'premierLeague3'},
+              {id: '4', name : 'premierLeague4'},
+              {id: '5', name : 'premierLeague5'},
+              {id: '6', name : 'premierLeague6'},
+              {id: '7', name : 'premierLeague7'},
+              {id: '8', name : 'premierLeague8'},
+              ],
+    tmp_laliga: [{id: '1', name : 'laliga-1'},
+                  {id: '2', name : 'laliga-2'},
+                  {id: '3', name : 'laliga-3'},
+                  {id: '4', name : 'laliga-4'},],
+    tmp_serie: [{id: '5', name : 'serie_A-1'},
+                {id: '6', name : 'serie_A-2'},
+                {id: '7', name : 'serie_A-3'},
+                {id: '8', name : 'serie_A-4'},
+                {id: '9', name : 'serie_A-5'},],
+    tmp_bundesliga: [{id: '10', name : 'bundesliga-1'},
+                    {id: '11', name : 'bundesliga-2'},
+                    {id: '12', name : 'bundesliga-3'},
+                    {id: '13', name : 'bundesliga-4'},
+                    {id: '14', name : 'bundesliga-5'},
+                    {id: '15', name : 'bundesliga-6'},
+                    {id: '16', name : 'bundesliga-7'},
+                    {id: '17', name : 'bundesliga-8'},
+                    {id: '18', name : 'bundesliga-9'},
+                    {id: '19', name : 'bundesliga-10'},
+                    {id: '20', name : 'bundesliga-11'},],
+    tmp_ligue1: [{id: '5', name : 'ligue_1-1'},
+                  {id: '6', name : 'ligue_1-2'},
+                  {id: '7', name : 'ligue_1-3'},],
+    tmp_k_league: [{id: '5', name : 'K_league-1'},
+                    {id: '6', name : 'K_league-2'},]
+  }),
+  actions: {
+    moveLeagueRooms(event){
+      const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
+      if(document.querySelector('.sideBar-subtitle-active')){
+        const fromSubtitle = document.querySelector('.sideBar-subtitle-active')
+        fromSubtitle.classList.remove('sideBar-subtitle-active')
+      }
+      const toSubtitle = event.target
+      toSubtitle.classList.add('sideBar-subtitle-active')
+      for(let league of leagues){
+        if(league === toSubtitle.innerText) {
+          this.fetchRooms(toSubtitle.innerText)
+          router.push({name: 'Onair' , params: {leaguename: `${toSubtitle.innerText}`} })
+        }
+      }
+      
+    },
+
+    fetchRooms(leagueName){
+      
+      if (leagueName === '프리미어리그'){
+        this.rooms = this.tmp_pl
+      } else if (leagueName === '라리가'){
+        this.rooms = this.tmp_laliga
+      } else if (leagueName === '세리에 A'){
+        this.rooms = this.tmp_serie
+      } else if (leagueName === '분데스리가'){
+        this.rooms = this.tmp_bundesliga
+      } else if (leagueName === '리그 1'){
+        this.rooms = this.tmp_ligue1
+      } else if (leagueName === 'K리그 1'){
+        this.rooms = this.tmp_k_league
+      }
+    },
+
+    makeRoomDialogToggle() {
+      if (this.makeRoomDialog) {
+        this.makeRoomDialog = false
+      } else {
+        this.makeRoomDialog = true
+      }
+    }
+  }
+})
+
+export const useNavbarStore = defineStore('navbar', {
+  state: () => (
+    { 
+      isClickProfile: false,
+    })
+})
+export const useMatchScreenStore = defineStore('match', {
+  state: () => (
+    { 
+      isClickChatting: '',
+    })
+})
+

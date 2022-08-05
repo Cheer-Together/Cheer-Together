@@ -27,10 +27,19 @@ leagueStore.leaguesAll()
 :root {
   --main-color: #2E6AFD;
   --sub-color: #F2F8FF;
+  /* --main-color: rgb(78, 167, 235);
+  --sub-color: rgb(177, 202, 255); */
+  --active-color: #604a3e;
+  --bold-font: 'MICEGothic Bold';
+  
 }
-
+label:hover {
+  cursor: pointer;
+}
 body {
   font-family: 'MICEGothic';
   margin: 0;
+  color: #3b4151;
+  /* color: black; */
 }
 </style>

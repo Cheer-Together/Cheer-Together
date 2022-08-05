@@ -23,11 +23,11 @@
            <!-- 상단 하늘색 영역 -->
           <div class="todayMatchList-item-section-header">
             <div>
-              <v-icon style="width:10px; font-size:20px; margin-right: 5px;">
+              <v-icon>
                 mdi-chevron-left
               </v-icon>
-                07.26 <span style="font-size:10px;">(화)</span>
-              <v-icon style="width:10px; font-size:20px; margin-left: 5px;">
+                07.26 <span style="font-size:15px;">(화)</span>
+              <v-icon>
                 mdi-chevron-right
               </v-icon>
             </div>
@@ -257,7 +257,7 @@ const premierLeague = {
   margin-bottom: 50px;
 }
 .todayMatchList-title {
-  font-size: 18px;
+  font-size: 24px;
   padding: 5.5px 0;
 }
 .todayMatchList-section {
@@ -279,24 +279,30 @@ const premierLeague = {
   justify-content: space-between;
 }
 .todayMatchList-section-title {
-  height: 20px;
-  margin: 9px 0;
+  height: 30px;
+  margin: 10px 0;
+  font-size: 20px;
 }
 .todayMatchList-section-etc{
-  height: 20px;
-  margin: 9px 0;
+  height: 30px;
+  margin: 10px 0;
+  font-size: 16px;
+  padding: 4px 2px 0 0;
+
 }
 .todayMatchList-item-section {
   width: 515px;
   height: 350px;
-  border: 1px solid var(--main-color);
+  border: 2px solid var(--main-color);
+  border-radius: 5px;
 }
 .todayMatchList-item-section-header {
-  width: 513px;
-  border-bottom: 1px solid var(--main-color);
+  width: 511px;
+  border-bottom: 2px solid var(--main-color);
   background-color: var(--sub-color);
-  height: 50px;
+  height: 60px;
   text-align: center;
+  font-size: 20px;
 }
 .todayMatchList-item-section-header > div{
   padding-top: 13.25px;
