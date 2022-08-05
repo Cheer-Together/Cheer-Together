@@ -1,6 +1,8 @@
 package com.ssafy.cheertogether.article.domain;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 import com.ssafy.cheertogether.article.dto.ArticleRegisterRequest;
 import com.ssafy.cheertogether.league.domain.League;
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+@DynamicInsert
 public class Article {
 
 	@Id
@@ -43,8 +45,7 @@ public class Article {
 	private String title;
 	@Column(columnDefinition = "TEXT")
 	private String content;
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createDate;
+	private Timestamp createDate;
 	@ColumnDefault("0")
 	private Long likes;
 	@ColumnDefault("0")
@@ -73,5 +74,9 @@ public class Article {
 
 	public void setLeague(League league) {
 		this.league = league;
+	}
+
+	public void setCreateDate() {
+		this.createDate = Timestamp.from(ZonedDateTime.now(ZoneId.of("Asia/Seoul")).toInstant());
 	}
 }

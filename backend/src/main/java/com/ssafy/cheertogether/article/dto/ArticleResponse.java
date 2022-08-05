@@ -1,5 +1,6 @@
 package com.ssafy.cheertogether.article.dto;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import com.ssafy.cheertogether.article.domain.Article;
@@ -17,7 +18,7 @@ public class ArticleResponse {
 	private int leagueApiId;
 	private String title;
 	private String content;
-	private Date createDate;
+	private Timestamp createDate;
 	private Long likes;
 	private Long unlike;
 	private Long hit;

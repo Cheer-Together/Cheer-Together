@@ -27,6 +27,7 @@ public class ArticleService {
 
 	public void regist(ArticleRegisterRequest articleRegisterRequest) {
 		Article article = Article.from(articleRegisterRequest);
+		article.setCreateDate();
 		article.setMember(memberRepository.getReferenceById(articleRegisterRequest.getMemberId()));
 		article.setLeague(leagueRepository.findLeagueByApiId(articleRegisterRequest.getLeagueApiId()).get());
 		articleRepository.save(article);
