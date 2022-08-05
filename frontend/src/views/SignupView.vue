@@ -227,7 +227,7 @@
 
       <!-- 회원 가입!! -->
       <div class="signup-range-bottom">
-        <button class="signup-submit-button"  @click="this.$router.push({name:'MainPage'})">
+        <button class="signup-submit-button"  @click="router.push({name:'MainPage'})">
           이전
         </button>
         <button class="signup-submit-button next" @click.prevent="changeSignUp(credentialsSignup)">
@@ -246,6 +246,7 @@ import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
 import { useAccountStore } from "@/store"
 import { useLeagueStore } from "@/store"
 import Swal from 'sweetalert2'
+import router from '@/router'
 
 const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()
