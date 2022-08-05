@@ -48,6 +48,7 @@
         rounded="circle"
       ></v-pagination>
     </div>
+    {{decoded}}
   </div>
 </template>
 
@@ -55,9 +56,15 @@
 import { useAccountStore, useCommunityStore } from "@/store"
 import { ref, watchEffect } from "vue"
 import router from "@/router"
+import jwt_decode from "jwt-decode"
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
 const { articles } = communityStore
+const toke = ref(sessionStorage.getItem('token')??'')
+const decoded = ref('')
+if (toke.value) {
+  decoded.value = jwt_decode(toke.value)
+}
 
 // 페이지네이션
 const page = ref(1)
