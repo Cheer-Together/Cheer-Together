@@ -6,4 +6,5 @@ public class RoomConstant {
 	public static final String MISMATCH_MATCH_ID_ERROR_MESSAGE = "검색하시는 경기 정보가 없습니다.";
 	public static final String CREATE_ROOM_SUCCESS_MESSAGE = "응원방 생성이 완료되었습니다.";
 	public static final String MODIFY_ROOM_SUCCESS_MESSAGE = "응원방 수정이 완료되었습니다.";
+	public static final String DELETE_ROOM_SUCCESS_MESSAGE = "응원방 삭제가 완료되었습니다.";
 }

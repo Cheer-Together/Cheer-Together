@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
 import com.ssafy.cheertogether.room.dto.RoomModifyRequest;
 import com.ssafy.cheertogether.room.dto.RoomResponse;
+import com.ssafy.cheertogether.room.repository.RoomRepository;
 import com.ssafy.cheertogether.room.service.RoomService;
 
 import io.swagger.annotations.ApiOperation;
@@ -31,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 public class RoomController {
 
 	private final RoomService roomService;
+	private final RoomRepository roomRepository;
 
 	@GetMapping("/")
 	@ApiOperation(value = "모든 응원방 검색", notes = "모든 응원방 목록 검색")
@@ -46,7 +49,7 @@ public class RoomController {
 	}
 
 	@GetMapping("/match/{matchId}")
-	@ApiOperation(value = "매치 아이디 검색", notes = "매치 아이디 검색")
+	@ApiOperation(value = "매치 아이디 검색", notes = "특정 경기 시청중인 응원방 검색")
 	public ResponseEntity<List<RoomResponse>> findRoomByMatchId(
 		@ApiParam(value = "매치 아이디", required = true, example = "1") @PathVariable Long matchId) {
 		return new ResponseEntity<>(roomService.findRoomByMatchId(matchId), HttpStatus.OK);
@@ -66,5 +69,14 @@ public class RoomController {
 		@ApiParam(value = "응원방 수정 정보", required = true) @RequestBody RoomModifyRequest roomModifyRequest) {
 		roomService.modifyRoom(roomModifyRequest);
 		return new ResponseEntity<>(MODIFY_ROOM_SUCCESS_MESSAGE, HttpStatus.OK);
+	}
+
+	@DeleteMapping("/{roomId}")
+	@ApiOperation(value = "응원방 정보 삭제", notes = "응원방 응원 종료로 인한 응원방 삭제")
+	public ResponseEntity<String> deleteRoom(
+		@ApiParam(value = "삭제할 응원방 아이디", required = true, example = "1") @PathVariable Long roomId
+	){
+		roomRepository.deleteRoomById(roomId);
+		return new ResponseEntity<>(DELETE_ROOM_SUCCESS_MESSAGE, HttpStatus.OK);
 	}
 }
