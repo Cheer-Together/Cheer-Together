@@ -1,8 +1,8 @@
 <template>
   <div class="navBar">
     <div>
-      <img :src="navBarLogo" class="navBar-logo" @click="this.$router.push({ name:'MainPage', })">
-      <img :src="navBarNameLogo" class="navBar-namelogo" @click="this.$router.push({ name:'MainPage', })">
+      <img :src="navBarLogo" class="navBar-logo" @click="router.push({ name:'MainPage', })">
+      <img :src="navBarNameLogo" class="navBar-namelogo" @click="router.push({ name:'MainPage', })">
     </div>
     <div class="navBar-items">
       <div v-if="accountStore.isLogin" class="navBar-item-login">
@@ -16,7 +16,7 @@
         </div>
       </div>
       <div v-if="navbarStore.isClickProfile" class="navBar-profile-dropdown">
-        <div @click="this.$router.push({ name:'Mypage', params: { userid: 30 } })">
+        <div @click="router.push({ name:'Mypage', params: { userid: 30 } })">
           <v-icon>
             mdi-account-circle
           </v-icon>
@@ -32,7 +32,7 @@
       <div v-if="!accountStore.isLogin" @click="accountStore.loginDialogToggle()" class="navBar-item-notlogin">
         로그인
       </div>
-      <div v-if="!accountStore.isLogin" class="navBar-item-notlogin" @click="this.$router.push({ name:'Signup', })">
+      <div v-if="!accountStore.isLogin" class="navBar-item-notlogin" @click="router.push({ name:'Signup', })">
         회원가입
       </div>
       
@@ -45,6 +45,7 @@
 <script setup>
 import { useAccountStore } from '@/store'
 import { useNavbarStore } from '@/store'
+import router from '@/router'
 
 const navbarStore = useNavbarStore()
 const accountStore = useAccountStore()

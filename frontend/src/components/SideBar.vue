@@ -1,7 +1,7 @@
 <template>
   <div class="sideBar">
     <!-- 홈 -->
-    <div class="sideBar-item" @click="this.$router.push({name:'MainPage'})">
+    <div class="sideBar-item" @click="router.push({name:'MainPage'})">
       <v-icon class="sideBar-item-icon">
         mdi-home
       </v-icon>
@@ -10,7 +10,7 @@
       </div>
     </div>
     <!-- 실시간 집관 -->
-    <div class="sideBar-item" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
+    <div class="sideBar-item" @click="router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
       <v-icon class="sideBar-item-icon">
         mdi-video-outline
       </v-icon>
@@ -43,7 +43,7 @@
       K리그 1
     </div>
     <!-- 경기 일정 -->
-    <div class="sideBar-item" @click="this.$router.push({name:'Schedule'})">
+    <div class="sideBar-item" @click="router.push({name:'Schedule'})">
       <v-icon class="sideBar-item-icon">
         mdi-calendar-month-outline
       </v-icon>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <!-- 커뮤니티 -->
-    <div class="sideBar-item" @click="this.$router.push({name:'Article'})">
+    <div class="sideBar-item" @click="router.push({name:'Article'})">
       <v-icon class="sideBar-item-icon">
         mdi-account-group
       </v-icon>
@@ -65,7 +65,9 @@
 
 <script setup>
 import { useOnAirStore } from '../store/index.js'
+import router from '@/router/index.js'
 const onairStore = useOnAirStore();
+
 </script>
 
 <style>
