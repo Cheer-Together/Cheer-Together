@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RoomController {
 
 	private final RoomService roomService;
-	private final RoomRepository roomRepository;
 
 	@GetMapping("/")
 	@ApiOperation(value = "모든 응원방 검색", notes = "모든 응원방 목록 검색")
@@ -76,7 +75,7 @@ public class RoomController {
 	@ApiOperation(value = "응원방 정보 삭제", notes = "응원방 응원 종료로 인한 응원방 삭제")
 	public ResponseEntity<String> deleteRoom(
 		@ApiParam(value = "삭제할 응원방 아이디", required = true, example = "1") @PathVariable Long roomId) {
-		roomRepository.deleteRoomById(roomId);
+		roomService.deleteRoom(roomId);
 		return new ResponseEntity<>(DELETE_ROOM_SUCCESS_MESSAGE, HttpStatus.OK);
 	}
 

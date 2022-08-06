@@ -14,7 +14,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 
 	List<Room> findAll();
 
-	@Transactional
 	void deleteRoomById(Long id);
 
 	List<Room> findRoomByNameContaining(String keyword);
