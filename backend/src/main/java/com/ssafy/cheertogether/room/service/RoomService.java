@@ -68,4 +68,7 @@ public class RoomService {
 			.orElseThrow(() -> new IllegalArgumentException(MODIFY_ROOM_ERROR_MESSAGE));
 		room.update(modifyRequest);
 	}
+	public void deleteRoom(Long id){
+		roomRepository.deleteRoomById(id);
+	}
 }
