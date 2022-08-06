@@ -10,11 +10,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.ssafy.cheertogether.room.domain.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
-	Optional<Room> findById(Long id);
+	Optional<Room> findRoomById(Long id);
 
 	List<Room> findAll();
 
 	@Transactional
 	void deleteRoomById(Long id);
 
+	List<Room> findRoomByNameContaining(String keyword);
+
+	List<Room> findRoomByManagerIdContaining(String keyword);
 }

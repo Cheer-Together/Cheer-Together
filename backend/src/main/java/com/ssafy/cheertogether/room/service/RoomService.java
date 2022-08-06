@@ -46,6 +46,19 @@ public class RoomService {
 		return match.getRoomList().stream().map(RoomResponse::new).collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
+	public List<RoomResponse> findRoomByContaining(String type, String keyword){
+		if(type.equals("name")){
+			List<Room> roomList = roomRepository.findRoomByNameContaining(keyword);
+			return roomList.stream().map(RoomResponse::new).collect(Collectors.toList());
+		} else if (type.equals("managerId")) {
+			List<Room> roomList = roomRepository.findRoomByManagerIdContaining(keyword);
+			return roomList.stream().map(RoomResponse::new).collect(Collectors.toList());
+		}else{
+			throw new IllegalStateException(MISMATCH_SEARCH_TYPE_ERROR_MESSAGE);
+		}
+	}
+
 	public void createRoom(RoomCreateRequest roomCreateRequest) {
 		roomRepository.save(Room.from(roomCreateRequest));
 	}
