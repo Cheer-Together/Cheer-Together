@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.cheertogether.auth.JwtTokenProvider;
+import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberLoginRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;

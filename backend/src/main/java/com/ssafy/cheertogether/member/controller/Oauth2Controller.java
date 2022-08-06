@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.ssafy.cheertogether.auth.JwtTokenProvider;
+import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.service.Oauth2Service;
 
