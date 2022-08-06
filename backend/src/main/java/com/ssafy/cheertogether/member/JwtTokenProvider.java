@@ -1,4 +1,4 @@
-package com.ssafy.cheertogether.auth;
+package com.ssafy.cheertogether.member;
 
 import java.util.Base64;
 import java.util.Date;
