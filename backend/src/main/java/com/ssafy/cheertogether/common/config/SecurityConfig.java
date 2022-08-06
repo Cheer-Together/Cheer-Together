@@ -8,7 +8,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.ssafy.cheertogether.auth.JwtTokenProvider;
+import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.common.filter.JwtAuthenticationFilter;
 
 import lombok.RequiredArgsConstructor;
