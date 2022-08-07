@@ -132,4 +132,7 @@ const items = [
   border: 1px solid #bcbcbc;
   padding-left: 10px;
 }
+::v-deep .v-field {
+  font-size: 12px !important;
+}
 </style>
