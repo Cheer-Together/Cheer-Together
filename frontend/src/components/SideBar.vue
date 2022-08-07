@@ -10,7 +10,7 @@
       </div>
     </div>
     <!-- 실시간 집관 -->
-    <div class="sideBar-item" @click="this.$router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
+    <div class="sideBar-item" @click="onairStore.moveLeagueRooms">
       <v-icon class="sideBar-item-icon">
         mdi-video-outline
       </v-icon>
@@ -107,7 +107,7 @@ const onairStore = useOnAirStore();
   cursor:pointer;
 }
 .sideBar-subtitle-active {
-  color: #2E6AFD;
+  color: var(--main-color);
 }
 
 @media (max-width: 1580px) {

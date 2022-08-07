@@ -83,27 +83,7 @@
           </div>
         </div>
 
-        <div class="schedule-list-items" v-for="match in matches" :key="match.date">
-          <div class="schedule-date">
-            <p>{{ match.date }}</p>
-          </div>
-          <div class="schedule-time">
-            <p>{{ match.time }}</p>
-          </div>
-          <div class="schedule-stadium">
-            <p>{{ match.stadium }}</p>
-          </div>
-          <div class="schedule-matches">
-            <div v-if="!!match.time">
-              <p>{{ match.team1 }}</p>
-              <img :src="match.team1_logo" class="team-logo">
-              <p>VS</p> 
-              <img :src="match.team2_logo" class="team-logo">
-              <p>{{ match.team2 }}</p>
-            </div>
-            <div v-if="!match.time" class="no-match">경기가 없습니다.</div>
-          </div>
-        </div>
+        <ScheduleTable/>
         
 
       </div>
@@ -114,37 +94,9 @@
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
+import ScheduleTable from "../components/ScheduleTable.vue"
 import { useScheduleStore } from  '../store/index.js'
-
-const matches = [
-  {
-    date: '8월 1일',
-    time: '00:30',
-    stadium: 'Selhurst Park',
-    team1: '크리스탈팰리스',
-    team2: '아스날',
-    team1_logo: require('../assets/image/프리미어리그/크리스탈팰리스.png'),
-    team2_logo: require('../assets/image/프리미어리그/아스날.png')
-  },
-  {
-    date: '8월 2일',
-    time: '',
-    stadium: '',
-    team1: '',
-    team2: ''
-  },
-  {
-    date: '8월 3일',
-    time: '',
-    stadium: '',
-    team1: '',
-    team2: ''
-  },
-
-]
-
 const scheduleStore = useScheduleStore();
-
 </script>
 
 <style>
@@ -194,11 +146,11 @@ const scheduleStore = useScheduleStore();
 }
 
 .schedule-page-month-item .item-active {
-  color: #2E6AFD
+  color: var(--main-color)
 }
 
 .league-active {
-  color: #2E6AFD
+  color: var(--main-color)
 }
 
 .schedule-list {

@@ -371,19 +371,101 @@ export const useLeagueStore = defineStore('league', {
 })
 export const useScheduleStore = defineStore('schedule', {
   state: () => ({
-    schedules: []
+    schedules: [],
+    schedulePL: [
+                  {
+                    date: '8월 1일',
+                    time: '00:30',
+                    stadium: 'Selhurst Park',
+                    team1: '크리스탈팰리스',
+                    team2: '아스날',
+                    team1_logo: require('../assets/image/프리미어리그/크리스탈팰리스.png'),
+                    team2_logo: require('../assets/image/프리미어리그/아스날.png')
+                  },
+                  {
+                    date: '9월 1일',
+                    time: '03:30',
+                    stadium: 'Vitality Stadium',
+                    team1: '본머스',
+                    team2: '울버햄튼',
+                    team1_logo: require('../assets/image/프리미어리그/본머스.png'),
+                    team2_logo: require('../assets/image/프리미어리그/울버햄튼원더러스.png')
+                  },
+                ],
+    scheduleLL: [{
+      date: '8월 1일',
+      time: '00:30',
+      stadium: 'Estadio EI Sadar',
+      team1: '오사수나',
+      team2: '세비야',
+      team1_logo: '',
+      team2_logo: ''
+    }],
+    scheduleSA: [{
+      date: '8월 1일',
+      time: '01:30',
+      stadium: 'Giuseppe Meazza',
+      team1: 'AC밀란',
+      team2: '우디네세',
+      team1_logo: '',
+      team2_logo: ''
+    }],
+    scheduleBL: [{
+      date: '8월 1일',
+      time: '03:30',
+      stadium: 'Commerzbank Arena',
+      team1: '프랑크푸르트',
+      team2: '바이에른 뮌헨',
+      team1_logo: '',
+      team2_logo: ''
+    }],
+    scheduleL1: [{
+      date: '8월 1일',
+      time: '04:00',
+      stadium: 'Groupama Stadium',
+      team1: '리옹',
+      team2: '아작시오',
+      team1_logo: '',
+      team2_logo: ''
+    }],
+    scheduleKL: [{
+      date: '8월 1일',
+      time: '14:00',
+      stadium: '나도몰라 스타디움',
+      team1: '전북',
+      team2: '제주',
+      team1_logo: '',
+      team2_logo: ''
+    }]
   }),
   actions: {
     clickLeague(event) {
+      // 현재 라우터에 색깔 입히기
       const activeTag = document.querySelector('.league-active')
       activeTag.classList.remove('league-active')
       const clickedTag = event.target
       clickedTag.classList.add('league-active')
+      // 리그 클릭 시 가장 앞 달로 강제 이동
       const activeMonthTag = document.querySelector('.item-active')
       activeMonthTag.classList.remove('item-active')
       const firstMonthTag = document.querySelector('.schedule-page-month-item p')
       firstMonthTag.classList.add('item-active')
-      // axios({})
+      // state 변경하기
+      if(clickedTag.innerText === '프리미어리그'){
+        this.schedules = this.schedulePL
+        console.log(this.schedules)
+      } else if(clickedTag.innerText === '라리가'){
+        this.schedules = this.scheduleLL
+      } else if(clickedTag.innerText === '세리에 A'){
+        this.schedules = this.scheduleSA
+      } else if(clickedTag.innerText === '분데스리가'){
+        this.schedules = this.scheduleBL
+      } else if(clickedTag.innerText === '리그 1'){
+        this.schedules = this.scheduleL1
+      } else if(clickedTag.innerText === 'K리그'){
+        this.schedules = this.scheduleKL
+      }
+      // axios({}) 
     },
 
     clickMonth (event) {
@@ -444,10 +526,10 @@ export const useOnAirStore = defineStore('onair', {
       const toSubtitle = event.target
       toSubtitle.classList.add('sideBar-subtitle-active')
       for(let league of leagues){
-        if(league === toSubtitle.innerText) {
+        if(toSubtitle.innerText === league ) {
           this.fetchRooms(toSubtitle.innerText)
           router.push({name: 'Onair' , params: {leaguename: `${toSubtitle.innerText}`} })
-        }
+        } 
       }
       
     },
@@ -485,4 +567,3 @@ export const useMatchScreenStore = defineStore('match', {
       isClickChatting: '',
     })
 })
-
