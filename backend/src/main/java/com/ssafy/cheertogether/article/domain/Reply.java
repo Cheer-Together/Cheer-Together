@@ -59,7 +59,7 @@ public class Reply {
 
 	public void setArticle(Article article) {
 		this.article = article;
-		if(!article.getReplyList().contains(this)) {
+		if (!article.getReplyList().contains(this)) {
 			article.getReplyList().add(this);
 		}
 	}

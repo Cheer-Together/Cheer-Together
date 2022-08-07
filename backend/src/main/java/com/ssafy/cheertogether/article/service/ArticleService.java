@@ -23,8 +23,8 @@ import com.ssafy.cheertogether.article.repository.ArticleRepository;
 import com.ssafy.cheertogether.article.repository.LikesRepository;
 import com.ssafy.cheertogether.article.repository.ReplyRepository;
 import com.ssafy.cheertogether.article.repository.UnLikeRepository;
-import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
+import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
 
@@ -43,7 +43,7 @@ public class ArticleService {
 	private final UnLikeRepository unLikeRepository;
 	private final ReplyRepository replyRepository;
 
-	public void regist(ArticleRegisterRequest articleRegisterRequest,String jwtToken) {
+	public void regist(ArticleRegisterRequest articleRegisterRequest, String jwtToken) {
 		Article article = Article.from(articleRegisterRequest);
 		article.setCreateDate();
 		article.setMember(findMemberByJwtToken(jwtToken));
@@ -99,7 +99,9 @@ public class ArticleService {
 	public Long likes(Long articleId, String jwtToken) {
 		Long memberId = Long.parseLong(jwtTokenProvider.getMemberId(jwtToken));
 		likesRepository.findLikesByArticle_IdAndMember_Id(articleId, memberId)
-			.ifPresent(likes -> {throw new AlreadyLikesUnlikeException();});
+			.ifPresent(likes -> {
+				throw new AlreadyLikesUnlikeException();
+			});
 		Article article = findArticleByArticleId(articleId);
 		article.uplikes();
 		Likes likes = new Likes();
@@ -112,7 +114,9 @@ public class ArticleService {
 	public Long unLike(Long articleId, String jwtToken) {
 		Long memberId = Long.parseLong(jwtTokenProvider.getMemberId(jwtToken));
 		unLikeRepository.findUnLikeByArticle_IdAndMember_Id(articleId, memberId)
-			.ifPresent(unLike -> {throw new AlreadyLikesUnlikeException();});
+			.ifPresent(unLike -> {
+				throw new AlreadyLikesUnlikeException();
+			});
 		Article article = articleRepository
 			.findById(articleId)
 			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
@@ -137,7 +141,7 @@ public class ArticleService {
 	public void replyModify(Long replyId, ReplyRequest replyRequest, String jwtToken) {
 		Reply reply = replyRepository.findById(replyId)
 			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
-		if(reply.getMember().getId() != Long.parseLong(jwtTokenProvider.getMemberId(jwtToken))) {
+		if (reply.getMember().getId() != Long.parseLong(jwtTokenProvider.getMemberId(jwtToken))) {
 			throw new NoAccessException();
 		}
 		reply.update(replyRequest);
@@ -146,7 +150,7 @@ public class ArticleService {
 	public void replyDelete(Long replyId, String jwtToken) {
 		Reply reply = replyRepository.findById(replyId)
 			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
-		if(reply.getMember().getId() != Long.parseLong(jwtTokenProvider.getMemberId(jwtToken))) {
+		if (reply.getMember().getId() != Long.parseLong(jwtTokenProvider.getMemberId(jwtToken))) {
 			throw new NoAccessException();
 		}
 		replyRepository.deleteById(replyId);

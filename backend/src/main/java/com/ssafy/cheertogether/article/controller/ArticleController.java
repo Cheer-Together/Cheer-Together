@@ -36,7 +36,8 @@ public class ArticleController {
 
 	@PostMapping
 	@ApiOperation(value = "글 등록", notes = "게시판 - 글 등록")
-	public ResponseEntity<String> regist(@RequestBody ArticleRegisterRequest articleRegisterRequest, @ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
+	public ResponseEntity<String> regist(@RequestBody ArticleRegisterRequest articleRegisterRequest,
+		@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
 		articleService.regist(articleRegisterRequest, jwtToken);
 		return new ResponseEntity<>(REGIST_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
@@ -55,13 +56,15 @@ public class ArticleController {
 
 	@GetMapping("/search")
 	@ApiOperation(value = "검색한 단어를 포함한 글 목록 조회", notes = "게시판 - 검색한 단어를 포함한 글 목록 조회")
-	public ResponseEntity<List<ArticleResponse>> findAllByKeyWord(@ApiParam(value = "검색 단어", required = true, example = "토트넘") @RequestParam String keyword) {
+	public ResponseEntity<List<ArticleResponse>> findAllByKeyWord(
+		@ApiParam(value = "검색 단어", required = true, example = "토트넘") @RequestParam String keyword) {
 		return new ResponseEntity<>(articleService.findAllSearchByTitleContent(keyword), HttpStatus.OK);
 	}
 
 	@PostMapping("/{articleId}")
 	@ApiOperation(value = "게시글 수정", notes = "게시판 - 게시글 수정")
-	public ResponseEntity<ArticleResponse> modify(@PathVariable Long articleId, @RequestBody ArticleModifyRequest articleModifyRequest) {
+	public ResponseEntity<ArticleResponse> modify(@PathVariable Long articleId,
+		@RequestBody ArticleModifyRequest articleModifyRequest) {
 		return new ResponseEntity<>(articleService.modify(articleId, articleModifyRequest), HttpStatus.OK);
 	}
 
@@ -80,33 +83,38 @@ public class ArticleController {
 
 	@PostMapping("/{articleId}/like")
 	@ApiOperation(value = "게시글 좋아요 등록", notes = "게시판 - 게시글 좋아요 등록")
-	public ResponseEntity<Long> like(@PathVariable Long articleId,@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
+	public ResponseEntity<Long> like(@PathVariable Long articleId,
+		@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
 		return new ResponseEntity<>(articleService.likes(articleId, jwtToken), HttpStatus.OK);
 	}
 
 	@PostMapping("/{articleId}/unlike")
 	@ApiOperation(value = "게시글 싫어요 등록", notes = "게시판 - 게시글 싫어요 등록")
-	public ResponseEntity<Long> unLike(@PathVariable Long articleId,@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
+	public ResponseEntity<Long> unLike(@PathVariable Long articleId,
+		@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
 		return new ResponseEntity<>(articleService.unLike(articleId, jwtToken), HttpStatus.OK);
 	}
 
 	@PostMapping("/{articleId}/reply")
 	@ApiOperation(value = "게시글 댓글 등록", notes = "게시판 - 게시글 댓글 등록")
-	public ResponseEntity<String> registReply(@PathVariable Long articleId, @RequestBody ReplyRequest replyRequest, @ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
+	public ResponseEntity<String> registReply(@PathVariable Long articleId, @RequestBody ReplyRequest replyRequest,
+		@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
 		articleService.replyRegist(articleId, replyRequest, jwtToken);
 		return new ResponseEntity<>(REGIST_REPLY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 
 	@PostMapping("/reply/{replyId}")
 	@ApiOperation(value = "게시글 댓글 수정", notes = "게시판 - 게시글 댓글 수정")
-	public ResponseEntity<String> modifyReply(@PathVariable Long replyId, @RequestBody ReplyRequest replyRequest, @ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
+	public ResponseEntity<String> modifyReply(@PathVariable Long replyId, @RequestBody ReplyRequest replyRequest,
+		@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
 		articleService.replyModify(replyId, replyRequest, jwtToken);
 		return new ResponseEntity<>(MODIFY_REPLY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/reply/{replyId}")
 	@ApiOperation(value = "게시글 댓글 삭제", notes = "게시판 - 게시글 댓글 삭제")
-	public ResponseEntity<String> deleteReply(@PathVariable Long replyId, @ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
+	public ResponseEntity<String> deleteReply(@PathVariable Long replyId,
+		@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
 		articleService.replyDelete(replyId, jwtToken);
 		return new ResponseEntity<>(DELETE_REPLY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
