@@ -16,18 +16,33 @@
               <div class="makeroom-dialog-info">
                 <a>방 만들기</a>
               </div>
-              <div style="margin-top:20px">
+              <div style="width: 340px; margin-top: 25px;">
+                <v-select
+                :items="items"
+                label="경기 목록"
+                density="compact"
+                solo
+                ></v-select>
+              </div>
+              <div style="margin-top:-18px;">
                 <input v-model="roomTitle" type="text" placeholder="방 제목" class="makeroom-dialog-textinput">
               </div>
               <div style="display: flex; margin-top:20px">
-                <div>
-
+                <input v-model="roomPassword" style="width: 290px;" type="password" placeholder="비밀번호" class="makeroom-dialog-textinput">
+                <div style="display: flex; flex-direction: column; align-items: center; width: 40px; height: 40px; margin-left: 10px; font-size: 12px;">
+                  <div style="width: 40px; height: 15px; text-align: center;">
+                    비공개
+                  </div>
+                  <input style="width:22px; height:22px; margin-top: 3px;" type="checkbox">
                 </div>
-                <div>
-
-                </div>
-                <input v-model="roomPassword" @keyup.enter="loginButton()" type="password" placeholder="비밀번호" class="makeroom-dialog-textinput">
               </div>
+              <v-btn
+                style="margin-top: 35px; color:white;"
+                color="#2E6AFD"
+                width="340px"
+              >
+                같이 집관
+              </v-btn>
             </div>
           </v-card-text>
 
@@ -76,9 +91,18 @@ const dialog2 = ref(false)
 const makeroomLogo = require('../assets/image/로고.png')
 const roomTitle = ref('')
 const roomPassword = ref('')
+const items = [
+  {title: '브라이튼 앤 호브 알비온 vs 브라이튼 앤 호브 알비온'},
+  {title: '프리미어리그'},
+  {title: '라리가'},
+  {title: '세리에A'},
+  {title: '분데스리가'},
+  {title: '리그 1'},
+  {title: 'K리그'},
+]
 </script>
 
-<style>
+<style scoped>
 .makeroom-dialog {
   display: flex;
   flex-direction: column;
