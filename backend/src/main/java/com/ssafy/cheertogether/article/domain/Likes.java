@@ -1,4 +1,4 @@
-package com.ssafy.cheertogether.favorite.domain;
+package com.ssafy.cheertogether.article.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,43 +8,33 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ssafy.cheertogether.member.domain.Member;
-import com.ssafy.cheertogether.team.domain.Team;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class FavoriteTeam {
+public class Likes {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_id")
-	@JsonBackReference
+	@JoinColumn(name = "member_email", referencedColumnName = "email")
 	private Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "team_id")
-	private Team team;
+	@JoinColumn(name = "article_id")
+	private Article article;
 
-	@Builder
-	private FavoriteTeam(Member member, Team team, Integer priority) {
+	public void setMember(Member member) {
 		this.member = member;
-		this.team = team;
 	}
 
-	public static FavoriteTeam from(Member member, Team team) {
-		return FavoriteTeam.builder()
-			.member(member)
-			.team(team)
-			.build();
+	public void setArticle(Article article) {
+		this.article = article;
 	}
-
 }
