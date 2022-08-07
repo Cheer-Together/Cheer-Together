@@ -30,7 +30,7 @@ public class GameService {
 	@Transactional(readOnly = true)
 	public List<GameResponse> findMatches() {
 		return matchRepository.findAll().stream()
-			.map(GameResponse::new)
+			.map(GameResponse::from)
 			.collect(Collectors.toList());
 	}
 }
