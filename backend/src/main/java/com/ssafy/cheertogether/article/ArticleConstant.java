@@ -14,4 +14,6 @@ public class ArticleConstant {
 	public static final String MODIFY_REPLY_SUCCESS_RESPONSE_MESSAGE = "댓글 수정을 성공했습니다.";
 
 	public static final String DELETE_REPLY_SUCCESS_RESPONSE_MESSAGE = "댓글 삭제를 성공했습니다.";
+
+	public static final String NO_ACCESS_ERROR_MESSAGE = "접근 권한이 없습니다.";
 }

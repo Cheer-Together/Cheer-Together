@@ -30,7 +30,7 @@ public class Reply {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "member_email", referencedColumnName = "email")
+	@JoinColumn(name = "member_id")
 	Member member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -59,6 +59,9 @@ public class Reply {
 
 	public void setArticle(Article article) {
 		this.article = article;
+		if(!article.getReplyList().contains(this)) {
+			article.getReplyList().add(this);
+		}
 	}
 
 	public void update(ReplyRequest replyRequest) {

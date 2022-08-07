@@ -18,11 +18,12 @@ import com.ssafy.cheertogether.article.dto.ArticleRegisterRequest;
 import com.ssafy.cheertogether.article.dto.ArticleResponse;
 import com.ssafy.cheertogether.article.dto.ReplyRequest;
 import com.ssafy.cheertogether.article.exception.AlreadyLikesUnlikeException;
+import com.ssafy.cheertogether.article.exception.NoAccessException;
 import com.ssafy.cheertogether.article.repository.ArticleRepository;
 import com.ssafy.cheertogether.article.repository.LikesRepository;
 import com.ssafy.cheertogether.article.repository.ReplyRepository;
 import com.ssafy.cheertogether.article.repository.UnLikeRepository;
-import com.ssafy.cheertogether.auth.JwtTokenProvider;
+import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
@@ -96,8 +97,8 @@ public class ArticleService {
 	}
 
 	public Long likes(Long articleId, String jwtToken) {
-		String memberEmail = jwtTokenProvider.getMemberEmail(jwtToken);
-		likesRepository.findLikesByArticle_IdAndMember_Email(articleId, memberEmail)
+		Long memberId = Long.parseLong(jwtTokenProvider.getMemberId(jwtToken));
+		likesRepository.findLikesByArticle_IdAndMember_Id(articleId, memberId)
 			.ifPresent(likes -> {throw new AlreadyLikesUnlikeException();});
 		Article article = findArticleByArticleId(articleId);
 		article.uplikes();
@@ -109,8 +110,8 @@ public class ArticleService {
 	}
 
 	public Long unLike(Long articleId, String jwtToken) {
-		String memberEmail = jwtTokenProvider.getMemberEmail(jwtToken);
-		unLikeRepository.findUnLikeByArticle_IdAndMember_Email(articleId, memberEmail)
+		Long memberId = Long.parseLong(jwtTokenProvider.getMemberId(jwtToken));
+		unLikeRepository.findUnLikeByArticle_IdAndMember_Id(articleId, memberId)
 			.ifPresent(unLike -> {throw new AlreadyLikesUnlikeException();});
 		Article article = articleRepository
 			.findById(articleId)
@@ -123,27 +124,37 @@ public class ArticleService {
 		return article.getUnlike();
 	}
 
-	public void replyRegist(Long articleId, ReplyRequest replyRequest) {
+	public void replyRegist(Long articleId, ReplyRequest replyRequest, String jwtToken) {
+
 		Reply reply = Reply.from(replyRequest);
+		reply.setMember(findMemberByJwtToken(jwtToken));
 		reply.setArticle(findArticleByArticleId(articleId));
 		reply.setCreateDate();
+		findArticleByArticleId(articleId).addReply(reply);
 		replyRepository.save(reply);
 	}
 
-	public void replyModify(Long replyId, ReplyRequest replyRequest) {
+	public void replyModify(Long replyId, ReplyRequest replyRequest, String jwtToken) {
 		Reply reply = replyRepository.findById(replyId)
 			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
+		if(reply.getMember().getId() != Long.parseLong(jwtTokenProvider.getMemberId(jwtToken))) {
+			throw new NoAccessException();
+		}
 		reply.update(replyRequest);
 	}
 
-	public void replyDelete(Long replyId) {
+	public void replyDelete(Long replyId, String jwtToken) {
+		Reply reply = replyRepository.findById(replyId)
+			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
+		if(reply.getMember().getId() != Long.parseLong(jwtTokenProvider.getMemberId(jwtToken))) {
+			throw new NoAccessException();
+		}
 		replyRepository.deleteById(replyId);
 	}
 
 	private Member findMemberByJwtToken(String jwtToken) {
 		return memberRepository
-			.findByEmail(jwtTokenProvider
-				.getMemberEmail(jwtToken))
+			.findById(Long.parseLong(jwtTokenProvider.getMemberId(jwtToken)))
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_EMAIL_ERROR_MESSAGE));
 	}
 

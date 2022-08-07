@@ -104,4 +104,11 @@ public class Article {
 	public void unlike() {
 		this.unlike++;
 	}
+
+	public void addReply(Reply reply) {
+		this.replyList.add(reply);
+		if(reply.getArticle() != this) {
+			reply.setArticle(this);
+		}
+	}
 }
