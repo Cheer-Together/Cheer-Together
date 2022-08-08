@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.ssafy.cheertogether.member.MemberConstant;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
 
@@ -87,7 +88,7 @@ public class Oauth2Service {
 		return access_Token;
 	}
 
-	public Member createKakaoUser(String token) {
+	public String getEmail(String token) {
 		String reqURL = "https://kapi.kakao.com/v2/user/me";
 
 		//access_token을 이용하여 사용자 정보 조회
@@ -116,23 +117,25 @@ public class Oauth2Service {
 
 			//Gson 라이브러리로 JSON파싱
 			JsonElement element = JsonParser.parseString(result.toString());
-
-			String nickname = element.getAsJsonObject()
-				.get("properties")
-				.getAsJsonObject()
-				.get("nickname")
-				.getAsString();
-			String email = element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
-
-			Optional<Member> member = memberRepository.findByEmail(email);
-			return member.orElseGet(() ->  {
-				Member newMember = new Member(email, nickname, "", "", "user", "하이");
-				memberRepository.save(newMember);
-				return newMember;
-			});
+			return element.getAsJsonObject().get("kakao_account").getAsJsonObject().get("email").getAsString();
+			// Optional<Member> member = memberRepository.findByEmail(email);
+			// return member.orElseGet(() ->  {
+			// 	Member newMember = new Member(email, nickname, "", "", "user", "하이");
+			// 	memberRepository.save(newMember);
+			// 	return newMember;
+			// });
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public boolean isExistEmail(String email) {
+		return memberRepository.findByEmail(email).isPresent();
+	}
+
+	public Member findMemberByEmail(String email) {
+		return memberRepository.findByEmail(email)
+			.orElseThrow(() -> new IllegalArgumentException(MemberConstant.MISMATCH_EMAIL_ERROR_MESSAGE));
 	}
 }
