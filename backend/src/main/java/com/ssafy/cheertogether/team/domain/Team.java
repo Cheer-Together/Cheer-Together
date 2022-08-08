@@ -36,6 +36,6 @@ public class Team implements Serializable {
 	private String logo;
 	private String code;
 	@Column(name = "api_id", unique = true)
-	private int apiId;
+	private Long apiId;
 	private String hanName;
 }

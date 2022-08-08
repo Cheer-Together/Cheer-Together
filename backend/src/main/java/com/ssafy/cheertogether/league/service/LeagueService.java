@@ -28,14 +28,15 @@ public class LeagueService {
 	public List<LeagueResponse> findAll() {
 		List<League> leagueList = leagueRepository.findAll();
 		List<LeagueResponse> leagueResponseList = new ArrayList<>();
-		leagueResponseList.addAll(leagueList.stream().map(league -> new LeagueResponse(league)).collect(Collectors.toList()));
+		leagueResponseList.addAll(
+			leagueList.stream().map(league -> new LeagueResponse(league)).collect(Collectors.toList()));
 		return leagueResponseList;
 	}
 
 	/**
 	 * 리그 api id를 통한 리그 정보 조회
 	 */
-	public LeagueResponse findByApiId(int apiId) {
+	public LeagueResponse findByApiId(Long apiId) {
 		League league = leagueRepository.findLeagueByApiId(apiId)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE));
 		return new LeagueResponse(league);

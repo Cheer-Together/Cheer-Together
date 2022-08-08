@@ -34,7 +34,7 @@ public class LeagueController {
 	@GetMapping("/{apiId}")
 	@ApiOperation(value = "리그 정보 단건 조회", notes = "apiId를 통한 리그 정보 단건 조회")
 	public ResponseEntity<LeagueResponse> findByApiId(
-		@ApiParam(value = "apiId", required = true, example = "39") @PathVariable int apiId) {
+		@ApiParam(value = "apiId", required = true, example = "39") @PathVariable Long apiId) {
 		return new ResponseEntity<>(leagueService.findByApiId(apiId), HttpStatus.OK);
 	}
 

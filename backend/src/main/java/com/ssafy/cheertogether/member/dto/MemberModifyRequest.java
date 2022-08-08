@@ -10,6 +10,6 @@ public class MemberModifyRequest {
 	private String password;
 	private String profileImage;
 	private String myInfo;
-	private List<Integer> favoriteLeagueList;
-	private List<Integer> favoriteTeamList;
+	private List<Long> favoriteLeagueList;
+	private List<Long> favoriteTeamList;
 }

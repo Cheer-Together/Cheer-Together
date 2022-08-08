@@ -8,5 +8,5 @@ import com.ssafy.cheertogether.team.domain.Team;
 
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-	Optional<Team> findTeamByApiId(int apiId);
+	Optional<Team> findTeamByApiId(Long apiId);
 }
