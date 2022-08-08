@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 public class RoomResponse {
 	private final long roomId;
-	private final long matchId;
+	private final long gameId;
 	private final String name;
 	private final RoomStatus status;
 	private final String password;
@@ -16,7 +16,7 @@ public class RoomResponse {
 
 	public RoomResponse(Room room) {
 		roomId = room.getId();
-		matchId = room.getMatchId();
+		gameId = room.getGame().getId();
 		name = room.getName();
 		status = room.getStatus();
 		password = room.getPassword();

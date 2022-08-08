@@ -48,11 +48,18 @@ public class RoomController {
 		return new ResponseEntity<>(roomService.findRoomById(roomId), HttpStatus.OK);
 	}
 
-	@GetMapping("/match/{matchId}")
-	@ApiOperation(value = "매치 아이디 검색", notes = "특정 경기 시청중인 응원방 검색")
-	public ResponseEntity<List<RoomResponse>> findRoomByMatchId(
-		@ApiParam(value = "매치 아이디", required = true, example = "1") @PathVariable Long matchId) {
-		return new ResponseEntity<>(roomService.findRoomByMatchId(matchId), HttpStatus.OK);
+	@GetMapping("/game/{gameId}")
+	@ApiOperation(value = "경기 아이디 검색", notes = "특정 경기 시청중인 응원방 검색")
+	public ResponseEntity<List<RoomResponse>> findRoomByGameId(
+		@ApiParam(value = "경기 아이디", required = true, example = "1") @PathVariable Long gameId) {
+		return new ResponseEntity<>(roomService.findRoomByGameId(gameId), HttpStatus.OK);
+	}
+
+	@GetMapping("/league/{leagueId}")
+	@ApiOperation(value = "리그 아이디로 검색", notes = "특정 리그의 경기 시청중인 응원방 검색")
+	public ResponseEntity<List<RoomResponse>> findRoomByLeagueId(
+		@ApiParam(value = "리그 아이디", required = true, example = "1") @PathVariable Long leagueId) {
+		return new ResponseEntity<>(roomService.findRoomByLeague(leagueId), HttpStatus.OK);
 	}
 
 	@PostMapping("/")

@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public class RoomModifyRequest {
 	Long id;
-	Long matchId;
+	Long gameId;
 	String name;
 	RoomStatus status;
 	String password;
