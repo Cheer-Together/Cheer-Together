@@ -43,7 +43,7 @@
       K리그 1
     </div>
     <!-- 경기 일정 -->
-    <div class="sideBar-item" @click="router.push({name:'Schedule', params: {leaguename: '프리미어리그' } })">
+    <div class="sideBar-item" @click="scheduleStore.moveSchedulePage">
       <v-icon class="sideBar-item-icon">
         mdi-calendar-month-outline
       </v-icon>
@@ -65,8 +65,10 @@
 
 <script setup>
 import { useOnAirStore } from '../store/index.js'
+import { useScheduleStore } from '../store/index.js'
 import router from '@/router/index.js'
-const onairStore = useOnAirStore();
+const onairStore = useOnAirStore()
+const scheduleStore = useScheduleStore()
 
 const goToRoomsPage = () => {
   onairStore.rooms = onairStore.tmp_pl

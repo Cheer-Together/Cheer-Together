@@ -4,7 +4,6 @@ import cheertogether from '@/api/cheertogether'
 import Swal from 'sweetalert2'
 import router from '@/router/index.js';
 
-
 export const useMainPageStore = defineStore('mainpage', {
   state: () => (
     { 
@@ -377,74 +376,30 @@ export const useLeagueStore = defineStore('league', {
 })
 export const useScheduleStore = defineStore('schedule', {
   state: () => ({
-    schedules: [],
-    schedulePL: [
-                  {
-                    date: '8월 1일',
-                    time: '00:30',
-                    stadium: 'Selhurst Park',
-                    team1: '크리스탈팰리스',
-                    team2: '아스날',
-                    team1_logo: require('../assets/image/프리미어리그/크리스탈팰리스.png'),
-                    team2_logo: require('../assets/image/프리미어리그/아스날.png')
-                  },
-                  {
-                    date: '9월 1일',
-                    time: '03:30',
-                    stadium: 'Vitality Stadium',
-                    team1: '본머스',
-                    team2: '울버햄튼',
-                    team1_logo: require('../assets/image/프리미어리그/본머스.png'),
-                    team2_logo: require('../assets/image/프리미어리그/울버햄튼원더러스.png')
-                  },
-                ],
-    scheduleLL: [{
-      date: '8월 1일',
-      time: '00:30',
-      stadium: 'Estadio EI Sadar',
-      team1: '오사수나',
-      team2: '세비야',
-      team1_logo: '',
-      team2_logo: ''
-    }],
-    scheduleSA: [{
-      date: '8월 1일',
-      time: '01:30',
-      stadium: 'Giuseppe Meazza',
-      team1: 'AC밀란',
-      team2: '우디네세',
-      team1_logo: '',
-      team2_logo: ''
-    }],
-    scheduleBL: [{
-      date: '8월 1일',
-      time: '03:30',
-      stadium: 'Commerzbank Arena',
-      team1: '프랑크푸르트',
-      team2: '바이에른 뮌헨',
-      team1_logo: '',
-      team2_logo: ''
-    }],
-    scheduleL1: [{
-      date: '8월 1일',
-      time: '04:00',
-      stadium: 'Groupama Stadium',
-      team1: '리옹',
-      team2: '아작시오',
-      team1_logo: '',
-      team2_logo: ''
-    }],
-    scheduleKL: [{
-      date: '8월 1일',
-      time: '14:00',
-      stadium: '나도몰라 스타디움',
-      team1: '전북',
-      team2: '제주',
-      team1_logo: '',
-      team2_logo: ''
-    }]
+    sch_of_leagues: [], // 전체 리그 목록
+    sch_of_month: [], // 월별 리그 목록
+
   }),
   actions: {
+    moveSchedulePage(){
+      // SideBar에 '경기 일정'을 누르면 경기 정보를 불러와 store에 저장
+      axios({
+        url: cheertogether.games.scheduleList(),
+        method: 'GET'
+      })
+      .then(res => {
+        this.sch_of_leagues = res.data
+        // 처음에는 EPL, 8월을 보여준다
+        for(let game of this.sch_of_leagues){
+          if(game.kickoff.substring(6, 7) === '8') {
+            this.sch_of_month.push(game)
+          } else { break; }
+        }
+      })
+      // router 이동
+      router.push({name: 'Month', params: {leaguename: '프리미어리그', month: '8'}})
+    },
+
     clickLeague(event) {
       // 현재 라우터에 색깔 입히기
       const activeTag = document.querySelector('.league-active')
@@ -456,72 +411,44 @@ export const useScheduleStore = defineStore('schedule', {
       activeMonthTag.classList.remove('item-active')
       const firstMonthTag = document.querySelector('.schedule-page-month-item p')
       firstMonthTag.classList.add('item-active')
+      // 해당 리그의 8월 정보를 보여준다.
       // state 변경하기
       if(clickedTag.innerText === '프리미어리그'){
-        this.schedules = this.schedulePL
-        console.log(this.schedules)
-      } else if(clickedTag.innerText === '라리가'){
-        this.schedules = this.scheduleLL
-      } else if(clickedTag.innerText === '세리에 A'){
-        this.schedules = this.scheduleSA
-      } else if(clickedTag.innerText === '분데스리가'){
-        this.schedules = this.scheduleBL
-      } else if(clickedTag.innerText === '리그 1'){
-        this.schedules = this.scheduleL1
-      } else if(clickedTag.innerText === 'K리그'){
-        this.schedules = this.scheduleKL
+        this.sch_of_month = []
+        for(let game of this.sch_of_leagues){
+          if(game.kickoff.substring(6, 7) === '8' && game.home.leagueName === 'Premier League') {
+            this.sch_of_month.push(game)
+          } else { break; }}        
+        
+      // league 이름 담아서 라우터 이동
+      router.push({name : 'Month', params: {leaguename: `${clickedTag.innerText}`, month: '8'} })
       }
-      // axios({}) 
     },
 
     clickMonth (event) {
+      // 색 바꾸기
       const activeTag = document.querySelector('.item-active')
       activeTag.classList.remove('item-active')
       const clickedTag = event.target
       clickedTag.classList.add('item-active')
-      // axios({})
+      // 월별로 잘라서 담아주기
+
+      // month parameter 담아서 라우터 이동
+      router.push({name: 'Month', params: {month: `${clickedTag.innerText.slice(-3, -1).trim()}`} })
+      
     }
   }
 })
-
 export const useOnAirStore = defineStore('onair', {
   state: () => ({
-    rooms: [],
+    allRooms: [],
+    roomsPL: [],
+    roomsLL: [],
+    roomsSA: [],
+    roomsBL: [],
+    roomsL1: [],
+    roomsKL: [],
     makeRoomDialog: false,
-    tmp_pl: [{id: '1', name : 'premierLeague1'},
-              {id: '2', name : 'premierLeague2'},
-              {id: '3', name : 'premierLeague3'},
-              {id: '4', name : 'premierLeague4'},
-              {id: '5', name : 'premierLeague5'},
-              {id: '6', name : 'premierLeague6'},
-              {id: '7', name : 'premierLeague7'},
-              {id: '8', name : 'premierLeague8'},
-              ],
-    tmp_laliga: [{id: '1', name : 'laliga-1'},
-                  {id: '2', name : 'laliga-2'},
-                  {id: '3', name : 'laliga-3'},
-                  {id: '4', name : 'laliga-4'},],
-    tmp_serie: [{id: '5', name : 'serie_A-1'},
-                {id: '6', name : 'serie_A-2'},
-                {id: '7', name : 'serie_A-3'},
-                {id: '8', name : 'serie_A-4'},
-                {id: '9', name : 'serie_A-5'},],
-    tmp_bundesliga: [{id: '10', name : 'bundesliga-1'},
-                    {id: '11', name : 'bundesliga-2'},
-                    {id: '12', name : 'bundesliga-3'},
-                    {id: '13', name : 'bundesliga-4'},
-                    {id: '14', name : 'bundesliga-5'},
-                    {id: '15', name : 'bundesliga-6'},
-                    {id: '16', name : 'bundesliga-7'},
-                    {id: '17', name : 'bundesliga-8'},
-                    {id: '18', name : 'bundesliga-9'},
-                    {id: '19', name : 'bundesliga-10'},
-                    {id: '20', name : 'bundesliga-11'},],
-    tmp_ligue1: [{id: '5', name : 'ligue_1-1'},
-                  {id: '6', name : 'ligue_1-2'},
-                  {id: '7', name : 'ligue_1-3'},],
-    tmp_k_league: [{id: '5', name : 'K_league-1'},
-                    {id: '6', name : 'K_league-2'},]
   }),
   actions: {
     moveLeagueRooms(event){
@@ -534,28 +461,38 @@ export const useOnAirStore = defineStore('onair', {
       toSubtitle.classList.add('sideBar-subtitle-active')
       for(let league of leagues){
         if(toSubtitle.innerText === league ) {
-          this.fetchRooms(toSubtitle.innerText)
+          this.fetchRooms()
           router.push({name: 'Onair' , params: {leaguename: `${toSubtitle.innerText}`} })
         } 
       }
       
     },
 
-    fetchRooms(leagueName){
-      
-      if (leagueName === '프리미어리그'){
-        this.rooms = this.tmp_pl
-      } else if (leagueName === '라리가'){
-        this.rooms = this.tmp_laliga
-      } else if (leagueName === '세리에 A'){
-        this.rooms = this.tmp_serie
-      } else if (leagueName === '분데스리가'){
-        this.rooms = this.tmp_bundesliga
-      } else if (leagueName === '리그 1'){
-        this.rooms = this.tmp_ligue1
-      } else if (leagueName === 'K리그 1'){
-        this.rooms = this.tmp_k_league
-      }
+    fetchRooms(){
+      // 데이터 받아오기
+      axios({
+        url: cheertogether.rooms.loadRooms(),
+        method: 'GET',
+      })
+        .then(res => {
+          this.allRooms = res.data
+        })
+        .catch(err => {
+          console.log(err.message)
+        })
+      // if (leagueName === '프리미어리그'){
+      //   this.rooms = 
+      // } else if (leagueName === '라리가'){
+      //   this.rooms = this.tmp_laliga
+      // } else if (leagueName === '세리에 A'){
+      //   this.rooms = this.tmp_serie
+      // } else if (leagueName === '분데스리가'){
+      //   this.rooms = this.tmp_bundesliga
+      // } else if (leagueName === '리그 1'){
+      //   this.rooms = this.tmp_ligue1
+      // } else if (leagueName === 'K리그 1'){
+      //   this.rooms = this.tmp_k_league
+      // }
     },
 
     makeRoomDialogToggle() {
@@ -567,7 +504,6 @@ export const useOnAirStore = defineStore('onair', {
     }
   }
 })
-
 export const useNavbarStore = defineStore('navbar', {
   state: () => (
     { 

@@ -1,23 +1,23 @@
 <template>
-  <div class="schedule-list-items" v-for="match in scheduleStore.schedules" :key="match.date">
+  <div class="schedule-list-items" v-for="day in 31" :key="day">
     <div class="schedule-date">
-      <p>{{ match.date }}</p>
+      <p>{{ $route.params.month }}월 {{ day }}일</p>
     </div>
     <div class="schedule-time">
-      <p>{{ match.time }}</p>
+      <p>{{ scheduleStore.kickoff }}</p>
     </div>
     <div class="schedule-stadium">
-      <p>{{ match.stadium }}</p>
+      <p>싸피 경기장</p>
     </div>
     <div class="schedule-matches">
-      <div v-if="!!match.time">
-        <p>{{ match.team1 }}</p>
-        <img :src="match.team1_logo" class="team-logo">
+      <div>
+        <p>1팀</p>
+        <img src="" class="team-logo">
         <p>VS</p> 
-        <img :src="match.team2_logo" class="team-logo">
-        <p>{{ match.team2 }}</p>
+        <img src="" class="team-logo">
+        <p>2팀</p>
       </div>
-      <div v-if="!match.time" class="no-match">경기가 없습니다.</div>
+      <!-- <div v-if="!match.time" class="no-match">경기가 없습니다.</div> -->
     </div>
   </div>
 </template>
@@ -25,8 +25,14 @@
 <script setup>
 import { useScheduleStore } from  '../store/index.js'
 const scheduleStore = useScheduleStore();
+
+
 </script>
 
 <style>
-
+.schedule-list-items {
+  display: flex;
+  margin-top: 5px;
+  border-bottom: 1px solid #d1cfcf;
+}
 </style>
