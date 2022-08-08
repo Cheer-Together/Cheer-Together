@@ -10,7 +10,7 @@
       </div>
     </div>
     <!-- 실시간 집관 -->
-    <div class="sideBar-item" @click="router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
+    <div class="sideBar-item" @click="goToRoomsPage">
       <v-icon class="sideBar-item-icon">
         mdi-video-outline
       </v-icon>
@@ -43,7 +43,7 @@
       K리그 1
     </div>
     <!-- 경기 일정 -->
-    <div class="sideBar-item" @click="router.push({name:'Schedule'})">
+    <div class="sideBar-item" @click="router.push({name:'Schedule', params: {leaguename: '프리미어리그' } })">
       <v-icon class="sideBar-item-icon">
         mdi-calendar-month-outline
       </v-icon>
@@ -68,6 +68,10 @@ import { useOnAirStore } from '../store/index.js'
 import router from '@/router/index.js'
 const onairStore = useOnAirStore();
 
+const goToRoomsPage = () => {
+  onairStore.rooms = onairStore.tmp_pl
+  router.push({name: 'Onair', params: {leaguename: '프리미어리그'}})
+}
 </script>
 
 <style>
