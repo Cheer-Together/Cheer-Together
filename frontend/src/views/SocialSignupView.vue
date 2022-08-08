@@ -253,10 +253,10 @@ const route = useRoute()
 onMounted(()=>{
   axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao',
-  method: 'GET',
-  params: {
+  method: 'POST',
+  data: {
     code: route.query.code,
-  }  
+  }
   }).then(res => {
       console.log(res.data)
   }).catch(err => {
