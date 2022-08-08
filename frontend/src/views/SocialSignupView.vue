@@ -3,9 +3,7 @@
   <div style="display:flex;">
     <SideBar/>
     <div class="signup">
-      {{typeof(JSON.stringify({
-    code: route.query.code,
-  }))}}
+      {{codedata}}
       <div class="signup-image" v-if="!accountStore.myImage">
         <label for="input-file" style="padding:66px 30px 66px 35px;">
           <v-icon class="sideBar-item-icon">
@@ -252,13 +250,12 @@ import { useRoute } from "vue-router"
 import axios from 'axios'
 import { onMounted } from "vue"
 const route = useRoute()
+const codedata = route.query.code
 onMounted(()=>{
   axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao',
   method: 'POST',
-  data: JSON.stringify({
-    code: route.query.code,
-  })
+  data: {code: codedata}
   }).then(res => {
       console.log(res.data)
   }).catch(err => {
