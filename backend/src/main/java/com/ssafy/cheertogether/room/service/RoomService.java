@@ -61,10 +61,10 @@ public class RoomService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<RoomResponse> findRoomByLeague(Long leagueId) {
+	public List<RoomResponse> findRoomByLeague(Long leagueApiId) {
 		return roomRepository.findAll()
 			.stream()
-			.filter(room -> room.getGame().getLeagueId().equals(leagueId))
+			.filter(room -> room.getGame().getLeagueApiId().equals(leagueApiId))
 			.map(RoomResponse::new)
 			.collect(Collectors.toList());
 	}

@@ -55,11 +55,11 @@ public class RoomController {
 		return new ResponseEntity<>(roomService.findRoomByGameId(gameId), HttpStatus.OK);
 	}
 
-	@GetMapping("/league/{leagueId}")
-	@ApiOperation(value = "리그 아이디로 검색", notes = "특정 리그의 경기 시청중인 응원방 검색")
-	public ResponseEntity<List<RoomResponse>> findRoomByLeagueId(
-		@ApiParam(value = "리그 아이디", required = true, example = "1") @PathVariable Long leagueId) {
-		return new ResponseEntity<>(roomService.findRoomByLeague(leagueId), HttpStatus.OK);
+	@GetMapping("/league/{leagueApiId}")
+	@ApiOperation(value = "리그 아이디로 검색", notes = "특정 리그의 경기 시청중인 응원방 검색(프리미어리그: 39, 라리가: 140, 세리에A: 135, 분데스리가: 78, 리그앙: 61, k리그: 292)")
+	public ResponseEntity<List<RoomResponse>> findRoomByLeagueApiId(
+		@ApiParam(value = "리그 아이디", required = true, example = "1") @PathVariable Long leagueApiId) {
+		return new ResponseEntity<>(roomService.findRoomByLeague(leagueApiId), HttpStatus.OK);
 	}
 
 	@PostMapping("/")
