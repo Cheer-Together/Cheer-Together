@@ -3,6 +3,7 @@
   <div style="display:flex;">
     <SideBar/>
     <div class="signup">
+      {{route.query.code}}
       <div class="signup-image" v-if="!accountStore.myImage">
         <label for="input-file" style="padding:66px 30px 66px 35px;">
           <v-icon class="sideBar-item-icon">
@@ -10,9 +11,7 @@
           </v-icon>
           이미지 올리기
         </label>
-
       </div>
-
       <div v-if="accountStore.myImage" class="signup-image" :style="{'background-image': `url(${accountStore.myImage})`}">
         <label for="input-file" style="padding:66px 150px 66px 35px;">
           &nbsp;
@@ -247,6 +246,25 @@ import { useAccountStore } from "@/store"
 import { useLeagueStore } from "@/store"
 import Swal from 'sweetalert2'
 import router from '@/router'
+import { useRoute } from "vue-router"
+import axios from 'axios'
+import { onMounted } from "vue"
+const route = useRoute()
+onMounted(()=>{
+  axios({
+  url: 'https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao',
+  method: 'GET',
+  params: {
+    code: route.query.code,
+  }  
+  }).then(res => {
+      console.log(res.data)
+  }).catch(err => {
+      console.log(err)
+  })
+})
+
+// route.query.code 이거를 /oauth2/kakao에다가
 
 const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()
