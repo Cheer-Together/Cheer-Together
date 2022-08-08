@@ -48,7 +48,7 @@ public class Game {
 	private Long apiId;
 	private Long leagueApiId;
 
-	@OneToMany(mappedBy = "matchId")
+	@OneToMany(mappedBy = "game")
 	@JsonManagedReference
 	private List<Room> roomList = new ArrayList<>();
 
