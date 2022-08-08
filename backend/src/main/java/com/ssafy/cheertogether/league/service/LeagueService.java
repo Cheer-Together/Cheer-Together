@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.cheertogether.league.domain.League;
 import com.ssafy.cheertogether.league.dto.LeagueResponse;
+import com.ssafy.cheertogether.league.dto.LeagueResponseExceptTeamList;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,14 @@ public class LeagueService {
 		List<LeagueResponse> leagueResponseList = new ArrayList<>();
 		leagueResponseList.addAll(
 			leagueList.stream().map(league -> new LeagueResponse(league)).collect(Collectors.toList()));
+		return leagueResponseList;
+	}
+
+	public List<LeagueResponseExceptTeamList> findAlleExceptTeam() {
+		List<League> leagueList = leagueRepository.findAll();
+		List<LeagueResponseExceptTeamList> leagueResponseList = new ArrayList<>();
+		leagueResponseList.addAll(
+			leagueList.stream().map(league -> new LeagueResponseExceptTeamList(league)).collect(Collectors.toList()));
 		return leagueResponseList;
 	}
 
