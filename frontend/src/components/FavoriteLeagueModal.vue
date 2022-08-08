@@ -14,7 +14,7 @@
     </div>
     <!-- 섹션 -->
     <div class="favorite-league-modal-section">
-      <div v-for="bigLeague in leagueStore.leagues" :key="bigLeague.id" class="favorite-league-modal-section-item" @click="addSelectLeague(bigLeague)">
+      <div v-for="bigLeague in leagueStore.leaguesNoTeam" :key="bigLeague.id" class="favorite-league-modal-section-item" @click="addSelectLeague(bigLeague)">
         <img :src="bigLeague.logo" >
         <div class="bigleague-title">
           {{ bigLeague.hanName }}
@@ -23,25 +23,25 @@
 
     </div>
     <!-- 푸터 -->
-    <div v-if="leagueStore.selectLeague.length !== 0" class="favorite-league-modal-footer">
-      <div class="favorite-league-modal-footer-item" @click="spliceLeague(leagueStore.selectLeague[0])">
-        <img :src="leagueStore.selectLeague[0].logo" class="favorite-league-modal-footer-image">
+    <div v-if="accountStore.profile.favoriteLeagueList.length !== 0" class="favorite-league-modal-footer">
+      <div class="favorite-league-modal-footer-item" @click="spliceLeague(accountStore.profile.favoriteLeagueList[0])">
+        <img :src="accountStore.profile.favoriteLeagueList[0].logo" class="favorite-league-modal-footer-image">
         <div class="favorite-league-modal-footer-item-title">
-          {{ leagueStore.selectLeague[0].hanName }}
+          {{ accountStore.profile.favoriteLeagueList[0].hanName }}
         </div>
       </div>
 
-      <div class="favorite-league-modal-footer-item" v-if="leagueStore.selectLeague.length >= 2" @click="spliceLeague(leagueStore.selectLeague[1])">
-        <img :src="leagueStore.selectLeague[1].logo" class="favorite-league-modal-footer-image">
+      <div class="favorite-league-modal-footer-item" v-if="accountStore.profile.favoriteLeagueList.length >= 2" @click="spliceLeague(accountStore.profile.favoriteLeagueList[1])">
+        <img :src="accountStore.profile.favoriteLeagueList[1].logo" class="favorite-league-modal-footer-image">
         <div class="favorite-league-modal-footer-item-title">
-          {{ leagueStore.selectLeague[1].hanName }}
+          {{ accountStore.profile.favoriteLeagueList[1].hanName }}
         </div>
       </div>
 
-      <div class="favorite-league-modal-footer-item" v-if="leagueStore.selectLeague.length == 3" @click="spliceLeague(leagueStore.selectLeague[2])">
-        <img :src="leagueStore.selectLeague[2].logo" class="favorite-league-modal-footer-image">
+      <div class="favorite-league-modal-footer-item" v-if="accountStore.profile.favoriteLeagueList.length == 3" @click="spliceLeague(accountStore.profile.favoriteLeagueList[2])">
+        <img :src="accountStore.profile.favoriteLeagueList[2].logo" class="favorite-league-modal-footer-image">
         <div class="favorite-league-modal-footer-item-title">
-          {{ leagueStore.selectLeague[2].hanName }}
+          {{ accountStore.profile.favoriteLeagueList[2].hanName }}
         </div>
       </div>
 
@@ -53,31 +53,34 @@
 
 <script setup>
 import { useLeagueStore } from "@/store"
+import { useAccountStore } from "@/store"
 const leagueStore = useLeagueStore()
+const accountStore = useAccountStore()
 
 leagueStore.selectFavoriteTeam = '프리미어리그'
+
 const addSelectLeague = (bigLeague) => {
-  if (leagueStore.selectLeague.length < 3){
-    if (leagueStore.selectLeague.includes(bigLeague)) {
-      const smallNumberIndex = leagueStore.selectLeague.indexOf(bigLeague);
-      leagueStore.selectLeague.splice(smallNumberIndex, 1)
+  if (accountStore.profile.favoriteLeagueList.length < 3){
+    if (accountStore.profile.favoriteLeagueList.includes(bigLeague)) {
+      const smallNumberIndex = accountStore.profile.favoriteLeagueList.indexOf(bigLeague);
+      accountStore.profile.favoriteLeagueList.splice(smallNumberIndex, 1)
     }
     else {
-      leagueStore.selectLeague.push(bigLeague);
+      accountStore.profile.favoriteLeagueList.push(bigLeague);
     }
   }
-  else if (leagueStore.selectLeague.length === 3) {
-    if (leagueStore.selectLeague.includes(bigLeague)) {
-      const smallNumberIndex = leagueStore.selectLeague.indexOf(bigLeague);
-      leagueStore.selectLeague.splice(smallNumberIndex, 1)
+  else if (accountStore.profile.favoriteLeagueList.length === 3) {
+    if (accountStore.profile.favoriteLeagueList.includes(bigLeague)) {
+      const smallNumberIndex = accountStore.profile.favoriteLeagueList.indexOf(bigLeague);
+      accountStore.profile.favoriteLeagueList.splice(smallNumberIndex, 1)
     }
   }
 }
 
 const spliceLeague = (myLeague) => {
-      if (leagueStore.selectLeague.includes(myLeague)) {
-      const smallNumberIndex = leagueStore.selectLeague.indexOf(myLeague);
-      leagueStore.selectLeague.splice(smallNumberIndex, 1)
+      if (accountStore.profile.favoriteLeagueList.includes(myLeague)) {
+      const smallNumberIndex = accountStore.profile.favoriteLeagueList.indexOf(myLeague);
+      accountStore.profile.favoriteLeagueList.splice(smallNumberIndex, 1)
     }
 }
 </script>
