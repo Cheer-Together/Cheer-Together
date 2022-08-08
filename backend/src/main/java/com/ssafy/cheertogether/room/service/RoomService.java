@@ -71,7 +71,7 @@ public class RoomService {
 
 	public void createRoom(RoomCreateRequest roomCreateRequest) {
 		Game game = gameRepository.findGameById(roomCreateRequest.getGameId())
-			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_CREATE_MATCH_ID_ERROR_MESSAGE));
+			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_MATCH_ID_ERROR_MESSAGE));
 		roomRepository.save(Room.from(roomCreateRequest, game));
 	}
 
@@ -79,7 +79,7 @@ public class RoomService {
 		Room room = roomRepository.findById(modifyRequest.getId())
 			.orElseThrow(() -> new IllegalArgumentException(MODIFY_ROOM_ERROR_MESSAGE));
 		Game game = gameRepository.findGameById(modifyRequest.getGameId())
-			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_MODIFY_MATCH_ID_ERROR_MESSAGE));
+			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_MATCH_ID_ERROR_MESSAGE));
 		room.update(modifyRequest, game);
 	}
 
