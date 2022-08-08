@@ -28,7 +28,7 @@ public class GameService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<GameResponse> findMatches() {
+	public List<GameResponse> findGames() {
 		return matchRepository.findAll().stream()
 			.map(GameResponse::from)
 			.collect(Collectors.toList());

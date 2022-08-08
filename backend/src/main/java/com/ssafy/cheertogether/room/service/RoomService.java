@@ -3,6 +3,7 @@ package com.ssafy.cheertogether.room.service;
 import static com.ssafy.cheertogether.room.RoomConstant.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -34,16 +35,16 @@ public class RoomService {
 
 	@Transactional(readOnly = true)
 	public RoomResponse findRoomById(Long id) {
-		Room room = roomRepository.findById(id)
+		Room room = roomRepository.findRoomById(id)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_ROOM_ID_ERROR_MESSAGE));
 		return new RoomResponse(room);
 	}
 
 	@Transactional(readOnly = true)
-	public List<RoomResponse> findRoomByMatchId(Long matchId) {
-		Game match = gameRepository.findGameById(matchId)
+	public List<RoomResponse> findRoomByGameId(Long gameId) {
+		Game game = gameRepository.findGameById(gameId)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_MATCH_ID_ERROR_MESSAGE));
-		return match.getRoomList().stream().map(RoomResponse::new).collect(Collectors.toList());
+		return game.getRoomList().stream().map(RoomResponse::new).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -59,16 +60,30 @@ public class RoomService {
 		}
 	}
 
+	@Transactional(readOnly = true)
+	public List<RoomResponse> findRoomByLeague(Long leagueApiId) {
+		return roomRepository.findAll()
+			.stream()
+			.filter(room -> room.getGame().getLeagueApiId().equals(leagueApiId))
+			.map(RoomResponse::new)
+			.collect(Collectors.toList());
+	}
+
 	public void createRoom(RoomCreateRequest roomCreateRequest) {
-		roomRepository.save(Room.from(roomCreateRequest));
+		Game game = gameRepository.findGameById(roomCreateRequest.getGameId())
+			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_MATCH_ID_ERROR_MESSAGE));
+		roomRepository.save(Room.from(roomCreateRequest, game));
 	}
 
 	public void modifyRoom(RoomModifyRequest modifyRequest) {
 		Room room = roomRepository.findById(modifyRequest.getId())
 			.orElseThrow(() -> new IllegalArgumentException(MODIFY_ROOM_ERROR_MESSAGE));
-		room.update(modifyRequest);
+		Game game = gameRepository.findGameById(modifyRequest.getGameId())
+			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_MATCH_ID_ERROR_MESSAGE));
+		room.update(modifyRequest, game);
 	}
-	public void deleteRoom(Long id){
+
+	public void deleteRoom(Long id) {
 		roomRepository.deleteRoomById(id);
 	}
 }
