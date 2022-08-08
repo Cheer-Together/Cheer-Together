@@ -3,7 +3,9 @@
   <div style="display:flex;">
     <SideBar/>
     <div class="signup">
-      {{route.query.code}}
+      {{typeof(JSON.stringify({
+    code: route.query.code,
+  }))}}
       <div class="signup-image" v-if="!accountStore.myImage">
         <label for="input-file" style="padding:66px 30px 66px 35px;">
           <v-icon class="sideBar-item-icon">
@@ -254,9 +256,9 @@ onMounted(()=>{
   axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao',
   method: 'POST',
-  data: {
+  data: JSON.stringify({
     code: route.query.code,
-  }
+  })
   }).then(res => {
       console.log(res.data)
   }).catch(err => {
