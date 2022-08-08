@@ -1,11 +1,14 @@
 <template>
   <div class="navBar">
-    <img :src="navBarLogo" class="navBar-logo" @click="this.$router.push({ name:'MainPage', })">
+    <div>
+      <img :src="navBarLogo" class="navBar-logo" @click="router.push({ name:'MainPage', })">
+      <img :src="navBarNameLogo" class="navBar-namelogo" @click="router.push({ name:'MainPage', })">
+    </div>
     <div class="navBar-items">
       <div v-if="accountStore.isLogin" class="navBar-item-login">
-        <img :src="user.profileImage" class="navBar-profile-image" >
+        <img :src="user.profileImage" class="navBar-profile-image">
         <div class="navBar-profile-nickname">
-          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;r">{{ user.nickname}}</span>
+          <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ user.nickname}}</span>
           
           <v-icon class="navBar-profile-icon" @click="navbarStore.isClickProfile = !navbarStore.isClickProfile">
             mdi-chevron-down
@@ -13,7 +16,7 @@
         </div>
       </div>
       <div v-if="navbarStore.isClickProfile" class="navBar-profile-dropdown">
-        <div @click="this.$router.push({ name:'Mypage', params: { userid: 30 } })">
+        <div @click="router.push({ name:'Mypage', params: { userid: 30 } })">
           <v-icon>
             mdi-account-circle
           </v-icon>
@@ -29,7 +32,7 @@
       <div v-if="!accountStore.isLogin" @click="accountStore.loginDialogToggle()" class="navBar-item-notlogin">
         로그인
       </div>
-      <div v-if="!accountStore.isLogin" class="navBar-item-notlogin" @click="this.$router.push({ name:'Signup', })">
+      <div v-if="!accountStore.isLogin" class="navBar-item-notlogin" @click="router.push({ name:'Signup', })">
         회원가입
       </div>
       
@@ -42,10 +45,12 @@
 <script setup>
 import { useAccountStore } from '@/store'
 import { useNavbarStore } from '@/store'
+import router from '@/router'
 
 const navbarStore = useNavbarStore()
 const accountStore = useAccountStore()
 const navBarLogo = require('../assets/image/로고.png');
+const navBarNameLogo = require('../assets/image/같이집관이름로고.png');
 
 navbarStore.isClickProfile = false
 
@@ -240,24 +245,28 @@ const myLogout = () => {
 <style>
 .navBar {
   width: 100%;
-  height: 80px;
+  height: 100px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid var(--main-color);
+  border-bottom: 2px solid var(--main-color);
   position: fixed;
   background-color: #ffffff;
   top: 0;
   z-index: 1;
 }
 .navBar-logo {
-  margin-left: 30px;
-  width: 80px;
+  margin-left: 10px;
+  width: 98px;
+}
+.navBar-namelogo {
+  width: 98px;
+
 }
 .navBar-logo:hover {
   cursor: pointer;
 }
 .navBar-profile-image {
-  width: 35px;
+  width: 40px;
   border: 1px solid var( --main-color);
   border-radius: 50px;
 }
@@ -265,14 +274,14 @@ const myLogout = () => {
   width: 90px;
   text-align: start;
   margin-left: 10px;
-  font-size: 15px;
+  font-size: 20px;
 }
 .navBar-profile-icon:hover {
   cursor: pointer;
 }
 .navBar-items {
   display: flex;
-  margin-right: 100px;
+  margin-right: 40px;
   position: relative;
 }
 .navBar-item {
@@ -283,9 +292,9 @@ const myLogout = () => {
 .navBar-item-login {
   display: flex;
   width: 150px;
-  height: 80px;
+  height: 100px;
   align-items: center;
-  font-size: 18px;
+  font-size: 20px;
 }
 .navBar-item-notlogin{
   width: 100px;
@@ -298,10 +307,10 @@ const myLogout = () => {
   cursor: pointer;
 }
 .navBar-profile-dropdown {
-  width: 150px;
+  width: 300px;
   position: absolute;
   right: 30px;
-  top: 60px;
+  top: 80px;
   border: 1px solid #ecf0f5;
   color: #5f60639b;
   background-color: #ffffff;
@@ -310,11 +319,11 @@ const myLogout = () => {
   display: flex;
 }
 .navBar-profile-dropdown div {
-  width: 75px;
-  height: 40px;
-  font-size: 12px;
+  width: 150px;
+  height: 60px;
+  font-size: 18px;
   text-align: center;
-  padding-top: 10px;
+  padding-top: 18px;
 }
 .navBar-profile-dropdown div:first-child {
   border-right: 1px solid #ecf0f5;

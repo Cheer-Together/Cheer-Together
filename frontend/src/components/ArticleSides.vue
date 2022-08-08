@@ -14,7 +14,7 @@
 
     <div class="community-matches-top">
       <p style="font-size: 20px;">오늘의 경기</p>
-      <p class="word-link" @click="this.$router.push({ name: 'Schedule',})" style="font-size: 14px;">자세히 보기</p>
+      <p class="word-link" @click="router.push({ name: 'Schedule',})" style="font-size: 14px;">자세히 보기</p>
     </div>
     <div v-for="match in matches" :key="match.id" class="community-matches">
       <div class="community-matches-teamname" style="justify-content: flex-end;">
@@ -44,6 +44,7 @@
 </template>
 
 <script setup>
+import router from '@/router/index.js'
 // 아마 뉴스API로 가져올듯? 지금은 그냥 값 넣어보기
 const news = [
   {

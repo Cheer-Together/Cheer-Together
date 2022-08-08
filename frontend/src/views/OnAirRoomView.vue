@@ -19,7 +19,7 @@
             <p>경기 목록</p>
           </div>
 
-          <button class="onair-header-make-room">방만들기</button>
+          <button @click="onAirStore.makeRoomDialogToggle()" class="onair-header-make-room">방만들기</button>
         </div>
       </div>
 
@@ -29,12 +29,16 @@
 
     </div>
   </div>
+  <OnAirMakeModal/>
 </template>
 
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import RoomsList from "../components/RoomsList.vue"
+import OnAirMakeModal from "../components/OnAirMakeModal.vue"
+import { useOnAirStore } from "@/store"
+const onAirStore = useOnAirStore()
 </script>
 
 <style>

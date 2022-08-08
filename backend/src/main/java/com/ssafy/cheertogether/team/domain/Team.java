@@ -13,8 +13,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ssafy.cheertogether.league.domain.League;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 @Entity
 public class Team {
 
@@ -31,4 +33,5 @@ public class Team {
 	private String logo;
 	private String code;
 	private int apiId;
+	private String hanName;
 }

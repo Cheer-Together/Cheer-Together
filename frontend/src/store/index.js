@@ -309,12 +309,18 @@ export const useAccountStore = defineStore('account', {
         method: 'POST',
         data: user
       }).then(res => {
-          sessionStorage.setItem('token', res.data)
+          sessionStorage.setItem('token', res.data.jwtToken)
           this.isLogin = true
           console.log(res.data)
       }).catch(err => {
           console.log(err)
       })
+    },
+    kakaoLogin() {
+      const API_KEY = process.env.VUE_APP_KAKAO_LOGIN_API_KEY;
+      const REDIRECT_URI = process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI;
+      const url = "https://kauth.kakao.com/oauth/authorize?client_id=" + decodeURIComponent(API_KEY) + "&redirect_uri=" + decodeURIComponent(REDIRECT_URI) + "&response_type=code";
+      window.location.replace(url);
     },
     logoutAccount() {
       sessionStorage.removeItem('token')
@@ -481,6 +487,7 @@ export const useScheduleStore = defineStore('schedule', {
 export const useOnAirStore = defineStore('onair', {
   state: () => ({
     rooms: [],
+    makeRoomDialog: false,
     tmp_pl: [{id: '1', name : 'premierLeague1'},
               {id: '2', name : 'premierLeague2'},
               {id: '3', name : 'premierLeague3'},
@@ -551,7 +558,13 @@ export const useOnAirStore = defineStore('onair', {
       }
     },
 
-    
+    makeRoomDialogToggle() {
+      if (this.makeRoomDialog) {
+        this.makeRoomDialog = false
+      } else {
+        this.makeRoomDialog = true
+      }
+    }
   }
 })
 

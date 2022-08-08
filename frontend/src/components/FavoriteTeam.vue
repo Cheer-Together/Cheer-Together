@@ -18,24 +18,28 @@ const accountStore = useAccountStore()
 
 <style>
 .favoriteTeam {
-  margin-bottom: 21px;
+  margin-bottom: 40px;
 }
 .favoriteTeam-title {
-  font-size: 18px;
+  font-size: 24px;
   padding: 5.5px 0;
 }
 .favoriteTeam-section {
   margin-top: 11px;
   width: 1580px;
-  height: 170px;
+  height: 190px;
   text-align: center;
   background-color: var(--sub-color);
+  border-radius: 4px;
 }
-.favoriteTeam-section:hover {
+.favoriteTeam-section:hover, .favoriteTeam-section:hover .favoriteTeam-section-title{
   cursor: pointer;
+  font-size: 24px;
 }
+
 .favoriteTeam-section-title {
   padding-top: 78px ;
+  font-size: 20px;
 }
 
 @media (max-width: 1580px) {

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.cheertogether.auth.JwtTokenProvider;
+import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberLoginRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
@@ -69,8 +69,8 @@ public class MemberController {
 	@ApiOperation(value = "로그인", notes = "로그인")
 	public ResponseEntity<String> login(@RequestBody MemberLoginRequest memberLoginRequest) {
 		log.info("email = " + memberLoginRequest.getEmail() + " password = " + memberLoginRequest.getPassword());
-		memberService.login(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
-		return new ResponseEntity<>(jwtTokenProvider.createToken(memberLoginRequest.getEmail()), HttpStatus.OK);
+		Long id = memberService.login(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
+		return new ResponseEntity<>(jwtTokenProvider.createToken(String.valueOf(id)), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")

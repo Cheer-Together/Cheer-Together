@@ -56,7 +56,7 @@
                 style="margin-top:22px;"
                 color="#FEE500"
                 width="340px"
-                @click.prevent="social='카카오', dialog2=true"
+                @click.prevent="accountStore.kakaoLogin()"
               >
               카카오로 로그인
               </v-btn>
@@ -182,7 +182,7 @@ const findPasswordEmail = ref('')
 const loginId = ref('')
 const loginPassword = ref('')
 const social = ref('')
-const loginLogo = require('../assets/image/로고.png');
+const loginLogo = require('../assets/image/로고.png')
 const isVaildEmail = ref(false)
 const isValidId = ref(false)
 const errorText = ref('')

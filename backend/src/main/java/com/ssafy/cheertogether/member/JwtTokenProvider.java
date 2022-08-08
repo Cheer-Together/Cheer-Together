@@ -1,4 +1,4 @@
-package com.ssafy.cheertogether.auth;
+package com.ssafy.cheertogether.member;
 
 import java.util.Base64;
 import java.util.Date;
@@ -59,7 +59,7 @@ public class JwtTokenProvider {
 	 * @return 인증 정보
 	 */
 	public Authentication getAuthentication(String token) {
-		UserDetails userDetails = memberService.loadUserByUsername(getMemberEmail(token));
+		UserDetails userDetails = memberService.loadUserByUsername(getMemberId(token));
 		return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 	}
 
@@ -68,7 +68,7 @@ public class JwtTokenProvider {
 	 * @param token JWT 토큰
 	 * @return 회원 정보
 	 */
-	public String getMemberEmail(String token) {
+	public String getMemberId(String token) {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
