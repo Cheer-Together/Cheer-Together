@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ArticleRegisterRequest {
-	private int leagueApiId;
+	private Long leagueApiId;
 	private String title;
 	private String content;
 }

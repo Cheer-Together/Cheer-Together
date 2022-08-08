@@ -6,5 +6,5 @@ import lombok.Getter;
 public class ArticleModifyRequest {
 	private String title;
 	private String content;
-	private int leagueApiId;
+	private Long leagueApiId;
 }
