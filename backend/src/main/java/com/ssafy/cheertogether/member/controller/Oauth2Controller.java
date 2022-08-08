@@ -26,6 +26,7 @@ public class Oauth2Controller {
 
 	@PostMapping("/kakao")
 	public ResponseEntity<Oauth2Response> kakaoCallBack(@RequestBody String code) {
+
 		JsonElement element = JsonParser.parseString(code);
 		code = element.getAsJsonObject().get("code").getAsString();
 
