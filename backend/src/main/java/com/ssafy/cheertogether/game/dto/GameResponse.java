@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 
 import com.ssafy.cheertogether.game.domain.Game;
 import com.ssafy.cheertogether.game.domain.GameStatus;
-import com.ssafy.cheertogether.team.domain.Team;
 import com.ssafy.cheertogether.team.dto.TeamResponse;
 
 import lombok.Builder;
@@ -22,6 +21,7 @@ public class GameResponse {
 	private Integer homeScore;
 	private Integer awayScore;
 	private Long apiId;
+	private Long leagueApiId;
 
 	public static GameResponse from(Game game) {
 		return GameResponse.builder()
@@ -34,6 +34,7 @@ public class GameResponse {
 			.homeScore(game.getHomeScore())
 			.awayScore(game.getAwayScore())
 			.apiId(game.getApiId())
+			.leagueApiId(game.getLeagueApiId())
 			.build();
 	}
 }

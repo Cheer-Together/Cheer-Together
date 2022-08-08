@@ -18,7 +18,7 @@ public class TeamResponse {
 	private String hanName;
 	private String logo;
 	private String code;
-	private int apiId;
+	private Long apiId;
 
 	public static TeamResponse from(final Team team) {
 		return TeamResponse.teamResponseBuilder()

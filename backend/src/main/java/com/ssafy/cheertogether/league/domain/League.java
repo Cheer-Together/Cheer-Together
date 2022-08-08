@@ -28,6 +28,6 @@ public class League {
 
 	private String name;
 	private String logo;
-	private int apiId;
+	private Long apiId;
 	private String hanName;
 }

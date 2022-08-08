@@ -1,6 +1,5 @@
 package com.ssafy.cheertogether.game.domain;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +46,7 @@ public class Game {
 	private Integer homeScore;
 	private Integer awayScore;
 	private Long apiId;
+	private Long leagueApiId;
 
 	@OneToMany(mappedBy = "matchId")
 	@JsonManagedReference

@@ -26,7 +26,7 @@ public class TeamController {
 	@GetMapping("/{apiId}")
 	@ApiOperation(value = "팀 정보 단건 조회", notes = "apiId를 통한 팀 정보 단건 조회")
 	public ResponseEntity<TeamResponse> findByApiId(
-		@ApiParam(value = "apiId", required = true, example = "47") @PathVariable int apiId) {
+		@ApiParam(value = "apiId", required = true, example = "47") @PathVariable Long apiId) {
 		return new ResponseEntity<>(teamService.findByApiId(apiId), HttpStatus.OK);
 	}
 }
