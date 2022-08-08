@@ -62,15 +62,17 @@ public class Article {
 	private List<Reply> replyList = new ArrayList<>();
 
 	@Builder
-	private Article(Member member, League league, String title, String content, Long likes, Long unlike, Long hit) {
+	private Article(Member member, League league, String title, String content) {
 		this.member = member;
 		this.league = league;
 		this.title = title;
 		this.content = content;
 	}
 
-	public static Article from(ArticleRegisterRequest articleRegisterRequest) {
+	public static Article from(ArticleRegisterRequest articleRegisterRequest, Member member, League league) {
 		return Article.builder()
+			.member(member)
+			.league(league)
 			.title(articleRegisterRequest.getTitle())
 			.content(articleRegisterRequest.getContent())
 			.build();

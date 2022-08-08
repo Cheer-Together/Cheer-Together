@@ -7,6 +7,7 @@ import SignupView from '../views/SignupView.vue'
 import OnAirRoomView from '../views/OnAirRoomView.vue'
 import MatchScreenView from '../views/MatchScreenView.vue'
 import MyPageView from '../views/MyPageView.vue'
+import SocialSignupView from '../views/SocialSignupView'
 import { useAccountStore } from "@/store"
 
 const routes = [
@@ -34,6 +35,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: SignupView
+  },
+  {
+    path: '/signup/social',
+    name: 'SocialSignup',
+    component: SocialSignupView
   },
   {
     path: '/onair/:leaguename',
