@@ -12,6 +12,10 @@ public class MemberJoinRequest {
 	private String profileImage;
 	private String role;
 	private String myInfo;
-	private List<Long> favoriteLeagueList;
-	private List<Long> favoriteTeamList;
+	private List<Integer> favoriteLeagueList;
+	private List<Integer> favoriteTeamList;
+
+	public void saveProfileImgLink(String link) {
+		profileImage = link;
+	}
 }
