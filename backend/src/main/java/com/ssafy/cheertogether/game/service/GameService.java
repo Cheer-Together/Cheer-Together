@@ -32,9 +32,23 @@ public class GameService {
 	private final GameRepository matchRepository;
 	private final TeamRepository teamRepository;
 
-	public void update(Long id, GameModifyRequest gameModifyRequest) {
+	public void update(Long id, String responseJson) throws ParseException {
 		Game game = matchRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCH_ERROR_MESSAGE));
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonObject = (JSONObject)jsonParser.parse(responseJson);
+		JSONArray response = (JSONArray)jsonObject.get("response");
+		JSONObject responseBody = (JSONObject)response.get(0);
+		JSONObject fixture = (JSONObject)responseBody.get("fixture");
+		JSONObject status = (JSONObject)fixture.get("status");
+		JSONObject goals = (JSONObject)responseBody.get("goals");
+		GameModifyRequest gameModifyRequest = new GameModifyRequest();
+		gameModifyRequest.setApiId(game.getApiId());
+		gameModifyRequest.setKickoff(game.getKickoff());
+		gameModifyRequest.setStadium(game.getStadium());
+		gameModifyRequest.setStatus(GameStatus.valueOf(status.get("short").toString()));
+		gameModifyRequest.setHomeScore(Integer.parseInt(goals.get("home").toString()));
+		gameModifyRequest.setAwayScore(Integer.parseInt(goals.get("away").toString()));
 		game.updateGameInfos(gameModifyRequest);
 	}
 
@@ -47,27 +61,27 @@ public class GameService {
 
 	public void insert(String responseJson) throws ParseException {
 		JSONParser jsonParser = new JSONParser();
-		JSONObject jsonObject = (JSONObject) jsonParser.parse(responseJson);
-		JSONArray response = (JSONArray) jsonObject.get("response");
+		JSONObject jsonObject = (JSONObject)jsonParser.parse(responseJson);
+		JSONArray response = (JSONArray)jsonObject.get("response");
 		DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
-		for(int i = 0; i < response.size(); i++){
-			JSONObject responseBody = (JSONObject) response.get(i);
-			JSONObject fixture = (JSONObject) responseBody.get("fixture");
-			JSONObject venue = (JSONObject) fixture.get("venue");
-			JSONObject status = (JSONObject) fixture.get("status");
-			JSONObject league = (JSONObject) responseBody.get("league");
-			JSONObject teams = (JSONObject) responseBody.get("teams");
-			JSONObject home = (JSONObject) teams.get("home");
-			JSONObject away = (JSONObject) teams.get("away");
-			JSONObject goals = (JSONObject) responseBody.get("goals");
+		for (int i = 0; i < response.size(); i++) {
+			JSONObject responseBody = (JSONObject)response.get(i);
+			JSONObject fixture = (JSONObject)responseBody.get("fixture");
+			JSONObject venue = (JSONObject)fixture.get("venue");
+			JSONObject status = (JSONObject)fixture.get("status");
+			JSONObject league = (JSONObject)responseBody.get("league");
+			JSONObject teams = (JSONObject)responseBody.get("teams");
+			JSONObject home = (JSONObject)teams.get("home");
+			JSONObject away = (JSONObject)teams.get("away");
+			JSONObject goals = (JSONObject)responseBody.get("goals");
 			GameRegisterRequest gameRegisterRequest = new GameRegisterRequest();
 			gameRegisterRequest.setKickoff(LocalDateTime.parse(fixture.get("date").toString(), formatter));
 			gameRegisterRequest.setStadium(venue.get("name").toString());
 			gameRegisterRequest.setStatus(GameStatus.valueOf(status.get("short").toString()));
-			if(goals.get("home")!=null) {
+			if (goals.get("home") != null) {
 				gameRegisterRequest.setHomeScore(Integer.parseInt(goals.get("home").toString()));
 			}
-			if(goals.get("away")!=null) {
+			if (goals.get("away") != null) {
 				gameRegisterRequest.setAwayScore(Integer.parseInt(goals.get("away").toString()));
 			}
 			gameRegisterRequest.setApiId(Long.parseLong(fixture.get("id").toString()));
