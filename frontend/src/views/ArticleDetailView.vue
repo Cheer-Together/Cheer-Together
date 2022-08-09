@@ -2,7 +2,7 @@
   <NavBar/>
   <div style="display:flex;">
     <SideBar/>
-    <div class="community-main">
+    <div v-if="loaded" class="community-main">
       <div class="community-detail-top">
         <div style="height:36px; width:36px; margin-right:10px; background-color:aquamarine;">
         </div>
@@ -49,6 +49,7 @@ import axios from "axios"
 const route = useRoute()
 const articleid = route.params.articleid
 const maincontent = ref({})
+const loaded = ref(false)
 const createdDate = ref('')
 const commentText = ref('')
 axios({
@@ -58,6 +59,7 @@ axios({
   maincontent.value = res.data
   const createdTime = new Date(res.data.createDate)
   createdDate.value = createdTime.getFullYear() +'-'+ createdTime.getMonth() +'-'+ createdTime.getDate() + ' ' + createdTime.getHours() + ":" + createdTime.getMinutes()
+  loaded.value = true
 }).catch(err => {
   console.log(err)
 })
