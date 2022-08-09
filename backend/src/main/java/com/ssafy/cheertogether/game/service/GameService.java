@@ -2,10 +2,15 @@ package com.ssafy.cheertogether.game.service;
 
 import static com.ssafy.cheertogether.game.GameConstant.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.text.DateFormatter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,6 +24,7 @@ import com.ssafy.cheertogether.game.domain.GameStatus;
 import com.ssafy.cheertogether.game.dto.GameModifyRequest;
 import com.ssafy.cheertogether.game.dto.GameRegisterRequest;
 import com.ssafy.cheertogether.game.dto.GameResponse;
+import com.ssafy.cheertogether.game.dto.YearMonthRequestDto;
 import com.ssafy.cheertogether.game.repository.GameRepository;
 import com.ssafy.cheertogether.team.domain.Team;
 import com.ssafy.cheertogether.team.repository.TeamRepository;
@@ -29,11 +35,11 @@ import lombok.RequiredArgsConstructor;
 @Transactional
 @RequiredArgsConstructor
 public class GameService {
-	private final GameRepository matchRepository;
+	private final GameRepository gameRepository;
 	private final TeamRepository teamRepository;
 
 	public void update(Long id, String responseJson) throws ParseException {
-		Game game = matchRepository.findById(id)
+		Game game = gameRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCH_ERROR_MESSAGE));
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObject = (JSONObject)jsonParser.parse(responseJson);
@@ -54,7 +60,7 @@ public class GameService {
 
 	@Transactional(readOnly = true)
 	public List<GameResponse> findGames() {
-		return matchRepository.findAll().stream()
+		return gameRepository.findAll().stream()
 			.map(GameResponse::from)
 			.collect(Collectors.toList());
 	}
@@ -89,7 +95,40 @@ public class GameService {
 			Team homeTeam = teamRepository.findTeamByApiId(Long.parseLong(home.get("id").toString())).get();
 			Team awayTeam = teamRepository.findTeamByApiId(Long.parseLong(away.get("id").toString())).get();
 			Game game = Game.from(gameRegisterRequest, homeTeam, awayTeam);
-			matchRepository.save(game);
+			gameRepository.save(game);
 		}
+	}
+
+	public List<GameResponse> findGamesByLeagueApiId(Long leagueApiId) {
+		return gameRepository.findAllByLeagueApiId(leagueApiId)
+			.stream()
+			.map(GameResponse::from)
+			.collect(Collectors.toList());
+	}
+
+	public List<GameResponse> findGamesByLeagueApiIdAndDay(Long leagueApiId, String date) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+		LocalDate dateTime = LocalDate.parse(date, formatter);
+		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
+			0, 0);
+		LocalDateTime end = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth() ,23, 59);
+		return gameRepository.findAllByLeagueApiIdAndKickoffBetween(leagueApiId, start, end)
+			.stream()
+			.map(GameResponse::from)
+			.collect(Collectors.toList());
+	}
+
+	public List<GameResponse> findGamesByLeagueApiIdAndMonth(Long leagueApiId, String date) {
+		YearMonth yearMonth = YearMonth.parse(date);
+		LocalDateTime start = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), 1, 0, 0);
+		LocalDateTime end = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), yearMonth.lengthOfMonth(), 23, 59);
+		System.out.println("===============");
+		System.out.println(start);
+		System.out.println(end);
+		System.out.println("=================");
+		return gameRepository.findAllByLeagueApiIdAndKickoffBetween(leagueApiId, start, end)
+			.stream()
+			.map(GameResponse::from)
+			.collect(Collectors.toList());
 	}
 }
