@@ -40,27 +40,6 @@ export const useCommunityStore = defineStore('community', {
   state: () => (
     { 
       toggle: false,
-      ids: 2,
-      articles : [
-        {
-          article_id: 0,
-          category: '프리미어리그',
-          title: '사람가면나쁘다',
-          content: '문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인문단 사이 거리 확인 자간 확인',
-          updated_date: '8:37',
-          author: '닭다리도둑',
-          recommended: 27
-        },
-        {
-          article_id: 1,
-          category: '라리가',
-          title: '이기는팀이우리팀',
-          content: '내용은없다',
-          updated_date: '8:32',
-          author: '아카페라모카라때',
-          recommended: 5
-        },
-      ]
     }
   ),
   actions: {
@@ -74,17 +53,6 @@ export const useCommunityStore = defineStore('community', {
         this.toggle = true
       }
     },
-    writeArticle(contents) {
-      this.articles.push({
-        article_id: this.ids++,
-        category: contents.category,
-        title: contents.title,
-        content: contents.content,
-        updated_date: contents.updated_date,
-        author: contents.author,
-        recommended: 0
-      })
-    }
   },
 })
 export const useAccountStore = defineStore('account', {
@@ -308,7 +276,7 @@ export const useAccountStore = defineStore('account', {
         method: 'POST',
         data: user
       }).then(res => {
-          sessionStorage.setItem('token', res.data.jwtToken)
+          sessionStorage.setItem('token', res.data)
           this.isLogin = true
           console.log(res.data)
       }).catch(err => {

@@ -127,7 +127,7 @@ const matches = [
 <style>
 .community-side {
   width: 350px;
-  margin-top: 140px;
+  margin-top: 160px;
   margin-left: 80px;
 }
 @media (max-width: 1580px) {
