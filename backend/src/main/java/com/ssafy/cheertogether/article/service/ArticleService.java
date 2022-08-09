@@ -60,7 +60,7 @@ public class ArticleService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ArticleResponse> findByHeader(int leagueApiId) {
+	public List<ArticleResponse> findByHeader(Long leagueApiId) {
 		return articleRepository
 			.findArticlesByLeague_ApiId(leagueApiId, Sort.by(Sort.Direction.DESC, "id"))
 			.stream()
