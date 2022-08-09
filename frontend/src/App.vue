@@ -6,9 +6,16 @@
 <script setup>
 import LoginView from "./views/LoginView.vue"
 import { useLeagueStore } from "@/store"
+import { useAccountStore } from "@/store"
+const accountStore = useAccountStore()
 
 const leagueStore = useLeagueStore()
-leagueStore.leaguesAll() 
+leagueStore.leaguesAll()
+leagueStore.getLeaguesNoTeam()
+
+if (accountStore.isLogin) {
+  accountStore.userProfile(34)
+}
 </script>
 
 <style>
@@ -30,6 +37,12 @@ leagueStore.leaguesAll()
   /* --main-color: rgb(78, 167, 235);
   --sub-color: rgb(177, 202, 255); */
   --active-color: #604a3e;
+  /* 네브 바 */
+  --navbar-back-color: #ffffff;
+  --navbar-border-color: black;
+  /* 사이드 바 */
+  --sidebar-back-color: #ffffff;
+  --sidebar-border-color: black;
   --bold-font: 'MICEGothic Bold';
   
 }

@@ -248,9 +248,9 @@ const myLogout = () => {
   height: 100px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 2px solid var(--main-color);
+  border-bottom: 2px solid var(--navbar-border-color);
   position: fixed;
-  background-color: #ffffff;
+  background-color: var(--navbar-back-color);
   top: 0;
   z-index: 1;
 }

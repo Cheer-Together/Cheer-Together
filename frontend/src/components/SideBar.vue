@@ -85,10 +85,10 @@ const onairStore = useOnAirStore();
 .sideBar {
   min-width: 210px;
   height:100%;
-  border-right: 1px solid rgb(225, 252, 255);
+  border-right: 1px solid var(--sidebar-border-color);
   position: fixed;
   top: 100px;
-  background-color: rgb(225, 252, 255);
+  background-color: var(--navbar-back-color);
 }
 .sideBar-item {
   font-size: 15px;
