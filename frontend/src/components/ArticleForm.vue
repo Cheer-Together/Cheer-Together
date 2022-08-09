@@ -36,6 +36,7 @@
 import router from "@/router"
 import { useAccountStore, useCommunityStore } from "@/store"
 import axios from "axios"
+import Swal from "sweetalert2";
 import { ref } from 'vue'
 const category = ref('분류 없음')
 const title = ref('')
@@ -72,15 +73,11 @@ function completeButton() {
   })
   .catch(err => {
     console.log(err)
+    Swal.fire({
+      icon: 'error',
+      title: '작성 실패'
+    })
   })
-  // const contents = {
-  //   category,
-  //   title,
-  //   content,
-  //   updated_date: `${time.getHours()}:${time.getMinutes()}`,
-  //   author: '작성자 이름'
-  // }
-  // communityStore.writeArticle(contents)
   communityStore.communityToggle()
 }
 </script>

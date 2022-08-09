@@ -26,7 +26,7 @@
         {{maincontent.content}}
       </div>
       <div style="height:50px; margin-top: 30px;">
-        <div style="height:50px; width:50px; margin:auto; background-color:aquamarine">
+        <div @click="likeArticle" style="height:50px; width:50px; margin:auto; background-color:aquamarine">
         </div>
       </div>
       <div class="community-detail-writecomment">
@@ -46,12 +46,14 @@ import SideBar from "../components/SideBar.vue"
 import ArticleSides from "../components/ArticleSides.vue"
 import router from '@/router/index.js'
 import axios from "axios"
+import Swal from "sweetalert2"
 const route = useRoute()
 const articleid = route.params.articleid
 const maincontent = ref({})
 const loaded = ref(false)
 const createdDate = ref('')
 const commentText = ref('')
+console.log(route.params.articleid)
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + articleid,
   method: 'GET', 
@@ -67,6 +69,29 @@ axios({
 function toArticleListBtn() {
   commentText.value = ''
   router.push({name: 'Article'})
+}
+function likeArticle() {
+  axios({
+    url: "https://i7b204.p.ssafy.io/cheertogether/articles/"+ route.params.articleid +"/like",
+    method: 'POST',
+    params: {
+      jwtToken: sessionStorage.getItem('token')
+    }
+  })
+  .then(res => {
+    console.log(res.data)
+    Swal.fire({
+      icon: 'success',
+      title: '이 글을 좋아합니다!'
+    })
+  })
+  .catch(err => {
+    console.log(err)
+    Swal.fire({
+      icon: 'error',
+      title: '너는 이 글을 좋아하지 못했다'
+    })
+  })
 }
 </script>
 
