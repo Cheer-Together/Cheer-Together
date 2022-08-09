@@ -21,12 +21,12 @@
         {{header.name}}
       </div>
     </div>
-    <article-list-item
+    <ArticleListItem
       v-for="article in pagedArticles" :key="article.id" :article="article">
-    </article-list-item>
+    </ArticleListItem>
     <div class="community-list-search">
-      <input type="text" placeholder=" 검색할 내용을 입력하세요." class="community-list-searchbar">
-      <v-btn style="height:34px; margin-left:20px">검색</v-btn>
+      <input v-model="searchString" type="text" placeholder=" 검색할 내용을 입력하세요." class="community-list-searchbar">
+      <v-btn @click="searchBtn" style="height:34px; margin-left:20px">검색</v-btn>
     </div>
     <div>
       <v-pagination
@@ -50,12 +50,29 @@ const pageLength = ref(1)
 const articles = ref({})
 const pagedArticles = ref({})
 const category = ref('')
+const searchString = ref('')
 function writeButton() {
   if (accountStore.isLogin) {
     communityStore.communityToggle()
   } else {
     accountStore.loginDialogToggle()
   }
+}
+function searchBtn() {
+  axios({
+    url: 'https://i7b204.p.ssafy.io/cheertogether/articles/search',
+    method: 'GET',
+    params: {
+      keyword: searchString.value,
+    }  
+  }).then(res => {
+    articles.value = res.data
+    searchString.value = ''
+    pagedArticles.value = articles.value.slice(0, 15)
+    pageLength.value = parseInt((articles.value.length-1)/15)+1
+  }).catch(err => {
+    console.log(err)
+  })
 }
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/articles',
