@@ -3,17 +3,7 @@
   <div style="display:flex;">
     <SideBar/>
     <div class="mypagedeit">
-      <div class="mypagedeit-image" v-if="!accountStore.profile.profileImage">
-        <label for="input-file" style="padding:66px 30px 66px 35px;">
-          <v-icon class="sideBar-item-icon">
-            mdi-image-search
-          </v-icon>
-          이미지 올리기
-        </label>
-
-      </div>
-
-      <div v-if="accountStore.profile.profileImage" class="mypagedeit-image" :style="{'background-image': `url(${accountStore.profile.profileImage})`}">
+      <div class="mypagedeit-image" :style="{'background-image': `url(${accountStore.profile.profileImage})`}">
         <label for="input-file" style="padding:66px 150px 66px 35px;">
           &nbsp;
         </label>
@@ -38,7 +28,7 @@
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="mypagedeit-range-input" v-model="accountStore.profile.nickname" :placeholder="accountStore.profile.nickname" maxlength="40">
+          <input type="text" class="mypagedeit-range-input" v-model="myNickname" :placeholder="myNickname" maxlength="40">
         </div>
       </div>
 
@@ -176,12 +166,12 @@
         </div>
       </div>
 
-      <!-- 회원 가입!! -->
+      <!-- 회원 수정 -->
       <div class="mypagedeit-range-bottom">
         <button class="mypagedeit-submit-button"  @click="router.push({name:'MainPage'})">
           이전
         </button>
-        <button class="mypagedeit-submit-button next" @click="changeUserInfo()">
+        <button class="mypagedeit-submit-button next" @click="changeUserInfo(myNickname)">
           저장
         </button>
       </div>
@@ -202,8 +192,9 @@ import router from '@/router'
 const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()
 
-accountStore.userProfile(35)
+accountStore.userProfile(accountStore.profileId)
 
+let myNickname = accountStore.profile.nickname
 // 회원가입 시 변수 초기화 영역
 accountStore.passwordAccordance = '';
 accountStore.passwordAccordance2 = '';
@@ -214,7 +205,7 @@ const onInputImage = (e) => {
   accountStore.profile.profileImage = url
 }
 
-const changeUserInfo = () => {
+const changeUserInfo = (myNickname) => {
     // 사용한 피니아 변수들 감기
 
     if (accountStore.profile.favoriteLeagueList.length == 3) {
@@ -242,8 +233,11 @@ const changeUserInfo = () => {
     else if (accountStore.profile.favoriteTeamList.length == 1) {
       accountStore.profile.favoriteTeamList = [accountStore.profile.favoriteTeamList[0].apiId]
     }
+    
+    accountStore.profile.nickname = myNickname
+
     // 회원 정보 수정
-    accountStore.editUserProfile(34)
+    accountStore.editUserProfile(accountStore.profileId)
   
 }
 

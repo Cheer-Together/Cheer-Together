@@ -105,7 +105,7 @@ const onairStore = useOnAirStore();
   animation-duration: 0.5s;
   white-space:nowrap;
   color: var(--main-color);
-  box-shadow: 0.5px 0.5px 0.5px;
+  box-shadow: grey 0.5px 0.5px 0.5px;
   /* text-shadow: -0.5px 0px var(--active-color), 0.5px 0.5px var(--active-color), 0.5px 0.5px var(--active-color), 0px -0.5px var(--active-color); */
 }
 .sideBar-item-icon {

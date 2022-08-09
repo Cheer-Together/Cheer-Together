@@ -19,13 +19,12 @@
             </div>
             <!-- 소개 -->
             <div class="mypage-header-info">
-              <!-- {{ accountStore.profile.myInfo }} -->
-              일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십
+              {{ accountStore.profile.myInfo }}
             </div>
           </div>
         </div>
         <!-- 회원정보수정 -->
-        <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: {userid: 35 } })">
+        <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
           <v-icon>
             mdi-pencil-box
           </v-icon>
@@ -77,9 +76,11 @@ import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import router from '@/router'
 import { useAccountStore } from "@/store"
+
+
 const accountStore = useAccountStore()
 
-
+accountStore.userProfile(accountStore.profileId)
 </script>
 
 <style>
