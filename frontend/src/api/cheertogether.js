@@ -1,6 +1,8 @@
 const HOST = 'https://i7b204.p.ssafy.io/cheertogether/'
 
 const MEMBERS = 'members/'
+const GAMES = 'games/'
+const ROOMS = 'rooms/'
 
 export default {
   members: {
@@ -14,4 +16,10 @@ export default {
     leaguesAll: () => HOST + 'leagues', // 모든 리그 정보 조회
 
   },
+  games: {
+    scheduleList: () => HOST + GAMES // 전체 스케줄 받아오기
+  },
+  rooms: {
+    loadRooms: () => HOST + ROOMS // 생성된 응원방 받아오기
+  }
 }
