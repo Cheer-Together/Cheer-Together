@@ -8,6 +8,7 @@ import OnAirRoomView from '../views/OnAirRoomView.vue'
 import MatchScreenView from '../views/MatchScreenView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import SocialSignupView from '../views/SocialSignupView'
+import ScheduleSelectMonth from '../components/ScheduleSelectMonth.vue'
 import { useAccountStore } from "@/store"
 
 const routes = [
@@ -22,9 +23,12 @@ const routes = [
     component: ArticleView
   },
   {
-    path: '/schedule',
+    path: '/schedule/:leaguename',
     name: 'Schedule',
-    component: ScheduleView
+    component: ScheduleView,
+    children : [
+      {path: ':month', name: 'Month', component: ScheduleSelectMonth}
+    ]
   },
   {
     path: '/article/:articleid',
