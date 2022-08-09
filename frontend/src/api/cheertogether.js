@@ -2,6 +2,9 @@ const HOST = 'https://i7b204.p.ssafy.io/cheertogether/'
 
 const MEMBERS = 'members/'
 const LEAGUES = 'leagues/'
+const NEWS = 'news/'
+const GAMES = 'games/'
+const ROOMS = 'rooms/'
 
 export default {
   members: {
@@ -22,6 +25,12 @@ export default {
 
   },
   news: {
-    news: () => HOST +  'news' // 뉴스 데이터 조회
+    news: () => HOST +  NEWS // 뉴스 데이터 조회
+  },
+  game: {
+    games: () => HOST + GAMES // 경기일정 조회
+  },
+  room: {
+    rooms: () => HOST + ROOMS // 모든 응원방 검색
   }
 }
