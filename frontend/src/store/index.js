@@ -120,8 +120,7 @@ export const useAccountStore = defineStore('account', {
           email: email,
         }  
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
           this.emailDoubleChecked = true
           Swal.fire({
             icon: 'success',
@@ -153,8 +152,6 @@ export const useAccountStore = defineStore('account', {
         실패하면
 
       */
-     console.log(this.emailAuthCode)
-     console.log(inputCode)
       if (this.emailAuthCode === inputCode) {
         this.emailAuthCodeChecked = true
 
@@ -185,11 +182,9 @@ export const useAccountStore = defineStore('account', {
       if (validatePassword.test(password)) {
         this.isAllowPassword == true
         this.isShowPasswordError = false
-        console.log('ㄴㄴㄴ')
         return
     }
     this.isShowPasswordError = true
-    console.log(this.isShowPasswordError)
     },
 
     signUp(userInfo) {
@@ -200,7 +195,6 @@ export const useAccountStore = defineStore('account', {
         실패하면
 
       */
-      console.log(userInfo)
       axios({
         url: cheertogether.members.signUp(),
         method: 'POST',
@@ -215,8 +209,7 @@ export const useAccountStore = defineStore('account', {
           role : 'user'
         }  
       })
-        .then(res => {
-          console.log(res)
+        .then(() => {
           router.push({name:'MainPage'})
         })
         .catch(err => {
@@ -242,7 +235,6 @@ export const useAccountStore = defineStore('account', {
         }  
       })
         .then(res => {
-          console.log(res.data)
           this.profile = res.data
         })
         .catch(err => {
@@ -259,7 +251,6 @@ export const useAccountStore = defineStore('account', {
         실패하면
 
       */
-    console.log(this.profile)
         axios({
           url: cheertogether.members.editUserProfile(userId),
           method: 'PUT',
@@ -271,8 +262,8 @@ export const useAccountStore = defineStore('account', {
             profileImage: this.profile.profileImage,
           }
         })
-          .then(res => {
-            console.log(res.data)
+          .then(() => {
+            
             router.push({name: 'Mypage' , params: {userid: this.profileId } })
             this.userProfile(this.profileId)
           })
@@ -319,7 +310,7 @@ export const useAccountStore = defineStore('account', {
           }
           this.prfileID = decoded.value.sub
           this.userProfile(decoded.value.sub)
-          console.log(res.data)
+          router.push({ name:'MainPage' })
       }).catch(err => {
           console.log(err)
       })
@@ -373,7 +364,6 @@ export const useLeagueStore = defineStore('league', {
         method: 'GET',
       })
         .then(res => {
-          console.log(res.data)
           this.leagues = res.data
         })
         .catch(err => {
@@ -389,7 +379,6 @@ export const useLeagueStore = defineStore('league', {
         method: 'GET',
       })
         .then(res => {
-          console.log(res.data)
           this.leaguesNoTeam = res.data
         })
         .catch(err => {
@@ -564,7 +553,6 @@ export const useNewsStore = defineStore('news', {
           }
         })
           .then(res => {
-            console.log(res.data)
             res.data.forEach((e) => {
               let title = e.title
               title = title.replaceAll('&apos;', "'")
@@ -637,10 +625,51 @@ export const useGameStore = defineStore('game', {
             this.monthGames.push(e)       
           }
         })
-        console.log(myToday)
-        console.log(this.todayGames)
-        console.log(this.monthGames)
+      })
+      .catch(err => {
+        console.log(err)
+        
+      })
+    },
+  }
+})
+export const useRoomStore = defineStore('room', { 
+  state: () => ({ 
+    roomsAll: [
+      {
+       gameId: 0,
+       managerId: '힐히샴샤호휵',
+       name: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십',
+       password: '',
+       roomId: 0,
+       status: "PRIVATE"
+      },
+      {
+        gameId: 1,
+        managerId: '',
+        name: '',
+        password: '',
+        roomId: 1,
+        status: "PRIVATE"
+       }
+    ],
+  }),
+  actions: {
+    getRooms() {
+      /* 
+      GET: 응원방 조회
+        성공하면
+         
+        실패하면
 
+      */
+      axios({
+        url: cheertogether.room.rooms(),
+        method: 'GET',
+      })
+      .then(res => {
+        console.log(res.data)
+        // this.roomsAll = res.data
       })
       .catch(err => {
         console.log(err)
