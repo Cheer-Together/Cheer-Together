@@ -48,7 +48,7 @@
         </div>
       </div>
       <!-- 좋아하는 리그 -->
-      <div class="signup-range" style="height:182px;">
+      <!-- <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 리그
           <v-dialog
@@ -59,7 +59,6 @@
                 mdi-plus-circle-outline
               </v-icon>
             </template>
-            <!-- 모달 창 -->
             <FavoriteLeagueModal/>
           </v-dialog>
           <div v-if="leagueStore.selectLeague.length !== 0" class="signup-favorite-league">
@@ -71,10 +70,10 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- 좋아하는 팀 -->
-      <div class="signup-range" style="height:182px;">
+      <!-- <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 팀    
           <v-dialog
@@ -85,7 +84,6 @@
                 mdi-plus-circle-outline
               </v-icon>
             </template>
-            <!-- 모달 창 -->
             <FavoriteTeamModal/>
           </v-dialog>
           <div v-if="leagueStore.selectTeam.length !== 0" class="signup-favorite-league">
@@ -97,7 +95,7 @@
             </div>
           </div>  
         </div>
-      </div>
+      </div> -->
 
       <!-- 회원 가입!! -->
       <div class="signup-range-bottom">
@@ -115,8 +113,8 @@
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
-import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
-import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
+// import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
+// import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
 import { useAccountStore, useLeagueStore } from "@/store"
 import Swal from 'sweetalert2'
 import router from '@/router'
