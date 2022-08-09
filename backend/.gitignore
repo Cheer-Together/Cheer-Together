@@ -238,5 +238,6 @@ replay_pid*
 src/main/resources/application.properties
 src/main/resources/application.yml
 /target
+src/main/resources/serviceAccountKey.json
 
 # End of https://www.toptal.com/developers/gitignore/api/eclipse,java,intellij
