@@ -21,7 +21,7 @@ public class TeamService {
 	/**
 	 * 팀 api id를 통한 팀 정보 조회
 	 */
-	public TeamResponse findByApiId(int apiId) {
+	public TeamResponse findByApiId(Long apiId) {
 		Team team = teamRepository.findTeamByApiId(apiId)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE));
 		return TeamResponse.from(team);

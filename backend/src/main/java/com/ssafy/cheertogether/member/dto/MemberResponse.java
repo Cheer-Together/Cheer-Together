@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.ssafy.cheertogether.favorite.dto.FavoriteLeagueResponse;
-import com.ssafy.cheertogether.favorite.dto.FavoriteTeamResponse;
+import com.ssafy.cheertogether.league.dto.LeagueResponseExceptTeamList;
 import com.ssafy.cheertogether.member.domain.Member;
+import com.ssafy.cheertogether.team.dto.TeamResponse;
 
 import lombok.Getter;
 
@@ -17,8 +17,8 @@ public class MemberResponse {
 	private final String profileImage;
 	private final String role;
 	private final String myInfo;
-	private final List<FavoriteLeagueResponse> favoriteLeagueResponseList = new ArrayList<>();
-	private final List<FavoriteTeamResponse> favoriteTeamResponseList = new ArrayList<>();
+	private final List<LeagueResponseExceptTeamList> favoriteLeagueList = new ArrayList<>();
+	private final List<TeamResponse> favoriteTeamList = new ArrayList<>();
 
 	public MemberResponse(Member member) {
 		email = member.getEmail();
@@ -26,16 +26,16 @@ public class MemberResponse {
 		profileImage = member.getProfileImage();
 		role = member.getRole();
 		myInfo = member.getMyInfo();
-		favoriteLeagueResponseList.addAll(
+		favoriteLeagueList.addAll(
 			member.getFavoriteLeagueList()
 				.stream()
-				.map(favoriteLeague -> new FavoriteLeagueResponse(favoriteLeague))
+				.map(favoriteLeague -> new LeagueResponseExceptTeamList(favoriteLeague.getLeague()))
 				.collect(Collectors.toList())
 		);
-		favoriteTeamResponseList.addAll(
+		favoriteTeamList.addAll(
 			member.getFavoriteTeamList()
 				.stream()
-				.map(favoriteTeam -> new FavoriteTeamResponse(favoriteTeam))
+				.map(favoriteTeam -> TeamResponse.from(favoriteTeam.getTeam()))
 				.collect(Collectors.toList())
 		);
 	}

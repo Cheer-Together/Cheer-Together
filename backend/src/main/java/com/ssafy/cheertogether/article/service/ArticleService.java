@@ -6,6 +6,7 @@ import static com.ssafy.cheertogether.member.MemberConstant.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,26 +45,24 @@ public class ArticleService {
 	private final ReplyRepository replyRepository;
 
 	public void regist(ArticleRegisterRequest articleRegisterRequest, String jwtToken) {
-		Article article = Article.from(articleRegisterRequest);
+		Article article = Article.from(articleRegisterRequest, findMemberByJwtToken(jwtToken), leagueRepository.findLeagueByApiId(articleRegisterRequest.getLeagueApiId()).get());
 		article.setCreateDate();
-		article.setMember(findMemberByJwtToken(jwtToken));
-		article.setLeague(leagueRepository.findLeagueByApiId(articleRegisterRequest.getLeagueApiId()).get());
 		articleRepository.save(article);
 	}
 
 	@Transactional(readOnly = true)
 	public List<ArticleResponse> findAll() {
 		return articleRepository
-			.findAll()
+			.findAll(Sort.by(Sort.Direction.DESC, "id"))
 			.stream()
 			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
-	public List<ArticleResponse> findByHeader(int leagueApiId) {
+	public List<ArticleResponse> findByHeader(Long leagueApiId) {
 		return articleRepository
-			.findArticlesByLeague_ApiId(leagueApiId)
+			.findArticlesByLeague_ApiId(leagueApiId, Sort.by(Sort.Direction.DESC, "id"))
 			.stream()
 			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
@@ -72,7 +71,7 @@ public class ArticleService {
 	@Transactional(readOnly = true)
 	public List<ArticleResponse> findAllSearchByTitleContent(String keyword) {
 		return articleRepository
-			.findArticlesByTitleContainingOrContentContaining(keyword, keyword)
+			.findArticlesByTitleContainingOrContentContaining(keyword, keyword, Sort.by(Sort.Direction.DESC, "id"))
 			.stream()
 			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
