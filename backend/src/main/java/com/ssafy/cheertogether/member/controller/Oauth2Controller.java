@@ -14,6 +14,7 @@ import com.google.gson.JsonParser;
 import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
+import com.ssafy.cheertogether.member.dto.Oauth2JoinRequest;
 import com.ssafy.cheertogether.member.dto.Oauth2Response;
 import com.ssafy.cheertogether.member.service.MemberService;
 import com.ssafy.cheertogether.member.service.Oauth2Service;
@@ -53,9 +54,9 @@ public class Oauth2Controller {
 
 	@PostMapping("/kakao/join")
 	@ApiOperation(value = "카카오 회원가입 및 로그인", notes = "카카오 새로운 유저 회원가입/로그인")
-	public ResponseEntity<String> kakaoJoinAndLogin(MemberJoinRequest memberJoinRequest) {
-		memberService.join(memberJoinRequest);
-		Long memberId = memberService.login(memberJoinRequest.getEmail(), memberJoinRequest.getPassword());
+	public ResponseEntity<String> kakaoJoinAndLogin(Oauth2JoinRequest oauth2JoinRequest) {
+		oauth2Service.join(oauth2JoinRequest);
+		Long memberId = memberService.login(oauth2JoinRequest.getEmail(), "");
 		return new ResponseEntity<>(jwtTokenProvider.createToken(String.valueOf(memberId)), HttpStatus.OK);
 	}
 }
