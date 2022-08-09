@@ -94,7 +94,7 @@ public class Member implements UserDetails {
 	public void update(MemberModifyRequest memberModifyRequest) {
 		nickname = memberModifyRequest.getNickname();
 		profileImage = memberModifyRequest.getProfileImage();
-		myInfo = memberModifyRequest.getProfileImage();
+		myInfo = memberModifyRequest.getMyInfo();
 	}
 
 	public void setFavoriteLeagueList(List<FavoriteLeague> favoriteLeagueList) {
