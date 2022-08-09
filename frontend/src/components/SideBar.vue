@@ -71,17 +71,6 @@ const onairStore = useOnAirStore();
 </script>
 
 <style>
-@keyframes hoverSidebarItem {
-  0% {
-    overflow: hidden;
-    background-color: white;
-  }
-  100% {
-    overflow: hidden;
-    padding-right: 0px;
-  }
-}
-
 .sideBar {
   min-width: 210px;
   height:100%;
@@ -90,24 +79,7 @@ const onairStore = useOnAirStore();
   top: 100px;
   background-color: var(--navbar-back-color);
 }
-.sideBar-item {
-  font-size: 15px;
-  width: 160px;
-  margin: 15px 12px 0px 15px;
-  padding: 10px 0px 10px 10px;
-  border-radius: 3px;
-  font-family: var(--bold-font);
-}
-.sideBar-item:hover {
-  background-color: var(--sub-color);
-  cursor:pointer;
-  animation-name: hoverSidebarItem;
-  animation-duration: 0.5s;
-  white-space:nowrap;
-  color: var(--main-color);
-  box-shadow: grey 0.5px 0.5px 0.5px;
-  /* text-shadow: -0.5px 0px var(--active-color), 0.5px 0.5px var(--active-color), 0.5px 0.5px var(--active-color), 0px -0.5px var(--active-color); */
-}
+
 .sideBar-item-icon {
   width: 22px;
   height: 22px;
@@ -132,7 +104,56 @@ const onairStore = useOnAirStore();
 .sideBar-subtitle-active {
   color: #2E6AFD;
 }
+.sideBar-item,
+.sideBar-item::after {
+  -webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+	transition: all 0.3s;
+}
 
+.sideBar-item{
+  font-size: 15px;
+  width: 160px;
+  margin: 15px 12px 0px 15px;
+  padding: 10px 0px 10px 10px;
+  border-radius: 3px;
+  font-family: var(--bold-font);
+  background: none;
+  border-radius: 5px;
+  display: block;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.sideBar-item::before,
+.sideBar-item::after {
+  background: var(--active-color);
+  content: '';
+  position: absolute;
+  z-index: -1;
+}
+.sideBar-item:hover {
+  color: #ffffff;
+}
+.sideBar-item {
+  overflow: hidden;
+}
+.sideBar-item::after {
+  /*background-color: #f00;*/
+  height: 100%;
+  left: -35%;
+  top: 0;
+  transform: skew(50deg);
+  transition-duration: 0.6s;
+  transform-origin: top left;
+  width: 0;
+}
+
+.sideBar-item:hover:after {
+  height: 100%;
+  width: 135%;
+}
 @media (max-width: 1580px) {
 .sideBar {
   min-width: 150px;
