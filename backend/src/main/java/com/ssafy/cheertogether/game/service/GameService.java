@@ -6,11 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.swing.text.DateFormatter;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -24,7 +21,6 @@ import com.ssafy.cheertogether.game.domain.GameStatus;
 import com.ssafy.cheertogether.game.dto.GameModifyRequest;
 import com.ssafy.cheertogether.game.dto.GameRegisterRequest;
 import com.ssafy.cheertogether.game.dto.GameResponse;
-import com.ssafy.cheertogether.game.dto.YearMonthRequestDto;
 import com.ssafy.cheertogether.game.repository.GameRepository;
 import com.ssafy.cheertogether.team.domain.Team;
 import com.ssafy.cheertogether.team.repository.TeamRepository;
@@ -111,7 +107,7 @@ public class GameService {
 		LocalDate dateTime = LocalDate.parse(date, formatter);
 		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
 			0, 0);
-		LocalDateTime end = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth() ,23, 59);
+		LocalDateTime end = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(), 23, 59);
 		return gameRepository.findAllByLeagueApiIdAndKickoffBetween(leagueApiId, start, end)
 			.stream()
 			.map(GameResponse::from)
@@ -121,7 +117,8 @@ public class GameService {
 	public List<GameResponse> findGamesByLeagueApiIdAndMonth(Long leagueApiId, String date) {
 		YearMonth yearMonth = YearMonth.parse(date);
 		LocalDateTime start = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), 1, 0, 0);
-		LocalDateTime end = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), yearMonth.lengthOfMonth(), 23, 59);
+		LocalDateTime end = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), yearMonth.lengthOfMonth(), 23,
+			59);
 		System.out.println("===============");
 		System.out.println(start);
 		System.out.println(end);
