@@ -4,7 +4,9 @@
       <p>{{ $route.params.month }}월 {{ day }}일</p>
     </div>
     <div class="schedule-time">
-      <p>{{ scheduleStore.kickoff }}</p>
+      <div>
+        <p>ddd</p>
+      </div>
     </div>
     <div class="schedule-stadium">
       <p>싸피 경기장</p>
@@ -23,10 +25,10 @@
 </template>
 
 <script setup>
-import { useScheduleStore } from  '../store/index.js'
-const scheduleStore = useScheduleStore();
-
-
+// import { useScheduleStore } from  '../store/index.js'
+// const scheduleStore = useScheduleStore();
+const dayList = ['6', '7', '8', '13', '14', '15', '16', '21', '20', '22', '23', '27', '28', '29']
+console.log(dayList)
 </script>
 
 <style>

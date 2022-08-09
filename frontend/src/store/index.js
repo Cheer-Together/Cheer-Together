@@ -376,8 +376,8 @@ export const useLeagueStore = defineStore('league', {
 })
 export const useScheduleStore = defineStore('schedule', {
   state: () => ({
-    sch_of_leagues: [], // 전체 리그 목록
-    sch_of_month: [], // 월별 리그 목록
+    gamesAll: [], // 전체 경기 목록
+    gamesMonth: [], // 월별 경기 목록
 
   }),
   actions: {
@@ -388,13 +388,16 @@ export const useScheduleStore = defineStore('schedule', {
         method: 'GET'
       })
       .then(res => {
-        this.sch_of_leagues = res.data
+        this.gamesAll = res.data
         // 처음에는 EPL, 8월을 보여준다
-        for(let game of this.sch_of_leagues){
-          if(game.kickoff.substring(6, 7) === '8') {
-            this.sch_of_month.push(game)
+        // 현재는 EPL밖에 없어서 임시로 짜놓은 코드임
+        this.gamesMonth = []
+        for(let game of this.gamesAll){
+          if(game.kickoff.startsWith('2022-08') && game.leagueApiId === 39) {
+            this.gamesMonth.push(game)
           } else { break; }
         }
+        console.log(this.gamesMonth)
       })
       // router 이동
       router.push({name: 'Month', params: {leaguename: '프리미어리그', month: '8'}})
@@ -414,10 +417,10 @@ export const useScheduleStore = defineStore('schedule', {
       // 해당 리그의 8월 정보를 보여준다.
       // state 변경하기
       if(clickedTag.innerText === '프리미어리그'){
-        this.sch_of_month = []
-        for(let game of this.sch_of_leagues){
+        this.gamesMonth = []
+        for(let game of this.gamesAll){
           if(game.kickoff.substring(6, 7) === '8' && game.home.leagueName === 'Premier League') {
-            this.sch_of_month.push(game)
+            this.gamesMonth.push(game)
           } else { break; }}        
         
       // league 이름 담아서 라우터 이동
