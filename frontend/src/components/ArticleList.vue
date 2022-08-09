@@ -3,7 +3,10 @@
     <div class="community-list-top">
       <div style="width:200px;">
         <v-select
+        v-model="category"
         :items="items"
+        item-title="title"
+        item-value="apiId"
         label="리그 분류"
         density="compact"
         solo
@@ -18,25 +21,9 @@
         {{header.name}}
       </div>
     </div>
-
-    <div v-for="article in pagedArticles" :key="article.article_id" class="community-list-articles">
-      <div style="width:100px">
-        <p>{{article.category}}</p>
-      </div>
-      <div @click="toArticleDetail(article.article_id)" class="article-list" style="width:380px">
-        <p>{{article.title}}</p>
-      </div>
-      <div style="width:100px">
-        <p>{{article.updated_date}}</p>
-      </div>
-      <div style="width:130px">
-        <p>{{article.author}}</p>
-      </div>
-      <div style="width:80px">
-        <p>{{article.recommended}}</p>
-      </div>
-    </div>
-
+    <article-list-item
+      v-for="article in pagedArticles" :key="article.id" :article="article">
+    </article-list-item>
     <div class="community-list-search">
       <input type="text" placeholder=" 검색할 내용을 입력하세요." class="community-list-searchbar">
       <v-btn style="height:34px; margin-left:20px">검색</v-btn>
@@ -48,31 +35,21 @@
         rounded="circle"
       ></v-pagination>
     </div>
-    {{decoded}}
   </div>
 </template>
 
 <script setup>
+import ArticleListItem from "./ArticleListItem.vue"
 import { useAccountStore, useCommunityStore } from "@/store"
-import { ref, watchEffect } from "vue"
-import router from "@/router"
-import jwt_decode from "jwt-decode"
+import { ref, watch } from "vue"
+import axios from "axios";
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
-const { articles } = communityStore
-const toke = ref(sessionStorage.getItem('token')??'')
-const decoded = ref('')
-if (toke.value) {
-  decoded.value = jwt_decode(toke.value)
-}
-
-// 페이지네이션
 const page = ref(1)
-const pageLength = ref(parseInt((articles.length-1)/15)+1)
-const pagedArticles = ref(articles.filter(article => article.article_id < 15))
-watchEffect(() => {
-    pagedArticles.value = articles.filter(article => {if (article.article_id >= 15*(page.value-1)) {if (article.article_id < 15*page.value) {return true}}})
-})
+const pageLength = ref(1)
+const articles = ref({})
+const pagedArticles = ref({})
+const category = ref('')
 function writeButton() {
   if (accountStore.isLogin) {
     communityStore.communityToggle()
@@ -80,15 +57,53 @@ function writeButton() {
     accountStore.loginDialogToggle()
   }
 }
+axios({
+  url: 'https://i7b204.p.ssafy.io/cheertogether/articles',
+  method: 'GET', 
+}).then(res => {
+  articles.value = res.data
+  pagedArticles.value = articles.value.slice(0, 15)
+  pageLength.value = parseInt((articles.value.length-1)/15)+1
+}).catch(err => {
+  console.log(err)
+})
+
+//리그 분류
+watch(category, () => {
+  //category.value가 false(전체보기)인 경우, 모든 게시글을 가져옴
+  if (category.value) {
+    axios({
+      url: 'https://i7b204.p.ssafy.io/cheertogether/articles/header/' + category.value,
+      method: 'GET', 
+    }).then(res => {
+      articles.value = res.data
+      pagedArticles.value = articles.value.slice(0, 15)
+      pageLength.value = parseInt((articles.value.length-1)/15)+1
+    }).catch(err => {
+      console.log(err)
+  })} else {
+    axios({
+      url: 'https://i7b204.p.ssafy.io/cheertogether/articles',
+      method: 'GET', 
+    }).then(res => {
+      articles.value = res.data
+      pagedArticles.value = articles.value.slice(0, 15)
+      pageLength.value = parseInt((articles.value.length-1)/15)+1
+    }).catch(err => {
+      console.log(err)
+    })
+  }
+})
+
 
 const items = [
-  {title: '전체보기'},
-  {title: '프리미어리그'},
-  {title: '라리가'},
-  {title: '세리에A'},
-  {title: '분데스리가'},
-  {title: '리그 1'},
-  {title: 'K리그'},
+  {title: '전체보기', apiId: false},
+  {title: '프리미어리그', apiId: 39},
+  {title: '라리가', apiId: 140},
+  {title: '세리에A', apiId: 135},
+  {title: '분데스리가', apiId: 78},
+  {title: '리그 1', apiId: 61},
+  {title: 'K리그', apiId: 292},
 ]
 const headers = [
   {
@@ -112,17 +127,9 @@ const headers = [
     style: {width:'80px'},
   },
 ]
-function toArticleDetail(id) {
-  router.push({name: 'ArticleDetail', params: { articleid: id }})
-}
 </script>
 
 <style>
-.community-main {
-  width: 790px;
-  margin-top: 140px;
-  margin-left: 300px;
-}
 .community-list-top {
   display:flex;
   justify-content: space-between;
@@ -135,13 +142,6 @@ function toArticleDetail(id) {
   text-align: center;
   align-items: center;
   border-bottom: 1px solid #bcbcbc;
-}
-.community-list-articles {
-  display:flex;
-  height:36px;
-  margin:0;
-  text-align: center;
-  align-items: center;
 }
 .community-list-search {
   display:flex;
@@ -156,11 +156,5 @@ function toArticleDetail(id) {
   height:34px;
   border-radius:5px;
   border: 1px solid #bcbcbc;
-}
-@media (max-width: 1580px) {
-  .community-main {
-    margin-top: 120px;
-    margin-left: 200px;
-  }
 }
 </style>

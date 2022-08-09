@@ -1,7 +1,6 @@
 const HOST = 'https://i7b204.p.ssafy.io/cheertogether/'
 
 const MEMBERS = 'members/'
-// const article = 'article/'
 
 export default {
   members: {
@@ -13,9 +12,6 @@ export default {
   },
   league: {
     leaguesAll: () => HOST + 'leagues', // 모든 리그 정보 조회
-
-  },
-  article: {
 
   },
 }
