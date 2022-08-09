@@ -13,42 +13,6 @@
           [K리그] 제주 VS 전북 명경기
         </div>
       </div>
-      <!-- 두 번째 -->
-      <div class="popularMatch-section-item">
-        <div class="popularMatch-section-item-image">
-          <img :src="popularThumbnail.second" width="300" height="150">
-        </div>
-        <div class="popularMatch-section-item-title">
-          박지성 골!!! 한국축구 짱
-        </div>
-      </div>
-      <!-- 세 번째 -->
-      <div class="popularMatch-section-item">
-        <div class="popularMatch-section-item-image">
-          <img :src="popularThumbnail.third" width="300" height="150">
-        </div>
-        <div class="popularMatch-section-item-title">
-          손흥민의 찰칵
-        </div>
-      </div>
-      <!-- 네 번째 -->
-      <div class="popularMatch-section-item">
-        <div class="popularMatch-section-item-image">
-          <img :src="popularThumbnail.fourth" width="300" height="150">
-        </div>
-        <div class="popularMatch-section-item-title">
-          손흥민의 호우!!!!!
-        </div>
-      </div>
-      <!-- 다섯 번째 -->
-      <!-- <div class="popularMatch-section-item">
-        <div class="popularMatch-section-item-image">
-          <img :src="popularThumbnail.fifth" width="300" height="150">
-        </div>
-        <div class="popularMatch-section-item-title">
-          손흥민의 너로 정했다
-        </div>
-      </div> -->
     </div>
   </div>
 </template>
@@ -101,7 +65,7 @@ const popularThumbnail = {
   font-size: 16px;
   width: 375px;
   height: 30px;
-  background-color: var(--main-color);
+  background-color: var(--card-color);
   color: #ffffff;
   padding-top: 2px;
 }

@@ -91,10 +91,10 @@ const goToRoomsPage = () => {
 .sideBar {
   min-width: 210px;
   height:100%;
-  border-right: 1px solid rgb(225, 252, 255);
+  border-right: 1px solid var(--sidebar-border-color);
   position: fixed;
   top: 100px;
-  background-color: rgb(225, 252, 255);
+  background-color: var(--navbar-back-color);
 }
 .sideBar-item {
   font-size: 15px;
@@ -111,7 +111,7 @@ const goToRoomsPage = () => {
   animation-duration: 0.5s;
   white-space:nowrap;
   color: var(--main-color);
-  box-shadow: 0.5px 0.5px 0.5px;
+  box-shadow: grey 0.5px 0.5px 0.5px;
   /* text-shadow: -0.5px 0px var(--active-color), 0.5px 0.5px var(--active-color), 0.5px 0.5px var(--active-color), 0px -0.5px var(--active-color); */
 }
 .sideBar-item-icon {
