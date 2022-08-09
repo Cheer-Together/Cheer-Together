@@ -25,6 +25,7 @@ import com.ssafy.cheertogether.game.dto.GameApiParameterRequest;
 import com.ssafy.cheertogether.game.dto.GameResponse;
 import com.ssafy.cheertogether.game.service.GameService;
 
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -65,6 +66,23 @@ public class GameController {
 			throw new RuntimeException(e);
 		}
 		return new ResponseEntity<>(REGIST_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+	}
+
+	@GetMapping("/{leagueApiId}")
+	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiId(@PathVariable Long leagueApiId) {
+		return new ResponseEntity<>(gameService.findGamesByLeagueApiId(leagueApiId), HttpStatus.OK);
+	}
+
+	@GetMapping("/{leagueApiId}/date")
+	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(@PathVariable Long leagueApiId,
+		@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
+		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndDay(leagueApiId, date), HttpStatus.OK);
+	}
+
+	@GetMapping("/{leagueApiId}/month")
+	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndMonth(@PathVariable Long leagueApiId,
+		@ApiParam(value = "연월", required = true, example = "yyyy-MM") @RequestParam String date) {
+		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndMonth(leagueApiId, date), HttpStatus.OK);
 	}
 
 	private String apiResponseToJson(MultiValueMap<String, String> params) {
