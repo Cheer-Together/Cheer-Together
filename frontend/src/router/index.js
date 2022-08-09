@@ -8,6 +8,8 @@ import OnAirRoomView from '../views/OnAirRoomView.vue'
 import MatchScreenView from '../views/MatchScreenView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import MyPageEditView from '../views/MyPageEditView.vue'
+import SocialSignupView from '../views/SocialSignupView'
+import ScheduleSelectMonth from '../components/ScheduleSelectMonth.vue'
 import { useAccountStore } from "@/store"
 
 const routes = [
@@ -22,9 +24,12 @@ const routes = [
     component: ArticleView
   },
   {
-    path: '/schedule',
+    path: '/schedule/:leaguename',
     name: 'Schedule',
-    component: ScheduleView
+    component: ScheduleView,
+    children : [
+      {path: ':month', name: 'Month', component: ScheduleSelectMonth}
+    ]
   },
   {
     path: '/article/:articleid',
@@ -35,6 +40,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: SignupView
+  },
+  {
+    path: '/signup/social',
+    name: 'SocialSignup',
+    component: SocialSignupView
   },
   {
     path: '/onair/:leaguename',

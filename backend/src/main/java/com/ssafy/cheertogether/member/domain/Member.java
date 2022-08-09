@@ -71,7 +71,6 @@ public class Member implements UserDetails {
 	public static Member from(MemberModifyRequest modifyRequest) {
 		return Member.builder()
 			.nickname(modifyRequest.getNickname())
-			.password(modifyRequest.getPassword())
 			.profileImage(modifyRequest.getProfileImage())
 			.myInfo(modifyRequest.getMyInfo())
 			.build();
@@ -83,7 +82,6 @@ public class Member implements UserDetails {
 
 	public void update(MemberModifyRequest memberModifyRequest) {
 		nickname = memberModifyRequest.getNickname();
-		password = memberModifyRequest.getPassword();
 		profileImage = memberModifyRequest.getProfileImage();
 		myInfo = memberModifyRequest.getProfileImage();
 	}
@@ -106,6 +104,9 @@ public class Member implements UserDetails {
 	@Override
 	public String getPassword() {
 		return password;
+	}
+	public void updatePassword(String newPassword) {
+		this.password = newPassword;
 	}
 
 	@Override
@@ -136,4 +137,5 @@ public class Member implements UserDetails {
 	public void setTempPassword(String tempPassword) {
 		password = tempPassword;
 	}
+
 }

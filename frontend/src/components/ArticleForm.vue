@@ -66,17 +66,6 @@ function completeButton() {
 </script>
 
 <style>
-.community-main {
-  width: 790px;
-  margin-top: 140px;
-  margin-left: 300px;
-}
-@media (max-width: 1580px) {
-  .community-main {
-    margin-top: 120px;
-    margin-left: 200px;
-  }
-}
 .write-top {
   display: flex;
   justify-content: space-between;

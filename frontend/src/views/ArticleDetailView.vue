@@ -6,7 +6,7 @@
       <div class="community-detail-top">
         <div style="height:36px; width:36px; margin-right:10px; background-color:aquamarine;">
         </div>
-        <a>{{maincontent.category}}</a>
+        <a>{{maincontent.leagueResponseExceptTeamList.hanName}}</a>
       </div>
       <div class="community-detail-header">
         <div style="margin-left: 10px; font-size:20px;">
@@ -20,7 +20,7 @@
       <div class="community-detail-content-top">
         <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
         </div>
-        <a>{{maincontent.author}} | {{maincontent.updated_date}}</a>
+        <a>{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
       </div>
       <div style="margin: 10px">
         {{maincontent.content}}
@@ -41,37 +41,34 @@
 <script setup>
 import { ref } from "vue"
 import { useRoute } from 'vue-router'
-import { useCommunityStore } from "@/store"
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import ArticleSides from "../components/ArticleSides.vue"
 import router from '@/router/index.js'
-
-
-const communityStore = useCommunityStore()
+import axios from "axios"
 const route = useRoute()
 const articleid = route.params.articleid
+const maincontent = ref({})
+const createdDate = ref('')
 const commentText = ref('')
+axios({
+  url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + articleid,
+  method: 'GET', 
+}).then(res => {
+  maincontent.value = res.data
+  const createdTime = new Date(res.data.createDate)
+  createdDate.value = createdTime.getFullYear() +'-'+ createdTime.getMonth() +'-'+ createdTime.getDate() + ' ' + createdTime.getHours() + ":" + createdTime.getMinutes()
+}).catch(err => {
+  console.log(err)
+})
 
 function toArticleListBtn() {
   commentText.value = ''
   router.push({name: 'Article'})
 }
-
-// DB를 사용할경우 절대로 쓰지 않을 방법
-const maincontents = communityStore.articles.filter((article) => article.article_id == articleid)
-const maincontent = maincontents[0]
-
-
-
 </script>
 
 <style>
-.community-main {
-  width: 790px;
-  margin-top: 140px;
-  margin-left: 300px;
-}
 .community-detail-top {
   display:flex;
   align-items: center;
@@ -103,11 +100,5 @@ const maincontent = maincontents[0]
 .word-link:hover {
   color: var(--main-color);
   cursor: pointer
-}
-@media (max-width: 1580px) {
-  .community-main {
-    margin-top: 120px;
-    margin-left: 200px;
-  }
 }
 </style>

@@ -29,12 +29,12 @@ public class Game {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "home_team_id")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "home_team_api_id", referencedColumnName = "api_id")
 	private Team home;
 
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "away_team_id")
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "away_team_api_id", referencedColumnName = "api_id")
 	private Team away;
 
 	private LocalDateTime kickoff;
@@ -46,8 +46,9 @@ public class Game {
 	private Integer homeScore;
 	private Integer awayScore;
 	private Long apiId;
+	private Long leagueApiId;
 
-	@OneToMany(mappedBy = "matchId")
+	@OneToMany(mappedBy = "game")
 	@JsonManagedReference
 	private List<Room> roomList = new ArrayList<>();
 
