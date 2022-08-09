@@ -61,19 +61,26 @@ leagueStore.selectFavoriteTeam = '프리미어리그'
 
 const addSelectLeague = (bigLeague) => {
   if (accountStore.profile.favoriteLeagueList.length < 3){
-    if (accountStore.profile.favoriteLeagueList.includes(bigLeague)) {
-      const smallNumberIndex = accountStore.profile.favoriteLeagueList.indexOf(bigLeague);
-      accountStore.profile.favoriteLeagueList.splice(smallNumberIndex, 1)
-    }
-    else {
-      accountStore.profile.favoriteLeagueList.push(bigLeague);
+    let myChecked = true
+    accountStore.profile.favoriteLeagueList.filter((e)=> {
+      if (e.apiId === bigLeague.apiId) {
+        myChecked = false
+        const smallNumberIndex = accountStore.profile.favoriteLeagueList.indexOf(e);
+        accountStore.profile.favoriteLeagueList.splice(smallNumberIndex, 1)
+      }
+    })
+    if (myChecked) {
+      accountStore.profile.favoriteLeagueList.push(bigLeague)       
     }
   }
-  else if (accountStore.profile.favoriteLeagueList.length === 3) {
-    if (accountStore.profile.favoriteLeagueList.includes(bigLeague)) {
-      const smallNumberIndex = accountStore.profile.favoriteLeagueList.indexOf(bigLeague);
-      accountStore.profile.favoriteLeagueList.splice(smallNumberIndex, 1)
-    }
+  else  {
+    accountStore.profile.favoriteLeagueList.filter((e)=> {
+      if (e.apiId === bigLeague.apiId) {
+        const smallNumberIndex = accountStore.profile.favoriteLeagueList.indexOf(e);
+        accountStore.profile.favoriteLeagueList.splice(smallNumberIndex, 1)
+        return
+      }
+    })
   }
 }
 

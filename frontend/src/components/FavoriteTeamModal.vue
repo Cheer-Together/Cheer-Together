@@ -89,19 +89,26 @@ const leagueStore = useLeagueStore()
 
 const addSelectTeam = (myTeam) => {
   if (accountStore.profile.favoriteTeamList.length < 5){
-    if (accountStore.profile.favoriteTeamList.includes(myTeam)) {
-      const smallNumberIndex = accountStore.profile.favoriteTeamList.indexOf(myTeam);
-      accountStore.profile.favoriteTeamList.splice(smallNumberIndex, 1)
-    }
-    else {
-      accountStore.profile.favoriteTeamList.push(myTeam);
-    }
+    let myChecked = true
+    accountStore.profile.favoriteTeamList.filter((e)=> {
+      if (e.apiId === myTeam.apiId) {
+        myChecked = false
+        const smallNumberIndex = accountStore.profile.favoriteTeamList.indexOf(e);
+        accountStore.profile.favoriteTeamList.splice(smallNumberIndex, 1)
+      }
+    })
+    if (myChecked) {
+        accountStore.profile.favoriteTeamList.push(myTeam)  
+      }
   }
-  else if (accountStore.profile.favoriteTeamList.length === 5) {
-    if (accountStore.profile.favoriteTeamList.includes(myTeam)) {
-      const smallNumberIndex = accountStore.profile.favoriteTeamList.indexOf(myTeam);
-      accountStore.profile.favoriteTeamList.splice(smallNumberIndex, 1)
-    }
+  else{
+    accountStore.profile.favoriteTeamList.filter((e)=> {
+      if (e.apiId === myTeam.apiId) {
+        const smallNumberIndex = accountStore.profile.favoriteTeamList.indexOf(e);
+        accountStore.profile.favoriteTeamList.splice(smallNumberIndex, 1)
+        return
+      }
+    })
   }
 }
 

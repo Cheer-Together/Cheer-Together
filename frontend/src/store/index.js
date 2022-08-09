@@ -3,6 +3,8 @@ import axios from 'axios'
 import cheertogether from '@/api/cheertogether'
 import Swal from 'sweetalert2'
 import router from '@/router/index.js';
+import jwt_decode from "jwt-decode"
+import { ref } from "vue"
 
 
 export const useCommunityStore = defineStore('community', {
@@ -77,7 +79,8 @@ export const useAccountStore = defineStore('account', {
       nickname: '',
       profileImage: '',
       role: '',
-    }
+    },
+    profileId: false,
   }),
   getters: {
   },
@@ -302,14 +305,15 @@ export const useAccountStore = defineStore('account', {
         })
           .then(res => {
             console.log(res.data)
-            router.push({name: 'Mypage' , params: {userid: 34 } })
-
+            router.push({name: 'Mypage' , params: {userid: this.profileId } })
+            this.userProfile(this.profileId)
           })
           .catch(err => {
             console.log(err)
             
           })
     },
+
     loginDialogToggle(){
       /* 
       세션 스토리지에 토큰이 존재하지 않을 경우 (비 로그인 유저인 경우)
@@ -337,8 +341,16 @@ export const useAccountStore = defineStore('account', {
         method: 'POST',
         data: user
       }).then(res => {
-          sessionStorage.setItem('token', res.data.jwtToken)
+          sessionStorage.setItem('token', res.data)
           this.isLogin = true
+
+          const toke = ref(sessionStorage.getItem('token')??'')
+          const decoded = ref('')
+          if (toke.value) {
+            decoded.value = jwt_decode(toke.value)
+          }
+          this.prfileID = decoded.value.sub
+          this.userProfile(decoded.value.sub)
           console.log(res.data)
       }).catch(err => {
           console.log(err)
@@ -561,7 +573,12 @@ export const useNewsStore = defineStore('news', {
         })
           .then(res => {
             console.log(res.data)
-            this.news = res.data
+            res.data.forEach((e) => {
+              let title = e.title
+              title = title.replaceAll('&apos;', "'")
+              title = title.replaceAll('&quot;', '"')
+              this.news.push({link: e.link, title: title})
+            })
           })
           .catch(err => {
             console.log(err)
@@ -569,5 +586,74 @@ export const useNewsStore = defineStore('news', {
           })
     },
 
+  }
+})
+export const useGameStore = defineStore('game', { 
+  state: () => ({ 
+    gamesAll: [],
+    todayGames: [],
+    monthGames: [],
+  }),
+  actions: {
+    getGames(inputMonth) {
+      /* 
+      GET: 경기 일정 데이터 조회
+        성공하면
+         
+        실패하면
+
+      */
+      axios({
+        url: cheertogether.game.games(),
+        method: 'GET',
+      })
+      .then(res => {
+
+        let today = new Date();   
+
+        let year = today.getFullYear(); // 년도
+        let month = today.getMonth() + 1;  // 월
+        let date = today.getDate();  // 날짜
+        // let day = today.getDay();  // 요일
+        if (0 < month < 10) {
+          month = '0' + month
+        }
+        if (0 < inputMonth < 10) {
+          inputMonth = '0' + inputMonth
+        }
+        if (0 < date < 10) {
+          date = '0' + date
+        }
+        // myToday 는 오늘날
+        // const myToday = year + '-' + month + '-' + date 
+        const myMonth = year + '-' + inputMonth
+        const myToday = '2022-08-06'
+
+        // 모든 경기 정보
+        this.gamesAll = res.data
+
+        // 오늘 경기 정보
+        res.data.filter((e) => {
+          if(e.kickoff.startsWith(myToday)) {
+            this.todayGames.push(e)       
+          }
+        })
+
+        // inputMonth로 달을 받아 옴
+        res.data.filter((e) => {
+          if(e.kickoff.startsWith(myMonth)) {
+            this.monthGames.push(e)       
+          }
+        })
+        console.log(myToday)
+        console.log(this.todayGames)
+        console.log(this.monthGames)
+
+      })
+      .catch(err => {
+        console.log(err)
+        
+      })
+    },
   }
 })
