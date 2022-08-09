@@ -3,8 +3,10 @@
     <div class="write-top">
       <div style="width: 180px;">
         <v-select
-        :items="categories"
         v-model="category"
+        :items="items"
+        item-title="title"
+        item-value="apiId"
         label="리그 분류"
         density="compact"
         solo
@@ -31,36 +33,54 @@
 </template>
 
 <script setup>
+import router from "@/router"
 import { useAccountStore, useCommunityStore } from "@/store"
+import axios from "axios"
 import { ref } from 'vue'
-
 const category = ref('분류 없음')
 const title = ref('')
 const content = ref('')
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
-const categories = [
-  {title: '분류 없음'},
-  {title: '프리미어리그'},
-  {title: '라리가'},
-  {title: '세리에A'},
-  {title: '분데스리가'},
-  {title: '리그 1'},
-  {title: 'K리그'},
+const items = [
+  {title: '분류 없음', apiId: false},
+  {title: '프리미어리그', apiId: 39},
+  {title: '라리가', apiId: 140},
+  {title: '세리에A', apiId: 135},
+  {title: '분데스리가', apiId: 78},
+  {title: '리그 1', apiId: 61},
+  {title: 'K리그', apiId: 292},
 ]
 const time = new Date();
 const now = time.toLocaleString();
-
-// 일단 store에 저장 (나중에 DB에 저장할 예정)
 function completeButton() {
-  const contents = {
-    category,
-    title,
-    content,
-    updated_date: `${time.getHours()}:${time.getMinutes()}`,
-    author: '작성자 이름'
-  }
-  communityStore.writeArticle(contents)
+  axios({
+    url: "https://i7b204.p.ssafy.io/cheertogether/articles",
+    method: 'POST',
+    data: {
+      content: content.value,
+      leagueApiId: category.value,
+      title: title.value,
+    },
+    params: {
+      jwtToken: sessionStorage.getItem('token')
+    }
+  })
+  .then(res => {
+    console.log(res.data)
+    router.push({name:'Article'})
+  })
+  .catch(err => {
+    console.log(err)
+  })
+  // const contents = {
+  //   category,
+  //   title,
+  //   content,
+  //   updated_date: `${time.getHours()}:${time.getMinutes()}`,
+  //   author: '작성자 이름'
+  // }
+  // communityStore.writeArticle(contents)
   communityStore.communityToggle()
 }
 </script>
