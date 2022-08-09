@@ -3,6 +3,12 @@
   <div style="display:flex;">
     <SideBar/>
     <div v-if="loaded" class="community-main">
+<!--     
+    axios가 실행되기 전에 {{maincontent}}를 불러와서 에러 발생,
+    axios가 실행되고 maincontent가 로드되면 렌더되도록 하기 위해
+    로드가 완료될때까지 false를 출력하는 변수 loaded를 사용하여
+    순차적으로 진행 될 수 있도록 구조화함
+-->
       <div class="community-detail-top">
         <div style="height:36px; width:36px; margin-right:10px; background-color:aquamarine;">
         </div>
@@ -13,7 +19,7 @@
           {{maincontent.title}}
         </div>
         <div style="font-size:13px;">
-          <a class="word-link">신고하기</a><a> | </a>
+          <a class="word-link" @click="reportModalToggle()">신고하기</a><a> | </a>
           <a class="word-link" @click="toArticleListBtn()">글 목록</a>
         </div>
       </div>
@@ -36,6 +42,101 @@
     </div>
     <ArticleSides/>
   </div>
+
+  <div>
+    <v-row
+      justify="center"
+    >
+      <!-- 여기부터 모달창 -->
+      <v-dialog
+        v-model="reportModal"
+      >
+        <v-card>
+          <v-card-text>
+            <div>
+              <div style="margin-bottom:20px; font-size: 22px;">
+                <p>신고하실 사유를 모두 선택해주세요.</p>
+              </div>
+              <v-checkbox
+                v-model="check1"
+                label="음담패설"
+                color="error"
+                density="compact"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="check2" 
+                label="혐오스러운 내용 혹은 혐오 발언"
+                color="error"
+                density="compact"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="check3"
+                label="악의적인 내용"
+                color="error"
+                density="compact"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="check4"
+                label="범죄 조장 혹은 유해한 내용"
+                color="error"
+                density="compact"
+                hide-details
+              ></v-checkbox>
+              <v-checkbox
+                v-model="check5"
+                label="도배 혹은 오해의 소지가 있는 내용"
+                color="error"
+                density="compact"
+                hide-details
+              ></v-checkbox>
+              <div style="display: flex; justify-content:space-around; margin-top: 20px; margin-bottom: 15px;">
+                <v-btn color="error" @click="reportArticle()">신고하기</v-btn>
+                <v-btn @click="reportModalToggle()">취소하기</v-btn>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <v-dialog
+        v-model="reportErrorModal"
+      >
+        <v-card>
+          <v-card-text>
+            <div>
+              <div style="font-size:20px">
+                <p>신고 사유를 선택해 주세요!</p>
+              </div>
+              <div style="text-align:center">
+                <v-btn
+                  style="margin-top:30px; color:white; margin-left: auto; margin-right: auto;"
+                  color="#2E6AFD"
+                  width="200px"
+                  @click="reportErrorModal = false"
+                >
+                  다음
+                </v-btn>
+              </div>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              color="primary"
+              text
+              @click="reportErrorModal = false"
+            >
+              Close
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+  </div>
+
+
 </template>
 
 <script setup>
@@ -53,7 +154,13 @@ const maincontent = ref({})
 const loaded = ref(false)
 const createdDate = ref('')
 const commentText = ref('')
-console.log(route.params.articleid)
+const reportModal = ref(false)
+const reportErrorModal = ref(false)
+const check1 = ref(false)
+const check2 = ref(false)
+const check3 = ref(false)
+const check4 = ref(false)
+const check5 = ref(false)
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + articleid,
   method: 'GET', 
@@ -92,6 +199,42 @@ function likeArticle() {
       title: '너는 이 글을 좋아하지 못했다'
     })
   })
+}
+function reportModalToggle() {
+  if (reportModal.value) {
+    reportModal.value = false
+  } else {
+    reportModal.value = true
+  }
+}
+function reportArticle() {
+  if (check1.value||check2.value||check3.value||check4.value||check5.value) {
+    axios({
+      url: "https://i7b204.p.ssafy.io/cheertogether/articles/"+ route.params.articleid +"/unlike",
+      method: 'POST',
+      params: {
+        jwtToken: sessionStorage.getItem('token')
+      }
+    })
+    .then(res => {
+      console.log(res.data)
+      reportModalToggle()
+      Swal.fire({
+        icon: 'success',
+        title: '신고가 접수되었습니다.'
+      })
+    })
+    .catch(err => {
+      console.log(err)
+      reportModalToggle()
+      Swal.fire({
+        icon: 'error',
+        title: '싫어하기 실패'
+      })
+    })
+  } else {
+    reportErrorModal.value = true
+  }
 }
 function writeReply() {
   axios({
@@ -154,4 +297,7 @@ function writeReply() {
   color: var(--main-color);
   cursor: pointer
 }
+/* :deep(.v-selection-control .v-label) {
+  height: 40px !important;
+} */
 </style>
