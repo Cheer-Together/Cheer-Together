@@ -20,6 +20,17 @@ communityStore.communityMounted()
 </script>
 
 <style>
+.community-main {
+  width: 790px;
+  margin-top: 160px;
+  margin-left: 270px;
+}
+@media (max-width: 1580px) {
+  .community-main {
+    margin-top: 120px;
+    margin-left: 235px;
+  }
+}
 .maincolor {
   color: var(--main-color);
 }

@@ -132,7 +132,7 @@ const items = [
   border: 1px solid #bcbcbc;
   padding-left: 10px;
 }
-::v-deep .v-field {
+:deep(.v-select__selection-text) {
   font-size: 12px !important;
 }
 </style>
