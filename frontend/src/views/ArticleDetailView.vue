@@ -31,7 +31,7 @@
       </div>
       <div class="community-detail-writecomment">
         <input type="text" v-model="commentText" maxlength="30" placeholder=" 여기에 댓글을 달아주세요." class="community-detail-commentcontent">
-        <v-btn style="height:34px; margin-left:20px">댓글작성</v-btn>
+        <v-btn @click="writeReply" style="height:34px; margin-left:20px">댓글작성</v-btn>
       </div>
     </div>
     <ArticleSides/>
@@ -93,6 +93,32 @@ function likeArticle() {
     })
   })
 }
+function writeReply() {
+  axios({
+    url: "https://i7b204.p.ssafy.io/cheertogether/articles/"+ route.params.articleid +"/reply",
+    method: 'POST',
+    data: {
+      content: commentText.value
+    },
+    params: {
+      jwtToken: sessionStorage.getItem('token')
+    }
+  })
+  .then(res => {
+    console.log(res.data)
+    Swal.fire({
+      icon: 'success',
+      title: '댓글담'
+    })
+  })
+  .catch(err => {
+    console.log(err)
+    Swal.fire({
+      icon: 'error',
+      title: '댓글못담'
+    })
+  })
+} 
 </script>
 
 <style>
