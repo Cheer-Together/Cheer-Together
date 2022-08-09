@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class FirebaseConfig {
 
-	@Value("${app.firebase-configuration-file")
+	@Value("${app.firebase-configuration-file}")
 	private String firebaseConfigPath;
 
 	@PostConstruct
