@@ -25,8 +25,8 @@ public class GameController {
 	private final GameService gameService;
 
 	@GetMapping
-	public ResponseEntity<List<GameResponse>> findMatches() {
-		return new ResponseEntity<>(gameService.findMatches(), HttpStatus.OK);
+	public ResponseEntity<List<GameResponse>> findGames() {
+		return new ResponseEntity<>(gameService.findGames(), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberLoginRequest;
+import com.ssafy.cheertogether.member.dto.MemberModifyPasswordRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.service.EmailService;
@@ -78,6 +79,14 @@ public class MemberController {
 	public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody MemberModifyRequest memberModifyRequest) {
 		memberService.update(id, memberModifyRequest);
 		return new ResponseEntity<>(MODIFY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+	}
+
+	@PostMapping("{id}/password")
+	@ApiOperation(value = "비밀번호 변경", notes = "마이페이지에서 비밀번호를 변경")
+	public ResponseEntity<String> modifyPassword(@PathVariable Long id, @RequestBody MemberModifyPasswordRequest request) {
+		memberService.confirmPassword(id, request);
+		memberService.updatePassword(id, request.getNewPassword());
+		return new ResponseEntity<>(MODIFY_PASSWORD_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")

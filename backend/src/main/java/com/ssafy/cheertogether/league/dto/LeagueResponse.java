@@ -5,30 +5,24 @@ import java.util.List;
 import com.ssafy.cheertogether.league.domain.League;
 import com.ssafy.cheertogether.team.domain.Team;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder(builderMethodName = "leagueBuilder")
 public class LeagueResponse {
 
 	private String name;
 	private String hanName;
 	private String logo;
-	private int apiId;
+	private Long apiId;
 	private List<Team> teamList;
 
-	public static LeagueResponse from(final League league) {
-		return LeagueResponse.leagueBuilder()
-			.name(league.getName())
-			.hanName(league.getHanName())
-			.logo(league.getLogo())
-			.apiId(league.getApiId())
-			.teamList(league.getTeamList())
-			.build();
+	public LeagueResponse(League league) {
+		this.name = league.getName();
+		this.hanName = league.getHanName();
+		this.logo = league.getLogo();
+		this.apiId = league.getApiId();
+		this.teamList = league.getTeamList();
 	}
 }

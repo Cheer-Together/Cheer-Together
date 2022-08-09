@@ -21,6 +21,7 @@ import com.ssafy.cheertogether.favorite.repository.FavoriteTeamRepository;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
+import com.ssafy.cheertogether.member.dto.MemberModifyPasswordRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
@@ -131,6 +132,12 @@ public class MemberService implements UserDetailsService {
 		findMember.setFavoriteTeamList(favoriteTeamList);
 	}
 
+	public void updatePassword(Long id, String newPassword) {
+		Member findMember = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
+		findMember.updatePassword(newPassword);
+	}
+
 	public void delete(Long id) {
 		memberRepository.deleteById(id);
 	}
@@ -162,5 +169,14 @@ public class MemberService implements UserDetailsService {
 			sb.append(charSet[idx]);
 		}
 		return sb.toString();
+	}
+
+	@Transactional(readOnly = true)
+	public void confirmPassword(Long id, MemberModifyPasswordRequest request) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
+		if(!member.confirmPassword(request.getCurPassword())) {
+			throw new IllegalArgumentException(MISMATCH_PASSWORD_ERROR_MESSAGE);
+		}
 	}
 }

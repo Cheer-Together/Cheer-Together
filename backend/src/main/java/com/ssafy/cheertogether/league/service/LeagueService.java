@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.cheertogether.league.domain.League;
 import com.ssafy.cheertogether.league.dto.LeagueResponse;
+import com.ssafy.cheertogether.league.dto.LeagueResponseExceptTeamList;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,16 +29,25 @@ public class LeagueService {
 	public List<LeagueResponse> findAll() {
 		List<League> leagueList = leagueRepository.findAll();
 		List<LeagueResponse> leagueResponseList = new ArrayList<>();
-		leagueResponseList.addAll(leagueList.stream().map(LeagueResponse::from).collect(Collectors.toList()));
+		leagueResponseList.addAll(
+			leagueList.stream().map(league -> new LeagueResponse(league)).collect(Collectors.toList()));
+		return leagueResponseList;
+	}
+
+	public List<LeagueResponseExceptTeamList> findAlleExceptTeam() {
+		List<League> leagueList = leagueRepository.findAll();
+		List<LeagueResponseExceptTeamList> leagueResponseList = new ArrayList<>();
+		leagueResponseList.addAll(
+			leagueList.stream().map(league -> new LeagueResponseExceptTeamList(league)).collect(Collectors.toList()));
 		return leagueResponseList;
 	}
 
 	/**
 	 * 리그 api id를 통한 리그 정보 조회
 	 */
-	public LeagueResponse findByApiId(int apiId) {
+	public LeagueResponse findByApiId(Long apiId) {
 		League league = leagueRepository.findLeagueByApiId(apiId)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE));
-		return LeagueResponse.from(league);
+		return new LeagueResponse(league);
 	}
 }

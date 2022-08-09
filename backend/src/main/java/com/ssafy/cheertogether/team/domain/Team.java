@@ -1,6 +1,9 @@
 package com.ssafy.cheertogether.team.domain;
 
+import java.io.Serializable;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -18,7 +21,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Team {
+public class Team implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,6 +35,7 @@ public class Team {
 	private String name;
 	private String logo;
 	private String code;
-	private int apiId;
+	@Column(name = "api_id", unique = true)
+	private Long apiId;
 	private String hanName;
 }
