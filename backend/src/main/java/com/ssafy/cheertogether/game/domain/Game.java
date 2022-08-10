@@ -97,4 +97,8 @@ public class Game {
 		awayScore = gameModifyRequest.getAwayScore();
 		apiId = gameModifyRequest.getApiId();
 	}
+
+	public void updateLive() {
+		this.status = GameStatus.LIVE;
+	}
 }
