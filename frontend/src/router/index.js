@@ -8,6 +8,7 @@ import OnAirRoomView from '../views/OnAirRoomView.vue'
 import MatchScreenView from '../views/MatchScreenView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import SocialSignupView from '../views/SocialSignupView'
+import RoomVue from '../views/room/RoomView';
 import { useAccountStore } from "@/store"
 
 const routes = [
@@ -56,6 +57,11 @@ const routes = [
     name: 'Mypage',
     component: MyPageView
   },
+  {
+    path: '/room/:session',
+    name: 'Room',
+    component: RoomVue
+  }
 ]
 
 const router = createRouter({
