@@ -17,10 +17,10 @@
                 <p>로그인 후 이용하실 수 있습니다.</p>
               </div>
               <div style="margin-top:20px">
-                <input v-model="loginId" type="text" placeholder=" 아이디" class="login-dialog-textinput">
+                <input v-model="loginId" type="text" placeholder="아이디" class="login-dialog-textinput">
               </div>
               <div style="margin-top:20px">
-                <input v-model="loginPassword" @keyup.enter="loginButton()" type="password" placeholder=" 비밀번호" class="login-dialog-textinput">
+                <input v-model="loginPassword" @keyup.enter="loginButton()" type="password" placeholder="비밀번호" class="login-dialog-textinput">
               </div>
               <v-btn
                 v-if="isValidId"
@@ -241,6 +241,7 @@ function toSignupBtn() {
   height:50px;
   border-radius:1px;
   border: 1px solid #bcbcbc;
+  padding-left: 10px;
 }
 .password-dialog-top {
   width:340px;

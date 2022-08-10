@@ -160,25 +160,25 @@
             <!-- 모달 창 -->
             <FavoriteLeagueModal/>
           </v-dialog>
-          <div v-if="leagueStore.selectLeague.length !== 0" class="signup-favorite-league">
+          <div v-if="accountStore.profile.favoriteLeagueList.length !== 0" class="signup-favorite-league">
             <div class="signup-favorite-league-item">
-              <img :src="leagueStore.selectLeague[0].logo" class="signup-favorite-league-image">
+              <img :src="accountStore.profile.favoriteLeagueList[0].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectLeague[0].hanName }}
+                {{ accountStore.profile.favoriteLeagueList[0].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectLeague.length >= 2" >
-              <img :src="leagueStore.selectLeague[1].logo" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteLeagueList.length >= 2" >
+              <img :src="accountStore.profile.favoriteLeagueList[1].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectLeague[1].hanName }}
+                {{ accountStore.profile.favoriteLeagueList[1].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectLeague.length == 3" >
-              <img :src="leagueStore.selectLeague[2].logo" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteLeagueList.length == 3" >
+              <img :src="accountStore.profile.favoriteLeagueList[2].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectLeague[2].hanName }}
+                {{ accountStore.profile.favoriteLeagueList[2].hanName }}
               </div>
             </div>
           </div>        
@@ -200,25 +200,39 @@
             <!-- 모달 창 -->
             <FavoriteTeamModal/>
           </v-dialog>
-          <div v-if="leagueStore.selectTeam.length !== 0" class="signup-favorite-league">
+          <div v-if="accountStore.profile.favoriteTeamList.length !== 0" class="signup-favorite-league">
             <div class="signup-favorite-league-item">
-              <img :src="leagueStore.selectTeam[0].logo" class="signup-favorite-league-image">
+              <img :src="accountStore.profile.favoriteTeamList[0].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectTeam[0].hanName }}
+                {{ accountStore.profile.favoriteTeamList[0].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectTeam.length >= 2" >
-              <img :src="leagueStore.selectTeam[1].logo" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length >= 2" >
+              <img :src="accountStore.profile.favoriteTeamList[1].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectTeam[1].hanName }}
+                {{ accountStore.profile.favoriteTeamList[1].hanName }}
               </div>
             </div>
 
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectTeam.length == 3" >
-              <img :src="leagueStore.selectTeam[2].logo" class="signup-favorite-league-image">
+            <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length >= 3" >
+              <img :src="accountStore.profile.favoriteTeamList[2].logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectTeam[2].hanName }}
+                {{ accountStore.profile.favoriteTeamList[2].hanName }}
+              </div>
+            </div>
+
+            <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length >= 4" >
+              <img :src="accountStore.profile.favoriteTeamList[3].logo" class="signup-favorite-league-image">
+              <div class="signup-favorite-league-item-title">
+                {{ accountStore.profile.favoriteTeamList[3].hanName }}
+              </div>
+            </div>
+
+            <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length == 5" >
+              <img :src="accountStore.profile.favoriteTeamList[4].logo" class="signup-favorite-league-image">
+              <div class="signup-favorite-league-item-title">
+                {{ accountStore.profile.favoriteTeamList[4].hanName }}
               </div>
             </div>
           </div>  
@@ -260,13 +274,15 @@ accountStore.passwordAccordance2 = '';
 accountStore.isPushEmail = false;
 accountStore.isShowPasswordError = '';
 accountStore.myImage  = ''
-leagueStore.selectLeague = []
-leagueStore.selectTeam = []
+accountStore.profile.favoriteLeagueList = []
+accountStore.profile.favoriteTeamList = []
 
 let userInputEmailAuthCode = ''
 let credentialsSignup = {
   email: "",
   favoriteLeagueList: [ 
+  ],
+  favoriteTeamList: [
   ],
   myInfo: "",
   nickname: "",
@@ -324,22 +340,37 @@ const changeSignUp = (credentialsSignup) => {
     credentialsSignup.password = accountStore.passwordAccordance
     credentialsSignup.profileImage = accountStore.myImage
 
-    if (leagueStore.selectLeague.length == 3) {
-      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId, leagueStore.selectLeague[1].apiId, leagueStore.selectLeague[2].apiId]
+    if (accountStore.profile.favoriteLeagueList.length == 3) {
+      credentialsSignup.favoriteLeagueList = [accountStore.profile.favoriteLeagueList[0].apiId, accountStore.profile.favoriteLeagueList[1].apiId, accountStore.profile.favoriteLeagueList[2].apiId]
     }
-    else if (leagueStore.selectLeague.length == 2) {
-      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId, leagueStore.selectLeague[1].apiId ]
+    else if (accountStore.profile.favoriteLeagueList.length == 2) {
+      credentialsSignup.favoriteLeagueList = [accountStore.profile.favoriteLeagueList[0].apiId, accountStore.profile.favoriteLeagueList[1].apiId ]
     }
-    else if (leagueStore.selectLeague.length == 1) {
-      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId]
+    else if (accountStore.profile.favoriteLeagueList.length == 1) {
+      credentialsSignup.favoriteLeagueList = [accountStore.profile.favoriteLeagueList[0].apiId]
     }
 
+    if (accountStore.profile.favoriteTeamList.length == 5) {
+      credentialsSignup.favoriteTeamList = [accountStore.profile.favoriteTeamList[0].apiId, accountStore.profile.favoriteTeamList[1].apiId, accountStore.profile.favoriteTeamList[2].apiId, accountStore.profile.favoriteTeamList[3].apiId, accountStore.profile.favoriteTeamList[4].apiId]
+    }
+    else if (accountStore.profile.favoriteTeamList.length == 4) {
+      credentialsSignup.favoriteTeamList = [accountStore.profile.favoriteTeamList[0].apiId, accountStore.profile.favoriteTeamList[1].apiId, accountStore.profile.favoriteTeamList[2].apiId, accountStore.profile.favoriteTeamList[3].apiId]
+    }
+    else if (accountStore.profile.favoriteTeamList.length == 3) {
+      credentialsSignup.favoriteTeamList = [accountStore.profile.favoriteTeamList[0].apiId, accountStore.profile.favoriteTeamList[1].apiId, accountStore.profile.favoriteTeamList[2].apiId]
+    }
+    else if (accountStore.profile.favoriteTeamList.length == 2) {
+      credentialsSignup.favoriteTeamList = [accountStore.profile.favoriteTeamList[0].apiId, accountStore.profile.favoriteTeamList[1].apiId ]
+    }
+    else if (accountStore.profile.favoriteTeamList.length == 1) {
+      credentialsSignup.favoriteTeamList = [accountStore.profile.favoriteTeamList[0].apiId]
+    }
     // 사용한 피니아 변수들 초기화
     accountStore.passwordAccordance = ''
     accountStore.passwordAccordance2 = ''
     accountStore.myImage = ''
-    leagueStore.selectLeague = []
-    leagueStore.selectTeam = []
+    accountStore.profile.favoriteLeagueList = []
+    accountStore.profile.favoriteTeamList = []
 
     // 회원가입 진행
     accountStore.signUp(credentialsSignup)
