@@ -119,13 +119,15 @@ public class GameService {
 		LocalDateTime start = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), 1, 0, 0);
 		LocalDateTime end = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), yearMonth.lengthOfMonth(), 23,
 			59);
-		System.out.println("===============");
-		System.out.println(start);
-		System.out.println(end);
-		System.out.println("=================");
 		return gameRepository.findAllByLeagueApiIdAndKickoffBetween(leagueApiId, start, end)
 			.stream()
 			.map(GameResponse::from)
 			.collect(Collectors.toList());
+	}
+
+	public void updateLiveGames(LocalDateTime localDateTime) {
+		LocalDateTime kickoff = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), localDateTime.getHour(), localDateTime.getMinute());
+		List<Game> gameList = gameRepository.findAllByKickoff(kickoff);
+		gameList.stream().forEach(game -> game.updateLive());
 	}
 }
