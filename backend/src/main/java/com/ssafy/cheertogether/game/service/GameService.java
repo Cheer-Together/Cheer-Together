@@ -126,8 +126,23 @@ public class GameService {
 	}
 
 	public void updateLiveGames(LocalDateTime localDateTime) {
-		LocalDateTime kickoff = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(), localDateTime.getDayOfMonth(), localDateTime.getHour(), localDateTime.getMinute());
+		LocalDateTime kickoff = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(),
+			localDateTime.getDayOfMonth(), localDateTime.getHour(), localDateTime.getMinute());
 		List<Game> gameList = gameRepository.findAllByKickoff(kickoff);
 		gameList.stream().forEach(game -> game.updateLive());
+	}
+
+	public List<GameResponse> findGamesByStatus() {
+		return gameRepository.findAllByStatus(GameStatus.LIVE)
+			.stream()
+			.map(GameResponse::from)
+			.collect(Collectors.toList());
+	}
+
+	public List<GameResponse> findGamesByLeagueApiIdAndStatus(Long leagueApiId) {
+		return gameRepository.findAllByLeagueApiIdAndStatus(leagueApiId, GameStatus.LIVE)
+			.stream()
+			.map(GameResponse::from)
+			.collect(Collectors.toList());
 	}
 }

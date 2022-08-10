@@ -46,7 +46,8 @@ public class GameController {
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "해당 경기 정보 업데이트", notes = "해당 경기 정보 업데이트")
-	public ResponseEntity<String> modify(@PathVariable Long id,@ApiParam(value = "경기 api Id", required = true, example = "867946") @RequestParam String apiId) {
+	public ResponseEntity<String> modify(@PathVariable Long id,
+		@ApiParam(value = "경기 api Id", required = true, example = "867946") @RequestParam String apiId) {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("id", apiId);
 		try {
@@ -90,6 +91,18 @@ public class GameController {
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndMonth(@PathVariable Long leagueApiId,
 		@ApiParam(value = "연월", required = true, example = "yyyy-MM") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndMonth(leagueApiId, date), HttpStatus.OK);
+	}
+
+	@GetMapping("/live")
+	@ApiOperation(value = "진행중인 경기 정보 조회", notes = "진행중인 경기 정보 조회")
+	public ResponseEntity<List<GameResponse>> findLiveGames() {
+		return new ResponseEntity<>(gameService.findGamesByStatus(), HttpStatus.OK);
+	}
+
+	@GetMapping("/live/{leagueApiId}")
+	@ApiOperation(value = "진행중인 리그 별 경기 정보 조회", notes = "진행중인 리그 별 경기 정보 조회")
+	public ResponseEntity<List<GameResponse>> findLiveGamesByLeagueApiId(@PathVariable Long leagueApiId) {
+		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndStatus(leagueApiId), HttpStatus.OK);
 	}
 
 	private String apiResponseToJson(MultiValueMap<String, String> params) {
