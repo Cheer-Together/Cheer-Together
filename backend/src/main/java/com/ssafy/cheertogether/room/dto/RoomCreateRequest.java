@@ -11,4 +11,5 @@ public class RoomCreateRequest {
 	private RoomStatus roomStatus;
 	private String password;
 	private String managerId;
+	private String sessionId;
 }
