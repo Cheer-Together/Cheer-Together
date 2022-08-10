@@ -25,6 +25,7 @@ import com.ssafy.cheertogether.game.dto.GameApiParameterRequest;
 import com.ssafy.cheertogether.game.dto.GameResponse;
 import com.ssafy.cheertogether.game.service.GameService;
 
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 
@@ -38,12 +39,14 @@ public class GameController {
 	private String apiKey;
 
 	@GetMapping
+	@ApiOperation(value = "모든 경기 정보 조회", notes = "모든 경기 정보 조회")
 	public ResponseEntity<List<GameResponse>> findGames() {
 		return new ResponseEntity<>(gameService.findGames(), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<String> modify(@PathVariable Long id, @RequestParam String apiId) {
+	@ApiOperation(value = "해당 경기 정보 업데이트", notes = "해당 경기 정보 업데이트")
+	public ResponseEntity<String> modify(@PathVariable Long id,@ApiParam(value = "경기 api Id", required = true, example = "867946") @RequestParam String apiId) {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("id", apiId);
 		try {
@@ -55,6 +58,7 @@ public class GameController {
 	}
 
 	@PostMapping
+	@ApiOperation(value = "경기 정보 삽입", notes = "리그와 시즌 별 경기 정보 삽입")
 	public ResponseEntity<String> insert(@RequestBody GameApiParameterRequest gameApiParameterRequest) {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("league", gameApiParameterRequest.getLeagueApiId());
@@ -69,17 +73,20 @@ public class GameController {
 	}
 
 	@GetMapping("/{leagueApiId}")
+	@ApiOperation(value = "리그별 경기 정보 조회", notes = "리그별 경기 정보 조회")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiId(@PathVariable Long leagueApiId) {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiId(leagueApiId), HttpStatus.OK);
 	}
 
 	@GetMapping("/{leagueApiId}/date")
+	@ApiOperation(value = "리그와 날짜 별 경기 정보 조회", notes = "리그와 날짜 별 경기 정보 조회")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(@PathVariable Long leagueApiId,
 		@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndDay(leagueApiId, date), HttpStatus.OK);
 	}
 
 	@GetMapping("/{leagueApiId}/month")
+	@ApiOperation(value = "리그와 월 별 경기 정보 조회", notes = "리그와 월 별 경기 정보 조회")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndMonth(@PathVariable Long leagueApiId,
 		@ApiParam(value = "연월", required = true, example = "yyyy-MM") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndMonth(leagueApiId, date), HttpStatus.OK);
