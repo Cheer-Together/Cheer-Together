@@ -305,7 +305,7 @@ export const useAccountStore = defineStore('account', {
           this.isLogin = true          
           const decoded = ref('')
           decoded.value = jwt_decode(res.data)
-          this.prfileID = decoded.value.sub
+          this.profileId = decoded.value.sub
           this.userProfile(decoded.value.sub)
           router.push({ name:'MainPage' })
       }).catch(err => {
