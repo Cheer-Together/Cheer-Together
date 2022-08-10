@@ -217,7 +217,27 @@ export const useAccountStore = defineStore('account', {
           
         })
     },
-    
+    withdrawal(userId) {
+      /* 
+      DELETE: 회원 탈퇴를 진행한다.
+        성공하면
+          유저 정보를 profile에 저장한다.
+        실패하면
+
+      */
+        axios({
+          url: cheertogether.members.withdrawal(userId),
+          method: 'DELETE', 
+        })
+          .then(res => {
+            console.log(res.data)
+          })
+          .catch(err => {
+            console.log(err)
+            
+          })
+    },
+
     //   로그인 시 사용하는 함수들
     userProfile(userId) {
       /* 
