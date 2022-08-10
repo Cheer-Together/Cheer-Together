@@ -262,10 +262,11 @@ export const useAccountStore = defineStore('account', {
             profileImage: this.profile.profileImage,
           }
         })
-          .then(() => {
+          .then(res => {
             
             router.push({name: 'Mypage' , params: {userid: this.profileId } })
             this.userProfile(this.profileId)
+            console.log(res)
           })
           .catch(err => {
             console.log(err)
@@ -301,13 +302,9 @@ export const useAccountStore = defineStore('account', {
         data: user
       }).then(res => {
           sessionStorage.setItem('token', res.data)
-          this.isLogin = true
-
-          const toke = ref(sessionStorage.getItem('token')??'')
+          this.isLogin = true          
           const decoded = ref('')
-          if (toke.value) {
-            decoded.value = jwt_decode(toke.value)
-          }
+          decoded.value = jwt_decode(res.data)
           this.prfileID = decoded.value.sub
           this.userProfile(decoded.value.sub)
           router.push({ name:'MainPage' })
@@ -487,7 +484,7 @@ export const useOnAirStore = defineStore('onair', {
     fetchRooms(){
       // 데이터 받아오기
       axios({
-        url: cheertogether.rooms.loadRooms(),
+        url: cheertogether.room.loadRooms(),
         method: 'GET',
       })
         .then(res => {
