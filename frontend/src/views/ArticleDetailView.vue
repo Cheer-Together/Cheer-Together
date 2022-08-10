@@ -39,6 +39,7 @@
         <input type="text" v-model="commentText" maxlength="30" placeholder=" 여기에 댓글을 달아주세요." class="community-detail-commentcontent">
         <v-btn @click="writeReply" style="height:34px; margin-left:20px">댓글작성</v-btn>
       </div>
+      <ArticleDetailComment v-for="reply in maincontent.replyResponseList" :key="reply.id" :reply="reply"/>
     </div>
     <ArticleSides/>
   </div>
@@ -145,9 +146,11 @@ import { useRoute } from 'vue-router'
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import ArticleSides from "../components/ArticleSides.vue"
+import ArticleDetailComment from "../components/ArticleDetailComment.vue"
 import router from '@/router/index.js'
 import axios from "axios"
 import Swal from "sweetalert2"
+
 const route = useRoute()
 const articleid = route.params.articleid
 const maincontent = ref({})

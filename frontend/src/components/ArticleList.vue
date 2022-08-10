@@ -21,9 +21,7 @@
         {{header.name}}
       </div>
     </div>
-    <ArticleListItem
-      v-for="article in pagedArticles" :key="article.id" :article="article">
-    </ArticleListItem>
+    <ArticleListItem v-for="article in pagedArticles" :key="article.id" :article="article"/>
     <div class="community-list-search">
       <input v-model="searchString" type="text" placeholder=" 검색할 내용을 입력하세요." class="community-list-searchbar">
       <v-btn @click="searchBtn" style="height:34px; margin-left:20px">검색</v-btn>
