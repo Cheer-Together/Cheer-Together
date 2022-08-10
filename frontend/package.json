@@ -13,6 +13,7 @@
     "core-js": "^3.8.3",
     "dotenv": "^16.0.1",
     "jwt-decode": "^3.1.2",
+    "openvidu-browser": "2.22.0",
     "pinia": "^2.0.14",
     "roboto-fontface": "*",
     "sweetalert2": "^11.4.24",

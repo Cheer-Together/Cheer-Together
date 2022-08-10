@@ -9,6 +9,7 @@ import MatchScreenView from '../views/MatchScreenView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import MyPageEditView from '../views/MyPageEditView.vue'
 import SocialSignupView from '../views/SocialSignupView'
+import RoomVue from '../views/room/RoomView';
 import ScheduleSelectMonth from '../components/ScheduleSelectMonth.vue'
 import { useAccountStore } from "@/store"
 
@@ -60,6 +61,11 @@ const routes = [
     path: '/mypage/:userid',
     name: 'Mypage',
     component: MyPageView
+  },
+  {
+    path: '/room/:session',
+    name: 'Room',
+    component: RoomVue
   },
   {
     path: '/mypage/:userid/edit',
