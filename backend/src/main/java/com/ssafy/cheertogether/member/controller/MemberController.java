@@ -68,7 +68,7 @@ public class MemberController {
 		consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
 	@ApiOperation(value = "회원가입", notes = "회원 가입 - 회원 등록")
 	public ResponseEntity<String> join(@RequestPart MemberJoinRequest memberJoinRequest, @RequestPart MultipartFile file) {
-		memberJoinRequest.saveProfileImgLink(firebaseService.uploadFiles(file, "123"));
+		memberJoinRequest.saveProfileImgLink(firebaseService.uploadFiles(file));
 		memberService.join(memberJoinRequest);
 		return new ResponseEntity<>(JOIN_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
@@ -90,7 +90,8 @@ public class MemberController {
 
 	@PostMapping("{id}/password")
 	@ApiOperation(value = "비밀번호 변경", notes = "마이페이지에서 비밀번호를 변경")
-	public ResponseEntity<String> modifyPassword(@PathVariable Long id, @RequestBody MemberModifyPasswordRequest request) {
+	public ResponseEntity<String> modifyPassword(@PathVariable Long id,
+		@RequestBody MemberModifyPasswordRequest request) {
 		memberService.confirmPassword(id, request);
 		memberService.updatePassword(id, request.getNewPassword());
 		return new ResponseEntity<>(MODIFY_PASSWORD_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
