@@ -514,7 +514,20 @@ export const useOnAirStore = defineStore('onair', {
       } else {
         this.makeRoomDialog = true
       }
-    }
+    },
+    generateRandomString(num){
+      const characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      let result = '';
+      const charactersLength = characters.length;
+      for (let i = 0; i < num; i++) {
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+      console.log("makeRoom: "+result);
+      return result;
+    },
+    makeRoom(){
+      router.push({name: 'Room' , params: {session: this.generateRandomString(10)} })
+    },
   }
 })
 export const useNavbarStore = defineStore('navbar', {

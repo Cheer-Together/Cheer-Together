@@ -3,6 +3,7 @@ package com.ssafy.cheertogether.member.controller;
 import static com.ssafy.cheertogether.member.MemberConstant.*;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,8 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.ssafy.cheertogether.common.FirebaseService;
 import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberLoginRequest;
@@ -36,6 +40,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 	private final EmailService emailService;
+	private final FirebaseService firebaseService;
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@GetMapping("/{id}")
@@ -59,9 +64,11 @@ public class MemberController {
 		return new ResponseEntity<>(emailService.sendAuthenticationMail(email), HttpStatus.OK);
 	}
 
-	@PostMapping("/join")
+	@PostMapping(value = "/join",
+		consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
 	@ApiOperation(value = "회원가입", notes = "회원 가입 - 회원 등록")
-	public ResponseEntity<String> join(@RequestBody MemberJoinRequest memberJoinRequest) {
+	public ResponseEntity<String> join(@RequestPart MemberJoinRequest memberJoinRequest, @RequestPart MultipartFile file) {
+		memberJoinRequest.saveProfileImgLink(firebaseService.uploadFiles(file));
 		memberService.join(memberJoinRequest);
 		return new ResponseEntity<>(JOIN_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
@@ -83,7 +90,8 @@ public class MemberController {
 
 	@PostMapping("{id}/password")
 	@ApiOperation(value = "비밀번호 변경", notes = "마이페이지에서 비밀번호를 변경")
-	public ResponseEntity<String> modifyPassword(@PathVariable Long id, @RequestBody MemberModifyPasswordRequest request) {
+	public ResponseEntity<String> modifyPassword(@PathVariable Long id,
+		@RequestBody MemberModifyPasswordRequest request) {
 		memberService.confirmPassword(id, request);
 		memberService.updatePassword(id, request.getNewPassword());
 		return new ResponseEntity<>(MODIFY_PASSWORD_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);

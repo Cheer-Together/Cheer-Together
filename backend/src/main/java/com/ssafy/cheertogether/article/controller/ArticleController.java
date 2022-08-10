@@ -50,7 +50,7 @@ public class ArticleController {
 
 	@GetMapping("/header/{leagueApiId}")
 	@ApiOperation(value = "헤더 별 글 목록 조회", notes = "게시판 - 헤더 별 글 목록 조회")
-	public ResponseEntity<List<ArticleResponse>> findByLeagueApiId(@PathVariable int leagueApiId) {
+	public ResponseEntity<List<ArticleResponse>> findByLeagueApiId(@PathVariable Long leagueApiId) {
 		return new ResponseEntity<>(articleService.findByHeader(leagueApiId), HttpStatus.OK);
 	}
 

@@ -7,7 +7,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,9 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
+import com.ssafy.cheertogether.favorite.domain.FavoriteTeam;
+import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.MemberConstant;
 import com.ssafy.cheertogether.member.domain.Member;
+import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
+import com.ssafy.cheertogether.member.dto.Oauth2JoinRequest;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
+import com.ssafy.cheertogether.team.repository.TeamRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -33,6 +42,8 @@ public class Oauth2Service {
 	private String kakao_redirectUri;
 
 	private final MemberRepository memberRepository;
+	private final LeagueRepository leagueRepository;
+	private final TeamRepository teamRepository;
 
 	public String getKakaoAccessToken(String code) {
 		String access_Token = "";
@@ -137,5 +148,28 @@ public class Oauth2Service {
 	public Member findMemberByEmail(String email) {
 		return memberRepository.findByEmail(email)
 			.orElseThrow(() -> new IllegalArgumentException(MemberConstant.MISMATCH_EMAIL_ERROR_MESSAGE));
+	}
+
+	public void join(Oauth2JoinRequest oauth2JoinRequest) {
+		Member member = Member.from(oauth2JoinRequest);
+		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
+		if (!oauth2JoinRequest.getFavoriteLeagueList().isEmpty()) {
+			favoriteLeagueList.addAll(oauth2JoinRequest
+				.getFavoriteLeagueList()
+				.stream()
+				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+				.collect(Collectors.toList()));
+		}
+		member.setFavoriteLeagueList(favoriteLeagueList);
+		List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
+		if (!oauth2JoinRequest.getFavoriteTeamList().isEmpty()) {
+			favoriteTeamList.addAll(oauth2JoinRequest
+				.getFavoriteTeamList()
+				.stream()
+				.map(teamApiId -> FavoriteTeam.from(member, teamRepository.findTeamByApiId(teamApiId).get()))
+				.collect(Collectors.toList()));
+		}
+		member.setFavoriteTeamList(favoriteTeamList);
+		memberRepository.save(member);
 	}
 }

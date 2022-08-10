@@ -20,6 +20,7 @@ import com.ssafy.cheertogether.favorite.domain.FavoriteLeague;
 import com.ssafy.cheertogether.favorite.domain.FavoriteTeam;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
+import com.ssafy.cheertogether.member.dto.Oauth2JoinRequest;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -68,6 +69,16 @@ public class Member implements UserDetails {
 			.build();
 	}
 
+	public static Member from(Oauth2JoinRequest oauth2JoinRequest) {
+		return Member.builder()
+			.email(oauth2JoinRequest.getEmail())
+			.nickname(oauth2JoinRequest.getNickname())
+			.profileImage(oauth2JoinRequest.getProfileImage())
+			.role(oauth2JoinRequest.getRole())
+			.myInfo(oauth2JoinRequest.getMyInfo())
+			.build();
+	}
+
 	public static Member from(MemberModifyRequest modifyRequest) {
 		return Member.builder()
 			.nickname(modifyRequest.getNickname())
@@ -83,7 +94,7 @@ public class Member implements UserDetails {
 	public void update(MemberModifyRequest memberModifyRequest) {
 		nickname = memberModifyRequest.getNickname();
 		profileImage = memberModifyRequest.getProfileImage();
-		myInfo = memberModifyRequest.getProfileImage();
+		myInfo = memberModifyRequest.getMyInfo();
 	}
 
 	public void setFavoriteLeagueList(List<FavoriteLeague> favoriteLeagueList) {
