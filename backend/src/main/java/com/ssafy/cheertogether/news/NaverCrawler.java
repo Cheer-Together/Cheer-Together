@@ -32,7 +32,7 @@ public class NaverCrawler {
 
 	public List<Map<String, Object>> getNews(String subject) {
 		String response = search(subject);
-		String[] fields = {"title", "link"};
+		String[] fields = {"title", "link", "description"};
 		Map<String, Object> result = getResult(response, fields);
 		return (List<Map<String, Object>>)result.get("result");
 	}
