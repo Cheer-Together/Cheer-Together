@@ -1,6 +1,7 @@
 package com.ssafy.cheertogether.member.service;
 
 import static com.ssafy.cheertogether.member.MemberConstant.*;
+import static com.ssafy.cheertogether.league.LeagueConstant.*;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
 import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
+import com.ssafy.cheertogether.team.TeamConstant;
 import com.ssafy.cheertogether.team.repository.TeamRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -59,7 +61,9 @@ public class MemberService implements UserDetailsService {
 			favoriteLeagueList.addAll(memberJoinRequest
 				.getFavoriteLeagueList()
 				.stream()
-				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository
+					.findLeagueByApiId(leagueApiId)
+					.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		member.setFavoriteLeagueList(favoriteLeagueList);
@@ -68,7 +72,9 @@ public class MemberService implements UserDetailsService {
 			favoriteTeamList.addAll(memberJoinRequest
 				.getFavoriteTeamList()
 				.stream()
-				.map(teamApiId -> FavoriteTeam.from(member, teamRepository.findTeamByApiId(teamApiId).get()))
+				.map(teamApiId -> FavoriteTeam.from(member, teamRepository
+					.findTeamByApiId(teamApiId)
+					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		member.setFavoriteTeamList(favoriteTeamList);
@@ -116,7 +122,8 @@ public class MemberService implements UserDetailsService {
 				.getFavoriteLeagueList()
 				.stream()
 				.map(leagueApiId -> FavoriteLeague.from(findMember,
-					leagueRepository.findLeagueByApiId(leagueApiId).get()))
+					leagueRepository.findLeagueByApiId(leagueApiId)
+						.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		findMember.setFavoriteLeagueList(favoriteLeagueList);
@@ -126,7 +133,8 @@ public class MemberService implements UserDetailsService {
 			favoriteTeamList.addAll(memberModifyRequest
 				.getFavoriteTeamList()
 				.stream()
-				.map(teamApiId -> FavoriteTeam.from(findMember, teamRepository.findTeamByApiId(teamApiId).get()))
+				.map(teamApiId -> FavoriteTeam.from(findMember, teamRepository.findTeamByApiId(teamApiId)
+					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		findMember.setFavoriteTeamList(favoriteTeamList);
