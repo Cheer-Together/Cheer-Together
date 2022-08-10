@@ -65,7 +65,7 @@ public class MemberController {
 	}
 
 	@PostMapping(value = "/join",
-		consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+		consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 	@ApiOperation(value = "회원가입", notes = "회원 가입 - 회원 등록")
 	public ResponseEntity<String> join(@RequestPart MemberJoinRequest memberJoinRequest,
 		@RequestPart(required = false) MultipartFile file) {
