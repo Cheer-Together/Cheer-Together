@@ -13,7 +13,7 @@
     </div>
     <div id="main-video" class="col-md-6">
       <user-video :stream-manager="mainStreamManager" />
-      <!--추후에 경기영상으로 대체해야할듯함. 현재는 방장의 카메라-->
+      <!--추후에 경기영상으로 대체해야할듯함. 현재는 본인의 카메라-->
     </div>
     <div id="video-container" class="col-md-6">
       <user-video
@@ -34,6 +34,7 @@
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import axios from "axios";
+import { useAccountStore } from "@/store/index.js";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -56,19 +57,17 @@ export default {
       subscribers: [],
 
       mySessionId: undefined,
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      myUserName: undefined,
     };
   },
   mounted() {
     this.mySessionId = this.$route.params.session;
+    this.myUserName = useAccountStore().profile.nickname;
     this.joinSession();
   },
 
   methods: {
     joinSession() {
-      console.log(OPENVIDU_SERVER_URL);
-      console.log(OPENVIDU_SERVER_SECRET);
-
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
