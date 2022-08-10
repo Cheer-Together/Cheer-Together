@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
 import com.ssafy.cheertogether.room.dto.RoomModifyRequest;
 import com.ssafy.cheertogether.room.dto.RoomResponse;
+import com.ssafy.cheertogether.room.repository.RoomRepository;
 import com.ssafy.cheertogether.room.service.RoomService;
 
 import io.swagger.annotations.ApiOperation;
@@ -52,6 +53,13 @@ public class RoomController {
 	public ResponseEntity<List<RoomResponse>> findRoomByGameId(
 		@ApiParam(value = "경기 아이디", required = true, example = "1") @PathVariable Long gameId) {
 		return new ResponseEntity<>(roomService.findRoomByGameId(gameId), HttpStatus.OK);
+	}
+
+	@GetMapping("session/{sessionId}")
+	@ApiOperation(value = "응원방 세션 검색", notes = "응원방 세션 아이디로 검색")
+	public ResponseEntity<RoomResponse> findRoomBySessionId(
+		@ApiParam(value = "응원방 세션 아이디", required = true) @PathVariable String sessionId) {
+		return new ResponseEntity<>(roomService.findRoomBySessionId(sessionId), HttpStatus.OK);
 	}
 
 	@GetMapping("/league/{leagueApiId}")
