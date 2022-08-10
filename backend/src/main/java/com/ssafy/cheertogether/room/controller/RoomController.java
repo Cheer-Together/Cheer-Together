@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
 import com.ssafy.cheertogether.room.dto.RoomModifyRequest;
 import com.ssafy.cheertogether.room.dto.RoomResponse;
-import com.ssafy.cheertogether.room.repository.RoomRepository;
 import com.ssafy.cheertogether.room.service.RoomService;
 
 import io.swagger.annotations.ApiOperation;
