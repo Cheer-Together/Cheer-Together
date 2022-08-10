@@ -10,7 +10,7 @@
       </div>
     </div>
     <!-- 실시간 집관 -->
-    <div class="sideBar-item" @click="router.push({name: 'Onair' , params: {leaguename: 'Premier-league'} })">
+    <div class="sideBar-item" @click="goToRoomsPage">
       <v-icon class="sideBar-item-icon">
         mdi-video-outline
       </v-icon>
@@ -43,7 +43,7 @@
       K리그 1
     </div>
     <!-- 경기 일정 -->
-    <div class="sideBar-item" @click="router.push({name:'Schedule'})">
+    <div class="sideBar-item" @click="scheduleStore.moveSchedulePage">
       <v-icon class="sideBar-item-icon">
         mdi-calendar-month-outline
       </v-icon>
@@ -65,49 +65,27 @@
 
 <script setup>
 import { useOnAirStore } from '../store/index.js'
+import { useScheduleStore } from '../store/index.js'
 import router from '@/router/index.js'
-const onairStore = useOnAirStore();
+const onairStore = useOnAirStore()
+const scheduleStore = useScheduleStore()
 
+const goToRoomsPage = () => {
+  onairStore.rooms = onairStore.tmp_pl
+  router.push({name: 'Onair', params: {leaguename: '프리미어리그'}})
+}
 </script>
 
 <style>
-@keyframes hoverSidebarItem {
-  0% {
-    overflow: hidden;
-    background-color: white;
-  }
-  100% {
-    overflow: hidden;
-    padding-right: 0px;
-  }
-}
-
 .sideBar {
   min-width: 210px;
   height:100%;
-  border-right: 1px solid rgb(225, 252, 255);
+  border-right: 1px solid var(--sidebar-border-color);
   position: fixed;
   top: 100px;
-  background-color: rgb(225, 252, 255);
+  background-color: var(--navbar-back-color);
 }
-.sideBar-item {
-  font-size: 15px;
-  width: 160px;
-  margin: 15px 12px 0px 15px;
-  padding: 10px 0px 10px 10px;
-  border-radius: 3px;
-  font-family: var(--bold-font);
-}
-.sideBar-item:hover {
-  background-color: var(--sub-color);
-  cursor:pointer;
-  animation-name: hoverSidebarItem;
-  animation-duration: 0.5s;
-  white-space:nowrap;
-  color: var(--main-color);
-  box-shadow: 0.5px 0.5px 0.5px;
-  /* text-shadow: -0.5px 0px var(--active-color), 0.5px 0.5px var(--active-color), 0.5px 0.5px var(--active-color), 0px -0.5px var(--active-color); */
-}
+
 .sideBar-item-icon {
   width: 22px;
   height: 22px;
@@ -130,9 +108,58 @@ const onairStore = useOnAirStore();
   cursor:pointer;
 }
 .sideBar-subtitle-active {
-  color: #2E6AFD;
+  color: var(--main-color);
+}
+.sideBar-item,
+.sideBar-item::after {
+  -webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+  -o-transition: all 0.3s;
+	transition: all 0.3s;
 }
 
+.sideBar-item{
+  font-size: 15px;
+  width: 160px;
+  margin: 15px 12px 0px 15px;
+  padding: 10px 0px 10px 10px;
+  border-radius: 3px;
+  font-family: var(--bold-font);
+  background: none;
+  border-radius: 5px;
+  display: block;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.sideBar-item::before,
+.sideBar-item::after {
+  background: var(--active-color);
+  content: '';
+  position: absolute;
+  z-index: -1;
+}
+.sideBar-item:hover {
+  color: #ffffff;
+}
+.sideBar-item {
+  overflow: hidden;
+}
+.sideBar-item::after {
+  /*background-color: #f00;*/
+  height: 100%;
+  left: -35%;
+  top: 0;
+  transform: skew(50deg);
+  transition-duration: 0.6s;
+  transform-origin: top left;
+  width: 0;
+}
+
+.sideBar-item:hover:after {
+  height: 100%;
+  width: 135%;
+}
 @media (max-width: 1580px) {
 .sideBar {
   min-width: 150px;

@@ -40,6 +40,7 @@
                 style="margin-top: 35px; color:white;"
                 color="#2E6AFD"
                 width="340px"
+                @click="onAirStore.makeRoom()"
               >
                 같이 집관
               </v-btn>
@@ -100,6 +101,7 @@ const items = [
   {title: '리그 1'},
   {title: 'K리그'},
 ]
+
 </script>
 
 <style scoped>
@@ -132,7 +134,7 @@ const items = [
   border: 1px solid #bcbcbc;
   padding-left: 10px;
 }
-::v-deep .v-field {
+:deep(.v-select__selection-text) {
   font-size: 12px !important;
 }
 </style>

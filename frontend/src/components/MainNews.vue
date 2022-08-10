@@ -4,8 +4,8 @@
       스포츠 뉴스
     </div>
     <div class="mainNews-section">
-      <div class="mainNews-item" v-for="news in mainPageStore.mainNews" :key="news.id">
-        <img :src="news.img" class="mainNews-item-image">
+      <div class="mainNews-item" v-for="news in newsStore.news" :key="news.id">
+        <img :src="news.img" alt="" class="mainNews-item-image">
 
         <div class="mainNews-item-section">
           <div class="mainNews-item-title">
@@ -23,9 +23,10 @@
 </template>
 
 <script setup>
-import { useMainPageStore } from "@/store"
+import { useNewsStore } from "@/store"
 
-const mainPageStore = useMainPageStore()
+const newsStore = useNewsStore()
+newsStore.getNews('축구')
 </script>
 
 <style>
