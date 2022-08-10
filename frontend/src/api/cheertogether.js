@@ -1,4 +1,6 @@
-const HOST = 'https://i7b204.p.ssafy.io/cheertogether/'
+import {API_HOST_URL} from '@/config';
+
+const HOST = API_HOST_URL;
 
 const MEMBERS = 'members/'
 const LEAGUES = 'leagues/'
