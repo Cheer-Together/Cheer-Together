@@ -3,7 +3,6 @@
   <div style="display:flex;">
     <SideBar/>
     <div class="signup">
-      {{codedata}}
       <div class="signup-image" v-if="!accountStore.myImage">
         <label for="input-file" style="padding:66px 30px 66px 35px;">
           <v-icon class="sideBar-item-icon">
@@ -18,134 +17,38 @@
         </label>
       </div>
 
-
       <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'>
 
       <!-- 이메일 -->
-      <div class="signup-range" v-if="!accountStore.emailDoubleChecked">
+      <div class="signup-range">
         <div class="signup-range-title">
           이메일
         </div>
-        <div style="position: relative;">
-          <input type="email" class="signup-range-input" v-model="credentialsSignup.email" maxlength="40">
-          <button class="signup-range-button" @click.prevent="accountStore.checkEmail(credentialsSignup.email)">
-            중복 확인
-          </button>
+        <div>
+          <input disabled type="email" class="signup-range-input" v-model="socialSignupEmail" maxlength="40">
         </div>
       </div>
 
-      <!-- 이메일 유효성 검사 + 가입하지 않은 이메일  -->
-      <div class="signup-range" v-if="accountStore.emailDoubleChecked">
-        <div class="signup-range-title">
-          이메일
-        </div>
-        <div style="position: relative;">
-          <div type="email" class="signup-range-input checked-input" style="padding-top:10px">
-            {{ credentialsSignup.email }}
-            <button class="signup-range-button checked">
-              <v-icon class="sideBar-item-icon">
-                mdi-check-bold
-              </v-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="err-password-accordance" v-if="accountStore.emailDoubleChecked" style="color: var(--main-color)">
-        사용 가능한 이메일입니다.
-      </div>
-      <!-- 이메일 인증번호 -->
-      <div class="signup-range" v-if="!accountStore.emailAuthCodeChecked">
-        <div class="signup-range-title">
-          이메일 인증번호
-        </div>
-        <div style="position: relative;">
-          <input type="text" class="signup-range-input" maxlength="10" v-model="userInputEmailAuthCode">
-          <button v-if="!accountStore.isPushEmail" class="signup-range-button" @click.prevent="pushEmail(credentialsSignup.email)" style="background-color:brown;">
-            보내기 
-          <v-icon>
-            mdi-send
-          </v-icon>
-          </button>
-
-          <button v-else class="signup-range-button" @click.prevent="accountStore.emailAuthCodeCheck(userInputEmailAuthCode)">
-            확인
-          </button>
-        </div>
-      </div>
-
-      <!-- 이메일 인증번호 + 가입하지 않은 이메일  -->
-      <div class="signup-range" v-if="accountStore.emailAuthCodeChecked">
-        <div class="signup-range-title">
-          이메일 인증번호
-        </div>
-        <div style="position: relative;">
-          <div type="text" class="signup-range-input checked-input" style="padding-top:10px">
-            {{userInputEmailAuthCode }}
-            <button class="signup-range-button checked">
-              <v-icon class="sideBar-item-icon">
-                mdi-check-bold
-              </v-icon>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="err-password-accordance" v-if="accountStore.emailAuthCodeChecked" style="color: var(--main-color)">
-        인증되었습니다.
-      </div>
       <!-- 닉네임 -->
       <div class="signup-range">
         <div class="signup-range-title">
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="signup-range-input" maxlength="40" v-model="credentialsSignup.nickname">
+          <input type="text" class="signup-range-input" maxlength="40" v-model="socialSignupNickname">
         </div>
       </div>
-
-      <!-- 비밀번호 -->
-      <div class="signup-range">
-        <div class="signup-range-title">
-          비밀번호
-        </div>
-        <div style="position: relative;">
-          <input type="password" class="signup-range-input" maxlength="20" v-model="accountStore.passwordAccordance" @blur="accountStore.checkPassword(accountStore.passwordAccordance)">
-        </div>
-      </div>
-
-      <div class="err-password-accordance"  v-if="accountStore.isShowPasswordError === true">
-        올바르지 않은 비밀번호입니다. 영어, 숫자, 특수문자 조합 8- 20자
-      </div>
-
-      <div class="err-password-accordance"  v-if="accountStore.isShowPasswordError === false" style="color: var(--main-color)">
-        올바른 비밀번호입니다.
-      </div>
-      <!-- 비밀번호 확인 -->
-      <div class="signup-range">
-        <div class="signup-range-title">
-          비밀번호 확인
-        </div>
-        <div style="position: relative;">
-          <input type="password" class="signup-range-input" maxlength="20" v-model="accountStore.passwordAccordance2">
-        </div>
-      </div>
-
-      <div v-if="accountStore.passwordAccordance2 != '' && accountStore.passwordAccordance != accountStore.passwordAccordance2" class="err-password-accordance">
-        비밀번호가 일치하지 않습니다.
-      </div>
-      
       <!-- 본인 소개 -->
       <div class="signup-range signup-range-introduce" >
         <div class="signup-range-title">
           본인 소개
         </div>
         <div style="position: relative;">
-          <textarea cols="21" rows="5" class="signup-range-input-introduce" v-model="credentialsSignup.myInfo"></textarea>
+          <textarea cols="21" rows="5" class="signup-range-input-introduce" v-model="socialSignupMyInfo"></textarea>
         </div>
       </div>
       <!-- 좋아하는 리그 -->
-      <div class="signup-range" style="height:182px;">
+      <!-- <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 리그
           <v-dialog
@@ -156,36 +59,21 @@
                 mdi-plus-circle-outline
               </v-icon>
             </template>
-            <!-- 모달 창 -->
             <FavoriteLeagueModal/>
           </v-dialog>
           <div v-if="leagueStore.selectLeague.length !== 0" class="signup-favorite-league">
-            <div class="signup-favorite-league-item">
-              <img :src="leagueStore.selectLeague[0].logo" class="signup-favorite-league-image">
+            <div v-for="selectLeague in leagueStore.selectLeague" :key="selectLeague.logo" :selectLeague="selectLeague" class="signup-favorite-league-item">
+              <img :src="selectLeague.logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectLeague[0].hanName }}
+                {{ selectLeague.hanName }}
               </div>
             </div>
-
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectLeague.length >= 2" >
-              <img :src="leagueStore.selectLeague[1].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectLeague[1].hanName }}
-              </div>
-            </div>
-
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectLeague.length == 3" >
-              <img :src="leagueStore.selectLeague[2].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectLeague[2].hanName }}
-              </div>
-            </div>
-          </div>        
+          </div>
         </div>
-      </div>
+      </div> -->
 
       <!-- 좋아하는 팀 -->
-      <div class="signup-range" style="height:182px;">
+      <!-- <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 팀    
           <v-dialog
@@ -196,40 +84,25 @@
                 mdi-plus-circle-outline
               </v-icon>
             </template>
-            <!-- 모달 창 -->
             <FavoriteTeamModal/>
           </v-dialog>
           <div v-if="leagueStore.selectTeam.length !== 0" class="signup-favorite-league">
-            <div class="signup-favorite-league-item">
-              <img :src="leagueStore.selectTeam[0].logo" class="signup-favorite-league-image">
+            <div v-for="selectTeam in leagueStore.selectTeam" :key="selectTeam.logo" :selectTeam="selectTeam" class="signup-favorite-league-item">
+              <img :src="selectTeam.logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectTeam[0].hanName }}
-              </div>
-            </div>
-
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectTeam.length >= 2" >
-              <img :src="leagueStore.selectTeam[1].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectTeam[1].hanName }}
-              </div>
-            </div>
-
-            <div class="signup-favorite-league-item" v-if="leagueStore.selectTeam.length == 3" >
-              <img :src="leagueStore.selectTeam[2].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
-                {{ leagueStore.selectTeam[2].hanName }}
+                {{ selectTeam.hanName }}
               </div>
             </div>
           </div>  
         </div>
-      </div>
+      </div> -->
 
       <!-- 회원 가입!! -->
       <div class="signup-range-bottom">
-        <button class="signup-submit-button"  @click="router.push({name:'MainPage'})">
+        <button class="signup-submit-button" @click="router.push({name:'MainPage'})">
           이전
         </button>
-        <button class="signup-submit-button next" @click.prevent="changeSignUp(credentialsSignup)">
+        <button class="signup-submit-button next" @click.prevent="socialSignupBtn()">
           다음
         </button>
       </div>
@@ -240,127 +113,114 @@
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
-import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
-import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
-import { useAccountStore } from "@/store"
-import { useLeagueStore } from "@/store"
+// import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
+// import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
+import { useAccountStore, useLeagueStore } from "@/store"
 import Swal from 'sweetalert2'
 import router from '@/router'
 import { useRoute } from "vue-router"
 import axios from 'axios'
-import { onMounted } from "vue"
+import { onMounted, ref } from "vue"
+const leagueStore = useLeagueStore()
+const accountStore = useAccountStore()
 const route = useRoute()
-const codedata = route.query.code
+let socialSignupFavoriteLeagueList = []
+
+const socialSignupEmail = ref('소셜 이메일')
+const socialSignupNickname = ref('')
+const socialSignupMyInfo = ref('')
 onMounted(()=>{
   axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao',
   method: 'POST',
-  data: {code: codedata}
+  data: {code: route.query.code}
   }).then(res => {
-      console.log(res.data)
+    if (res.token) {
+      if (!res.newmember) {
+        console.log(res)
+        sessionStorage.setItem('token', res.token)
+        sessionStorage.setItem('isSocialLogin', true)
+        Swal.fire({
+          icon: 'success',
+          title: '성공적으로 로그인 되었습니다.',
+        })
+      } else {
+        socialSignupEmail.value = res.data.email
+      }
+    } else {
+      console.log('쿼리값이 올바르지 않습니다')
+      Swal.fire({
+        icon: 'error',
+        title: '쿼리값이 올바르ㅗ지 않습니다ㅗ.'
+      })
+      // router.push({name:'MainPage'})
+    }
   }).catch(err => {
-      console.log(err)
+    console.log(err)
+    Swal.fire({
+      icon: 'error',
+      title: '올바른 접근이 아닙니다.'
+    })
+    // router.push({name:'MainPage'})
   })
 })
 
-// route.query.code 이거를 /oauth2/kakao에다가
+function socialSignupBtn() {
+  leagueStore.selectLeague.forEach(function (League,) {
+    socialSignupFavoriteLeagueList.push(League.apiId)
+  })
+  console.log({
+    email : socialSignupEmail,
+    favoriteLeagueList : socialSignupFavoriteLeagueList,
+    myInfo : socialSignupMyInfo,
+    nickname : socialSignupNickname,
+    profileImage : accountStore.myImage,
+    role : 'user'
+  })
+  // axios({
+  //   url: "https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao/join",
+  //   method: 'POST',
+  //   data: {
+  //     email : socialSignupEmail,
+  //     favoriteLeagueList : socialSignupFavoriteLeagueList,
+  //     myInfo : socialSignupMyInfo,
+  //     nickname : socialSignupNickname,
+  //     // password : userInfo.password,
+  //     profileImage : accountStore.myImage,
+  //     role : 'user'
+  //   }  
+  // })
+}
 
-const leagueStore = useLeagueStore()
-const accountStore = useAccountStore()
 
 // 회원가입 시 변수 초기화 영역
-accountStore.emailDoubleChecked = false ;
-accountStore.emailAuthCode = 'AAAAAAAAAAA';
-accountStore.emailAuthCodeChecked = false;
-accountStore.passwordAccordance = '';
-accountStore.passwordAccordance2 = '';
-accountStore.isPushEmail = false;
-accountStore.isShowPasswordError = '';
-accountStore.myImage  = ''
-leagueStore.selectLeague = []
-leagueStore.selectTeam = []
+// accountStore.emailDoubleChecked = false ;
+// accountStore.emailAuthCode = 'AAAAAAAAAAA';
+// accountStore.emailAuthCodeChecked = false;
+// accountStore.passwordAccordance = '';
+// accountStore.passwordAccordance2 = '';
+// accountStore.isPushEmail = false;
+// accountStore.isShowPasswordError = '';
+// accountStore.myImage  = ''
+// leagueStore.selectLeague = []
+// leagueStore.selectTeam = []
 
-let userInputEmailAuthCode = ''
-let credentialsSignup = {
-  email: "",
-  favoriteLeagueList: [ 
-  ],
-  myInfo: "",
-  nickname: "",
-  password: '',
-  profileImage: '',
-  role: 'user'
-}
+// let userInputEmailAuthCode = ''
+// let credentialsSignup = {
+//   email: "",
+//   favoriteLeagueList: [ 
+//   ],
+//   myInfo: "",
+//   nickname: "",
+//   password: '',
+//   profileImage: '',
+//   role: 'user'
+// }
 
 const onInputImage = (e) => {
   console.log(e.target.files[0])
   let url = URL.createObjectURL(e.target.files[0])
   accountStore.myImage = url
-}
-
-const pushEmail = (email) => {
-  if (!accountStore.emailDoubleChecked){
-    Swal.fire({
-      icon: 'error',
-      title: '이메일 중복을 확인 하세요!',
-    })
-  }
-  else {
-    accountStore.isPushEmail = true
-    accountStore.emailAuth(email)
-  }
-}
-
-const changeSignUp = (credentialsSignup) => {
-  if (!accountStore.emailDoubleChecked) {
-    Swal.fire({
-      icon: 'error',
-      title: '이메일 중복을 확인 하세요!',
-    })
-  }
-  else if (!accountStore.emailAuthCodeChecked) {
-    Swal.fire({
-      icon: 'error',
-      title: '인증번호를 입력하세요!',
-    })
-  }
-  else if (accountStore.isAllowPassword) {
-    Swal.fire({
-      icon: 'error',
-      title: '비밀번호를 입력하세요!',
-    })
-  }
-  else if (accountStore.passwordAccordance != accountStore.passwordAccordance2) {
-    Swal.fire({
-      icon: 'error',
-      title: '비밀번호가 일치하지 않습니다!',
-    })
-  }
-  else {
-    // 사용한 피니아 변수들 감기
-    credentialsSignup.password = accountStore.passwordAccordance
-    credentialsSignup.profileImage = accountStore.myImage
-
-    if (leagueStore.selectLeague.length == 3) {
-      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId, leagueStore.selectLeague[1].apiId, leagueStore.selectLeague[2].apiId]
-    }
-    else if (leagueStore.selectLeague.length == 2) {
-      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId, leagueStore.selectLeague[1].apiId ]
-    }
-    else if (leagueStore.selectLeague.length == 1) {
-      credentialsSignup.favoriteLeagueList = [leagueStore.selectLeague[0].apiId]
-    }
-
-    // 사용한 피니아 변수들 초기화
-    accountStore.passwordAccordance = ''
-    accountStore.passwordAccordance2 = ''
-    accountStore.myImage = ''
-    leagueStore.selectLeague = []
-    leagueStore.selectTeam = []
-
-    // 회원가입 진행
-    accountStore.signUp(credentialsSignup)
-  }
 }
 </script>
 <style>
