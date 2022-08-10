@@ -4,34 +4,34 @@
       22/23 시즌
     </h1>
     <div class="schedule-page-month-select">
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
-        <p class="item-active">22년 8월</p>
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
+        <p>22년 8월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>9월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>10월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>11월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>12월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>23년 1월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>2월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>3월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>4월</p>
       </div>
-      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth">
+      <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>5월</p>
       </div>
     </div>
@@ -53,7 +53,7 @@
       </div>
     </div>
 
-    <ScheduleTable/>
+    <ScheduleTable :key="$route.fullPath"/>
     
 
   </div>
@@ -62,7 +62,24 @@
 <script setup>
 import ScheduleTable from "./ScheduleTable.vue"
 import { useScheduleStore } from  '../store/index.js'
+import { useRoute } from 'vue-router'
 const scheduleStore = useScheduleStore();
+const route = useRoute()
+const leagueName = route.params.leaguename
+let leagueParam = ''
+if(leagueName === '프리미어리그'){
+  leagueParam = '39'
+} else if (leagueName === '라리가'){
+  leagueParam = '140'
+} else if (leagueName === '세리에 A'){
+  leagueParam = '135'
+} else if (leagueName === '분데스리가'){
+  leagueParam = '78'
+} else if  (leagueName === '리그 1'){
+  leagueParam = '61'
+} else if (leagueName === 'K리그'){
+  leagueParam = '292'
+}
 </script>
 
 <style>
