@@ -13,6 +13,7 @@ public class RoomResponse {
 	private final RoomStatus status;
 	private final String password;
 	private final String managerId;
+	private final String sessionId;
 
 	public RoomResponse(Room room) {
 		roomId = room.getId();
@@ -21,5 +22,6 @@ public class RoomResponse {
 		status = room.getStatus();
 		password = room.getPassword();
 		managerId = room.getManagerId();
+		sessionId = room.getSessionId();
 	}
 }
