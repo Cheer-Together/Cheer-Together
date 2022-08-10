@@ -5,14 +5,14 @@
     </div>
     <div class="mainNews-section">
       <div class="mainNews-item" v-for="news in newsStore.news" :key="news.id">
-        <img :src="news.img" alt="" class="mainNews-item-image">
+        <!-- <img :src="news.img" alt="" class="mainNews-item-image"> -->
 
         <div class="mainNews-item-section">
           <div class="mainNews-item-title">
-            {{ news.title }}
+            <a :href="news.link">{{ news.title }}</a>
           </div>
           <div class="mainNews-item-content">
-            {{ news.content }}
+            <a :href="news.link">{{ news.description }}</a>
           </div>
 
         </div>
@@ -26,10 +26,14 @@
 import { useNewsStore } from "@/store"
 
 const newsStore = useNewsStore()
-newsStore.getNews('축구')
+newsStore.getNews('프리미어리그 세리에 A 라리가')
 </script>
 
-<style>
+<style scoped>
+a {
+  text-decoration: none;
+  color: inherit;
+}
 .mainNews {
   margin-bottom: 100px;
 }
@@ -43,7 +47,7 @@ newsStore.getNews('축구')
 }
 .mainNews-item{
   width: 1580px;
-  height: 200px;
+  height: 100px;
   margin-bottom: 30px;
   display: flex;
   border-bottom: 1px solid black;
@@ -62,7 +66,7 @@ newsStore.getNews('축구')
 .mainNews-item-content {
   display: -webkit-box;
   width: 1200px;
-  height: 135px;
+  height: 60px;
   white-space: normal;
   font-size: 15px;
   -webkit-line-clamp: 6;

@@ -583,11 +583,15 @@ export const useNewsStore = defineStore('news', {
           }
         })
           .then(res => {
+            this.news = []
             res.data.forEach((e) => {
               let title = e.title
+              let description = e.description
               title = title.replaceAll('&apos;', "'")
               title = title.replaceAll('&quot;', '"')
-              this.news.push({link: e.link, title: title})
+              description = title.replaceAll('&apos;', "'")
+              description = title.replaceAll('&quot;', '"')
+              this.news.push({link: e.link, title: title, description: description})
             })
           })
           .catch(err => {
