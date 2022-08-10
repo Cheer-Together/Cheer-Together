@@ -64,10 +64,10 @@ public class MemberController {
 		return new ResponseEntity<>(emailService.sendAuthenticationMail(email), HttpStatus.OK);
 	}
 
-	@PostMapping("/join")
+	@PostMapping(value = "/join", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@ApiOperation(value = "회원가입", notes = "회원 가입 - 회원 등록")
-	public ResponseEntity<String> join(@RequestBody MemberJoinRequest memberJoinRequest) {
-		//memberJoinRequest.saveProfileImgLink(firebaseService.uploadFiles(file));
+	public ResponseEntity<String> join(@RequestParam MemberJoinRequest memberJoinRequest, @RequestParam MultipartFile file) {
+		memberJoinRequest.saveProfileImgLink(firebaseService.uploadFiles(file));
 		memberService.join(memberJoinRequest);
 		return new ResponseEntity<>(JOIN_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
