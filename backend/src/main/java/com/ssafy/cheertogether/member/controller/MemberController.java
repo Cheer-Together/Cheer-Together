@@ -66,7 +66,7 @@ public class MemberController {
 
 	@PostMapping(value = "/join", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@ApiOperation(value = "회원가입", notes = "회원 가입 - 회원 등록")
-	public ResponseEntity<String> join(@RequestParam MemberJoinRequest memberJoinRequest, @RequestParam MultipartFile file) {
+	public ResponseEntity<String> join(@RequestPart MemberJoinRequest memberJoinRequest, @RequestPart MultipartFile file) {
 		memberJoinRequest.saveProfileImgLink(firebaseService.uploadFiles(file));
 		memberService.join(memberJoinRequest);
 		return new ResponseEntity<>(JOIN_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
