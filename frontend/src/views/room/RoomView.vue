@@ -127,7 +127,7 @@ export default {
       mySessionId: undefined,
       myUserName: undefined,
 
-      matchScreenStore: useMatchScreenStore()
+      matchScreenStore: useMatchScreenStore(),
       isOpenedChattingWindow: true,
       message: "",
     };
