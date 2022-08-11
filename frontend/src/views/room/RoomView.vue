@@ -138,6 +138,9 @@ export default {
       matchScreenStore: useMatchScreenStore(),
       isOpenedChattingWindow: true,
       message: "",
+
+      mic: false,
+      cam: false,
     };
   },
   mounted() {
@@ -373,6 +376,13 @@ export default {
           });
       }
       this.message = "";
+    },
+    
+    toggleMic(){
+      this.publisher.publishAudio(this.mic);   // true to unmute the audio track, false to mute it
+    },
+    toggleCam(){
+      this.publisher.publishVideo(this.cam);   // true to enable the video track, false to disable it
     }
   },
 };
