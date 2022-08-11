@@ -293,8 +293,10 @@ let credentialsSignup = {
 
 const onInputImage = (e) => {
   console.log(e.target.files[0])
-  let url = URL.createObjectURL(e.target.files[0])
-  accountStore.myImage = url
+  // let url = URL.createObjectURL(e.target.files[0])
+  // accountStore.myImage = url
+  accountStore.myImage = e.target.files[0]
+
 }
 
 const pushEmail = (email) => {

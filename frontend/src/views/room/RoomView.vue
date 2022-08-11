@@ -9,7 +9,7 @@
       <div class="match-screen-header">
         <div style="display:flex;">
           <div class="match-screen-title">
-            {{ mySessionId }}
+            {{ sessionInfo.name }}
           </div>
           <div class="match-screen-icon">
             <v-icon  size="40" @click="leaveSession">
@@ -64,7 +64,6 @@
           mdi-bullhorn
         </v-icon>
       </div>
-
     </div>
 
     
@@ -100,7 +99,7 @@
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import axios from "axios";
-import { useAccountStore, useMatchScreenStore } from "@/store/index.js";
+import { useAccountStore, useRoomStore, useMatchScreenStore } from "@/store/index.js";
 import NavBar from "@/components/NavBar.vue"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
@@ -126,19 +125,24 @@ export default {
 
       mySessionId: undefined,
       myUserName: undefined,
-
+      sessionInfo: undefined,
       matchScreenStore: useMatchScreenStore(),
       isOpenedChattingWindow: true,
       message: "",
     };
   },
   mounted() {
-    this.mySessionId = this.$route.params.session;
-    this.myUserName = useAccountStore().profile.nickname;
-    this.joinSession();
+    this.inMount();
   },
 
   methods: {
+    async inMount(){
+      this.mySessionId = this.$route.params.session;
+      this.myUserName = useAccountStore().profile.nickname;
+      await useRoomStore().getInfo(this.mySessionId)
+      .then(() => this.sessionInfo = useRoomStore().roomInfo);
+      this.joinSession();
+    },
     joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
