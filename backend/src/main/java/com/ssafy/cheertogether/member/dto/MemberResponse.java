@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import com.ssafy.cheertogether.league.dto.LeagueResponseExceptTeamList;
 import com.ssafy.cheertogether.member.domain.Member;
+import com.ssafy.cheertogether.member.domain.Role;
 import com.ssafy.cheertogether.team.dto.TeamResponse;
 
 import lombok.Getter;
@@ -14,7 +15,7 @@ import lombok.Getter;
 public class MemberResponse {
 	private final String email;
 	private final String nickname;
-	private final String role;
+	private final Role role;
 	private final String myInfo;
 	private final List<LeagueResponseExceptTeamList> favoriteLeagueList = new ArrayList<>();
 	private final List<TeamResponse> favoriteTeamList = new ArrayList<>();

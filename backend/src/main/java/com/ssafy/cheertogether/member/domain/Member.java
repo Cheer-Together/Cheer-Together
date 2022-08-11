@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,20 +37,26 @@ public class Member implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String email;
 	private String nickname;
 	private String password;
-	private String role;
+
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
 	private String myInfo;
+
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
+
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
 
 	@Builder
-	public Member(String email, String nickname, String password, String role, String myInfo) {
+	public Member(String email, String nickname, String password, Role role, String myInfo) {
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
@@ -102,7 +110,7 @@ public class Member implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(role));
+		authorities.add(new SimpleGrantedAuthority(role.toString()));
 		return authorities;
 	}
 
