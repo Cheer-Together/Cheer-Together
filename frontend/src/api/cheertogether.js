@@ -14,8 +14,8 @@ export default {
     login: () => HOST + MEMBERS + 'login', // 로그인
     findPassword: () => HOST + MEMBERS + 'find/password', // 비밀번호 찾기
     profile: (userId) => HOST + MEMBERS + `${userId}`, // 회원 조회
-    editUserProfile: (userId) => HOST + MEMBERS + `${userId}` // 회원 수정
-    
+    editUserProfile: (userId) => HOST + MEMBERS + `${userId}`, // 회원 수정
+    withdrawal: (userId) => HOST + MEMBERS + `${userId}`, // 회원 탈퇴
   },
   league: {
     leaguesAll: () => HOST + LEAGUES, // 모든 리그 정보 조회
