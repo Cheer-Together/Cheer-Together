@@ -1,8 +1,9 @@
 <template>
   <div class="rooms-list-page">
     <div class="rooms-list-section">
-      <div class="rooms-list-items" v-for="room in rooms" :key="room.id">
-        {{ room.name }}
+      <div class="rooms-list-items" v-for="room in rooms" :key="room.id" @click="onairStore.enterRoom(room.roomId)">
+        <div>{{ room.name }}</div>
+        <div>{{ room.status }}</div>
       </div>
     </div>
   </div>
@@ -12,7 +13,7 @@
 import { useOnAirStore } from '../store/index.js'
 
 const onairStore = useOnAirStore();
-const rooms = onairStore.allRooms
+const rooms = onairStore.rooms
 
 </script>
 
@@ -31,6 +32,7 @@ const rooms = onairStore.allRooms
   background-color: aqua;
   margin-top: 20px;
   margin-right: 20px;
+  cursor: pointer;
 }
 @media (max-width: 1580px) {
   .rooms-list-page {

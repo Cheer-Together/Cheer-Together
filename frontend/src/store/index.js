@@ -451,15 +451,15 @@ export const useScheduleStore = defineStore('schedule', {
 
     clickLeague(event) {
       // 현재 라우터에 색깔 입히기
-      // const activeTag = document.querySelector('.league-active')
-      // activeTag.classList.remove('league-active')
+      const activeTag = document.querySelector('.league-active')
+      activeTag.classList.remove('league-active')
       const clickedTag = event.target
-      // clickedTag.classList.add('league-active')
+      clickedTag.classList.add('league-active')
       // 리그 클릭 시 가장 앞 달로 강제 이동
-      // const activeMonthTag = document.querySelector('.item-active')
-      // activeMonthTag.classList.remove('item-active')
-      // const firstMonthTag = document.querySelector('.schedule-page-month-item p')
-      // firstMonthTag.classList.add('item-active')
+      const activeMonthTag = document.querySelector('.item-active')
+      activeMonthTag.classList.remove('item-active')
+      const firstMonthTag = document.querySelector('.schedule-page-month-item p')
+      firstMonthTag.classList.add('item-active')
       // 해당 리그의 8월 정보를 보여준다.
       // state 변경하기
       if(clickedTag.innerText === '프리미어리그'){
@@ -563,58 +563,52 @@ export const useScheduleStore = defineStore('schedule', {
 })
 export const useOnAirStore = defineStore('onair', {
   state: () => ({
-    allRooms: [],
-    roomsPL: [],
-    roomsLL: [],
-    roomsSA: [],
-    roomsBL: [],
-    roomsL1: [],
-    roomsKL: [],
+    rooms: [],
     makeRoomDialog: false,
   }),
   actions: {
     moveLeagueRooms(event){
-      const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
+      const leagues = [
+        {id: '39', league: '프리미어리그'},
+        {id: '140', league: '라리가'},
+        {id: '135', league: '세리에 A'},
+        {id: '78', league: '분데스리가'},
+        {id: '61', league: '리그 1'},
+        {id: '292', league: 'K리그 1'},
+      ]
+      // 색 입히기
       if(document.querySelector('.sideBar-subtitle-active')){
         const fromSubtitle = document.querySelector('.sideBar-subtitle-active')
         fromSubtitle.classList.remove('sideBar-subtitle-active')
       }
       const toSubtitle = event.target
       toSubtitle.classList.add('sideBar-subtitle-active')
-      for(let league of leagues){
-        if(toSubtitle.innerText === league ) {
-          this.fetchRooms()
-          router.push({name: 'Onair' , params: {leaguename: `${toSubtitle.innerText}`} })
+
+      for(let item of leagues){
+        if(toSubtitle.innerText === item.league) {
+          axios({
+            url: cheertogether.room.roomsLeague(item.id),
+            method: 'GET',
+          })
+            .then(res => {
+              this.rooms = res.data
+              router.push({name: 'Onair' , params: {leaguename: `${item.league}`} })
+            })
+            .catch(err => {
+              console.log(err)
+            })
         } 
-      }
-      
+      }      
     },
 
-    fetchRooms(){
-      // 데이터 받아오기
+    enterRoom(roomId){
       axios({
-        url: cheertogether.room.loadRooms(),
-        method: 'GET',
+        url:cheertogether.room.enterRoom(roomId),
+        method: 'GET'
       })
-        .then(res => {
-          this.allRooms = res.data
-        })
-        .catch(err => {
-          console.log(err.message)
-        })
-      // if (leagueName === '프리미어리그'){
-      //   this.rooms = 
-      // } else if (leagueName === '라리가'){
-      //   this.rooms = this.tmp_laliga
-      // } else if (leagueName === '세리에 A'){
-      //   this.rooms = this.tmp_serie
-      // } else if (leagueName === '분데스리가'){
-      //   this.rooms = this.tmp_bundesliga
-      // } else if (leagueName === '리그 1'){
-      //   this.rooms = this.tmp_ligue1
-      // } else if (leagueName === 'K리그 1'){
-      //   this.rooms = this.tmp_k_league
-      // }
+      .then(res => {
+        router.push({name: 'Room' , params: {session: `${res.data.sessionId}`} })
+      })
     },
 
     makeRoomDialogToggle() {
