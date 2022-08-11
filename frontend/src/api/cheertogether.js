@@ -30,7 +30,9 @@ export default {
     news: () => HOST +  NEWS // 뉴스 데이터 조회
   },
   game: {
-    games: () => HOST + GAMES // 경기일정 조회
+    games: () => HOST + GAMES, // 경기일정 조회
+
+    gameInfo: () => 'https://v3.football.api-sports.io/fixtures/events', // 경기 정보
   },
   room: {
     rooms: () => HOST + ROOMS, // 모든 응원방 검색
