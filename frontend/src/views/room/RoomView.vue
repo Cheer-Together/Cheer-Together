@@ -109,7 +109,6 @@ import UserVideo from "@/components/video/UserVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore, useMatchScreenStore } from "@/store/index.js";
-import NavBar from "@/components/NavBar.vue"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -143,18 +142,17 @@ export default {
   },
   mounted() {
     this.mySessionId = this.$route.params.session;
-    console.log('--------------------------------------------------------------------------------------')
-    console.log(this.$route.params.session)
-    console.log('--------------------------------------------------------------------------------------')
+
+    console.log(this.sessionInfo)
 
     this.myUserName = useAccountStore().profile.nickname;
     this.joinSession();
+    this.inMount();
 
     // 사용한 피니아 변수 초기화
     this.matchScreenStore.isClickChatting = ''
     this.matchScreenStore.isClickLayout = false
     this.screenHeight = '800px'
-    this.inMount();
   },
 
   methods: {
