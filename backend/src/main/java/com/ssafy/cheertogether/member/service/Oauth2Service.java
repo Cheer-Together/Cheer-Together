@@ -11,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,6 @@ import com.ssafy.cheertogether.favorite.domain.FavoriteTeam;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.MemberConstant;
 import com.ssafy.cheertogether.member.domain.Member;
-import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.Oauth2JoinRequest;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
 import com.ssafy.cheertogether.team.TeamConstant;
@@ -162,7 +160,8 @@ public class Oauth2Service {
 				.stream()
 				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository
 					.findLeagueByApiId(leagueApiId)
-					.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))				.collect(Collectors.toList()));
+					.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
+				.collect(Collectors.toList()));
 		}
 		member.setFavoriteLeagueList(favoriteLeagueList);
 		List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
@@ -172,7 +171,8 @@ public class Oauth2Service {
 				.stream()
 				.map(teamApiId -> FavoriteTeam.from(member, teamRepository
 					.findTeamByApiId(teamApiId)
-					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))				.collect(Collectors.toList()));
+					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))
+				.collect(Collectors.toList()));
 		}
 		member.setFavoriteTeamList(favoriteTeamList);
 		memberRepository.save(member);
