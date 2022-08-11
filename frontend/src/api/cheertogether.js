@@ -28,7 +28,8 @@ export default {
     news: () => HOST +  NEWS // 뉴스 데이터 조회
   },
   game: {
-    games: () => HOST + GAMES // 경기일정 조회
+    games: () => HOST + GAMES, // 경기일정 조회
+    gamesByDate: (leagueApiId) => HOST + GAMES + `${leagueApiId}` + '/date'
   },
   room: {
     rooms: () => HOST + ROOMS, // 모든 응원방 검색

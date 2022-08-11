@@ -555,113 +555,104 @@ export const useNewsStore = defineStore('news', {
         실패하면
 
       */
-        axios({
-          url: cheertogether.news.news(),
-          method: 'GET',
-          params: {
-            subject : subject
-          }
+      axios({
+        url: cheertogether.news.news(),
+        method: "GET",
+        params: {
+          subject: subject,
+        },
+      })
+        .then((res) => {
+          res.data.forEach((e) => {
+            let title = e.title;
+            title = title.replaceAll("&apos;", "'");
+            title = title.replaceAll("&quot;", '"');
+            this.news.push({ link: e.link, title: title });
+          });
         })
-          .then(res => {
-            res.data.forEach((e) => {
-              let title = e.title
-              title = title.replaceAll('&apos;', "'")
-              title = title.replaceAll('&quot;', '"')
-              this.news.push({link: e.link, title: title})
-            })
-          })
-          .catch(err => {
-            console.log(err)
-            
-          })
+        .catch((err) => {
+          console.log(err);
+        });
     },
-
-  }
-})
-export const useGameStore = defineStore('game', { 
-  state: () => ({ 
+  },
+});
+export const useGameStore = defineStore("game", {
+  state: () => ({
     gamesAll: [],
-    todayGames: [],
+    todayGames: [{}, {}, {}, {}, {}, {}],
     monthGames: [],
+    today: [new Date(), new Date(), new Date(), new Date(), new Date(), new Date()],
+    nextDate: [],
+    preDate: [],
+    month: [],
+    date: [],
+    day: [],
+    dayName: ["월", "화", "수", "목", "금", "토", "일"],
+    leagueApiId: [39, 140, 135, 78, 61, 292]
   }),
   actions: {
-    getGames(inputMonth) {
-      /* 
-      GET: 경기 일정 데이터 조회
-        성공하면
-         
-        실패하면
-
-      */
-      axios({
-        url: cheertogether.game.games(),
-        method: 'GET',
-      })
-      .then(res => {
-
-        let today = new Date();   
-
-        let year = today.getFullYear(); // 년도
-        let month = today.getMonth() + 1;  // 월
-        let date = today.getDate();  // 날짜
-        // let day = today.getDay();  // 요일
-        if (0 < month < 10) {
-          month = '0' + month
-        }
-        if (0 < inputMonth < 10) {
-          inputMonth = '0' + inputMonth
-        }
-        if (0 < date < 10) {
-          date = '0' + date
-        }
-        // myToday 는 오늘날
-        // const myToday = year + '-' + month + '-' + date 
-        const myMonth = year + '-' + inputMonth
-        const myToday = '2022-08-06'
-
-        // 모든 경기 정보
-        this.gamesAll = res.data
-
-        // 오늘 경기 정보
-        res.data.filter((e) => {
-          if(e.kickoff.startsWith(myToday)) {
-            this.todayGames.push(e)       
-          }
-        })
-
-        // inputMonth로 달을 받아 옴
-        res.data.filter((e) => {
-          if(e.kickoff.startsWith(myMonth)) {
-            this.monthGames.push(e)       
-          }
-        })
-      })
-      .catch(err => {
-        console.log(err)
-        
-      })
+    yyyymmdd(dateIn) {
+      var yyyy = dateIn.getFullYear();
+      var mm = dateIn.getMonth() + 1; // getMonth() is zero-based
+      var dd = dateIn.getDate();
+      return String(10000 * yyyy + 100 * mm + dd); // Leading zeros for mm and dd
     },
-  }
-})
-export const useRoomStore = defineStore('room', { 
-  state: () => ({ 
+    generateTodayGames() {
+      for(let i = 0; i < 6; i++) {
+        this.todayGames[i] = this.getGamesByDate(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
+      }
+    },
+    clickNextDate(i) {
+      this.nextDate[i] = this.today[i];
+      this.nextDate[i].setDate(this.nextDate[i].getDate() + 1);
+      this.today[i] = new Date(this.nextDate[i]);
+      this.month[i] = this.today[i].getMonth() + 1;
+      this.date[i] = this.today[i].getDate();
+      this.day[i] = this.dayName[this.today[i].getDay()];
+      this.getGamesByDate(this.leagueApiId[i], this.yyyymmdd(this.today[i]), i);
+    },
+    clickPreDate(i) {  
+      this.preDate[i] = this.today[i];
+      this.preDate[i].setDate(this.preDate[i].getDate() - 1);
+      this.today[i] = new Date(this.preDate[i]);
+      this.month[i] = this.today[i].getMonth() + 1;
+      this.date[i] = this.today[i].getDate();
+      this.day[i] = this.dayName[this.today[i].getDay()];
+      this.getGamesByDate(this.leagueApiId[i], this.yyyymmdd(this.today[i]), i);
+    },
+    getGamesByDate(leagueApiId, dateyyyy, i) {
+      axios({
+        url: cheertogether.game.gamesByDate(leagueApiId),
+        method: "GET",
+        params: {
+          date: dateyyyy
+        }
+      })
+        .then((res) => {
+          this.todayGames[i] = res.data;
+        })
+    },
+  },
+});
+export const useRoomStore = defineStore("room", {
+  state: () => ({
     roomsAll: [
       {
-       gameId: 0,
-       managerId: '힐히샴샤호휵',
-       name: '일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십',
-       password: '',
-       roomId: 0,
-       status: "PRIVATE"
+        gameId: 0,
+        managerId: "힐히샴샤호휵",
+        name: "일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십일이삼사오육칠팔구십",
+        password: "",
+        roomId: 0,
+        status: "PRIVATE",
       },
       {
         gameId: 1,
-        managerId: '',
-        name: '',
-        password: '',
+        managerId: "",
+        name: "",
+        password: "",
         roomId: 1,
-        status: "PRIVATE"
-       }
+        status: "PRIVATE",
+      },
     ],
   }),
   actions: {
