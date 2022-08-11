@@ -8,7 +8,6 @@ import lombok.Getter;
 public class Oauth2JoinRequest {
 	private String email;
 	private String nickname;
-	private String profileImage;
 	private String role;
 	private String myInfo;
 	private List<Long> favoriteLeagueList;
