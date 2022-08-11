@@ -3,14 +3,13 @@
   <div style="display:flex;">
     <SideBar/>
     <div v-if="loaded" class="signup">
-      <div class="signup-image" v-if="!accountStore.myImage">
+      <!-- <div class="signup-image" v-if="!accountStore.myImage">
         <label for="input-file" style="padding:66px 30px 66px 35px;">
           <v-icon class="sideBar-item-icon">
             mdi-image-search
           </v-icon>
           이미지 올리기
         </label>
-
       </div>
 
       <div v-if="accountStore.myImage" class="signup-image" :style="{'background-image': `url(${accountStore.myImage})`}">
@@ -18,9 +17,7 @@
           &nbsp;
         </label>
       </div>
-
-
-      <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'>
+      <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'> -->
 
       <!-- 이메일 -->
       <div class="signup-range">
@@ -56,9 +53,7 @@
       <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 리그
-          <v-dialog
-            v-model="leagueStore.favoriteLeague"
-          >
+          <v-dialog v-model="leagueStore.favoriteLeague">
             <template v-slot:activator="{ props }">
               <v-icon class="sideBar-item-icon" v-bind="props">
                 mdi-plus-circle-outline
@@ -82,9 +77,7 @@
       <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 팀    
-          <v-dialog
-            v-model="leagueStore.favoriteTeam"
-          >
+          <v-dialog v-model="leagueStore.favoriteTeam">
             <template v-slot:activator="{ props }">
               <v-icon class="sideBar-item-icon" v-bind="props">
                 mdi-plus-circle-outline
@@ -144,6 +137,16 @@ accountStore.profile.favoriteLeagueList = []
 accountStore.profile.favoriteTeamList = []
 
 function socialSignupBtn() {
+  const data = {
+    email : socialSignupEmail.value,
+    favoriteLeagueList : accountStore.profile.favoriteLeagueList,
+    favoriteTeamList: accountStore.profile.favoriteTeamList,
+    myInfo : socialSignupMyInfo.value,
+    nickname : socialSignupNickname.value,
+    // profileImage : accountStore.myImage,
+    role : 'user'
+  }
+  console.log(data)
   axios({
     url: "https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao/join",
     method: 'POST',
@@ -151,9 +154,9 @@ function socialSignupBtn() {
       email : socialSignupEmail.value,
       favoriteLeagueList : accountStore.profile.favoriteLeagueList,
       favoriteTeamList: accountStore.profile.favoriteTeamList,
-      myInfo : socialSignupMyInfo,
-      nickname : socialSignupNickname,
-      profileImage : accountStore.myImage,
+      myInfo : socialSignupMyInfo.value,
+      nickname : socialSignupNickname.value,
+      // profileImage : accountStore.myImage,
       role : 'user'
     }
   })
@@ -162,7 +165,7 @@ function socialSignupBtn() {
       icon: 'success',
       title: '가입되었습니다!',
     })
-    router.push({name:'MainPage'})
+    //router.push({name:'MainPage'})
   })
   .catch(err => {
     console.log(err)
@@ -196,7 +199,7 @@ axios({
         icon: 'error',
         title: '쿼리값이 올바르지 않습니다.'
       })
-      router.push({name:'MainPage'})
+      //router.push({name:'MainPage'})
     }
   }).catch(err => {
     console.log(err)
@@ -204,14 +207,14 @@ axios({
       icon: 'error',
       title: 'Axios에러.'
     })
-    router.push({name:'MainPage'})
+    //router.push({name:'MainPage'})
 }).then(loaded.value = true)
 
-const onInputImage = (e) => {
-  console.log(e.target.files[0])
-  let url = URL.createObjectURL(e.target.files[0])
-  accountStore.myImage = url
-}
+// const onInputImage = (e) => {
+//   console.log(e.target.files[0])
+//   let url = URL.createObjectURL(e.target.files[0])
+//   accountStore.myImage = url
+// }
 </script>
 <style>
 .signup {
@@ -258,21 +261,7 @@ const onInputImage = (e) => {
   border-radius: 5px;
   font-size: 13px;
 }
-.checked-input {
-  background-color: darkgrey;
-  color: black;
-  border: 1px solid black;
-}
-.checked {
-  background-color: #1EC800;
-  border: 1px solid black;
-}
-.err-password-accordance {
-  text-align: center;
-  color: red;
-  margin-bottom: 10px;
-}
-.signup-range-input-introduce{
+.signup-range-input-introduce {
   width: 420px;
   height: 200px;
   border: 1px solid #D9D9D9;
@@ -280,7 +269,7 @@ const onInputImage = (e) => {
   padding: 0 10px;
 
 }
-.signup-range-introduce{
+.signup-range-introduce {
   height: 233px; 
 }
 .signup-favorite-league {
