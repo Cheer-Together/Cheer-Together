@@ -28,7 +28,8 @@ export default {
   },
   game: {
     games: () => HOST + GAMES, // 경기일정 조회
-    gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month'
+    gameInfo: () => 'https://v3.football.api-sports.io/fixtures/events', // 경기 정보
+    gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month',
   },
   room: {
     rooms: () => HOST + ROOMS, // 모든 응원방 검색
