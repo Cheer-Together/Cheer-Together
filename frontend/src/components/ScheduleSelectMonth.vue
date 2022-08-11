@@ -5,7 +5,7 @@
     </h1>
     <div class="schedule-page-month-select">
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>22년 8월</p>
+        <p class="item-active">22년 8월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
         <p>9월</p>

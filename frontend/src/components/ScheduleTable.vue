@@ -6,9 +6,9 @@
       </div>
       <div class="schedule-time">
         <div v-if="uniqGameDays.includes(`${day}`)">
-          <p v-for="game in games.filter((ele) => Number(ele.kickoff.substring(8, 10)).toString() === `${day}`)" :key="game.id">
+          <div v-for="game in games.filter((ele) => Number(ele.kickoff.substring(8, 10)).toString() === `${day}`)" :key="game.id">
             {{ game.kickoff.substring(11, 16) }}
-          </p>
+          </div>
         </div>
       </div>
       <div class="schedule-stadium" >
