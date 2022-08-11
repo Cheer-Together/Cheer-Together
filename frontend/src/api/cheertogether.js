@@ -23,17 +23,17 @@ export default {
     leaguesAll: () => HOST + LEAGUES, // 모든 리그 정보 조회
     leaguesNoTeam: () => HOST + LEAGUES + 'noTeam', // 모든 리그 정보 조회 팀x
   },
-  games: {
-    scheduleList: () => HOST + GAMES // 전체 스케줄 받아오기
-  },
   news: {
     news: () => HOST +  NEWS // 뉴스 데이터 조회
   },
   game: {
-    games: () => HOST + GAMES // 경기일정 조회
+    games: () => HOST + GAMES, // 경기일정 조회
+    gameInfo: () => 'https://v3.football.api-sports.io/fixtures/events', // 경기 정보
+    gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month',
   },
   room: {
     rooms: () => HOST + ROOMS, // 모든 응원방 검색
-    loadRooms: () => HOST + ROOMS, // 생성된 응원방 받아오기
+    roomsLeague: (leagueApiId) => HOST + ROOMS + 'league/' + `${leagueApiId}`,
+    enterRoom: (roomId) => HOST + ROOMS + `${roomId}`
   }
 }

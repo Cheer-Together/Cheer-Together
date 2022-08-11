@@ -6,7 +6,7 @@
       <!-- 헤더 -->
       <div class="onair-header">
         <div>
-          <h1>실시간 집관 페이지</h1>
+          <h1>{{ $route.params.leaguename }}</h1>
         </div>
         <div class="onair-header-boxes">
           <!-- 검색 도구 -->
@@ -19,7 +19,7 @@
             <p>경기 목록</p>
           </div>
 
-          <button @click="onAirStore.makeRoomDialogToggle()" class="onair-header-make-room">방만들기</button>
+          <button @click="onAirStore.makeRoomDialogToggle()" class="onair-header-make-room" v-if="accountStore.isLogin">방만들기</button>
         </div>
       </div>
 
@@ -37,8 +37,9 @@ import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import RoomsList from "../components/RoomsList.vue"
 import OnAirMakeModal from "../components/OnAirMakeModal.vue"
-import { useOnAirStore } from "@/store"
+import { useOnAirStore, useAccountStore } from "@/store"
 const onAirStore = useOnAirStore()
+const accountStore = useAccountStore()
 </script>
 
 <style>

@@ -43,7 +43,7 @@
       K리그 1
     </div>
     <!-- 경기 일정 -->
-    <div class="sideBar-item" @click="scheduleStore.moveSchedulePage">
+    <div class="sideBar-item" @click="scheduleStore.moveSchedulePage('2022-08')">
       <v-icon class="sideBar-item-icon">
         mdi-calendar-month-outline
       </v-icon>
@@ -141,6 +141,7 @@ const goToRoomsPage = () => {
 }
 .sideBar-item:hover {
   color: #ffffff;
+  cursor: default;
 }
 .sideBar-item {
   overflow: hidden;
