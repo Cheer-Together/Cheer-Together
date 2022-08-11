@@ -1,46 +1,69 @@
 <template>
   <div>
-    <v-row
-      justify="center"
-    >
+    <v-row justify="center">
       <!-- 여기부터 모달창 -->
-      <v-dialog
-        v-model="onAirStore.makeRoomDialog"
-      >
+      <v-dialog v-model="onAirStore.makeRoomDialog">
         <v-card>
           <v-card-text>
             <div class="makeroom-dialog">
               <div class="makeroom-dialog-logo">
-                <img :src="makeroomLogo" class="makeroom-logo">
+                <img :src="makeroomLogo" class="makeroom-logo" />
               </div>
               <div class="makeroom-dialog-info">
                 <a>방 만들기</a>
               </div>
-              <div style="width: 340px; margin-top: 25px;">
+              <div style="width: 340px; margin-top: 25px">
                 <v-select
-                :items="items"
-                label="경기 목록"
-                density="compact"
-                solo
+                  v-model="game"
+                  :items="items"
+                  label="경기 목록"
+                  density="compact"
+                  solo
+                  return-object
                 ></v-select>
               </div>
-              <div style="margin-top:-18px;">
-                <input v-model="roomTitle" type="text" placeholder="방 제목" class="makeroom-dialog-textinput">
+              <div style="margin-top: -18px">
+                <input
+                  v-model="roomTitle"
+                  type="text"
+                  placeholder="방 제목"
+                  class="makeroom-dialog-textinput"
+                />
               </div>
-              <div style="display: flex; margin-top:20px">
-                <input v-model="roomPassword" style="width: 290px;" type="password" placeholder="비밀번호" class="makeroom-dialog-textinput">
-                <div style="display: flex; flex-direction: column; align-items: center; width: 40px; height: 40px; margin-left: 10px; font-size: 12px;">
-                  <div style="width: 40px; height: 15px; text-align: center;">
+              <div style="display: flex; margin-top: 20px">
+                <input
+                  v-model="roomPassword"
+                  style="width: 290px"
+                  type="password"
+                  placeholder="비밀번호"
+                  class="makeroom-dialog-textinput"
+                />
+                <div
+                  style="
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    width: 40px;
+                    height: 40px;
+                    margin-left: 10px;
+                    font-size: 12px;
+                  "
+                >
+                  <div style="width: 40px; height: 15px; text-align: center">
                     비공개
                   </div>
-                  <input style="width:22px; height:22px; margin-top: 3px;" type="checkbox">
+                  <input
+                    v-model="roomStatus"
+                    style="width: 22px; height: 22px; margin-top: 3px"
+                    type="checkbox"
+                  />
                 </div>
               </div>
               <v-btn
-                style="margin-top: 35px; color:white;"
+                style="margin-top: 35px; color: white"
                 color="#2E6AFD"
                 width="340px"
-                @click="onAirStore.makeRoom()"
+                @click="onAirStore.moveRoom(game, roomTitle, roomStatus,roomPassword, managerId)"
               >
                 같이 집관
               </v-btn>
@@ -58,25 +81,15 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
-      
-      <v-dialog
-        v-model="dialog2"
-      >
+
+      <v-dialog v-model="dialog2">
         <v-card>
           <v-card-title>
             <span>에러 표시용 모달</span>
           </v-card-title>
-          <v-card-text>
-
-          </v-card-text>
+          <v-card-text> </v-card-text>
           <v-card-actions>
-            <v-btn
-              color="primary"
-              text
-              @click="dialog2 = false"
-            >
-              Close
-            </v-btn>
+            <v-btn color="primary" text @click="dialog2 = false"> Close </v-btn>
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -85,23 +98,26 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useOnAirStore } from '@/store/index.js'
-const onAirStore = useOnAirStore()
-const dialog2 = ref(false)
-const makeroomLogo = require('../assets/image/로고.png')
-const roomTitle = ref('')
-const roomPassword = ref('')
+import { ref } from "vue";
+import { useOnAirStore, useAccountStore } from "@/store/index.js";
+const onAirStore = useOnAirStore();
+const dialog2 = ref(false);
+const makeroomLogo = require("../assets/image/로고.png");
+const game = ref("");
+const managerId = useAccountStore().profileId;
+const roomTitle = ref("");
+const roomPassword = ref("");
+const roomStatus = ref("");
 const items = [
-  {title: '브라이튼 앤 호브 알비온 vs 브라이튼 앤 호브 알비온'},
-  {title: '프리미어리그'},
-  {title: '라리가'},
-  {title: '세리에A'},
-  {title: '분데스리가'},
-  {title: '리그 1'},
-  {title: 'K리그'},
-]
-
+  { title: "브라이튼 앤 호브 알비온 vs 브라이튼 앤 호브 알비온" },
+  { title: "프리미어리그" },
+  { title: "라리가" },
+  { title: "세리에A" },
+  { title: "분데스리가" },
+  { title: "리그 1" },
+  { title: "K리그" },
+  { title: "크리스탈 펠리스 vs 아스날", id: 31},
+];
 </script>
 
 <style scoped>
@@ -128,8 +144,8 @@ const items = [
   margin-bottom: 10px;
 }
 .makeroom-dialog-textinput {
-  width:340px;
-  height:40px;
+  width: 340px;
+  height: 40px;
   border-radius: 1px;
   border: 1px solid #bcbcbc;
   padding-left: 10px;
