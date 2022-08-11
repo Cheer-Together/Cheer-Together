@@ -11,6 +11,8 @@ export const useCommunityStore = defineStore('community', {
   state: () => (
     { 
       toggle: false,
+      isModify: false,
+      modifingArticleId: false
     }
   ),
   actions: {
@@ -23,6 +25,12 @@ export const useCommunityStore = defineStore('community', {
       } else {
         this.toggle = true
       }
+    },
+    communityModify(articleid) {
+      this.isModify = true
+      this.toggle = true
+      this.modifingArticleId = articleid
+      router.push({name: 'Article'})
     },
   },
 })

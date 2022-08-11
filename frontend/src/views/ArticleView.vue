@@ -16,7 +16,9 @@ import ArticleList from "../components/ArticleList.vue"
 import { useCommunityStore } from "@/store"
 import ArticleSides from "../components/ArticleSides.vue"
 const communityStore = useCommunityStore()
-communityStore.communityMounted()
+if (!communityStore.isModify) {
+  communityStore.communityMounted()
+}
 </script>
 
 <style>

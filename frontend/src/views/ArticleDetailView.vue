@@ -29,20 +29,19 @@
           </div> -->
           <a>{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
         </div>
-        <div class="community-detail-btns">
-          <div class="word-link">
+        <div v-if="userEmail==maincontent.memberResponse.email" class="community-detail-btns">
+          <div @click="modifyArticle()" class="word-link">
             <v-icon size="20px">
               mdi-pencil
             </v-icon>
             <a>수정하기</a>
           </div>
-          <div @click="articleDelete()" class="word-link" style="margin-left:10px">
+          <div @click="deleteArticle()" class="word-link" style="margin-left:10px">
             <v-icon size="20px">
               mdi-delete
             </v-icon>
             <a>삭제하기</a>
           </div>
-          
         </div>
       </div>
       <div style="margin: 10px">
@@ -75,41 +74,11 @@
               <div style="margin-bottom:20px; font-size: 22px;">
                 <p>신고하실 사유를 모두 선택해주세요.</p>
               </div>
-              <v-checkbox
-                v-model="check1"
-                label="음담패설"
-                color="error"
-                density="compact"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="check2" 
-                label="혐오스러운 내용 혹은 혐오 발언"
-                color="error"
-                density="compact"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="check3"
-                label="악의적인 내용"
-                color="error"
-                density="compact"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="check4"
-                label="범죄 조장 혹은 유해한 내용"
-                color="error"
-                density="compact"
-                hide-details
-              ></v-checkbox>
-              <v-checkbox
-                v-model="check5"
-                label="도배 혹은 오해의 소지가 있는 내용"
-                color="error"
-                density="compact"
-                hide-details
-              ></v-checkbox>
+              <v-checkbox v-model="check1" label="음담패설" color="error" density="compact" hide-details></v-checkbox>
+              <v-checkbox v-model="check2" label="혐오스러운 내용 혹은 혐오 발언" color="error" density="compact" hide-details></v-checkbox>
+              <v-checkbox v-model="check3" label="악의적인 내용" color="error" density="compact" hide-details></v-checkbox>
+              <v-checkbox v-model="check4" label="범죄 조장 혹은 유해한 내용" color="error" density="compact" hide-details></v-checkbox>
+              <v-checkbox v-model="check5" label="도배 혹은 오해의 소지가 있는 내용" color="error" density="compact" hide-details></v-checkbox>
               <div style="display: flex; justify-content:space-around; margin-top: 20px; margin-bottom: 15px;">
                 <v-btn color="error" @click="reportArticle()">신고하기</v-btn>
                 <v-btn @click="reportModalToggle()">취소하기</v-btn>
@@ -119,9 +88,7 @@
         </v-card>
       </v-dialog>
 
-      <v-dialog
-        v-model="reportErrorModal"
-      >
+      <v-dialog v-model="reportErrorModal">
         <v-card>
           <v-card-text>
             <div>
@@ -141,11 +108,7 @@
             </div>
           </v-card-text>
           <v-card-actions>
-            <v-btn
-              color="primary"
-              text
-              @click="reportErrorModal = false"
-            >
+            <v-btn color="primary" text @click="reportErrorModal = false">
               Close
             </v-btn>
           </v-card-actions>
@@ -167,8 +130,10 @@ import ArticleDetailComment from "../components/ArticleDetailComment.vue"
 import router from '@/router/index.js'
 import axios from "axios"
 import Swal from "sweetalert2"
-// import jwt_decode from "jwt-decode"
+import jwt_decode from "jwt-decode"
+import { useCommunityStore } from "@/store"
 
+const communityStore = useCommunityStore()
 const route = useRoute()
 const articleid = route.params.articleid
 const maincontent = ref({})
@@ -182,9 +147,9 @@ const check2 = ref(false)
 const check3 = ref(false)
 const check4 = ref(false)
 const check5 = ref(false)
-const userId = ref('')
 const userEmail = ref('')
-//유저 아이디 받아야됨
+const loginUserId = jwt_decode(sessionStorage.getItem('token')).sub
+
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + articleid,
   method: 'GET', 
@@ -204,16 +169,13 @@ axios({
   console.log(err)
 })
 axios({
-  url: 'https://i7b204.p.ssafy.io/cheertogether/members/' + userId.value,
+  url: 'https://i7b204.p.ssafy.io/cheertogether/members/' + loginUserId,
   method: 'GET',
 }).then(res =>{
-  res.data.email = userEmail.value
+  userEmail.value = res.data.email
 }).catch(err => {
   console.log(err)
 })
-
-
-
 
 function toArticleListBtn() {
   commentText.value = ''
@@ -238,12 +200,20 @@ function likeArticle() {
     console.log(err)
     Swal.fire({
       icon: 'error',
-      title: '너는 이 글을 좋아하지 못했다'
+      title: '좋아요 실패'
     })
   })
 }
-function articleDelete() {
-  maincontent
+function deleteArticle() {
+  axios({
+    url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + route.params.articleid,
+    method: 'DELETE',
+  }).then(res => {
+    console.log(res)
+    router.push({name: 'Article'})
+  }).catch(err => {
+    console.log(err)
+  })
 }
 function reportModalToggle() {
   if (reportModal.value) {
@@ -251,6 +221,9 @@ function reportModalToggle() {
   } else {
     reportModal.value = true
   }
+}
+function modifyArticle() {
+  communityStore.communityModify(route.params.articleid)
 }
 function reportArticle() {
   if (check1.value||check2.value||check3.value||check4.value||check5.value) {
@@ -274,7 +247,7 @@ function reportArticle() {
       reportModalToggle()
       Swal.fire({
         icon: 'error',
-        title: '싫어하기 실패'
+        title: '싫어요 전송 실패'
       })
     })
   } else {
@@ -293,17 +266,14 @@ function writeReply() {
     }
   })
   .then(res => {
-    console.log(res.data)
-    Swal.fire({
-      icon: 'success',
-      title: '댓글담'
-    })
+    console.log(res)
+    router.go()
   })
   .catch(err => {
     console.log(err)
     Swal.fire({
       icon: 'error',
-      title: '댓글못담'
+      title: '댓글 다는 중 에러 발생'
     })
   })
 } 
