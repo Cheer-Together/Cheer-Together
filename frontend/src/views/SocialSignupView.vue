@@ -2,7 +2,7 @@
   <NavBar/>  
   <div style="display:flex;">
     <SideBar/>
-    <div class="signup">
+    <div v-if="loaded" class="signup">
       <div class="signup-image" v-if="!accountStore.myImage">
         <label for="input-file" style="padding:66px 30px 66px 35px;">
           <v-icon class="sideBar-item-icon">
@@ -10,12 +10,15 @@
           </v-icon>
           이미지 올리기
         </label>
+
       </div>
+
       <div v-if="accountStore.myImage" class="signup-image" :style="{'background-image': `url(${accountStore.myImage})`}">
         <label for="input-file" style="padding:66px 150px 66px 35px;">
           &nbsp;
         </label>
       </div>
+
 
       <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'>
 
@@ -24,8 +27,8 @@
         <div class="signup-range-title">
           이메일
         </div>
-        <div>
-          <input disabled type="email" class="signup-range-input" v-model="socialSignupEmail" maxlength="40">
+        <div style="position: relative;">
+          <input disabled type="email" class="signup-range-input" v-model="socialSignupEmail">
         </div>
       </div>
 
@@ -38,6 +41,7 @@
           <input type="text" class="signup-range-input" maxlength="40" v-model="socialSignupNickname">
         </div>
       </div>
+   
       <!-- 본인 소개 -->
       <div class="signup-range signup-range-introduce" >
         <div class="signup-range-title">
@@ -47,8 +51,9 @@
           <textarea cols="21" rows="5" class="signup-range-input-introduce" v-model="socialSignupMyInfo"></textarea>
         </div>
       </div>
+
       <!-- 좋아하는 리그 -->
-      <!-- <div class="signup-range" style="height:182px;">
+      <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 리그
           <v-dialog
@@ -59,21 +64,22 @@
                 mdi-plus-circle-outline
               </v-icon>
             </template>
+            <!-- 모달 창 -->
             <FavoriteLeagueModal/>
           </v-dialog>
-          <div v-if="leagueStore.selectLeague.length !== 0" class="signup-favorite-league">
-            <div v-for="selectLeague in leagueStore.selectLeague" :key="selectLeague.logo" :selectLeague="selectLeague" class="signup-favorite-league-item">
-              <img :src="selectLeague.logo" class="signup-favorite-league-image">
+          <div v-if="accountStore.profile.favoriteLeagueList.length !== 0" class="signup-favorite-league">
+            <div v-for="favoriteLeagueList in accountStore.profile.favoriteLeagueList" :key="favoriteLeagueList.logo" class="signup-favorite-league-item">
+              <img :src="favoriteLeagueList.logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ selectLeague.hanName }}
+                {{ favoriteLeagueList.hanName }}
               </div>
             </div>
-          </div>
+          </div>        
         </div>
-      </div> -->
+      </div>
 
       <!-- 좋아하는 팀 -->
-      <!-- <div class="signup-range" style="height:182px;">
+      <div class="signup-range" style="height:182px;">
         <div class="signup-range-title">
           좋아하는 팀    
           <v-dialog
@@ -84,25 +90,26 @@
                 mdi-plus-circle-outline
               </v-icon>
             </template>
+            <!-- 모달 창 -->
             <FavoriteTeamModal/>
           </v-dialog>
-          <div v-if="leagueStore.selectTeam.length !== 0" class="signup-favorite-league">
-            <div v-for="selectTeam in leagueStore.selectTeam" :key="selectTeam.logo" :selectTeam="selectTeam" class="signup-favorite-league-item">
-              <img :src="selectTeam.logo" class="signup-favorite-league-image">
+          <div v-if="accountStore.profile.favoriteTeamList.length !== 0" class="signup-favorite-league">
+            <div v-for="favoriteTeamList in accountStore.profile.favoriteTeamList" :key="favoriteTeamList.hanName" class="signup-favorite-league-item">
+              <img :src="favoriteTeamList.logo" class="signup-favorite-league-image">
               <div class="signup-favorite-league-item-title">
-                {{ selectTeam.hanName }}
+                {{ favoriteTeamList.hanName }}
               </div>
             </div>
           </div>  
         </div>
-      </div> -->
+      </div>
 
       <!-- 회원 가입!! -->
       <div class="signup-range-bottom">
-        <button class="signup-submit-button" @click="router.push({name:'MainPage'})">
+        <button class="signup-submit-button"  @click="router.push({name:'MainPage'})">
           이전
         </button>
-        <button class="signup-submit-button next" @click.prevent="socialSignupBtn()">
+        <button class="signup-submit-button next" @click="socialSignupBtn()">
           다음
         </button>
       </div>
@@ -113,30 +120,66 @@
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
-// import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
-// import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
-import { useAccountStore, useLeagueStore } from "@/store"
+import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
+import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
+import { useAccountStore } from "@/store"
+import { useLeagueStore } from "@/store"
 import Swal from 'sweetalert2'
 import router from '@/router'
 import { useRoute } from "vue-router"
-import axios from 'axios'
-import { onMounted, ref } from "vue"
+import axios from "axios"
+import { ref } from "vue"
+
+const route = useRoute()
 const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()
-const route = useRoute()
-let socialSignupFavoriteLeagueList = []
-
-const socialSignupEmail = ref('소셜 이메일')
-const socialSignupNickname = ref('')
+const socialSignupEmail = ref('')
 const socialSignupMyInfo = ref('')
-onMounted(()=>{
+const socialSignupNickname = ref('')
+const loaded = ref(false)
+
+// 회원가입 시 변수 초기화 영역
+accountStore.myImage  = ''
+accountStore.profile.favoriteLeagueList = []
+accountStore.profile.favoriteTeamList = []
+
+function socialSignupBtn() {
   axios({
+    url: "https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao/join",
+    method: 'POST',
+    data: {
+      email : socialSignupEmail.value,
+      favoriteLeagueList : accountStore.profile.favoriteLeagueList,
+      favoriteTeamList: accountStore.profile.favoriteTeamList,
+      myInfo : socialSignupMyInfo,
+      nickname : socialSignupNickname,
+      profileImage : accountStore.myImage,
+      role : 'user'
+    }
+  })
+  .then(() => {
+    Swal.fire({
+      icon: 'success',
+      title: '가입되었습니다!',
+    })
+    router.push({name:'MainPage'})
+  })
+  .catch(err => {
+    console.log(err)
+    Swal.fire({
+      icon: 'error',
+      title: '가입 실패.'
+    })
+  })
+}
+// 소셜 회원가입 or 로그인 분기
+axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao',
   method: 'POST',
   data: {code: route.query.code}
   }).then(res => {
     if (res.token) {
-      if (!res.newmember) {
+      if (!res.newMember) {
         console.log(res)
         sessionStorage.setItem('token', res.token)
         sessionStorage.setItem('isSocialLogin', true)
@@ -151,71 +194,18 @@ onMounted(()=>{
       console.log('쿼리값이 올바르지 않습니다')
       Swal.fire({
         icon: 'error',
-        title: '쿼리값이 올바르ㅗ지 않습니다ㅗ.'
+        title: '쿼리값이 올바르지 않습니다.'
       })
-      // router.push({name:'MainPage'})
+      router.push({name:'MainPage'})
     }
   }).catch(err => {
     console.log(err)
     Swal.fire({
       icon: 'error',
-      title: '올바른 접근이 아닙니다.'
+      title: 'Axios에러.'
     })
-    // router.push({name:'MainPage'})
-  })
-})
-
-function socialSignupBtn() {
-  leagueStore.selectLeague.forEach(function (League,) {
-    socialSignupFavoriteLeagueList.push(League.apiId)
-  })
-  console.log({
-    email : socialSignupEmail,
-    favoriteLeagueList : socialSignupFavoriteLeagueList,
-    myInfo : socialSignupMyInfo,
-    nickname : socialSignupNickname,
-    profileImage : accountStore.myImage,
-    role : 'user'
-  })
-  // axios({
-  //   url: "https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao/join",
-  //   method: 'POST',
-  //   data: {
-  //     email : socialSignupEmail,
-  //     favoriteLeagueList : socialSignupFavoriteLeagueList,
-  //     myInfo : socialSignupMyInfo,
-  //     nickname : socialSignupNickname,
-  //     // password : userInfo.password,
-  //     profileImage : accountStore.myImage,
-  //     role : 'user'
-  //   }  
-  // })
-}
-
-
-// 회원가입 시 변수 초기화 영역
-// accountStore.emailDoubleChecked = false ;
-// accountStore.emailAuthCode = 'AAAAAAAAAAA';
-// accountStore.emailAuthCodeChecked = false;
-// accountStore.passwordAccordance = '';
-// accountStore.passwordAccordance2 = '';
-// accountStore.isPushEmail = false;
-// accountStore.isShowPasswordError = '';
-// accountStore.myImage  = ''
-// leagueStore.selectLeague = []
-// leagueStore.selectTeam = []
-
-// let userInputEmailAuthCode = ''
-// let credentialsSignup = {
-//   email: "",
-//   favoriteLeagueList: [ 
-//   ],
-//   myInfo: "",
-//   nickname: "",
-//   password: '',
-//   profileImage: '',
-//   role: 'user'
-// }
+    router.push({name:'MainPage'})
+}).then(loaded.value = true)
 
 const onInputImage = (e) => {
   console.log(e.target.files[0])
