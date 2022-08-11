@@ -38,13 +38,12 @@ import { useAccountStore, useCommunityStore } from "@/store"
 import axios from "axios"
 import Swal from "sweetalert2";
 import { ref } from 'vue'
-const category = ref('분류 없음')
+const category = ref(39)
 const title = ref('')
 const content = ref('')
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
 const items = [
-  {title: '분류 없음', apiId: false},
   {title: '프리미어리그', apiId: 39},
   {title: '라리가', apiId: 140},
   {title: '세리에A', apiId: 135},

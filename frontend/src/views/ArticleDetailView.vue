@@ -24,9 +24,26 @@
         </div>
       </div>
       <div class="community-detail-content-top">
-        <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
+        <div style="display: flex; align-items: center;">
+          <!-- <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
+          </div> -->
+          <a>{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
         </div>
-        <a>{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
+        <div class="community-detail-btns">
+          <div class="word-link">
+            <v-icon size="20px">
+              mdi-pencil
+            </v-icon>
+            <a>수정하기</a>
+          </div>
+          <div @click="articleDelete()" class="word-link" style="margin-left:10px">
+            <v-icon size="20px">
+              mdi-delete
+            </v-icon>
+            <a>삭제하기</a>
+          </div>
+          
+        </div>
       </div>
       <div style="margin: 10px">
         {{maincontent.content}}
@@ -150,6 +167,7 @@ import ArticleDetailComment from "../components/ArticleDetailComment.vue"
 import router from '@/router/index.js'
 import axios from "axios"
 import Swal from "sweetalert2"
+// import jwt_decode from "jwt-decode"
 
 const route = useRoute()
 const articleid = route.params.articleid
@@ -164,17 +182,38 @@ const check2 = ref(false)
 const check3 = ref(false)
 const check4 = ref(false)
 const check5 = ref(false)
+const userId = ref('')
+const userEmail = ref('')
+//유저 아이디 받아야됨
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + articleid,
   method: 'GET', 
 }).then(res => {
   maincontent.value = res.data
   const createdTime = new Date(res.data.createDate)
-  createdDate.value = createdTime.getFullYear() +'-'+ createdTime.getMonth() +'-'+ createdTime.getDate() + ' ' + createdTime.getHours() + ":" + createdTime.getMinutes()
+  let yy = createdTime.getFullYear()
+  let mm = createdTime.getMonth()
+  let dd = createdTime.getDate()
+  let hh = createdTime.getHours()
+  if (hh < 10) {hh = '0' + hh}
+  let mmm = createdTime.getMinutes()
+  if (mmm < 10) {mmm = '0' + mmm}
+  createdDate.value = yy +'/'+ mm +'/'+ dd + ' ' + hh + ":" + mmm
   loaded.value = true
 }).catch(err => {
   console.log(err)
 })
+axios({
+  url: 'https://i7b204.p.ssafy.io/cheertogether/members/' + userId.value,
+  method: 'GET',
+}).then(res =>{
+  res.data.email = userEmail.value
+}).catch(err => {
+  console.log(err)
+})
+
+
+
 
 function toArticleListBtn() {
   commentText.value = ''
@@ -202,6 +241,9 @@ function likeArticle() {
       title: '너는 이 글을 좋아하지 못했다'
     })
   })
+}
+function articleDelete() {
+  maincontent
 }
 function reportModalToggle() {
   if (reportModal.value) {
@@ -282,8 +324,9 @@ function writeReply() {
   border-bottom: 1px solid #bcbcbc;
 }
 .community-detail-content-top {
-  display:flex;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   height:36px;
   margin:10px 0 10px 0;
 }
@@ -295,6 +338,12 @@ function writeReply() {
   height:34px;
   border-radius:5px;
   border: 1px solid #bcbcbc;
+}
+.community-detail-btns {
+  display: flex; 
+  align-items: center;
+  font-size: 13px;
+
 }
 .word-link:hover {
   color: var(--main-color);
