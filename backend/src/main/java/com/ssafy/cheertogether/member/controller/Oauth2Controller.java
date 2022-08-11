@@ -54,7 +54,7 @@ public class Oauth2Controller {
 
 	@PostMapping("/kakao/join")
 	@ApiOperation(value = "카카오 회원가입 및 로그인", notes = "카카오 새로운 유저 회원가입/로그인")
-	public ResponseEntity<String> kakaoJoinAndLogin(Oauth2JoinRequest oauth2JoinRequest) {
+	public ResponseEntity<String> kakaoJoinAndLogin(@RequestBody Oauth2JoinRequest oauth2JoinRequest) {
 		oauth2Service.join(oauth2JoinRequest);
 		Long memberId = memberService.login(oauth2JoinRequest.getEmail(), "");
 		return new ResponseEntity<>(jwtTokenProvider.createToken(String.valueOf(memberId)), HttpStatus.OK);

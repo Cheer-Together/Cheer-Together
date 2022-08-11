@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,25 +37,29 @@ public class Member implements UserDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
 	private String email;
 	private String nickname;
 	private String password;
-	private String profileImage;
-	private String role;
+
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
 	private String myInfo;
+
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
+
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
 
 	@Builder
-	public Member(String email, String nickname, String password, String profileImage, String role, String myInfo) {
+	public Member(String email, String nickname, String password, Role role, String myInfo) {
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
-		this.profileImage = profileImage;
 		this.role = role;
 		this.myInfo = myInfo;
 	}
@@ -63,7 +69,6 @@ public class Member implements UserDetails {
 			.email(memberJoinRequest.getEmail())
 			.nickname(memberJoinRequest.getNickname())
 			.password(memberJoinRequest.getPassword())
-			.profileImage(memberJoinRequest.getProfileImage())
 			.role(memberJoinRequest.getRole())
 			.myInfo(memberJoinRequest.getMyInfo())
 			.build();
@@ -73,7 +78,6 @@ public class Member implements UserDetails {
 		return Member.builder()
 			.email(oauth2JoinRequest.getEmail())
 			.nickname(oauth2JoinRequest.getNickname())
-			.profileImage(oauth2JoinRequest.getProfileImage())
 			.role(oauth2JoinRequest.getRole())
 			.myInfo(oauth2JoinRequest.getMyInfo())
 			.build();
@@ -82,7 +86,6 @@ public class Member implements UserDetails {
 	public static Member from(MemberModifyRequest modifyRequest) {
 		return Member.builder()
 			.nickname(modifyRequest.getNickname())
-			.profileImage(modifyRequest.getProfileImage())
 			.myInfo(modifyRequest.getMyInfo())
 			.build();
 	}
@@ -93,7 +96,6 @@ public class Member implements UserDetails {
 
 	public void update(MemberModifyRequest memberModifyRequest) {
 		nickname = memberModifyRequest.getNickname();
-		profileImage = memberModifyRequest.getProfileImage();
 		myInfo = memberModifyRequest.getMyInfo();
 	}
 
@@ -108,7 +110,7 @@ public class Member implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-		authorities.add(new SimpleGrantedAuthority(role));
+		authorities.add(new SimpleGrantedAuthority(role.toString()));
 		return authorities;
 	}
 
@@ -116,6 +118,7 @@ public class Member implements UserDetails {
 	public String getPassword() {
 		return password;
 	}
+
 	public void updatePassword(String newPassword) {
 		this.password = newPassword;
 	}
