@@ -12,7 +12,10 @@ export const useCommunityStore = defineStore('community', {
     { 
       toggle: false,
       isModify: false,
-      modifingArticleId: false
+      modifingArticleId: false,
+      modifingArticleContent: '',
+      modifingArticleTitle: '',
+      modifingArticleApiId: 39,
     }
   ),
   actions: {
@@ -26,10 +29,13 @@ export const useCommunityStore = defineStore('community', {
         this.toggle = true
       }
     },
-    communityModify(articleid) {
+    communityModify(article) {
       this.isModify = true
       this.toggle = true
-      this.modifingArticleId = articleid
+      this.modifingArticleId = article.id
+      this.modifingArticleContent = article.content
+      this.modifingArticleTitle = article.title
+      this.modifingArticleApiId = article.apiId
       router.push({name: 'Article'})
     },
   },

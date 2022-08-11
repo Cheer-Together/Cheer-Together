@@ -223,7 +223,12 @@ function reportModalToggle() {
   }
 }
 function modifyArticle() {
-  communityStore.communityModify(route.params.articleid)
+  communityStore.communityModify({
+    id: maincontent.value.id,
+    title: maincontent.value.title,
+    content: maincontent.value.content,
+    apiId: maincontent.value.leagueResponseExceptTeamList.apiId,
+  })
 }
 function reportArticle() {
   if (check1.value||check2.value||check3.value||check4.value||check5.value) {
