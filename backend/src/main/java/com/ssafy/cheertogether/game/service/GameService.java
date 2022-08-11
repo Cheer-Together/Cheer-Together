@@ -36,7 +36,7 @@ public class GameService {
 
 	public void update(Long id, String responseJson) throws ParseException {
 		Game game = gameRepository.findById(id)
-			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MATCH_ERROR_MESSAGE));
+			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_GAME_ERROR_MESSAGE));
 		JSONParser jsonParser = new JSONParser();
 		JSONObject jsonObject = (JSONObject)jsonParser.parse(responseJson);
 		JSONArray response = (JSONArray)jsonObject.get("response");
