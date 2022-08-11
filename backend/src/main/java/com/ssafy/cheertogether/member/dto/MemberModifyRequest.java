@@ -9,13 +9,7 @@ import lombok.Getter;
 @Getter
 public class MemberModifyRequest {
 	private String nickname;
-	@Nullable
-	private String profileImage;
 	private String myInfo;
 	private List<Long> favoriteLeagueList;
 	private List<Long> favoriteTeamList;
-
-	public void saveProfileImgLink(String link) {
-		profileImage = link;
-	}
 }

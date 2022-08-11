@@ -14,7 +14,6 @@ import lombok.Getter;
 public class MemberResponse {
 	private final String email;
 	private final String nickname;
-	private final String profileImage;
 	private final String role;
 	private final String myInfo;
 	private final List<LeagueResponseExceptTeamList> favoriteLeagueList = new ArrayList<>();
@@ -23,7 +22,6 @@ public class MemberResponse {
 	public MemberResponse(Member member) {
 		email = member.getEmail();
 		nickname = member.getNickname();
-		profileImage = member.getProfileImage();
 		role = member.getRole();
 		myInfo = member.getMyInfo();
 		favoriteLeagueList.addAll(
