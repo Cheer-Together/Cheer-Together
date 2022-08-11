@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <ScheduleSelectMonth/>
+      <ScheduleSelectMonth :key="$route.fullPath"/>
     </div>
   </div>
 </template>
@@ -39,7 +39,13 @@ import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import ScheduleSelectMonth from "../components/ScheduleSelectMonth.vue"
 import { useScheduleStore } from  '../store/index.js'
+// import { useRoute } from 'vue-router'
 const scheduleStore = useScheduleStore();
+// const route = useRoute()
+// let leagueParam = route.params.leaguename
+// const leagueTabs = document.querySelector(".schedule-page-league-items")
+// console.log(leagueTabs)
+// 새로고침 시 라우터 색깔 변하는거 고쳐볼랬더니 아직 해결 못함..
 </script>
 
 <style>
@@ -92,7 +98,7 @@ const scheduleStore = useScheduleStore();
   margin: auto;
 }
 
-.schedule-matches div {
+.schedule-matches-info{
   display: flex;
   justify-content: center;
   align-items: center;
