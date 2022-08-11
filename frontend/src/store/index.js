@@ -4,7 +4,7 @@ import cheertogether from '@/api/cheertogether'
 import Swal from 'sweetalert2'
 import router from '@/router/index.js';
 import jwt_decode from "jwt-decode"
-import { createRoom } from '@/api/room';
+import { createRoom, getRoomInfo } from '@/api/room';
 import { ref } from "vue"
 
 
@@ -12,6 +12,11 @@ export const useCommunityStore = defineStore('community', {
   state: () => (
     { 
       toggle: false,
+      isModify: false,
+      modifingArticleId: false,
+      modifingArticleContent: '',
+      modifingArticleTitle: '',
+      modifingArticleApiId: 39,
     }
   ),
   actions: {
@@ -24,6 +29,15 @@ export const useCommunityStore = defineStore('community', {
       } else {
         this.toggle = true
       }
+    },
+    communityModify(article) {
+      this.isModify = true
+      this.toggle = true
+      this.modifingArticleId = article.id
+      this.modifingArticleContent = article.content
+      this.modifingArticleTitle = article.title
+      this.modifingArticleApiId = article.apiId
+      router.push({name: 'Article'})
     },
   },
 })
@@ -546,7 +560,7 @@ export const useOnAirStore = defineStore('onair', {
       console.log("makeRoom: "+result);
       return result;
     },
-    moveRoom(gameId, name, roomStatus, password, managerId) {
+    async moveRoom(gameId, name, roomStatus, password, managerId) {
       let sessionId = this.generateRandomString(10);
       let status = roomStatus ? "PRIVATE" : "PUBLIC";
       console.log(gameId);
@@ -559,7 +573,8 @@ export const useOnAirStore = defineStore('onair', {
         sessionId: sessionId,
       };
       console.log(data);
-      createRoom(data).then(router.push({ name: "Room", params: { session: sessionId } }));
+      await createRoom(data).then(() => router.push({ name: "Room", params: { session: sessionId } }));
+      console.log("CREATED");
     }
   },
 })
@@ -573,6 +588,8 @@ export const useMatchScreenStore = defineStore('match', {
   state: () => (
     { 
       isClickChatting: '',
+      isClickLayout: false,
+      screenHeight: '705px'
     })
 })
 export const useNewsStore = defineStore('news', {
@@ -682,6 +699,7 @@ export const useGameStore = defineStore('game', {
 })
 export const useRoomStore = defineStore('room', { 
   state: () => ({ 
+    roomInfo: undefined,
     roomsAll: [
       {
        gameId: 0,
@@ -722,6 +740,16 @@ export const useRoomStore = defineStore('room', {
         console.log(err)
         
       })
+    },
+    async getInfo(sessionId) {
+      await getRoomInfo(sessionId, 
+        (res) => {
+          console.log(res);
+          this.roomInfo = res.data;
+        },
+        (err) => {
+          console.log(err);
+        })
     },
   }
 })

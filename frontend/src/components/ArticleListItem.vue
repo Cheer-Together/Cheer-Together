@@ -29,11 +29,14 @@ const props = defineProps({
 const createdTime = new Date(props.article.createDate)
 const now = new Date()
 if (createdTime.getDate()==now.getDate() && createdTime.getMonth()==now.getMonth() && createdTime.getFullYear()==now.getFullYear()) {
-  createdDate.value = createdTime.getHours() + ":" + createdTime.getMinutes()
+  let hh = createdTime.getHours()
+  if (hh < 10) {hh = '0' + hh}
+  let mmm = createdTime.getMinutes()
+  if (mmm < 10) {mmm = '0' + mmm}
+  createdDate.value = hh + ":" + mmm
 } else {
   createdDate.value = createdTime.getFullYear() +'/'+ createdTime.getMonth() +'/'+ createdTime.getDate()
 }
-
 function toArticleDetail(id) {
   router.push({name: 'ArticleDetail', params: { articleid: id }})
 }
