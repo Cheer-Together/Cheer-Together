@@ -39,6 +39,12 @@ public class RoomService {
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_ROOM_ID_ERROR_MESSAGE));
 		return new RoomResponse(room);
 	}
+	@Transactional(readOnly = true)
+	public RoomResponse findRoomBySessionId(String SessionId) {
+		Room room = roomRepository.findRoomBySessionId(SessionId)
+			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_ROOM_SESSION_ID_ERROR_MESSAGE));
+		return new RoomResponse(room);
+	}
 
 	@Transactional(readOnly = true)
 	public List<RoomResponse> findRoomByGameId(Long gameId) {

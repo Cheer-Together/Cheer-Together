@@ -27,7 +27,8 @@
     </div>
     <div class="write-bottom">
       <v-btn @click="communityStore.communityToggle()" class="write-button">취소하기</v-btn>
-      <v-btn @click="completeButton()" class="write-button">작성완료</v-btn>
+      <v-btn v-if="isModify" @click="modifyButton()" class="write-button">수정완료</v-btn>
+      <v-btn v-else @click="completeButton()" class="write-button">작성완료</v-btn>
     </div>
   </div>
 </template>
@@ -38,13 +39,24 @@ import { useAccountStore, useCommunityStore } from "@/store"
 import axios from "axios"
 import Swal from "sweetalert2";
 import { ref } from 'vue'
-const category = ref('분류 없음')
+const isModify = ref(false)
+const category = ref(39)
 const title = ref('')
 const content = ref('')
+const modifingArticleId = ref(false)
 const communityStore = useCommunityStore()
 const accountStore = useAccountStore()
+
+if (communityStore.isModify) {
+  title.value = communityStore.modifingArticleTitle
+  content.value = communityStore.modifingArticleContent
+  category.value = communityStore.modifingArticleApiId
+  modifingArticleId.value = communityStore.modifingArticleId
+  isModify.value = communityStore.isModify
+  communityStore.isModify = false
+}
+
 const items = [
-  {title: '분류 없음', apiId: false},
   {title: '프리미어리그', apiId: 39},
   {title: '라리가', apiId: 140},
   {title: '세리에A', apiId: 135},
@@ -76,6 +88,29 @@ function completeButton() {
     Swal.fire({
       icon: 'error',
       title: '작성 실패'
+    })
+  })
+  communityStore.communityToggle()
+}
+function modifyButton() {
+  axios({
+    url: "https://i7b204.p.ssafy.io/cheertogether/articles/" + modifingArticleId.value,
+    method: 'POST',
+    data: {
+      content: content.value,
+      leagueApiId: category.value,
+      title: title.value,
+    }
+  })
+  .then(res => {
+    console.log(res.data)
+    router.push({name: 'ArticleDetail', params: { articleid: modifingArticleId.value}})
+  })
+  .catch(err => {
+    console.log(err)
+    Swal.fire({
+      icon: 'error',
+      title: '수정 실패'
     })
   })
   communityStore.communityToggle()
