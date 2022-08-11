@@ -1,6 +1,5 @@
 <template>
-  <NavBar/>
-  <div style="display:flex; margin-top: 100px;">
+  <div style="display:flex;">
     <!-- 세션 정보가 잘못 되었을 때 -->
     <div id="noSession" v-if="!mySessionId">세션 정보가 잘못 되었습니다.</div>
     <!-- 세션 정보가 잘 되었을 때 -->
@@ -17,14 +16,13 @@
             </v-icon>
             6 
           </div>
-
-        
         </div>
 
         <div class="match-screen-layout" @click="clickLayoutButton">
           레이아웃
         </div>
       </div>
+      
       <!-- 스크린 -->
       <div class="match-screen-section" :style="{ height : matchScreenStore.screenHeight }">
 
@@ -47,6 +45,10 @@
       <!-- 푸터 -->
       <div class="match-screen-footer">
 
+        <!-- 나가기 -->
+        <v-icon size="40" class="match-screen-footer-icon" @click="leaveSession">
+          mdi-exit-run
+        </v-icon>
         <!-- 채팅 -->
         <v-icon size="40" @click="chattingOnOff" class="match-screen-footer-icon">
           mdi-chat-processing-outline
@@ -69,15 +71,28 @@
     
     <!-- 채팅 -->
     <div v-if="matchScreenStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
+      <!-- 채팅 헤더 -->
       <div class="match-screen-chatting-header">
+        <v-icon class="match-screen-chatting-header-setting-button">
+          mdi-cog
+        </v-icon>
 
+        <div v-if="matchScreenStore.isClickSetting">
+
+        </div>
       </div>
-
-      <div class="match-screen-chatting-section">
-
+      <!-- 채팅 내용 창 -->
+      <div class="match-screen-chatting-section" id="match-screen-chatting-section">
+        <div v-show="isOpenedChattingWindow" class="chatting-window">
+          <span id="chatting-content"></span>
+        </div>
       </div>
+      <!-- 채팅 입력하는 곳 -->
       <div class="match-screen-chatting-footer">
-
+        <div class="chatting-input-wrap">
+          <textarea v-model="message" @keyup.enter="sendChat()" class="chatting-input"/>
+          <button type="button" @click="sendChat()" class="chatting-input-button">입력</button>
+        </div>
       </div>
     </div>
     <!-- 얘는 그냥 사라질 때 자연스러운 효과를 위한 영역 신경 안써도 됩니다. -->
@@ -85,33 +100,27 @@
 
     </div>
 
-    <div v-show="isOpenedChattingWindow" class="chatting-window">
-      <ul id="chatting-content">
-      </ul>
-      <div class="">
-        <input type="text" v-model="message" @keyup.enter="sendChat()" />
-        <button type="button" @click="sendChat()">입력</button>
-      </div>
-    </div>
+
   </div>
 </template>
 <script>
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import axios from "axios";
+
 import { useAccountStore, useRoomStore, useMatchScreenStore } from "@/store/index.js";
-import NavBar from "@/components/NavBar.vue"
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const OPENVIDU_SERVER_URL = process.env.VUE_APP_OPENVIDU_SERVER_URL;
 const OPENVIDU_SERVER_SECRET = process.env.VUE_APP_OPENVIDU_SERVER_SECRET;
 
+
+
 export default {
   name: "Match-Room",
 
   components: {
-    NavBar,
     UserVideo,
   },
 
@@ -132,7 +141,18 @@ export default {
     };
   },
   mounted() {
+    this.mySessionId = this.$route.params.session;
+
+    console.log(this.sessionInfo)
+
+    this.myUserName = useAccountStore().profile.nickname;
+    this.joinSession();
     this.inMount();
+
+    // 사용한 피니아 변수 초기화
+    this.matchScreenStore.isClickChatting = ''
+    this.matchScreenStore.isClickLayout = false
+    this.screenHeight = '800px'
   },
 
   methods: {
@@ -175,8 +195,10 @@ export default {
         let receive = event.data.split("/");
         let userName = receive[0];
         let message = receive[1];
-        document.getElementById("chatting-content").innerHTML += `<li>${userName}:</li>`;
-        document.getElementById("chatting-content").innerHTML += `${message}`;
+        document.getElementById("chatting-content").innerHTML += `<div>${userName}:</div>`;
+        document.getElementById("chatting-content").innerHTML += `<div>${message}<div>`;
+        var objDiv = document.getElementById("match-screen-chatting-section");
+        objDiv.scrollTop = objDiv.scrollHeight;
       });
 
       // --- Connect to the session with a valid user token ---
@@ -316,11 +338,11 @@ export default {
     clickLayoutButton() {
       this.matchScreenStore.isClickLayout = !this.matchScreenStore.isClickLayout
 
-      if ( this.matchScreenStore.screenHeight === '705px') {
-        this.matchScreenStore.screenHeight = '465px'
+      if ( this.matchScreenStore.screenHeight === '800px') {
+        this.matchScreenStore.screenHeight = '610px'
       }
       else {
-        this.matchScreenStore.screenHeight = '705px'
+        this.matchScreenStore.screenHeight = '800px'
       }
     },
     chattingOnOff() {
@@ -373,6 +395,7 @@ export default {
     width: 0px;
   }
 }
+
 #session {
   width: 100%;
   height: 830px;
@@ -433,7 +456,7 @@ export default {
 }
 .match-screen-chatting-area {
   width: 295px;
-  height: 800px;
+  height: 900px;
   margin: 26px 30px 0 0;
   animation-name: chattingOver;
   animation-duration: 0.3s;
@@ -448,11 +471,66 @@ export default {
   animation-timing-function: ease-out;
 }
 #video-container {
-  width: 100%;
-  height: 240px;
-  margin-right: 20px;
+  margin-top: 10px;
+  width: 98%;
+  height: 180px;
+  margin-right: 60px;
   display: flex;
-  background-color: #54575b;
+
 }
+.match-screen-chatting-header {
+  height: 100px;
+  border-bottom: 1px solid #cfd2d6;
+}
+.match-screen-chatting-header-setting-button {
+  width: 20px;
+  height: 20px;
+  margin: 10px 10px auto 220px;
+}
+.match-screen-chatting-section {
+  height: 700px;
+  overflow-y: scroll;
+  border-bottom: 1px solid #cfd2d6;
+  padding: 10px 15px 10px 10px;
+}
+.match-screen-chatting-section::-webkit-scrollbar {
+  width: 3px;
+  background-color: var(--sub-color);
+}
+.match-screen-chatting-footer {
+  padding: 10px;
+  position: relative;
+}
+.chatting-input-wrap {
+  margin: 0 auto;
+  width: 200px;
+  height: 70px;
+  border-radius: 20px;
+  background-color: var(--sub-color);
+  display: flex;
+}
+.chatting-input {
+  max-width: 150px;
+  min-width: 150px; 
+  max-height: 50px;
+  min-height: 50px;
+  margin: auto 0;
+  overflow: auto;
+  word-wrap: break-word;
+  background: none;
+  padding: 5px;
+}
+.chatting-input:focus {
+  outline: none; 
+}
+.chatting-input::-webkit-scrollbar {
+  width: 1px;
+}
+.chatting-input-button {
+  padding: 0 auto;
+  width: 50px;
+  color: var(--main-color);
+}
+
 
 </style>

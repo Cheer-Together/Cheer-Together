@@ -5,7 +5,7 @@
 
 <script setup>
 import LoginView from "./views/LoginView.vue"
-import { useLeagueStore, useGameStore, useAccountStore, useRoomStore } from "@/store"
+import { useLeagueStore, useGameStore, useAccountStore, useRoomStore, } from "@/store"
 import jwt_decode from "jwt-decode"
 import { ref } from "vue"
 
@@ -13,6 +13,7 @@ const accountStore = useAccountStore()
 const leagueStore = useLeagueStore()
 const gameStore = useGameStore()
 const roomStore = useRoomStore()
+
 
 // 로그인 유저인지 확인
 const toke = ref(sessionStorage.getItem('token')??'')

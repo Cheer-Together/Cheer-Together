@@ -1,5 +1,7 @@
 package com.ssafy.cheertogether.member.service;
 
+import static com.ssafy.cheertogether.league.LeagueConstant.*;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -9,7 +11,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -23,9 +24,9 @@ import com.ssafy.cheertogether.favorite.domain.FavoriteTeam;
 import com.ssafy.cheertogether.league.repository.LeagueRepository;
 import com.ssafy.cheertogether.member.MemberConstant;
 import com.ssafy.cheertogether.member.domain.Member;
-import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.Oauth2JoinRequest;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
+import com.ssafy.cheertogether.team.TeamConstant;
 import com.ssafy.cheertogether.team.repository.TeamRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -157,7 +158,9 @@ public class Oauth2Service {
 			favoriteLeagueList.addAll(oauth2JoinRequest
 				.getFavoriteLeagueList()
 				.stream()
-				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId).get()))
+				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository
+					.findLeagueByApiId(leagueApiId)
+					.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		member.setFavoriteLeagueList(favoriteLeagueList);
@@ -166,7 +169,9 @@ public class Oauth2Service {
 			favoriteTeamList.addAll(oauth2JoinRequest
 				.getFavoriteTeamList()
 				.stream()
-				.map(teamApiId -> FavoriteTeam.from(member, teamRepository.findTeamByApiId(teamApiId).get()))
+				.map(teamApiId -> FavoriteTeam.from(member, teamRepository
+					.findTeamByApiId(teamApiId)
+					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		member.setFavoriteTeamList(favoriteTeamList);

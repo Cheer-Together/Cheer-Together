@@ -210,49 +210,27 @@ export const useAccountStore = defineStore('account', {
         실패하면
     
       */
-     const formData = new FormData();
-      const memberJoinRequest = {
+    axios({
+      url: cheertogether.members.signUp(),
+      method: 'POST',
+      data: {
         email : userInfo.email,
         favoriteLeagueList : userInfo.favoriteLeagueList,
         favoriteTeamList: userInfo.favoriteTeamList,
         myInfo : userInfo.myInfo,
         nickname : userInfo.nickname,
         password : userInfo.password,
-        // profileImage : userInfo.profileImage,
+        profileImage : userInfo.profileImage,
         role : 'user'
-      }
-      formData.append("file", userInfo.profileImage );
-      formData.append("memberJoinRequest", memberJoinRequest);
-
-      axios({
-        url: cheertogether.members.signUp(),
-        method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        data: formData
+      }  
+    })
+      .then(() => {
+        router.push({name:'MainPage'})
       })
-      // axios({
-      //   url: cheertogether.members.signUp(),
-      //   method: 'POST',
-      //   data: {
-      //     email : userInfo.email,
-      //     favoriteLeagueList : userInfo.favoriteLeagueList,
-      //     favoriteTeamList: userInfo.favoriteTeamList,
-      //     myInfo : userInfo.myInfo,
-      //     nickname : userInfo.nickname,
-      //     password : userInfo.password,
-      //     profileImage : userInfo.profileImage,
-      //     role : 'user'
-      //   }  
-      // })
-      //   .then(() => {
-      //     router.push({name:'MainPage'})
-      //   })
-      //   .catch(err => {
-      //     console.log(err)
-          
-      //   })
+      .catch(err => {
+        console.log(err)
+        
+      })
     },
     withdrawal(userId) {
       /* 
@@ -671,8 +649,37 @@ export const useMatchScreenStore = defineStore('match', {
     { 
       isClickChatting: '',
       isClickLayout: false,
-      screenHeight: '705px'
+      isClickSetting: false,
+      screenHeight: '800px',
+    }),
+  actions: {
+    getGameInfo(apiId) {
+    /* 
+    GET: 경기 정보를 불러옴
+      성공하면
+
+      실패하면
+        에러 메시지 표시
+    */
+    axios({
+      url: cheertogether.game.gameInfo(),
+      method: 'GET',
+      headers: {
+        "x-rapidapi-host" : process.env.VUE_APP_X_RAPIDAPI_HOST,
+        "x-rapidapi-key" : process.env.VUE_APP_X_RAPIDAPI_KEY
+      },
+      params: {
+        fixture: apiId,
+      }  
     })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+  }
 })
 export const useNewsStore = defineStore('news', {
   state: () => ({ 

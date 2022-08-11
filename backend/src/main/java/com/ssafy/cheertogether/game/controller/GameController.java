@@ -49,6 +49,15 @@ public ResponseEntity<List<GameResponse>> findGames() {
 		return new ResponseEntity<>(gameService.findGames(), HttpStatus.OK);
 	}
 
+	@GetMapping("/game/{id}")
+	@ApiOperation(value = "경기 정보 단건 검색", notes = "경기 아이디로 경기정보 검색")
+	public ResponseEntity<GameResponse> findGameById(
+		@ApiParam(value = "경기 ID", required = true, example = "31")
+		@PathVariable Long id
+	){
+		return new ResponseEntity<>(gameService.findGameById(id), HttpStatus.OK);
+	}
+
 	@PutMapping("/{id}")
 	@ApiOperation(value = "해당 경기 정보 업데이트", notes = "해당 경기 정보 업데이트")
 	public ResponseEntity<String> modify(@PathVariable Long id,

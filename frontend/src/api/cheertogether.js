@@ -31,7 +31,8 @@ export default {
 
     gamesByDate: (leagueApiId) => HOST + GAMES + `${leagueApiId}` + '/date',
 
-    gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month'
+    gameInfo: () => 'https://v3.football.api-sports.io/fixtures/events', // 경기 정보
+    gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month',
 
   },
   room: {
