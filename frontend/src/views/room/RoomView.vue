@@ -85,7 +85,16 @@
     <div v-if="matchScreenStore.isClickChatting == 'b'" class="match-screen-chatting-area2" >
 
     </div>
-  </div> 
+
+    <div v-show="isOpenedChattingWindow" class="chatting-window">
+      <ul id="chatting-content">
+      </ul>
+      <div class="">
+        <input type="text" v-model="message" @keyup.enter="sendChat()" />
+        <button type="button" @click="sendChat()">입력</button>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import { OpenVidu } from "openvidu-browser";
@@ -117,8 +126,10 @@ export default {
 
       mySessionId: undefined,
       myUserName: undefined,
-      matchScreenStore: useMatchScreenStore()
 
+      matchScreenStore: useMatchScreenStore()
+      isOpenedChattingWindow: true,
+      message: "",
     };
   },
   mounted() {
@@ -154,6 +165,14 @@ export default {
       // On every asynchronous exception...
       this.session.on("exception", ({ exception }) => {
         console.warn(exception);
+      });
+
+      this.session.on("signal:my-chat", (event) => {
+        let receive = event.data.split("/");
+        let userName = receive[0];
+        let message = receive[1];
+        document.getElementById("chatting-content").innerHTML += `<li>${userName}:</li>`;
+        document.getElementById("chatting-content").innerHTML += `${message}`;
       });
 
       // --- Connect to the session with a valid user token ---
@@ -311,6 +330,24 @@ export default {
         this.matchScreenStore.isClickChatting = 'a'
       }
     },
+
+    sendChat() {
+      if (this.message && this.message != "") {
+        this.session
+          .signal({
+            data: this.myUserName + "/" + this.message,
+            to: [],
+            type: "my-chat",
+          })
+          .then(() => {
+            console.log("Message successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      this.message = "";
+    }
   },
 };
 </script>
