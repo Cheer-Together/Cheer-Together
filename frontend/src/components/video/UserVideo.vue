@@ -1,6 +1,6 @@
 <template>
-  <div v-if="streamManager">
-    <ov-video :stream-manager="streamManager" />
+  <div v-if="streamManager" >
+    <ov-video :stream-manager="streamManager" class="cam"/>
     <div>
       <p>{{ clientData }}</p>
     </div>
@@ -36,3 +36,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.cam {
+  width: 320px;
+  border-radius: 5px;
+  margin: 0 10px;
+}
+
+</style>
