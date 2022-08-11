@@ -24,12 +24,21 @@
           </div>
         </div>
         <!-- 회원정보수정 -->
-        <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
-          <v-icon>
-            mdi-pencil-box
-          </v-icon>
-          회원정보수정
-        </div>
+        <div style="display:flex;">
+          <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
+            <v-icon>
+              mdi-pencil-box
+            </v-icon>
+            회원정보수정
+          </div>
+
+          <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
+            <v-icon>
+              mdi-delete-forever
+            </v-icon>
+            회원 탈퇴
+          </div>
+        </div>        
       </div>
       <!-- 본문 -->
       <div class="mypage-section">
@@ -118,14 +127,19 @@ accountStore.userProfile(accountStore.profileId)
   background-color: var( --sub-color );
 }
 .mypage-header-editinfo {
-  margin: 20px 40px 0 auto;
+  margin: 20px 40px 0 0;
   padding: 5px;
   width: 160px;
   height: 37px;
   background-color: blanchedalmond;
+  color: red;
   border-radius: 30px;
   font-size: 18px;
   text-align: center;
+}
+.mypage-header-editinfo:first-child {
+  margin-left: auto;
+  color: black;
 }
 .mypage-header-editinfo:hover {
   cursor: pointer;
