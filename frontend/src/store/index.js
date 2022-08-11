@@ -63,6 +63,15 @@ export const useAccountStore = defineStore('account', {
       profileImage: '',
       role: '',
     },
+    otherProfile: {
+      email: '',
+      favoriteLeagueList: [],
+      favoriteTeamList: [],
+      myInfo: '',
+      nickname: '',
+      profileImage: '',
+      role: '',
+    },
     profileId: false,
   }),
   getters: {
@@ -277,7 +286,29 @@ export const useAccountStore = defineStore('account', {
           
         })
     },
+    presentUserProfile(userId) {
+      /* 
+      GET: 
+        성공하면
+          유저 정보를 profile에 저장한다.
+        실패하면
 
+      */
+        axios({
+          url: cheertogether.members.profile(userId),
+          method: 'GET',
+          params: {
+            id: userId
+          }  
+        })
+          .then(res => {
+            this.otherProfile = res.data
+          })
+          .catch(err => {
+            console.log(err)
+            
+          })
+    },
     editUserProfile(userId) {
       /* 
       GET: 로그인 한 유저 아이디를 통해 유저 정보를 프로필에 저장
@@ -807,6 +838,32 @@ export const useRoomStore = defineStore('room', {
         status: "PRIVATE"
        }
     ],
+    playTeams: {
+      id: 31,
+      home: {
+        leagueName: "",
+        name: "",
+        hanName: "",
+        logo: "",
+        code: "",
+        apiId: 0
+      },
+      away: {
+        leagueName: "",
+        name: "",
+        hanName: "",
+        logo: "",
+        code: "",
+        apiId: 1
+      },
+      kickoff: "",
+      stadium: "",
+      status: "",
+      homeScore: 0,
+      awayScore: 2,
+      apiId: 867946,
+      leagueApiId: 39
+    }
   }),
   actions: {
     getRooms() {
@@ -835,10 +892,32 @@ export const useRoomStore = defineStore('room', {
         (res) => {
           console.log(res);
           this.roomInfo = res.data;
+          this.getPlayTeams(res.data.gameId)
         },
         (err) => {
           console.log(err);
         })
+    },
+    getPlayTeams(gameId) {
+    /* 
+    GET: 경기 정보를 불러옴
+      성공하면
+
+      실패하면
+        에러 메시지 표시
+    */
+    axios({
+      url: cheertogether.game.playGameInfo(gameId),
+      method: 'GET', 
+    })
+      .then(res => {
+        console.log(res.data)
+        this.playTeams = res.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+        
     },
   }
 })

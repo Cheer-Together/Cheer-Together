@@ -9,22 +9,22 @@
         <div style="display:flex;">
           <!-- 프로필 이미지 -->
           <div class="mypage-header-image">
-            <img :src="accountStore.profile.profileImage" alt="" width="200" height="200">
+            <img :src="accountStore.otherProfile.profileImage" alt="" width="200" height="200">
           </div>
           <!-- 닉네임 소개 -->
           <div>
             <!-- 닉네임 -->
             <div class="mypage-header-nickname">
-              {{ accountStore.profile.nickname }}
+              {{ accountStore.otherProfile.nickname }}
             </div>
             <!-- 소개 -->
             <div class="mypage-header-info">
-              {{ accountStore.profile.myInfo }}
+              {{ accountStore.otherProfile.myInfo }}
             </div>
           </div>
         </div>
         <!-- 회원정보수정 -->
-        <div style="display:flex;">
+        <div style="display:flex;" v-if="accountStore.otherProfile.email === accountStore.profile.email">
           <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
             <v-icon>
               mdi-pencil-box
@@ -45,10 +45,10 @@
         <!-- 좋아하는 리그 -->
         <div class="mypage-section-favorite-league">
           <div class="mypage-section-favorite-league-title">
-            {{ accountStore.profile.nickname }}님이 좋아하는 리그
+            {{ accountStore.otherProfile.nickname }}님이 좋아하는 리그
           </div>
           <div style="display:flex;">
-            <div class="mypage-favorite-league" v-for="favoriteLeague in accountStore.profile.favoriteLeagueList" :key="favoriteLeague.apiId">
+            <div class="mypage-favorite-league" v-for="favoriteLeague in accountStore.otherProfile.favoriteLeagueList" :key="favoriteLeague.apiId">
             <img :src="favoriteLeague.logo" alt="" >
             <div class="mypage-favorite-league-title">
               {{ favoriteLeague.hanName }}
@@ -60,11 +60,11 @@
         <!-- 좋아하는 팀 -->
         <div class="mypage-section-favorite-league">
           <div class="mypage-section-favorite-league-title">
-            {{ accountStore.profile.nickname }}님이 좋아하는 팀
+            {{ accountStore.otherProfile.nickname }}님이 좋아하는 팀
           </div>
           <div style="display:flex;">
 
-            <div class="mypage-favorite-league" v-for="favoriteTeam in accountStore.profile.favoriteTeamList" :key="favoriteTeam.iapiId">
+            <div class="mypage-favorite-league" v-for="favoriteTeam in accountStore.otherProfile.favoriteTeamList" :key="favoriteTeam.iapiId">
               <img :src="favoriteTeam.logo" alt="" >
               <div class="mypage-favorite-league-title">
                 {{ favoriteTeam.hanName }}
@@ -85,11 +85,12 @@ import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import router from '@/router'
 import { useAccountStore } from "@/store"
+import { useRoute } from "vue-router"
 
+const route = useRoute()
 
 const accountStore = useAccountStore()
-
-accountStore.userProfile(accountStore.profileId)
+accountStore.presentUserProfile(route.params.userid)
 </script>
 
 <style>
