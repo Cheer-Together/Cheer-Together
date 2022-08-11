@@ -4,6 +4,7 @@ import cheertogether from '@/api/cheertogether'
 import Swal from 'sweetalert2'
 import router from '@/router/index.js';
 import jwt_decode from "jwt-decode"
+import { createRoom } from '@/api/room';
 import { ref } from "vue"
 
 
@@ -545,10 +546,22 @@ export const useOnAirStore = defineStore('onair', {
       console.log("makeRoom: "+result);
       return result;
     },
-    makeRoom(){
-      router.push({name: 'Room' , params: {session: this.generateRandomString(10)} })
-    },
-  }
+    moveRoom(gameId, name, roomStatus, password, managerId) {
+      let sessionId = this.generateRandomString(10);
+      let status = roomStatus ? "PRIVATE" : "PUBLIC";
+      console.log(gameId);
+      let data = {
+        gameId: gameId.id,
+        name: name,
+        roomStatus: status,
+        password: password,
+        managerId: managerId,
+        sessionId: sessionId,
+      };
+      console.log(data);
+      createRoom(data).then(router.push({ name: "Room", params: { session: sessionId } }));
+    }
+  },
 })
 export const useNavbarStore = defineStore('navbar', {
   state: () => (

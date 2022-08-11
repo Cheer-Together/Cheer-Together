@@ -64,8 +64,7 @@ public class MemberController {
 		return new ResponseEntity<>(emailService.sendAuthenticationMail(email), HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/join",
-		consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE })
+	@PostMapping(value = "/join", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	@ApiOperation(value = "회원가입", notes = "회원 가입 - 회원 등록")
 	public ResponseEntity<String> join(@RequestPart MemberJoinRequest memberJoinRequest, @RequestPart MultipartFile file) {
 		memberJoinRequest.saveProfileImgLink(firebaseService.uploadFiles(file));
@@ -84,6 +83,7 @@ public class MemberController {
 	@PutMapping("/{id}")
 	@ApiOperation(value = "회원정보 수정", notes = "마이페이지에서 회원정보를 수정")
 	public ResponseEntity<String> modify(@PathVariable Long id, @RequestBody MemberModifyRequest memberModifyRequest) {
+		//memberModifyRequest.saveProfileImgLink(firebaseService.uploadFiles(file));
 		memberService.update(id, memberModifyRequest);
 		return new ResponseEntity<>(MODIFY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}

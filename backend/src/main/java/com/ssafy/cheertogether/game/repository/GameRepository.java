@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 
 import com.ssafy.cheertogether.game.domain.Game;
+import com.ssafy.cheertogether.game.domain.GameStatus;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
 	Optional<Game> findGameById(Long id);
@@ -15,4 +15,10 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 	List<Game> findAllByLeagueApiId(Long leagueApiId);
 
 	List<Game> findAllByLeagueApiIdAndKickoffBetween(Long leagueApiId, LocalDateTime start, LocalDateTime end);
+
+	List<Game> findAllByKickoff(LocalDateTime kickoff);
+
+	List<Game> findAllByStatus(GameStatus status);
+
+	List<Game> findAllByLeagueApiIdAndStatus(Long leagueApiId, GameStatus status);
 }

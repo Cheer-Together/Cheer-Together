@@ -38,15 +38,17 @@ public class Room {
 	private String password;
 
 	private String managerId;
+	private String sessionId;
 
 	@Builder
-	public Room(Long id, Game game, String name, RoomStatus status, String password, String managerId) {
+	public Room(Long id, Game game, String name, RoomStatus status, String password, String managerId, String sessionId) {
 		this.id = id;
 		this.game = game;
 		this.name = name;
 		this.status = status;
 		this.password = password;
 		this.managerId = managerId;
+		this.sessionId = sessionId;
 	}
 
 	public static Room from(RoomCreateRequest roomCreateRequest, Game game) {
@@ -56,6 +58,7 @@ public class Room {
 			.status(roomCreateRequest.getRoomStatus())
 			.password(roomCreateRequest.getPassword())
 			.managerId(roomCreateRequest.getManagerId())
+			.sessionId(roomCreateRequest.getSessionId())
 			.build();
 	}
 
