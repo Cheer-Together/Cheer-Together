@@ -2,7 +2,7 @@
   <div id="noSession" v-if="!mySessionId">세션 정보가 잘못 되었습니다.</div>
   <div id="session" v-if="mySessionId">
     <div id="session-header">
-      <h1 id="session-title">{{ mySessionId }}</h1>
+      <h1 id="session-title">{{ sessionInfo.name }}</h1>
       <input
         class="btn btn-large btn-danger"
         type="button"
@@ -34,7 +34,7 @@
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import axios from "axios";
-import { useAccountStore } from "@/store/index.js";
+import { useAccountStore, useRoomStore } from "@/store/index.js";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -58,15 +58,21 @@ export default {
 
       mySessionId: undefined,
       myUserName: undefined,
+      sessionInfo: undefined,
     };
   },
   mounted() {
-    this.mySessionId = this.$route.params.session;
-    this.myUserName = useAccountStore().profile.nickname;
-    this.joinSession();
+    this.inMount();
   },
 
   methods: {
+    async inMount(){
+      this.mySessionId = this.$route.params.session;
+      this.myUserName = useAccountStore().profile.nickname;
+      await useRoomStore().getInfo(this.mySessionId)
+      .then(() => this.sessionInfo = useRoomStore().roomInfo);
+      this.joinSession();
+    },
     joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
