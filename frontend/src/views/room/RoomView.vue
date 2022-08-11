@@ -13,7 +13,7 @@
     </div>
     <div id="main-video" class="col-md-6">
       <user-video :stream-manager="mainStreamManager" />
-      <!--추후에 경기영상으로 대체해야할듯함. 현재는 방장의 카메라-->
+      <!--추후에 경기영상으로 대체해야할듯함. 현재는 본인의 카메라-->
     </div>
     <div id="video-container" class="col-md-6">
       <user-video
@@ -27,6 +27,14 @@
         @click="updateMainVideoStreamManager(sub)"
       />
     </div>
+    <div v-show="isOpenedChattingWindow" class="chatting-window">
+      <ul id="chatting-content">
+      </ul>
+      <div class="">
+        <input type="text" v-model="message" @keyup.enter="sendChat()" />
+        <button type="button" @click="sendChat()">입력</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,6 +42,7 @@
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import axios from "axios";
+import { useAccountStore } from "@/store/index.js";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -56,19 +65,20 @@ export default {
       subscribers: [],
 
       mySessionId: undefined,
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      myUserName: undefined,
+
+      isOpenedChattingWindow: true,
+      message: "",
     };
   },
   mounted() {
     this.mySessionId = this.$route.params.session;
+    this.myUserName = useAccountStore().profile.nickname;
     this.joinSession();
   },
 
   methods: {
     joinSession() {
-      console.log(OPENVIDU_SERVER_URL);
-      console.log(OPENVIDU_SERVER_SECRET);
-
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -94,6 +104,14 @@ export default {
       // On every asynchronous exception...
       this.session.on("exception", ({ exception }) => {
         console.warn(exception);
+      });
+
+      this.session.on("signal:my-chat", (event) => {
+        let receive = event.data.split("/");
+        let userName = receive[0];
+        let message = receive[1];
+        document.getElementById("chatting-content").innerHTML += `<li>${userName}:</li>`;
+        document.getElementById("chatting-content").innerHTML += `${message}`;
       });
 
       // --- Connect to the session with a valid user token ---
@@ -230,6 +248,25 @@ export default {
           .catch((error) => reject(error.response));
       });
     },
+
+
+    sendChat() {
+      if (this.message && this.message != "") {
+        this.session
+          .signal({
+            data: this.myUserName + "/" + this.message,
+            to: [],
+            type: "my-chat",
+          })
+          .then(() => {
+            console.log("Message successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      this.message = "";
+    }
   },
 };
 </script>
