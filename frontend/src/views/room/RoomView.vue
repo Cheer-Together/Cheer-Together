@@ -49,6 +49,8 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 const OPENVIDU_SERVER_URL = process.env.VUE_APP_OPENVIDU_SERVER_URL;
 const OPENVIDU_SERVER_SECRET = process.env.VUE_APP_OPENVIDU_SERVER_SECRET;
 
+const BAD_WORDS_LIST = process.env.VUE_APP_BAD_WORDS.split(",");
+
 export default {
   name: "App",
 
@@ -109,7 +111,14 @@ export default {
       this.session.on("signal:my-chat", (event) => {
         let receive = event.data.split("/");
         let userName = receive[0];
-        let message = receive[1];
+        let message = String(receive[1]);
+
+        for(const badWord in BAD_WORDS_LIST) {
+          if(message.includes(badWord)) {
+            message = '[삭제된 메세지]';
+            break;
+          }
+        }
         document.getElementById("chatting-content").innerHTML += `<li>${userName}:</li>`;
         document.getElementById("chatting-content").innerHTML += `${message}`;
       });
