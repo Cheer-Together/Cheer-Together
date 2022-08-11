@@ -573,6 +573,8 @@ export const useMatchScreenStore = defineStore('match', {
   state: () => (
     { 
       isClickChatting: '',
+      isClickLayout: false,
+      screenHeight: '705px'
     })
 })
 export const useNewsStore = defineStore('news', {
