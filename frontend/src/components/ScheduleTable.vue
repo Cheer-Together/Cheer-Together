@@ -93,7 +93,7 @@ let uniqGameDays = [...set]
 }
 
 .schedule-stadium-items {
-  font-size: 11px;
+  font-size: 10px;
   height: 35px;
   line-height: 35px;
 }
