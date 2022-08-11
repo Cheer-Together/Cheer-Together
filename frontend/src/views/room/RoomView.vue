@@ -27,6 +27,14 @@
         @click="updateMainVideoStreamManager(sub)"
       />
     </div>
+    <div v-show="isOpenedChattingWindow" class="chatting-window">
+      <ul id="chatting-content">
+      </ul>
+      <div class="">
+        <input type="text" v-model="message" @keyup.enter="sendChat()" />
+        <button type="button" @click="sendChat()">입력</button>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -59,6 +67,8 @@ export default {
       mySessionId: undefined,
       myUserName: undefined,
       sessionInfo: undefined,
+      isOpenedChattingWindow: true,
+      message: "",
     };
   },
   mounted() {
@@ -99,6 +109,14 @@ export default {
       // On every asynchronous exception...
       this.session.on("exception", ({ exception }) => {
         console.warn(exception);
+      });
+
+      this.session.on("signal:my-chat", (event) => {
+        let receive = event.data.split("/");
+        let userName = receive[0];
+        let message = receive[1];
+        document.getElementById("chatting-content").innerHTML += `<li>${userName}:</li>`;
+        document.getElementById("chatting-content").innerHTML += `${message}`;
       });
 
       // --- Connect to the session with a valid user token ---
@@ -235,6 +253,25 @@ export default {
           .catch((error) => reject(error.response));
       });
     },
+
+
+    sendChat() {
+      if (this.message && this.message != "") {
+        this.session
+          .signal({
+            data: this.myUserName + "/" + this.message,
+            to: [],
+            type: "my-chat",
+          })
+          .then(() => {
+            console.log("Message successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+      this.message = "";
+    }
   },
 };
 </script>

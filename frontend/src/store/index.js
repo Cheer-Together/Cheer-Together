@@ -218,7 +218,27 @@ export const useAccountStore = defineStore('account', {
           
         })
     },
-    
+    withdrawal(userId) {
+      /* 
+      DELETE: 회원 탈퇴를 진행한다.
+        성공하면
+          유저 정보를 profile에 저장한다.
+        실패하면
+
+      */
+        axios({
+          url: cheertogether.members.withdrawal(userId),
+          method: 'DELETE', 
+        })
+          .then(res => {
+            console.log(res.data)
+          })
+          .catch(err => {
+            console.log(err)
+            
+          })
+    },
+
     //   로그인 시 사용하는 함수들
     userProfile(userId) {
       /* 
@@ -306,7 +326,7 @@ export const useAccountStore = defineStore('account', {
           this.isLogin = true          
           const decoded = ref('')
           decoded.value = jwt_decode(res.data)
-          this.prfileID = decoded.value.sub
+          this.profileId = decoded.value.sub
           this.userProfile(decoded.value.sub)
           router.push({ name:'MainPage' })
       }).catch(err => {
@@ -577,11 +597,15 @@ export const useNewsStore = defineStore('news', {
           }
         })
           .then(res => {
+            this.news = []
             res.data.forEach((e) => {
               let title = e.title
+              let description = e.description
               title = title.replaceAll('&apos;', "'")
               title = title.replaceAll('&quot;', '"')
-              this.news.push({link: e.link, title: title})
+              description = title.replaceAll('&apos;', "'")
+              description = title.replaceAll('&quot;', '"')
+              this.news.push({link: e.link, title: title, description: description})
             })
           })
           .catch(err => {
