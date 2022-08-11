@@ -80,7 +80,7 @@ const leagueStore = useLeagueStore();
 for(let i = 0 ; i < 6 ; i++) {
   gameStore.month[i] = gameStore.today[i].getMonth() + 1;
   gameStore.date[i] = gameStore.today[i].getDate();
-  gameStore.day[i] = gameStore.dayName[gameStore.today[i].getDay() - 1];
+  gameStore.day[i] = gameStore.dayName[gameStore.today[i].getDay()];
 }
 // let month = today.getMonth() + 1;  // 월
 // let date = today.getDate();  // 날짜

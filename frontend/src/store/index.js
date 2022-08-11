@@ -728,6 +728,10 @@ export const useNewsStore = defineStore('news', {
     },
   },
 });
+async function test(leagueApiId, date) {
+  const response = await axios.get(cheertogether.game.gamesByDate(leagueApiId), {params: {date: date}})
+  return response.data;
+}
 export const useGameStore = defineStore("game", {
   state: () => ({
     gamesAll: [],
@@ -739,8 +743,10 @@ export const useGameStore = defineStore("game", {
     month: [],
     date: [],
     day: [],
-    dayName: ["월", "화", "수", "목", "금", "토", "일"],
-    leagueApiId: [39, 140, 135, 78, 61, 292]
+    dayName: ["일", "월", "화", "수", "목", "금", "토"],
+    leagueApiId: [39, 140, 135, 78, 61, 292],
+    startDate: [new Date(2022, 8, 5), new Date(2022, 8, 12), new Date(2022, 8, 13), new Date(2022, 8, 5), new Date(2022, 8, 5), new Date(2022, 2, 18),],
+    endDate: [new Date(2023, 5, 28), new Date(2023, 6, 4), new Date(2023, 6, 3), new Date(2023, 5, 26), new Date(2023, 6, 2), new Date(2022, 9, 17)]
   }),
   actions: {
     yyyymmdd(dateIn) {
@@ -749,28 +755,59 @@ export const useGameStore = defineStore("game", {
       var dd = dateIn.getDate();
       return String(10000 * yyyy + 100 * mm + dd); // Leading zeros for mm and dd
     },
-    generateTodayGames() {
+    async generateTodayGames() {
       for(let i = 0; i < 6; i++) {
-        this.todayGames[i] = this.getGamesByDate(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
+        this.month[i] = this.today[i].getMonth() + 1;
+        this.date[i] = this.today[i].getDate();
+        this.day[i] = this.dayName[this.today[i].getDay()];
+        this.todayGames[i] = await test(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
+        console.log(this.todayGames[i])
+        while (this.todayGames[i].length == 0) {
+          this.nextDate[i] = this.today[i];
+          this.nextDate[i].setDate(this.nextDate[i].getDate() + 1);
+          this.today[i] = new Date(this.nextDate[i]);
+          this.month[i] = this.today[i].getMonth() + 1;
+          this.date[i] = this.today[i].getDate();
+          this.day[i] = this.dayName[this.today[i].getDay()];
+          this.todayGames[i] = await test(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
+        }
+        
       }
     },
-    clickNextDate(i) {
-      this.nextDate[i] = this.today[i];
-      this.nextDate[i].setDate(this.nextDate[i].getDate() + 1);
-      this.today[i] = new Date(this.nextDate[i]);
-      this.month[i] = this.today[i].getMonth() + 1;
-      this.date[i] = this.today[i].getDate();
-      this.day[i] = this.dayName[this.today[i].getDay()];
-      this.getGamesByDate(this.leagueApiId[i], this.yyyymmdd(this.today[i]), i);
+    async clickNextDate(i) {
+      if((this.today[i].getFullYear() == this.endDate[i].getFullYear()) && ((this.today[i].getMonth()+1) == this.endDate[i].getMonth()) && ((this.today[i].getDate()-1) == this.endDate[i].getDate())){
+        return false;
+      }
+      do {
+        console.log((this.today[i].getDate()-1))
+        console.log(this.startDate[i].getDate());
+        this.nextDate[i] = this.today[i];
+        this.nextDate[i].setDate(this.nextDate[i].getDate() + 1);
+        this.today[i] = new Date(this.nextDate[i]);
+        this.todayGames[i] = await test(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
+        if(this.todayGames[i].length != 0){
+          this.month[i] = this.today[i].getMonth() + 1;
+          this.date[i] = this.today[i].getDate();
+          this.day[i] = this.dayName[this.today[i].getDay()];
+        }
+      } while (this.todayGames[i].length == 0);
     },
-    clickPreDate(i) {  
-      this.preDate[i] = this.today[i];
-      this.preDate[i].setDate(this.preDate[i].getDate() - 1);
-      this.today[i] = new Date(this.preDate[i]);
-      this.month[i] = this.today[i].getMonth() + 1;
-      this.date[i] = this.today[i].getDate();
-      this.day[i] = this.dayName[this.today[i].getDay()];
-      this.getGamesByDate(this.leagueApiId[i], this.yyyymmdd(this.today[i]), i);
+    async clickPreDate(i) {
+      if((this.today[i].getFullYear() == this.startDate[i].getFullYear()) && ((this.today[i].getMonth()+1) == this.startDate[i].getMonth()) && ((this.today[i].getDate()-1) == this.startDate[i].getDate())){
+        console.log("check")
+        return false;
+      }
+      do {
+        this.preDate[i] = this.today[i];
+        this.preDate[i].setDate(this.preDate[i].getDate() - 1);
+        this.today[i] = new Date(this.preDate[i]);
+        this.todayGames[i] = await test(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
+        if(this.todayGames[i].length != 0){
+          this.month[i] = this.today[i].getMonth() + 1;
+          this.date[i] = this.today[i].getDate();
+          this.day[i] = this.dayName[this.today[i].getDay()];
+        }
+      } while (this.todayGames[i].length == 0); 
     },
     getGamesByDate(leagueApiId, dateyyyy, i) {
       axios({
@@ -780,9 +817,9 @@ export const useGameStore = defineStore("game", {
           date: dateyyyy
         }
       })
-        .then((res) => {
-          this.todayGames[i] = res.data;
-        })
+      .then((res) => {
+        this.todayGames[i] = res.data;
+      })
     },
   },
 });
