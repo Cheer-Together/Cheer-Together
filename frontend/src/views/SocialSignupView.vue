@@ -164,9 +164,9 @@ axios({
   method: 'POST',
   data: {code: route.query.code}
   }).then(res => {
-    if (res.email) {
-      if (!res.newMember) {
-        console.log(res)
+    if (res.data.email) {
+      if (!res.data.newMember) {
+        console.log(res.data)
         sessionStorage.setItem('token', res.token)
         sessionStorage.setItem('isSocialLogin', true)
         Swal.fire({
@@ -178,7 +178,7 @@ axios({
       }
     } else {
       console.log('응답은 오는데 email이 없음')
-      console.log(res)
+      console.log(res.data)
       Swal.fire({
         icon: 'error',
         title: '이메일을 못받았음.'
