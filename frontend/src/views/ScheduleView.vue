@@ -98,7 +98,7 @@ const scheduleStore = useScheduleStore();
   margin: auto;
 }
 
-.schedule-matches div div{
+.schedule-matches-info{
   display: flex;
   justify-content: center;
   align-items: center;

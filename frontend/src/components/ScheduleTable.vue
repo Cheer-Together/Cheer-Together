@@ -20,7 +20,7 @@
       </div>
       <div class="schedule-matches">
         <div v-if="uniqGameDays.includes(`${day}`)">
-          <div v-for="game in games.filter((ele) => Number(ele.kickoff.substring(8, 10)).toString() === `${day}`)" :key="game.id">
+          <div v-for="game in games.filter((ele) => Number(ele.kickoff.substring(8, 10)).toString() === `${day}`)" :key="game.id" class="schedule-matches-versus">
             <p>{{ game.home.hanName }}</p>
             <img :src="game.home.logo" class="team-logo">
             <p>VS</p> 
