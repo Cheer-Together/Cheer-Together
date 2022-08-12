@@ -691,21 +691,47 @@ export const useOnAirStore = defineStore('onair', {
     },
 
     enterRoom(roomId){
-      axios({
-        url:cheertogether.room.enterRoom(roomId),
-        method: 'GET'
-      })
-      .then(res => {
-        if(res.data.status === 'PUBLIC'){
-          router.push({name: 'Room' , params: {session: `${res.data.sessionId}`} })
-        } else if (res.data.status === 'PRIVATE'){
-          Swal.fire({
-            icon: 'question',
-            title: '비밀번호를 입력해주세요',
-            input: 'password'
-          })
-        }
-      })
+      if(!sessionStorage.getItem("token")){
+        Swal.fire({
+          title: '로그인이 필요합니다',
+          icon: 'warning'
+        })
+        console.log(sessionStorage.getItem("token"))
+      }
+      else{
+        axios({
+          url:cheertogether.room.enterRoom(roomId),
+          method: 'GET'
+        })
+        .then(res => {
+          if(res.data.status === 'PUBLIC'){
+            router.push({name: 'Room' , params: {session: `${res.data.sessionId}`} })
+          } else if (res.data.status === 'PRIVATE'){
+            Swal.fire({
+              title: '비밀번호를 입력하세요',
+              icon: 'info',
+              input: 'password',
+              inputPlaceholder: '********',
+              inputAttributes: {
+                maxlength: 10,
+                autocapitalize: 'off',
+                autocorrect: 'off'
+              }
+              
+            })
+            .then((pw) => {
+              if(pw.value === res.data.password){
+                router.push({name: 'Room' , params: {session: `${res.data.sessionId}`} })
+              } else {
+                Swal.fire({
+                  title: '비밀번호가 틀렸습니다',
+                  icon : 'error'         
+                })
+              }
+            })
+          }
+        })
+      }
     },
 
     makeRoomDialogToggle() {
