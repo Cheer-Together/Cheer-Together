@@ -53,7 +53,7 @@ export const useAccountStore = defineStore('account', {
     isPushEmail: false,
     isAllowPassword: false,
     isShowPasswordError: '',
-    myImage: '',
+    isShowPasswordError2: '',
     profile: {
       email: '',
       favoriteLeagueList: [],
@@ -73,6 +73,7 @@ export const useAccountStore = defineStore('account', {
       role: '',
     },
     profileId: false,
+    isChangePasswordModal: false,
   }),
   getters: {
   },
@@ -229,8 +230,7 @@ export const useAccountStore = defineStore('account', {
         myInfo : userInfo.myInfo,
         nickname : userInfo.nickname,
         password : userInfo.password,
-        profileImage : userInfo.profileImage,
-        role : 'user'
+        role : 'USER'
       }  
     })
       .then(() => {
@@ -241,6 +241,7 @@ export const useAccountStore = defineStore('account', {
         
       })
     },
+
     withdrawal(userId) {
       /* 
       DELETE: 회원 탈퇴를 진행한다.
@@ -261,6 +262,36 @@ export const useAccountStore = defineStore('account', {
             
           })
     },
+    
+    changePassword(userInfo) {
+      /* 
+      POST: 회원의 비밀번호를 변경한다.
+        성공하면
+          비밀번호변경
+        실패하면
+
+      */
+      axios({
+        url: cheertogether.members.changePassword(userInfo.userId),
+        method: 'POST',
+        data: {
+          curPassword: userInfo.password1,
+          newPassword: userInfo.password2,
+        }
+      })
+        .then(res => {
+          console.log(res.data)
+          this.isChangePasswordModal = false
+          Swal.fire({
+            icon: 'success',
+            title: '비밀번호가 변경되었습니다.',
+          })
+        })
+        .catch(err => {
+          console.log(err)
+          
+        })
+    },
 
     //   로그인 시 사용하는 함수들
     userProfile(userId) {
@@ -280,6 +311,12 @@ export const useAccountStore = defineStore('account', {
       })
         .then(res => {
           this.profile = res.data
+          if (this.profile.favoriteTeamList.length > 0 ) {
+            this.profile["profileImage"] = this.profile.favoriteTeamList[0].logo
+          }
+        else {
+          this.profile["profileImage"] = require('../assets/image/로고.png')
+        }    
         })
         .catch(err => {
           console.log(err)
@@ -303,6 +340,13 @@ export const useAccountStore = defineStore('account', {
         })
           .then(res => {
             this.otherProfile = res.data
+
+            if (this.otherProfile.favoriteTeamList.length > 0 ) {
+                this.otherProfile["profileImage"] = this.otherProfile.favoriteTeamList[0].logo
+              }
+            else {
+              this.otherProfile["profileImage"] = require('../assets/image/로고.png')
+            }        
           })
           .catch(err => {
             console.log(err)
@@ -383,6 +427,12 @@ export const useAccountStore = defineStore('account', {
       const REDIRECT_URI = process.env.VUE_APP_KAKAO_LOGIN_REDIRECT_URI;
       const url = "https://kauth.kakao.com/oauth/authorize?client_id=" + decodeURIComponent(API_KEY) + "&redirect_uri=" + decodeURIComponent(REDIRECT_URI) + "&response_type=code";
       window.location.replace(url);
+    },
+    socialLoginComplete(token) {
+      this.isLogin = true          
+      let userId = jwt_decode(token)
+      this.profileId = userId
+      this.userProfile(userId)
     },
     logoutAccount() {
       sessionStorage.removeItem('token')

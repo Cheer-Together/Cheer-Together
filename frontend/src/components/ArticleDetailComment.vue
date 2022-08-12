@@ -1,16 +1,10 @@
 <template>
   <div v-if="loaded" style="display: flex; height: 40px; margin-bottom: 5px;">
-    <!-- <div style="height: 40px; width:40px; margin-right: 6px; background-color:aquamarine;">
-    </div> -->
-    <div style="font-size:13px; margin-left: 10px;">
+    <div style="height: 40px; width:40px; margin-right: 6px; background-color:aquamarine;">
+    </div>
+    <div style="font-size:13px; margin-left: 2px;">
       <div style="color:#8D8D8D; display: flex;">
         {{replyNickName}} | {{replyCreatedDate}}
-        <div v-if="loginUserId==props.reply.memberId" style="margin-left:10px" class="word-link">
-          <v-icon>
-            mdi-pencil
-          </v-icon>
-          <a>수정하기</a>
-        </div>
         <div v-if="loginUserId==props.reply.memberId" @click="deleteComment()" class="word-link" style="margin-left:5px">
           <v-icon>
             mdi-delete
@@ -61,9 +55,6 @@ function deleteComment() {
   axios({
     url: 'https://i7b204.p.ssafy.io/cheertogether/articles/reply/' + props.reply.id,
     method: 'DELETE',
-    params: {
-      jwtToken: sessionStorage.getItem('token')
-    }
   }).then(res => {
     console.log(res)
     router.go()

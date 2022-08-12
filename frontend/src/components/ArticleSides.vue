@@ -3,12 +3,12 @@
     <div class="community-news-top">
       <p>오늘의 뉴스</p>
     </div>
-    <div v-for="item in news" :key="item.news_id" class="community-news">
+    <div v-for="item in news" :key="item.id" class="community-news">
       <div class="maincolor" style="width:24px; text-align: center;">
-        <p>{{item.news_id+1}}</p>
+        <p>{{item.id+1}}</p>
       </div>
       <div style="display: inline-block;">
-        <p class="article-list">{{item.title}}</p>
+        <p @click="toNews(item.link)" class="article-list">{{item.title}}</p>
       </div>
     </div>
 
@@ -45,61 +45,33 @@
 
 <script setup>
 import router from '@/router/index.js'
-// 아마 뉴스API로 가져올듯? 지금은 그냥 값 넣어보기
-const news = [
-  {
-    news_id: 0,
-    title: '그리스 언론 "오늘 황인범 온다...연봉 13억 X 3년 계약" 기대감↑',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 1,
-    title: '레알 마드리드 레전드가 어쩌다…中 슈퍼리그 이적설',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 2,
-    title: '"여전한 분노" 日, "중국 수비가 전혀 당황하지 않았다"',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 3,
-    title: '우리 벤투 감독님이 달라졌어요',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 4,
-    title: '"양현준 유니폼 없어요?"…핫플레이어 양현준, 인기 상승 뜨겁네',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 5,
-    title: '"NEW 길례르미가 온다!" 황인범에게 그리스 현지 언론도 큰 기대',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 6,
-    title: '안정적 수비와 빌드업…뉴페이스 조유민, 김민재 백업으로 급부상',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 7,
-    title: '황인범 올림피아코스와 3년 계약, 연봉 100만유로…그리스 매체 보도',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 8,
-    title: '부경고 전설의 14번을 아시나요[대통령금배]',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-  {
-    news_id: 9,
-    title: '"잘 샀다!" 10골 4도움 엄원상, 역대 이적생 중 손꼽히는 최고의 활약',
-    content: '뭔가 굉장히 긴 내용이 있을거야'
-  },
-]
-
-// 경기정보도 API에몽이 가져올거야~ 지금은 그냥 값 넣어보기
+import axios from 'axios'
+import { ref } from "vue"
+const news = ref([])
+let loadnews = []
+axios({
+  url: 'https://i7b204.p.ssafy.io/cheertogether/news',
+  method: 'GET',
+  params: {
+    subject : '프리미어리그 세리에 라리가'
+  }
+})
+.then(res => {
+  let id = 0
+  res.data.forEach((e) => {
+    let title = e.title
+    title = title.replaceAll('&apos;', "'")
+    title = title.replaceAll('&quot;', '"')
+    loadnews.push({link: e.link, title: title, id: id++})
+  })
+  news.value = loadnews
+})
+  .catch(err => {
+    console.log(err)
+})
+function toNews() {
+  
+}
 const matches = [
   {
     id: 0,
