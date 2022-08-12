@@ -20,7 +20,7 @@
     <div class="write-author">
       <div style="width:34px; height:34px; background-color: aquamarine; margin:0 10px 0 10px;">
       </div>
-      <a>{{accountStore.token}} | {{ now }}</a>
+      <a>{{accountStore.profile.nickname}} | {{ now }}</a>
     </div>
     <div style="width:790px; margin-bottom: 15px;">
       <textarea v-model="content" placeholder="내용을 입력하세요. 우측 하단을 드래그하여 높이를 변경할 수 있습니다." class="write-content"></textarea>
