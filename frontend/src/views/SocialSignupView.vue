@@ -140,7 +140,10 @@ function socialSignupBtn() {
       role : 'USER'
     }
   })
-  .then(() => {
+  .then(res => {
+    sessionStorage.setItem('token', res.data.token)
+    sessionStorage.setItem('isSocialLogin', true)
+    accountStore.socialLoginComplete(res.data.token)
     Swal.fire({
       icon: 'success',
       title: '가입되었습니다!',
@@ -163,9 +166,9 @@ axios({
   }).then(res => {
     if (res.data.email) {
       if (!res.data.newMember) {
-        console.log(res.data)
-        sessionStorage.setItem('token', res.token)
+        sessionStorage.setItem('token', res.data.token)
         sessionStorage.setItem('isSocialLogin', true)
+        accountStore.socialLoginComplete(res.data.token)
         Swal.fire({
           icon: 'success',
           title: '성공적으로 로그인 되었습니다.',
