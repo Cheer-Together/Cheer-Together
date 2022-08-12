@@ -18,6 +18,7 @@ export default {
     profile: (userId) => HOST + MEMBERS + `${userId}`, // 회원 조회
     editUserProfile: (userId) => HOST + MEMBERS + `${userId}`, // 회원 수정
     withdrawal: (userId) => HOST + MEMBERS + `${userId}`, // 회원 탈퇴
+    changePassword: (userId) => HOST + MEMBERS + `${userId}/` + 'password', // 비밀번호 변경
   },
   league: {
     leaguesAll: () => HOST + LEAGUES, // 모든 리그 정보 조회
@@ -30,6 +31,7 @@ export default {
     games: () => HOST + GAMES, // 경기일정 조회
 
     gamesByDate: (leagueApiId) => HOST + GAMES + `${leagueApiId}` + '/date',
+    playGameInfo: (gameId) => HOST + GAMES + 'game/' + `${gameId}`, // 현재 응원 방의 게임 조회
 
     gameInfo: () => 'https://v3.football.api-sports.io/fixtures/events', // 경기 정보
     gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month',
