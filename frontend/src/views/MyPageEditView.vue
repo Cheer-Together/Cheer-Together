@@ -3,15 +3,6 @@
   <div style="display:flex;">
     <SideBar/>
     <div class="mypagedeit">
-      <div class="mypagedeit-image" :style="{'background-image': `url(${accountStore.profile.profileImage})`}">
-        <label for="input-file" style="padding:66px 150px 66px 35px;">
-          &nbsp;
-        </label>
-      </div>
-
-
-      <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'>
-
       <!-- 이메일 -->
       <div class="mypagedeit-range" v-if="!accountStore.emailDoubleChecked">
         <div class="mypagedeit-range-title ">
@@ -33,35 +24,21 @@
       </div>
 
       <!-- 비밀번호 -->
-      <div class="mypagedeit-range">
-        <div class="mypagedeit-range-title">
-          비밀번호 변경
-        </div>
-        <div style="position: relative;">
-          <input type="password" class="mypagedeit-range-input" maxlength="20" v-model="accountStore.passwordAccordance" @blur="accountStore.checkPassword(accountStore.passwordAccordance)">
-        </div>
+      <div class="mypagedeit-range" v-if="!isSocialLogin">
+        비밀 번호
+        <v-dialog
+          v-model="accountStore.isChangePasswordModal"
+        >
+          <template v-slot:activator="{ props }" >
+            <div v-bind="props" class="change-password-button">
+              비밀번호 변경
+            </div>
+          </template>
+          <!-- 모달 창 -->
+          <ChangePasswordModal/>
+        </v-dialog>
       </div>
 
-      <div class="err-password-accordance"  v-if="accountStore.isShowPasswordError === true">
-        올바르지 않은 비밀번호입니다. 영어, 숫자, 특수문자 조합 8- 20자
-      </div>
-
-      <div class="err-password-accordance"  v-if="accountStore.isShowPasswordError === false" style="color: var(--main-color)">
-        올바른 비밀번호입니다.
-      </div>
-      <!-- 비밀번호 확인 -->
-      <div class="mypagedeit-range">
-        <div class="mypagedeit-range-title">
-          비밀번호 확인
-        </div>
-        <div style="position: relative;">
-          <input type="password" class="mypagedeit-range-input" maxlength="20" v-model="accountStore.passwordAccordance2">
-        </div>
-      </div>
-
-      <div v-if="accountStore.passwordAccordance2 != '' && accountStore.passwordAccordance != accountStore.passwordAccordance2" class="err-password-accordance">
-        비밀번호가 일치하지 않습니다.
-      </div>
       
       <!-- 본인 소개 -->
       <div class="mypagedeit-range mypagedeit-range-introduce" >
@@ -183,10 +160,13 @@
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import FavoriteLeagueModal from "../components/FavoriteLeagueModal.vue"
+import ChangePasswordModal from "../components/ChangePasswordModal.vue"
 import FavoriteTeamModal from "../components/FavoriteTeamModal.vue"
 import { useAccountStore } from "@/store"
 import { useLeagueStore } from "@/store"
 import router from '@/router'
+import { ref } from "vue";
+
 // import Swal from 'sweetalert2'
 
 const leagueStore = useLeagueStore()
@@ -194,16 +174,8 @@ const accountStore = useAccountStore()
 
 accountStore.userProfile(accountStore.profileId)
 
-let myNickname = accountStore.profile.nickname
-// 회원가입 시 변수 초기화 영역
-accountStore.passwordAccordance = '';
-accountStore.passwordAccordance2 = '';
-accountStore.isShowPasswordError = '';
-const onInputImage = (e) => {
-  console.log(e.target.files[0])
-  let url = URL.createObjectURL(e.target.files[0])
-  accountStore.profile.profileImage = url
-}
+let myNickname = ref(accountStore.profile.nickname)
+const isSocialLogin = ref(sessionStorage.getItem("isSocialLogin") ?? false);
 
 const changeUserInfo = (myNickname) => {
     // 사용한 피니아 변수들 감기
@@ -366,6 +338,21 @@ const changeUserInfo = (myNickname) => {
 .next {
   background-color: var(--main-color);
   color: white;
+}
+.change-password-button {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  padding: 5px;
+  width: 160px;
+  height: 37px;
+  background-color: blanchedalmond;
+  color: black;
+  border-radius: 30px;
+  font-size: 18px;
+  text-align: center;
+}
+.change-password-button:hover {
+  cursor: pointer;
 }
 @media (max-width: 1580px) {
 .mypagedeit {

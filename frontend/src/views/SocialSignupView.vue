@@ -119,6 +119,15 @@ accountStore.myImage  = ''
 accountStore.profile.favoriteLeagueList = []
 accountStore.profile.favoriteTeamList = []
 
+// async function test(leagueList, teamList) {
+//   const response = await axios.post("https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao/join", {email : socialSignupEmail.value,
+//       favoriteLeagueList : leagueList,
+//       favoriteTeamList: teamList,
+//       myInfo : socialSignupMyInfo.value,
+//       nickname : socialSignupNickname.value,
+//       role : 'USER'});
+//       return response.data;
+// }
 function socialSignupBtn() {
   let leagueList = []
   let teamList = []
@@ -137,10 +146,16 @@ function socialSignupBtn() {
       favoriteTeamList: teamList,
       myInfo : socialSignupMyInfo.value,
       nickname : socialSignupNickname.value,
-      role : 'user'
+      role : 'USER'
     }
   })
-  .then(() => {
+  .then(res => {
+    console.log('------------')
+    console.log(res)
+    console.log('------------')
+    sessionStorage.setItem('token', res.data)
+    sessionStorage.setItem('isSocialLogin', true)
+    //accountStore.socialLoginComplete(res.data.token)
     Swal.fire({
       icon: 'success',
       title: '가입되었습니다!',
@@ -163,14 +178,16 @@ axios({
   }).then(res => {
     if (res.data.email) {
       if (!res.data.newMember) {
-        console.log(res.data)
-        sessionStorage.setItem('token', res.token)
+        sessionStorage.setItem('token', res.data.token)
         sessionStorage.setItem('isSocialLogin', true)
+        accountStore.socialLoginComplete(res.data.token)
         Swal.fire({
           icon: 'success',
           title: '성공적으로 로그인 되었습니다.',
         })
+        router.push({name:'MainPage'})
       } else {
+        console.log(res)
         socialSignupEmail.value = res.data.email
       }
     } else {
