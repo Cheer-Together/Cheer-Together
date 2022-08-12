@@ -436,6 +436,7 @@ export const useAccountStore = defineStore('account', {
     },
     logoutAccount() {
       sessionStorage.removeItem('token')
+      sessionStorage.removeItem('isSocialLogin')
       this.isLogin = false
       Swal.fire({
         icon: 'success',
