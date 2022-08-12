@@ -3,23 +3,6 @@
   <div style="display:flex;">
     <SideBar/>
     <div v-if="loaded" class="signup">
-      <!-- <div class="signup-image" v-if="!accountStore.myImage">
-        <label for="input-file" style="padding:66px 30px 66px 35px;">
-          <v-icon class="sideBar-item-icon">
-            mdi-image-search
-          </v-icon>
-          이미지 올리기
-        </label>
-      </div>
-
-      <div v-if="accountStore.myImage" class="signup-image" :style="{'background-image': `url(${accountStore.myImage})`}">
-        <label for="input-file" style="padding:66px 150px 66px 35px;">
-          &nbsp;
-        </label>
-      </div>
-      <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'> -->
-
-      <!-- 이메일 -->
       <div class="signup-range">
         <div class="signup-range-title">
           이메일
@@ -181,9 +164,9 @@ axios({
   method: 'POST',
   data: {code: route.query.code}
   }).then(res => {
-    if (res.token) {
-      if (!res.newMember) {
-        console.log(res)
+    if (res.data.email) {
+      if (!res.data.newMember) {
+        console.log(res.data)
         sessionStorage.setItem('token', res.token)
         sessionStorage.setItem('isSocialLogin', true)
         Swal.fire({
@@ -194,10 +177,11 @@ axios({
         socialSignupEmail.value = res.data.email
       }
     } else {
-      console.log('쿼리값이 올바르지 않습니다')
+      console.log('응답은 오는데 email이 없음')
+      console.log(res.data)
       Swal.fire({
         icon: 'error',
-        title: '쿼리값이 올바르지 않습니다.'
+        title: '이메일을 못받았음.'
       })
       //router.push({name:'MainPage'})
     }
@@ -209,12 +193,6 @@ axios({
     })
     //router.push({name:'MainPage'})
 }).then(loaded.value = true)
-
-// const onInputImage = (e) => {
-//   console.log(e.target.files[0])
-//   let url = URL.createObjectURL(e.target.files[0])
-//   accountStore.myImage = url
-// }
 </script>
 <style>
 .signup {

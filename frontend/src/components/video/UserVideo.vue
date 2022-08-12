@@ -39,7 +39,7 @@ export default {
 
 <style>
 .cam {
-  width: 320px;
+  width: 240px;
   border-radius: 5px;
   margin: 0 10px;
 }

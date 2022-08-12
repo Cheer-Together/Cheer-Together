@@ -208,29 +208,29 @@ export const useAccountStore = defineStore('account', {
         성공하면
           회원가입
         실패하면
-
+    
       */
-      axios({
-        url: cheertogether.members.signUp(),
-        method: 'POST',
-        data: {
-          email : userInfo.email,
-          favoriteLeagueList : userInfo.favoriteLeagueList,
-          favoriteTeamList: userInfo.favoriteTeamList,
-          myInfo : userInfo.myInfo,
-          nickname : userInfo.nickname,
-          password : userInfo.password,
-          profileImage : userInfo.profileImage,
-          role : 'user'
-        }  
+    axios({
+      url: cheertogether.members.signUp(),
+      method: 'POST',
+      data: {
+        email : userInfo.email,
+        favoriteLeagueList : userInfo.favoriteLeagueList,
+        favoriteTeamList: userInfo.favoriteTeamList,
+        myInfo : userInfo.myInfo,
+        nickname : userInfo.nickname,
+        password : userInfo.password,
+        profileImage : userInfo.profileImage,
+        role : 'user'
+      }  
+    })
+      .then(() => {
+        router.push({name:'MainPage'})
       })
-        .then(() => {
-          router.push({name:'MainPage'})
-        })
-        .catch(err => {
-          console.log(err)
-          
-        })
+      .catch(err => {
+        console.log(err)
+        
+      })
     },
     withdrawal(userId) {
       /* 
@@ -423,29 +423,22 @@ export const useScheduleStore = defineStore('schedule', {
   state: () => ({
     gamesAll: [], // 전체 경기 목록
     gamesMonth: [], // 월별 경기 목록
-
   }),
+  persist: true,
   actions: {
-    moveSchedulePage(){
-      // SideBar에 '경기 일정'을 누르면 경기 정보를 불러와 store에 저장
+    moveSchedulePage(date){
+      // SideBar에 '경기 일정'을 누르면 EPL 8월 스케쥴을 담아온다.
       axios({
-        url: cheertogether.games.scheduleList(),
-        method: 'GET'
+        url: cheertogether.game.gamesLeagueMonth('39'),
+        method: 'GET',
+        params: {date: date}
       })
       .then(res => {
-        this.gamesAll = res.data
-        // 처음에는 EPL, 8월을 보여준다
-        // 현재는 EPL밖에 없어서 임시로 짜놓은 코드임
-        this.gamesMonth = []
-        for(let game of this.gamesAll){
-          if(game.kickoff.startsWith('2022-08') && game.leagueApiId === 39) {
-            this.gamesMonth.push(game)
-          } else { break; }
-        }
-        console.log(this.gamesMonth)
+        this.gamesMonth = [],
+        this.gamesMonth = res.data
+        router.push({name: 'Month', params: {leaguename: '프리미어리그', month: '8'}})
       })
-      // router 이동
-      router.push({name: 'Month', params: {leaguename: '프리미어리그', month: '8'}})
+      
     },
 
     clickLeague(event) {
@@ -462,85 +455,152 @@ export const useScheduleStore = defineStore('schedule', {
       // 해당 리그의 8월 정보를 보여준다.
       // state 변경하기
       if(clickedTag.innerText === '프리미어리그'){
-        this.gamesMonth = []
-        for(let game of this.gamesAll){
-          if(game.kickoff.substring(6, 7) === '8' && game.home.leagueName === 'Premier League') {
-            this.gamesMonth.push(game)
-          } else { break; }}        
-        
-      // league 이름 담아서 라우터 이동
-      router.push({name : 'Month', params: {leaguename: `${clickedTag.innerText}`, month: '8'} })
+        axios({
+          url: cheertogether.game.gamesLeagueMonth('39'),
+          method: 'GET',
+          params: {date: '2022-08'}
+        })
+        .then(res => {
+          this.gamesMonth = [],
+          this.gamesMonth = res.data
+          router.push({name: 'Month', params: {leaguename: '프리미어리그', month: '8'}})
+        })
+      } else if(clickedTag.innerText === '라리가'){
+        axios({
+          url: cheertogether.game.gamesLeagueMonth('140'),
+          method: 'GET',
+          params: {date: '2022-08'}
+        })
+        .then(res => {
+          this.gamesMonth = [],
+          this.gamesMonth = res.data
+          router.push({name: 'Month', params: {leaguename: '라리가', month: '8'}})
+        })
+      } else if(clickedTag.innerText === '세리에 A'){
+        axios({
+          url: cheertogether.game.gamesLeagueMonth('135'),
+          method: 'GET',
+          params: {date: '2022-08'}
+        })
+        .then(res => {
+          this.gamesMonth = [],
+          this.gamesMonth = res.data
+          router.push({name: 'Month', params: {leaguename: '세리에 A', month: '8'}})
+        })
+      } else if(clickedTag.innerText === '분데스리가'){
+        axios({
+          url: cheertogether.game.gamesLeagueMonth('78'),
+          method: 'GET',
+          params: {date: '2022-08'}
+        })
+        .then(res => {
+          this.gamesMonth = [],
+          this.gamesMonth = res.data
+          router.push({name: 'Month', params: {leaguename: '분데스리가', month: '8'}})
+        })
+      } else if(clickedTag.innerText === '리그 1'){
+        axios({
+          url: cheertogether.game.gamesLeagueMonth('61'),
+          method: 'GET',
+          params: {date: '2022-08'}
+        })
+        .then(res => {
+          this.gamesMonth = [],
+          this.gamesMonth = res.data
+          router.push({name: 'Month', params: {leaguename: '리그 1', month: '8'}})
+        })
+      } else if(clickedTag.innerText === 'K리그'){
+        axios({
+          url: cheertogether.game.gamesLeagueMonth('292'),
+          method: 'GET',
+          params: {date: '2022-08'}
+        })
+        .then(res => {
+          this.gamesMonth = [],
+          this.gamesMonth = res.data
+          router.push({name: 'Month', params: {leaguename: 'K리그', month: '8'}})
+        })
       }
     },
 
-    clickMonth (event) {
+    clickMonth (leagueId, event) {
       // 색 바꾸기
-      const activeTag = document.querySelector('.item-active')
-      activeTag.classList.remove('item-active')
+      // const activeTag = document.querySelector('.item-active')
+      // activeTag.classList.remove('item-active')
       const clickedTag = event.target
-      clickedTag.classList.add('item-active')
+      // clickedTag.classList.add('item-active')
+      const activeMonth = clickedTag.innerText.slice(-3, -1).trim()
+      let alteredDate = ''
+      if (activeMonth === '8' || activeMonth === '9'){
+        alteredDate = '2022-0' + activeMonth
+      } else if (activeMonth === '10' || activeMonth === '11' || activeMonth === '12'){
+        alteredDate = '2022-' + activeMonth
+      } else if (activeMonth === '1' || activeMonth === '2' || activeMonth === '3' || activeMonth === '4' || activeMonth === '5'){
+        alteredDate = '2023-0' + activeMonth
+      }
       // 월별로 잘라서 담아주기
-
-      // month parameter 담아서 라우터 이동
-      router.push({name: 'Month', params: {month: `${clickedTag.innerText.slice(-3, -1).trim()}`} })
-      
+      axios({
+        url: cheertogether.game.gamesLeagueMonth(`${leagueId}`),
+        method: 'GET',
+        params: {date: alteredDate}
+      })
+      .then(res => {
+        this.gamesMonth = [],
+        this.gamesMonth = res.data
+        // month parameter 담아서 라우터 이동
+        router.push({name: 'Month', params: {month: `${activeMonth}`} })
+      })      
     }
   }
 })
 export const useOnAirStore = defineStore('onair', {
   state: () => ({
-    allRooms: [],
-    roomsPL: [],
-    roomsLL: [],
-    roomsSA: [],
-    roomsBL: [],
-    roomsL1: [],
-    roomsKL: [],
+    rooms: [],
     makeRoomDialog: false,
   }),
   actions: {
     moveLeagueRooms(event){
-      const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
+      const leagues = [
+        {id: '39', league: '프리미어리그'},
+        {id: '140', league: '라리가'},
+        {id: '135', league: '세리에 A'},
+        {id: '78', league: '분데스리가'},
+        {id: '61', league: '리그 1'},
+        {id: '292', league: 'K리그 1'},
+      ]
+      // 색 입히기
       if(document.querySelector('.sideBar-subtitle-active')){
         const fromSubtitle = document.querySelector('.sideBar-subtitle-active')
         fromSubtitle.classList.remove('sideBar-subtitle-active')
       }
       const toSubtitle = event.target
       toSubtitle.classList.add('sideBar-subtitle-active')
-      for(let league of leagues){
-        if(toSubtitle.innerText === league ) {
-          this.fetchRooms()
-          router.push({name: 'Onair' , params: {leaguename: `${toSubtitle.innerText}`} })
+
+      for(let item of leagues){
+        if(toSubtitle.innerText === item.league) {
+          axios({
+            url: cheertogether.room.roomsLeague(item.id),
+            method: 'GET',
+          })
+            .then(res => {
+              this.rooms = res.data
+              router.push({name: 'Onair' , params: {leaguename: `${item.league}`} })
+            })
+            .catch(err => {
+              console.log(err)
+            })
         } 
-      }
-      
+      }      
     },
 
-    fetchRooms(){
-      // 데이터 받아오기
+    enterRoom(roomId){
       axios({
-        url: cheertogether.room.loadRooms(),
-        method: 'GET',
+        url:cheertogether.room.enterRoom(roomId),
+        method: 'GET'
       })
-        .then(res => {
-          this.allRooms = res.data
-        })
-        .catch(err => {
-          console.log(err.message)
-        })
-      // if (leagueName === '프리미어리그'){
-      //   this.rooms = 
-      // } else if (leagueName === '라리가'){
-      //   this.rooms = this.tmp_laliga
-      // } else if (leagueName === '세리에 A'){
-      //   this.rooms = this.tmp_serie
-      // } else if (leagueName === '분데스리가'){
-      //   this.rooms = this.tmp_bundesliga
-      // } else if (leagueName === '리그 1'){
-      //   this.rooms = this.tmp_ligue1
-      // } else if (leagueName === 'K리그 1'){
-      //   this.rooms = this.tmp_k_league
-      // }
+      .then(res => {
+        router.push({name: 'Room' , params: {session: `${res.data.sessionId}`} })
+      })
     },
 
     makeRoomDialogToggle() {
@@ -589,8 +649,37 @@ export const useMatchScreenStore = defineStore('match', {
     { 
       isClickChatting: '',
       isClickLayout: false,
-      screenHeight: '705px'
+      isClickSetting: false,
+      screenHeight: '800px',
+    }),
+  actions: {
+    getGameInfo(apiId) {
+    /* 
+    GET: 경기 정보를 불러옴
+      성공하면
+
+      실패하면
+        에러 메시지 표시
+    */
+    axios({
+      url: cheertogether.game.gameInfo(),
+      method: 'GET',
+      headers: {
+        "x-rapidapi-host" : process.env.VUE_APP_X_RAPIDAPI_HOST,
+        "x-rapidapi-key" : process.env.VUE_APP_X_RAPIDAPI_KEY
+      },
+      params: {
+        fixture: apiId,
+      }  
     })
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+  }
 })
 export const useNewsStore = defineStore('news', {
   state: () => ({ 
