@@ -389,7 +389,7 @@ export default {
     toggleMic(){
       console.log("toggleMic");
       this.publisher.publishAudio(this.mic);   // true to unmute the audio track, false to mute it
-      this.cam = !this.cam;
+      this.mic = !this.mic;
     },
     toggleCam(){
       console.log("toggleCam");
