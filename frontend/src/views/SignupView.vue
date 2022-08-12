@@ -3,22 +3,21 @@
   <div style="display:flex;">
     <SideBar/>
     <div class="signup">
-      <div class="signup-image" v-if="!accountStore.myImage">
+      <!-- 이미지 ㅜㅜ -->
+      <!-- <div class="signup-image" v-if="!accountStore.myImage">
         <label for="input-file" style="padding:66px 30px 66px 35px;">
           <v-icon class="sideBar-item-icon">
             mdi-image-search
           </v-icon>
           이미지 올리기
         </label>
-
-      </div>
+      </div> -->
 
       <div v-if="accountStore.myImage" class="signup-image" :style="{'background-image': `url(${accountStore.myImage})`}">
         <label for="input-file" style="padding:66px 150px 66px 35px;">
           &nbsp;
         </label>
       </div>
-
 
       <input type="file" @change="onInputImage" id="input-file" style="display:none;" accept='image/jpeg,image/gif,image/png'>
 
@@ -106,6 +105,17 @@
       </div>
 
       <!-- 비밀번호 -->
+      <v-dialog
+      >
+        <template v-slot:activator="{ props }">
+          <v-icon class="sideBar-item-icon" v-bind="props">
+            mdi-plus-circle-outline
+          </v-icon>
+          ddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
+        </template>
+        <!-- 모달 창 -->
+        <ChangePasswordModal/>
+      </v-dialog>
       <div class="signup-range">
         <div class="signup-range-title">
           비밀번호
@@ -287,7 +297,6 @@ let credentialsSignup = {
   myInfo: "",
   nickname: "",
   password: '',
-  profileImage: '',
   role: 'user'
 }
 
@@ -338,7 +347,6 @@ const changeSignUp = (credentialsSignup) => {
   else {
     // 사용한 피니아 변수들 감기
     credentialsSignup.password = accountStore.passwordAccordance
-    credentialsSignup.profileImage = accountStore.myImage
 
     if (accountStore.profile.favoriteLeagueList.length == 3) {
       credentialsSignup.favoriteLeagueList = [accountStore.profile.favoriteLeagueList[0].apiId, accountStore.profile.favoriteLeagueList[1].apiId, accountStore.profile.favoriteLeagueList[2].apiId]
@@ -368,7 +376,6 @@ const changeSignUp = (credentialsSignup) => {
     // 사용한 피니아 변수들 초기화
     accountStore.passwordAccordance = ''
     accountStore.passwordAccordance2 = ''
-    accountStore.myImage = ''
     accountStore.profile.favoriteLeagueList = []
     accountStore.profile.favoriteTeamList = []
 
