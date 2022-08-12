@@ -164,7 +164,7 @@ axios({
     if (res.data.email) {
       if (!res.data.newMember) {
         console.log(res.data)
-        sessionStorage.setItem('token', res.token)
+        sessionStorage.setItem('token', res.data.token)
         sessionStorage.setItem('isSocialLogin', true)
         Swal.fire({
           icon: 'success',
