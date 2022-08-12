@@ -105,17 +105,6 @@
       </div>
 
       <!-- 비밀번호 -->
-      <v-dialog
-      >
-        <template v-slot:activator="{ props }">
-          <v-icon class="sideBar-item-icon" v-bind="props">
-            mdi-plus-circle-outline
-          </v-icon>
-          ddddddddddddddddddddddddddddddddddddddddddddddddddddddddd
-        </template>
-        <!-- 모달 창 -->
-        <ChangePasswordModal/>
-      </v-dialog>
       <div class="signup-range">
         <div class="signup-range-title">
           비밀번호
