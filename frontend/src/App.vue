@@ -39,8 +39,8 @@ if (accountStore.isLogin) {
 leagueStore.leaguesAll();
 leagueStore.getLeaguesNoTeam();
 
-// 경기 일정 데이터 불러오기
-gameStore.getGames(8);
+// 경기 일정 데이터 불러오기 
+gameStore.generateTodayGames()
 
 // 응원방 데이터 불러오기
 roomStore.getRooms();
