@@ -2,20 +2,15 @@
   <NavBar/>
   <div style="display:flex;">
     <SideBar/>
-    <div v-if="loaded" class="community-main">
-<!--     
-    axios가 실행되기 전에 {{maincontent}}를 불러와서 에러 발생,
-    axios가 실행되고 maincontent가 로드되면 렌더되도록 하기 위해
-    로드가 완료될때까지 false를 출력하는 변수 loaded를 사용하여
-    순차적으로 진행 될 수 있도록 구조화함
--->
+    <div v-if="axiosLoaded" class="community-main">
       <div class="community-detail-top">
-        <div style="height:36px; width:36px; margin-right:10px; background-color:aquamarine;">
+        <div style="height:36px; width:36px; margin-right:10px;">
+          <img :src="maincontent.leagueResponseExceptTeamList.logo" style="height:36px; width:36px;">
         </div>
         <a>{{maincontent.leagueResponseExceptTeamList.hanName}}</a>
       </div>
       <div class="community-detail-header">
-        <div style="margin-left: 10px; font-size:20px;">
+        <div style="font-size:20px; font-family: 'MICEGothic Bold';">
           {{maincontent.title}}
         </div>
         <div style="font-size:13px;">
@@ -25,9 +20,9 @@
       </div>
       <div class="community-detail-content-top">
         <div style="display: flex; align-items: center;">
-          <!-- <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
-          </div> -->
-          <a>{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
+          <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
+          </div>
+          <a style="font-size:14px">{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
         </div>
         <div v-if="userEmail==maincontent.memberResponse.email" class="community-detail-btns">
           <div @click="modifyArticle()" class="word-link">
@@ -48,7 +43,10 @@
         {{maincontent.content}}
       </div>
       <div style="height:50px; margin-top: 30px;">
-        <div @click="likeArticle" style="height:50px; width:50px; margin:auto; background-color:aquamarine">
+        <div @click="likeArticle" class="like-btn">
+          <v-icon size="35px" color="white">
+            mdi-thumb-up
+          </v-icon>
         </div>
       </div>
       <div class="community-detail-writecomment">
@@ -137,7 +135,7 @@ const communityStore = useCommunityStore()
 const route = useRoute()
 const articleid = route.params.articleid
 const maincontent = ref({})
-const loaded = ref(false)
+const axiosLoaded = ref(false)
 const createdDate = ref('')
 const commentText = ref('')
 const reportModal = ref(false)
@@ -164,7 +162,7 @@ axios({
   let mmm = createdTime.getMinutes()
   if (mmm < 10) {mmm = '0' + mmm}
   createdDate.value = yy +'/'+ mm +'/'+ dd + ' ' + hh + ":" + mmm
-  loaded.value = true
+  axiosLoaded.value = true
 }).catch(err => {
   console.log(err)
 })
@@ -197,11 +195,19 @@ function likeArticle() {
     })
   })
   .catch(err => {
-    console.log(err)
-    Swal.fire({
-      icon: 'error',
-      title: '좋아요 실패'
-    })
+    if (err.response.status=='400') {
+      Swal.fire({
+        icon: 'warning',
+        title: '이미 좋아하는 게시글입니다.'
+      })
+    } else {
+      console.log(err)
+      Swal.fire({
+        icon: 'error',
+        title: '좋아요 에러'
+      })
+    }
+    
   })
 }
 function deleteArticle() {
@@ -248,12 +254,20 @@ function reportArticle() {
       })
     })
     .catch(err => {
-      console.log(err)
-      reportModalToggle()
-      Swal.fire({
-        icon: 'error',
-        title: '싫어요 전송 실패'
-      })
+      if (err.response.status=='400') {
+        reportModalToggle()
+        Swal.fire({
+          icon: 'warning',
+          title: '이미 신고가 접수된 게시글입니다.'
+        })
+      } else {
+        console.log(err)
+        reportModalToggle()
+        Swal.fire({
+          icon: 'error',
+          title: '싫어요 전송 실패'
+        })
+      }
     })
   } else {
     reportErrorModal.value = true
@@ -324,7 +338,17 @@ function writeReply() {
   color: var(--main-color);
   cursor: pointer
 }
-/* :deep(.v-selection-control .v-label) {
-  height: 40px !important;
-} */
+.like-btn {
+  display: flex;
+  height:50px; 
+  width:50px; 
+  margin:auto; 
+  background-color:var(--main-color); 
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+}
+.like-btn:hover {
+  cursor: pointer;
+}
 </style>

@@ -54,11 +54,11 @@
           mdi-chat-processing-outline
         </v-icon>
         <!-- 비디오 -->
-        <v-icon size="40" class="match-screen-footer-icon">
+        <v-icon size="40" @click="toggleCam" class="match-screen-footer-icon">
           mdi-video-outline
         </v-icon>
         <!-- 마이크 -->
-        <v-icon size="40" class="match-screen-footer-icon">
+        <v-icon size="40" @click="toggleMic" class="match-screen-footer-icon">
           mdi-microphone
         </v-icon>
         <!-- 응원가 -->
@@ -569,10 +569,14 @@ export default {
     },
     
     toggleMic(){
+      console.log("toggleMic");
       this.publisher.publishAudio(this.mic);   // true to unmute the audio track, false to mute it
+      this.mic = !this.mic;
     },
     toggleCam(){
+      console.log("toggleCam");
       this.publisher.publishVideo(this.cam);   // true to enable the video track, false to disable it
+
     },
     clickBillboard() {
       this.roomStore.isClickSettingButton = false
@@ -584,6 +588,8 @@ export default {
       var objDiv2 = document.getElementById("room-game-info");
       objDiv2.scrollTop = objDiv2.scrollHeight;
       // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId)
+      this.cam = !this.cam;
+
     }
   },
 };
