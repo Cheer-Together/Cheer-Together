@@ -547,10 +547,11 @@ export const useScheduleStore = defineStore('schedule', {
 
     clickMonth (leagueId, event) {
       // 색 바꾸기
-      // const activeTag = document.querySelector('.item-active')
-      // activeTag.classList.remove('item-active')
+      if(document.querySelector('.item-active')){
+        document.querySelector('.item-active').classList.remove('item-active')
+      }
       const clickedTag = event.target
-      // clickedTag.classList.add('item-active')
+      clickedTag.classList.add('item-active')
       const activeMonth = clickedTag.innerText.slice(-3, -1).trim()
       let alteredDate = ''
       if (activeMonth === '8' || activeMonth === '9'){
@@ -581,6 +582,20 @@ export const useOnAirStore = defineStore('onair', {
     makeRoomDialog: false,
   }),
   actions: {
+    moveOnairPage(){
+      axios({
+        url: cheertogether.room.rooms(),
+        method: 'GET',
+      })
+        .then(res => {
+          this.rooms = res.data
+          router.push({name: 'Onair', params: {leaguename: '모든 응원방 목록'}})
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
     moveLeagueRooms(event){
       const leagues = [
         {id: '39', league: '프리미어리그'},
@@ -621,7 +636,15 @@ export const useOnAirStore = defineStore('onair', {
         method: 'GET'
       })
       .then(res => {
-        router.push({name: 'Room' , params: {session: `${res.data.sessionId}`} })
+        if(res.data.status === 'PUBLIC'){
+          router.push({name: 'Room' , params: {session: `${res.data.sessionId}`} })
+        } else if (res.data.status === 'PRIVATE'){
+          Swal.fire({
+            icon: 'question',
+            title: '비밀번호를 입력해주세요',
+            input: 'password'
+          })
+        }
       })
     },
 
