@@ -141,9 +141,12 @@ function socialSignupBtn() {
     }
   })
   .then(res => {
+    console.log('------------')
+    console.log(res)
+    console.log('------------')
     sessionStorage.setItem('token', res.data.token)
     sessionStorage.setItem('isSocialLogin', true)
-    accountStore.socialLoginComplete(res.data.token)
+    //accountStore.socialLoginComplete(res.data.token)
     Swal.fire({
       icon: 'success',
       title: '가입되었습니다!',
@@ -175,6 +178,7 @@ axios({
         })
         router.push({name:'MainPage'})
       } else {
+        console.log(res)
         socialSignupEmail.value = res.data.email
       }
     } else {
