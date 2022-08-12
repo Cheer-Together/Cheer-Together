@@ -41,11 +41,7 @@ import ScheduleSelectMonth from "../components/ScheduleSelectMonth.vue"
 import { useScheduleStore } from  '../store/index.js'
 // import { useRoute } from 'vue-router'
 const scheduleStore = useScheduleStore();
-// const route = useRoute()
-// let leagueParam = route.params.leaguename
-// const leagueTabs = document.querySelector(".schedule-page-league-items")
-// console.log(leagueTabs)
-// 새로고침 시 라우터 색깔 변하는거 고쳐볼랬더니 아직 해결 못함..
+
 </script>
 
 <style>
@@ -72,45 +68,6 @@ const scheduleStore = useScheduleStore();
 
 .league-active {
   color: var(--main-color)
-}
-
-.schedule-date {
-  width: 140px;
-  text-align: center;
-  margin: auto;
-}
-
-.schedule-time {
-  width: 80px;
-  text-align: center;
-  margin: auto;
-}
-
-.schedule-stadium {
-  width: 230px;
-  text-align: center;
-  margin: auto;
-}
-
-.schedule-matches {
-  width: 700px;
-  text-align: center;
-  margin: auto;
-}
-
-.schedule-matches-info{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.schedule-matches .team-logo {
-  width: 35px;
-  height: 35px;
-}
-
-.schedule-matches .no-match {
-  color: #a7a4a4
 }
 
 @media (max-width: 1580px) {

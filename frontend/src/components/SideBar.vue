@@ -10,7 +10,7 @@
       </div>
     </div>
     <!-- 실시간 집관 -->
-    <div class="sideBar-item" @click="goToRoomsPage">
+    <div class="sideBar-item" @click="onairStore.moveOnairPage">
       <v-icon class="sideBar-item-icon">
         mdi-video-outline
       </v-icon>
@@ -70,10 +70,6 @@ import router from '@/router/index.js'
 const onairStore = useOnAirStore()
 const scheduleStore = useScheduleStore()
 
-const goToRoomsPage = () => {
-  onairStore.rooms = onairStore.tmp_pl
-  router.push({name: 'Onair', params: {leaguename: '프리미어리그'}})
-}
 </script>
 
 <style>
