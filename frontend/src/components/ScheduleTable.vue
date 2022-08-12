@@ -65,7 +65,6 @@ let uniqGameDays = [...set]
 <style>
 .schedule-list-items {
   display: flex;
-  margin-top: 5px;
   border-bottom: 1px solid #d1cfcf;
 }
 .schedule-date {
@@ -82,24 +81,24 @@ let uniqGameDays = [...set]
 }
 
 .schedule-time-items {
-  height: 35px;
-  line-height: 35px;
+  height: 40px;
+  line-height: 40px;
 }
 
 .schedule-stadium {
-  width: 260px;
+  width: 300px;
   text-align: left;
   margin: auto;
 }
 
 .schedule-stadium-items {
-  font-size: 10px;
-  height: 35px;
-  line-height: 35px;
+  font-size: 12px;
+  height: 40px;
+  line-height: 40px;
 }
 
 .schedule-matches {
-  width: 700px;
+  width: 680px;
   text-align: center;
   margin: auto;
 }
@@ -107,7 +106,7 @@ let uniqGameDays = [...set]
 .schedule-matches-items{
   display: flex;
   width: 550px;
-  height: 35px;
+  height: 40px;
   align-items: center;
 }
 
@@ -125,7 +124,7 @@ let uniqGameDays = [...set]
 .team-right {
   display: flex;
   position: relative;
-  left: 100px;
+  left: 80px;
   width: 210px;
   height: 35px;
   line-height: 35px;
@@ -134,7 +133,7 @@ let uniqGameDays = [...set]
 
 .versus {
   position: relative;
-  left: 285px;
+  left: 275px;
 }
 
 .left-score {
@@ -148,11 +147,16 @@ let uniqGameDays = [...set]
 
 }
 .schedule-matches .team-logo {
-  width: 35px;
-  height: 35px;
+  width: 25px;
+  height: 25px;
+  margin: 5px;
 }
 
 .schedule-matches .no-match {
-  color: #a7a4a4
+  display: flex;
+  color: #a7a4a4;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
 }
 </style>
