@@ -384,6 +384,12 @@ export const useAccountStore = defineStore('account', {
       const url = "https://kauth.kakao.com/oauth/authorize?client_id=" + decodeURIComponent(API_KEY) + "&redirect_uri=" + decodeURIComponent(REDIRECT_URI) + "&response_type=code";
       window.location.replace(url);
     },
+    socialLoginComplete(token) {
+      this.isLogin = true          
+      let userId = jwt_decode(token)
+      this.profileId = userId
+      this.userProfile(userId)
+    },
     logoutAccount() {
       sessionStorage.removeItem('token')
       this.isLogin = false
