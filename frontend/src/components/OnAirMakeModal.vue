@@ -63,7 +63,15 @@
                 style="margin-top: 35px; color: white"
                 color="#2E6AFD"
                 width="340px"
-                @click="onAirStore.moveRoom(game, roomTitle, roomStatus,roomPassword, managerId)"
+                @click="
+                  onAirStore.moveRoom(
+                    game,
+                    roomTitle,
+                    roomStatus,
+                    roomPassword,
+                    managerId
+                  )
+                "
               >
                 같이 집관
               </v-btn>
@@ -100,6 +108,7 @@
 <script setup>
 import { ref } from "vue";
 import { useOnAirStore, useAccountStore } from "@/store/index.js";
+import { useGamesStore } from "@/store/modules/game.js";
 const onAirStore = useOnAirStore();
 const dialog2 = ref(false);
 const makeroomLogo = require("../assets/image/로고.png");
@@ -108,16 +117,7 @@ const managerId = useAccountStore().profileId;
 const roomTitle = ref("");
 const roomPassword = ref("");
 const roomStatus = ref("");
-const items = [
-  { title: "브라이튼 앤 호브 알비온 vs 브라이튼 앤 호브 알비온" },
-  { title: "프리미어리그" },
-  { title: "라리가" },
-  { title: "세리에A" },
-  { title: "분데스리가" },
-  { title: "리그 1" },
-  { title: "K리그" },
-  { title: "크리스탈 펠리스 vs 아스날", id: 31},
-];
+const items = useGamesStore().liveGames;
 </script>
 
 <style scoped>

@@ -120,26 +120,23 @@ accountStore.profile.favoriteLeagueList = []
 accountStore.profile.favoriteTeamList = []
 
 function socialSignupBtn() {
-  const data = {
-    email : socialSignupEmail.value,
-    favoriteLeagueList : accountStore.profile.favoriteLeagueList,
-    favoriteTeamList: accountStore.profile.favoriteTeamList,
-    myInfo : socialSignupMyInfo.value,
-    nickname : socialSignupNickname.value,
-    // profileImage : accountStore.myImage,
-    role : 'user'
+  let leagueList = []
+  let teamList = []
+  for (const league of accountStore.profile.favoriteLeagueList){
+    leagueList.push(league.apiId)
   }
-  console.log(data)
+  for (const league of accountStore.profile.favoriteTeamList){
+    teamList.push(league.apiId)
+  }
   axios({
     url: "https://i7b204.p.ssafy.io/cheertogether/oauth2/kakao/join",
     method: 'POST',
     data: {
       email : socialSignupEmail.value,
-      favoriteLeagueList : accountStore.profile.favoriteLeagueList,
-      favoriteTeamList: accountStore.profile.favoriteTeamList,
+      favoriteLeagueList : leagueList,
+      favoriteTeamList: teamList,
       myInfo : socialSignupMyInfo.value,
       nickname : socialSignupNickname.value,
-      // profileImage : accountStore.myImage,
       role : 'user'
     }
   })
@@ -148,7 +145,7 @@ function socialSignupBtn() {
       icon: 'success',
       title: '가입되었습니다!',
     })
-    //router.push({name:'MainPage'})
+    router.push({name:'MainPage'})
   })
   .catch(err => {
     console.log(err)
@@ -183,7 +180,7 @@ axios({
         icon: 'error',
         title: '이메일을 못받았음.'
       })
-      //router.push({name:'MainPage'})
+      router.push({name:'MainPage'})
     }
   }).catch(err => {
     console.log(err)
@@ -191,7 +188,7 @@ axios({
       icon: 'error',
       title: 'Axios에러.'
     })
-    //router.push({name:'MainPage'})
+    router.push({name:'MainPage'})
 }).then(loaded.value = true)
 </script>
 <style>

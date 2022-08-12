@@ -113,9 +113,8 @@ public class ArticleController {
 
 	@DeleteMapping("/reply/{replyId}")
 	@ApiOperation(value = "게시글 댓글 삭제", notes = "게시판 - 게시글 댓글 삭제")
-	public ResponseEntity<String> deleteReply(@PathVariable Long replyId,
-		@ApiParam(value = "jwt토큰", required = true, example = "jwt토큰") @RequestParam String jwtToken) {
-		articleService.replyDelete(replyId, jwtToken);
+	public ResponseEntity<String> deleteReply(@PathVariable Long replyId) {
+		articleService.replyDelete(replyId);
 		return new ResponseEntity<>(DELETE_REPLY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
 	}
 }
