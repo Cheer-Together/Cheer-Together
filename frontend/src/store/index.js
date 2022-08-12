@@ -742,43 +742,6 @@ export const useNavbarStore = defineStore('navbar', {
       isClickProfile: false,
     })
 })
-export const useMatchScreenStore = defineStore('match', {
-  state: () => (
-    { 
-      isClickChatting: '',
-      isClickLayout: false,
-      isClickSetting: false,
-      screenHeight: '800px',
-    }),
-  actions: {
-    getGameInfo(apiId) {
-    /* 
-    GET: 경기 정보를 불러옴
-      성공하면
-
-      실패하면
-        에러 메시지 표시
-    */
-    axios({
-      url: cheertogether.game.gameInfo(),
-      method: 'GET',
-      headers: {
-        "x-rapidapi-host" : process.env.VUE_APP_X_RAPIDAPI_HOST,
-        "x-rapidapi-key" : process.env.VUE_APP_X_RAPIDAPI_KEY
-      },
-      params: {
-        fixture: apiId,
-      }  
-    })
-      .then(res => {
-        console.log(res.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    }
-  }
-})
 export const useNewsStore = defineStore('news', {
   state: () => ({ 
     news: [],
@@ -967,7 +930,284 @@ export const useRoomStore = defineStore('room', {
       awayScore: 2,
       apiId: 867946,
       leagueApiId: 39
-    }
+    },
+    isClickSettingButton: false,
+    isClickBillboard: false,
+    isClickGameInfo: false,
+    isClickChatting: '',
+    isClickLayout: false,
+    isClickSetting: false,
+    screenHeight: '800px',
+    gameInfo:[
+      {
+          "time": {
+              "elapsed": 20,
+              "extra": null
+          },
+          "team": {
+              "id": 42,
+              "name": "Arsenal",
+              "logo": "https://media.api-sports.io/football/teams/42.png"
+          },
+          "player": {
+              "id": 127769,
+              "name": "Gabriel Martinelli"
+          },
+          "assist": {
+              "id": 641,
+              "name": "O. Zinchenko"
+          },
+          "type": "Goal",
+          "detail": "Normal Goal",
+          "comments": null
+      },
+      {
+          "time": {
+              "elapsed": 44,
+              "extra": null
+          },
+          "team": {
+              "id": 42,
+              "name": "Arsenal",
+              "logo": "https://media.api-sports.io/football/teams/42.png"
+          },
+          "player": {
+              "id": 1464,
+              "name": "Granit Xhaka"
+          },
+          "assist": {
+              "id": null,
+              "name": null
+          },
+          "type": "Card",
+          "detail": "Yellow Card",
+          "comments": "Simulation"
+      },
+      
+  ],
+  gameInfoHalf: [
+    {
+      "time": {
+          "elapsed": 58,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 1135,
+          "name": "O. Édouard"
+      },
+      "assist": {
+          "id": 25927,
+          "name": "J. Mateta"
+      },
+      "type": "subst",
+      "detail": "Substitution 1",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 60,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 19959,
+          "name": "Ben White"
+      },
+      "assist": {
+          "id": null,
+          "name": null
+      },
+      "type": "Card",
+      "detail": "Yellow Card",
+      "comments": "Foul"
+  },
+  {
+      "time": {
+          "elapsed": 64,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 18862,
+          "name": "Nathaniel Clyne"
+      },
+      "assist": {
+          "id": null,
+          "name": null
+      },
+      "type": "Card",
+      "detail": "Yellow Card",
+      "comments": "Foul"
+  },
+  {
+      "time": {
+          "elapsed": 75,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 3339,
+          "name": "C. Doucouré"
+      },
+      "assist": {
+          "id": 18852,
+          "name": "L. Milivojević"
+      },
+      "type": "subst",
+      "detail": "Substitution 2",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 83,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 643,
+          "name": "Gabriel Jesus"
+      },
+      "assist": {
+          "id": 1468,
+          "name": "E. Nketiah"
+      },
+      "type": "subst",
+      "detail": "Substitution 1",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 83,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 641,
+          "name": "O. Zinchenko"
+      },
+      "assist": {
+          "id": 1117,
+          "name": "K. Tierney"
+      },
+      "type": "subst",
+      "detail": "Substitution 2",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 85,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 67971,
+          "name": "M. Guéhi"
+      },
+      "assist": {
+          "id": null,
+          "name": null
+      },
+      "type": "Goal",
+      "detail": "Own Goal",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 86,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 19586,
+          "name": "E. Eze"
+      },
+      "assist": {
+          "id": 328808,
+          "name": "M. Ebiowei"
+      },
+      "type": "subst",
+      "detail": "Substitution 3",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 86,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 18843,
+          "name": "J. Schlupp"
+      },
+      "assist": {
+          "id": 18806,
+          "name": "W. Hughes"
+      },
+      "type": "subst",
+      "detail": "Substitution 4",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 90,
+          "extra": 3
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 37127,
+          "name": "M. Ødegaard"
+      },
+      "assist": {
+          "id": 1427,
+          "name": "A. Lokonga"
+      },
+      "type": "subst",
+      "detail": "Substitution 3",
+      "comments": null
+  }
+  ]
+  
   }),
   actions: {
     getRooms() {
@@ -991,6 +1231,7 @@ export const useRoomStore = defineStore('room', {
         
       })
     },
+
     async getInfo(sessionId) {
       await getRoomInfo(sessionId, 
         (res) => {
@@ -1002,6 +1243,7 @@ export const useRoomStore = defineStore('room', {
           console.log(err);
         })
     },
+
     getPlayTeams(gameId) {
     /* 
     GET: 경기 정보를 불러옴
@@ -1023,5 +1265,42 @@ export const useRoomStore = defineStore('room', {
       })
         
     },
+
+    getGameInfo(apiId) {
+      /* 
+      GET: 경기 정보를 불러옴
+        성공하면
+  
+        실패하면
+          에러 메시지 표시
+      */
+      axios({
+        url: cheertogether.game.gameInfo(),
+        method: 'GET',
+        headers: {
+          "x-rapidapi-host" : process.env.VUE_APP_X_RAPIDAPI_HOST,
+          "x-rapidapi-key" : process.env.VUE_APP_X_RAPIDAPI_KEY
+        },
+        params: {
+          fixture: apiId,
+        }  
+      })
+        .then(res => {
+          this.gameInfo = []
+          this.gameInfoHalf = []
+          res.data.response.reverse().forEach((e) => {
+            if (e.time.elapsed <= 45) {
+              this.gameInfo.push(e);
+            }
+            else {
+              this.gameInfoHalf.push(e);
+            }
+          });
+
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
   }
 })
