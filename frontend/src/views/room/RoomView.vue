@@ -25,7 +25,7 @@
       
       <!-- 스크린 -->
       <div class="match-screen-section" :style="{ height : matchScreenStore.screenHeight }">
-
+        <GameVideo :stream_url="this.stream_urls"/>
       </div>
 
       <!-- 캠 레이아웃 -->
@@ -106,6 +106,7 @@
 <script>
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
+import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore, useMatchScreenStore } from "@/store/index.js";
@@ -122,6 +123,7 @@ export default {
 
   components: {
     UserVideo,
+    GameVideo,
   },
 
   data() {
@@ -138,7 +140,7 @@ export default {
       matchScreenStore: useMatchScreenStore(),
       isOpenedChattingWindow: true,
       message: "",
-
+      stream_urls: "https://i7b204.p.ssafy.io/tmp/hls/test/index.m3u8",
       mic: false,
       cam: false,
     };
