@@ -26,6 +26,8 @@
       <!-- 스크린 -->
       <div class="match-screen-section" :style="{ height : matchScreenStore.screenHeight }">
         <GameVideo :stream_url="this.stream_urls"/>
+        <!-- 비디오 컴포넌트 사이즈 조절 필요 
+              영상 시청하기 위해서는 CORS 설정 필요 -->
       </div>
 
       <!-- 캠 레이아웃 -->
@@ -140,7 +142,11 @@ export default {
       matchScreenStore: useMatchScreenStore(),
       isOpenedChattingWindow: true,
       message: "",
+      //테스트용 스트리밍 URL.
+      //서버에서 스트리밍을 시작해야 보임
+      //추후 스트리밍 서버 설정 방법 고려 후 변경 예정
       stream_urls: "https://i7b204.p.ssafy.io/tmp/hls/test/index.m3u8",
+
       mic: false,
       cam: false,
     };
