@@ -1,7 +1,5 @@
 package com.ssafy.cheertogether.member;
 
-import org.springframework.http.HttpStatus;
-
 public final class MemberConstant {
 	public static final String DUPLICATED_EMAIL_ERROR_MESSAGE = "이미 존재하는 이메일입니다.";
 	public static final String SEND_EMAIL_ERROR_MESSAGE = "이메일 전송에 실패하였습니다.";
@@ -15,4 +13,6 @@ public final class MemberConstant {
 	public static final String WITHDRAW_SUCCESS_RESPONSE_MESSAGE = "회원 탈퇴가 완료되었습니다.";
 	public static final String FIND_PASSWORD_SUCCESS_RESPONSE_MESSAGE = "임시 비밀번호로 변경되었습니다.";
 	public static final String MODIFY_PASSWORD_SUCCESS_RESPONSE_MESSAGE = "비밀번호 수정이 완료되었습니다.";
+	public static final String PLUS_POINT_SUCCESS_RESPONSE_MESSAGE = "%d 축구공이 증가했습니다.";
+	public static final String SUBTRACT_POINT_SUCCESS_RESPONSE_MESSAGE = "%d 축구공이 감소했습니다.";
 }
