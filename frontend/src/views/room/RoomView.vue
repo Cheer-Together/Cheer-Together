@@ -24,12 +24,12 @@
       </div>
       
       <!-- 스크린 -->
-      <div class="match-screen-section" :style="{ height : matchScreenStore.screenHeight }">
+      <div class="match-screen-section" :style="{ height : roomStore.screenHeight }">
 
       </div>
 
       <!-- 캠 레이아웃 -->
-      <div id="video-container" v-if="matchScreenStore.isClickLayout">
+      <div id="video-container" v-if="roomStore.isClickLayout">
           <user-video
             :stream-manager="publisher"
             @click="updateMainVideoStreamManager(publisher)"
@@ -68,19 +68,196 @@
       </div>
     </div>
 
-    
     <!-- 채팅 -->
-    <div v-if="matchScreenStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
+    <div v-if="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
       <!-- 채팅 헤더 -->
       <div class="match-screen-chatting-header">
-        <v-icon class="match-screen-chatting-header-setting-button">
+        <v-icon class="match-screen-chatting-header-setting-button" @click="roomStore.isClickSettingButton = !roomStore.isClickSettingButton">
           mdi-cog
         </v-icon>
 
-        <div v-if="matchScreenStore.isClickSetting">
-
+        <!-- 드롭 다운 -->
+        <div v-if="roomStore.isClickSettingButton" class="setting-dropdown">
+          <div @click="clickBillboard">
+            전광판
+          </div>
+          <div @click="clickGameInfo">
+            경기 정보
+          </div>
         </div>
+
+        <!-- 전광판 -->
+        <div v-if="roomStore.isClickBillboard">
+          전광판
+        </div>
+        <!-- 경기 정보 -->
+        <div v-if="roomStore.isClickGameInfo" style="position: relative;">
+          <div class="room-game-info-header" @click="roomStore.isClickGameInfo = false">
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </div>
+          <div class="room-game-info" id="room-game-info">
+            <!-- 후반전 -->
+            <div class="room-game-info-title">
+              후반전
+            </div>
+            <div class="room-game-info-item" v-for="(gameInfo, i) in roomStore.gameInfoHalf" :key="i">
+              <!-- 시간 나타내는 영역 -->
+              <div class="room-game-info-time-section">
+                <div class="room-game-info-time">
+                  {{ gameInfo.time.elapsed }}'
+                </div>
+              </div>
+
+              <!-- 골 -->
+              <div v-if="gameInfo.type === 'Goal'" class="room-game-info-section">
+                <div>
+                  <v-icon>
+                    mdi-soccer
+                  </v-icon>
+                  <span style="color: var(--main-color)">Goal !!!</span>
+                </div>
+
+                <div id="goal-player">
+                  골 :
+                  <img :src="gameInfo.team.logo" alt="" width="16">
+                  {{ gameInfo.player.name }}
+                </div>
+
+                <div id="assist-player" v-if="gameInfo.assist.name">
+                  어시 : {{ gameInfo.assist.name }}
+                </div>
+              </div>
+
+              <!-- 카드 -->
+              <!-- 옐로 카드 -->
+              <div v-if="gameInfo.type === 'Card' && gameInfo.detail === 'Yellow Card'" class="room-game-info-section">
+                <div id="goal-player">
+                  <div id="yellow-card" >
+                  </div>
+
+                  <img :src="gameInfo.team.logo" alt="" width="16" style="margin: 25px 0 0 25px">
+                  <span style="margin-bottom: 10px">{{ gameInfo.player.name }}</span>
+                  
+                </div>
+              </div>
+
+              <!-- 레드 카드 -->
+              <div v-if="gameInfo.type === 'Card' && gameInfo.detail === 'Red Card'" class="room-game-info-section">
+                <div id="goal-player">
+                  <div id="red-card" >
+                  </div>
+
+                  <img :src="gameInfo.team.logo" alt="" width="16" style="margin: 25px 0 0 25px">
+                  <span style="margin-bottom: 10px">{{ gameInfo.player.name }}</span>
+                  
+                </div>
+              </div>
+              
+              <!-- 교체 -->
+              <div v-if="gameInfo.type === 'subst'" class="room-game-info-section">
+                <div>
+                  <v-icon style="color: green">
+                    mdi-arrow-right
+                  </v-icon>
+                  <img :src="gameInfo.team.logo" alt="" width="16">
+                  {{ gameInfo.assist.name }}
+                </div>
+                <div>
+                  <v-icon style="color: red">
+                    mdi-arrow-left
+                  </v-icon>
+                  <img :src="gameInfo.team.logo" alt="" width="16">
+                  {{ gameInfo.player.name }}
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 전반전 -->
+            <div class="room-game-info-title">
+              전반전
+            </div>
+            <div class="room-game-info-item" v-for="(gameInfo, i) in roomStore.gameInfo" :key="i">
+              <!-- 시간 나타내는 영역 -->
+              <div class="room-game-info-time-section">
+                <div class="room-game-info-time">
+                  {{ gameInfo.time.elapsed }}'
+                </div>
+              </div>
+
+              <!-- 골 -->
+              <div v-if="gameInfo.type === 'Goal'" class="room-game-info-section">
+                <div>
+                  <v-icon>
+                    mdi-soccer
+                  </v-icon>
+                  <span style="color: var(--main-color)">Goal !!!</span>
+                </div>
+
+                <div id="goal-player">
+                  골 :
+                  <img :src="gameInfo.team.logo" alt="" width="16">
+                  {{ gameInfo.player.name }}
+                </div>
+
+                <div id="assist-player" v-if="gameInfo.assist.name">
+                  어시 : {{ gameInfo.assist.name }}
+                </div>
+              </div>
+
+              <!-- 카드 -->
+              <!-- 옐로 카드 -->
+              <div v-if="gameInfo.type === 'Card' && gameInfo.detail === 'Yellow Card'" class="room-game-info-section">
+                <div id="goal-player">
+                  <div id="yellow-card" >
+                  </div>
+
+                  <img :src="gameInfo.team.logo" alt="" width="16" style="margin: 25px 0 0 25px">
+                  <span style="margin-bottom: 10px">{{ gameInfo.player.name }}</span>
+                  
+                </div>
+              </div>
+
+              <!-- 레드 카드 -->
+              <div v-if="gameInfo.type === 'Card' && gameInfo.detail === 'Red Card'" class="room-game-info-section">
+                <div id="goal-player">
+                  <div id="red-card" >
+                  </div>
+
+                  <img :src="gameInfo.team.logo" alt="" width="16" style="margin: 25px 0 0 25px">
+                  <span style="margin-bottom: 10px">{{ gameInfo.player.name }}</span>
+                  
+                </div>
+              </div>
+              
+              <!-- 교체 -->
+              <div v-if="gameInfo.type === 'subst'" class="room-game-info-section">
+                <div>
+                  <v-icon style="color: green">
+                    mdi-arrow-right
+                  </v-icon>
+                  <img :src="gameInfo.team.logo" alt="" width="16">
+                  {{ gameInfo.assist.name }}
+                </div>
+                <div>
+                  <v-icon style="color: red">
+                    mdi-arrow-left
+                  </v-icon>
+                  <img :src="gameInfo.team.logo" alt="" width="16">
+                  {{ gameInfo.player.name }}
+                </div>
+              </div>
+
+            </div>
+            {{ roomStore.gameInfo.response }}
+          </div>
+        </div>
+
+
       </div>
+
       <!-- 채팅 내용 창 -->
       <div class="match-screen-chatting-section" id="match-screen-chatting-section">
         <div v-show="isOpenedChattingWindow" class="chatting-window">
@@ -96,11 +273,9 @@
       </div>
     </div>
     <!-- 얘는 그냥 사라질 때 자연스러운 효과를 위한 영역 신경 안써도 됩니다. -->
-    <div v-if="matchScreenStore.isClickChatting == 'b'" class="match-screen-chatting-area2" >
+    <div v-if="roomStore.isClickChatting == 'b'" class="match-screen-chatting-area2" >
 
     </div>
-
-
   </div>
 </template>
 <script>
@@ -108,7 +283,7 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import axios from "axios";
 
-import { useAccountStore, useRoomStore, useMatchScreenStore } from "@/store/index.js";
+import { useAccountStore, useRoomStore,  } from "@/store/index.js";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -135,12 +310,13 @@ export default {
       mySessionId: undefined,
       myUserName: undefined,
       sessionInfo: undefined,
-      matchScreenStore: useMatchScreenStore(),
+      roomStore: useRoomStore(),
       isOpenedChattingWindow: true,
       message: "",
 
       mic: false,
       cam: false,
+
     };
   },
   mounted() {
@@ -153,9 +329,12 @@ export default {
     this.inMount();
 
     // 사용한 피니아 변수 초기화
-    this.matchScreenStore.isClickChatting = ''
-    this.matchScreenStore.isClickLayout = false
-    this.screenHeight = '800px'
+    this.roomStore.isClickChatting = ''
+    this.roomStore.isClickLayout = false
+    this.roomStore.screenHeight = '800px'
+    this.roomStore.isClickSettingButton = false
+    this.roomStore.isClickBillboard = false
+    this.roomStore.isClickGameInfo = false
   },
 
   methods: {
@@ -207,9 +386,11 @@ export default {
         }
 
         document.getElementById("chatting-content").innerHTML += `<div>${userName}:</div>`;
-        document.getElementById("chatting-content").innerHTML += `<div>${message}<div>`;
+        document.getElementById("chatting-content").innerHTML += `<div style:'word-break:break-all;'>${message}<div>`;
+        
         var objDiv = document.getElementById("match-screen-chatting-section");
         objDiv.scrollTop = objDiv.scrollHeight;
+
       });
 
       // --- Connect to the session with a valid user token ---
@@ -347,24 +528,25 @@ export default {
       });
     },
     clickLayoutButton() {
-      this.matchScreenStore.isClickLayout = !this.matchScreenStore.isClickLayout
+      this.roomStore.isClickLayout = !this.roomStore.isClickLayout
 
-      if ( this.matchScreenStore.screenHeight === '800px') {
-        this.matchScreenStore.screenHeight = '610px'
+      if ( this.roomStore.screenHeight === '800px') {
+        this.roomStore.screenHeight = '610px'
       }
       else {
-        this.matchScreenStore.screenHeight = '800px'
+        this.roomStore.screenHeight = '800px'
       }
     },
     chattingOnOff() {
-      if (this.matchScreenStore.isClickChatting == '') {
-        this.matchScreenStore.isClickChatting = 'a'
+      this.roomStore.isClickGameInfo = false
+      if (this.roomStore.isClickChatting == '') {
+        this.roomStore.isClickChatting = 'a'
       }
-      else if (this.matchScreenStore.isClickChatting == 'a'){
-        this.matchScreenStore.isClickChatting = 'b'
+      else if (this.roomStore.isClickChatting == 'a'){
+        this.roomStore.isClickChatting = 'b'
       }
       else {
-        this.matchScreenStore.isClickChatting = 'a'
+        this.roomStore.isClickChatting = 'a'
       }
     },
 
@@ -394,7 +576,20 @@ export default {
     toggleCam(){
       console.log("toggleCam");
       this.publisher.publishVideo(this.cam);   // true to enable the video track, false to disable it
+
+    },
+    clickBillboard() {
+      this.roomStore.isClickSettingButton = false
+      this.roomStore.isClickBillboard = true
+    },
+    clickGameInfo() {
+      this.roomStore.isClickSettingButton = false
+      this.roomStore.isClickGameInfo = true
+      var objDiv2 = document.getElementById("room-game-info");
+      objDiv2.scrollTop = objDiv2.scrollHeight;
+      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId)
       this.cam = !this.cam;
+
     }
   },
 };
@@ -421,7 +616,7 @@ export default {
 #session {
   width: 100%;
   height: 830px;
-  margin-left: 30px;
+  margin: 50px 0 0 30px;
 }
 .match-screen-header {
   font-family: 'MICEGothic Bold';
@@ -478,8 +673,8 @@ export default {
 }
 .match-screen-chatting-area {
   width: 295px;
-  height: 900px;
-  margin: 26px 30px 0 0;
+  height: 1000px;
+  margin: 76px 30px 0 0;
   animation-name: chattingOver;
   animation-duration: 0.3s;
   animation-timing-function: ease-in;
@@ -503,6 +698,7 @@ export default {
 .match-screen-chatting-header {
   height: 100px;
   border-bottom: 1px solid #cfd2d6;
+  position: relative;
 }
 .match-screen-chatting-header-setting-button {
   width: 20px;
@@ -510,7 +706,7 @@ export default {
   margin: 10px 10px auto 220px;
 }
 .match-screen-chatting-section {
-  height: 700px;
+  height: 800px;
   overflow-y: scroll;
   border-bottom: 1px solid #cfd2d6;
   padding: 10px 15px 10px 10px;
@@ -538,7 +734,6 @@ export default {
   min-height: 50px;
   margin: auto 0;
   overflow: auto;
-  word-wrap: break-word;
   background: none;
   padding: 5px;
 }
@@ -553,6 +748,117 @@ export default {
   width: 50px;
   color: var(--main-color);
 }
+.setting-dropdown {
+  position: absolute;
+  right: 10px;
+  top: 30px;
+  width: 150px;
+  height: 50px;
+  border: 1px solid grey;
+  display: flex;
+  border-radius: 15px;
+}
+.setting-dropdown div {
+  width: 74px;
+  padding-top: 10px ;
+  text-align: center;
+}
+.setting-dropdown div:hover {
+  cursor: pointer;
+}
+.setting-dropdown div:first-child {
+  border-right: 1px solid grey;
+}
+.room-game-info {
+  position: absolute;
+  min-width: 300px;
+  height: 500px;
+  border: 1px solid grey;
+  overflow-y: auto;
+  margin-right: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  left: -60px;
+  padding-top: 10px;
 
+}
+.room-game-info-header {
+  position: absolute;
+  width: 279px;
+  height: 40px;
+  background-color: #ffffff;
+  top: 1px;
+  right: 20px;
+  z-index: 10;
+  padding-left: 260px;
 
+}
+.room-game-info-header:hover {
+  cursor: pointer;
+}
+.room-game-info::-webkit-scrollbar {
+  width: 1px;
+}
+.room-game-info-item {
+  width: 277px;
+  height: 80px;
+  margin: 10px;
+  display: flex;
+  border: 1px solid #cfd2d6;
+  border-radius: 15px;
+}
+.room-game-info-time-section {
+  width: 40px;
+  height: 100%;
+  border-right: 1px solid #cfd2d6;
+  position: relative;
+}
+.room-game-info-time {
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  border: 1px solid #cfd2d6;
+  border-radius: 35px;
+  text-align: center;
+  padding-top: 5px;
+  top: 23px;
+  left: 23px;
+  background-color: #ffffff;
+}
+.room-game-info-title {
+  margin: 10px;
+  font-size: 18px;
+}
+.room-game-info-title:first-child {
+  margin-top: 50px;
+}
+.room-game-info-section {
+  margin: 5px 0 0 30px;
+  font-family: var(--bold-font);
+  font-size: 18px;
+}
+#goal-player {
+  font-size: 16px;
+  position: relative;
+}
+#assist-player {
+  font-family: "MICEGothic";
+  font-size: 10px;
+}
+#yellow-card {
+  width: 20px;
+  height: 30px;
+  background: yellow;
+  color: none;
+  position: absolute;
+  top: 15px;
+}
+#red-card {
+  width: 20px;
+  height: 30px;
+  background: red;
+  color: none;
+  position: absolute;
+  top: 15px;
+}
 </style>
