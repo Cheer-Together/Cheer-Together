@@ -107,7 +107,11 @@
               </div>
             </div>
             <div>
-              <div style="float:left; width:40%">홈 팀 골기록</div>
+              <div style="float:left; width:40%">
+                <div v-for="(homeGoal, i) in roomStore.homeGoal" :key="i">
+                  {{homeGoal.player.name}}
+                </div>
+              </div>
               <div style="float:left; width:20%">
                 <div>
                   {{roomStore.playTeams.stadium}}
@@ -116,7 +120,11 @@
                   {{roomStore.playTeams.kickoff}}
                 </div>
               </div>
-              <div style="float:left; width:40%">어웨이팀 골 기록</div>
+              <div style="float:left; width:40%">
+                <div v-for="(awayGoal, i) in roomStore.awayGoal" :key="i">
+                  {{awayGoal.player.name}}
+                </div>
+              </div>
             </div>
           </div>
         </div>

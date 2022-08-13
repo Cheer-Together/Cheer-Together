@@ -964,6 +964,8 @@ export const useRoomStore = defineStore('room', {
       apiId: 867946,
       leagueApiId: 39
     },
+    homeGoal:[],
+    awayGoal:[],
     isClickSettingButton: false,
     isClickBillboard: false,
     isClickGameInfo: false,
@@ -1321,7 +1323,17 @@ export const useRoomStore = defineStore('room', {
         .then(res => {
           this.gameInfo = []
           this.gameInfoHalf = []
+          this.homeGoal = []
+          this.awayGoal = []
           res.data.response.reverse().forEach((e) => {
+            if(e.type == "Goal") {
+              if(e.team.id == this.playTeams.home.apiId) {
+                this.homeGoal.push(e);
+              }
+              else {
+                this.awayGoal.push(e);
+              }
+            }
             if (e.time.elapsed <= 45) {
               this.gameInfo.push(e);
             }
