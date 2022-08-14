@@ -475,6 +475,8 @@ export default {
       team2_count: 0,
       team2_predict_list: [],
       isPredicted: false,
+
+      bullhorn: false,
     };
   },
   mounted() {
