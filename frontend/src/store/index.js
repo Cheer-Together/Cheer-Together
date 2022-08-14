@@ -931,16 +931,16 @@ export const useRoomStore = defineStore("room", {
     isClickLayout: false,
     isClickSetting: false,
     isClickPredictButton: false,
-    screenWidth: '1400px',
-    screenHeight: '800px',
+    screenWidth: "1400px",
+    screenHeight: "800px",
     gameInfo: [],
     gameInfoHalf: [],
     mic: true,
 
-    predictMonth: '',
-    predictDate: '',
-    predictDay: '',
-    predictTime: '',
+    predictMonth: "",
+    predictDate: "",
+    predictDay: "",
+    predictTime: "",
   }),
   actions: {
     getRooms() {
@@ -993,16 +993,16 @@ export const useRoomStore = defineStore("room", {
         .then((res) => {
           console.log(res.data);
           this.playTeams = res.data;
-          this.predictMonth = res.data.kickoff.substring(5, 7)
-          this.predictDate = res.data.kickoff.substring(8, 10)
-          
-          const year = res.data.kickoff.substring(0, 4)
-          const myStr = year + '-' + this.predictMonth + '-' + this.predictDate
-          var week = ['일', '월', '화', '수', '목','금','토']
-          var today = new Date(myStr).getDate()
-          console.log(year, this.predictMonth, this.predictDate, myStr)
-          this.predictDay = week[today]
-          this.predictTime = res.data.kickoff.substring(11, 16)
+          this.predictMonth = res.data.kickoff.substring(5, 7);
+          this.predictDate = res.data.kickoff.substring(8, 10);
+
+          const year = res.data.kickoff.substring(0, 4);
+          const myStr = year + "-" + this.predictMonth + "-" + this.predictDate;
+          var week = ["일", "월", "화", "수", "목", "금", "토"];
+          var today = new Date(myStr).getDate();
+          console.log(year, this.predictMonth, this.predictDate, myStr);
+          this.predictDay = week[today];
+          this.predictTime = res.data.kickoff.substring(11, 16);
         })
         .catch((err) => {
           console.log(err);
@@ -1089,10 +1089,10 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
       team2_count: 0,
       team1_predict_list: [],
       team2_predict_list: [],
-      isPredictedList: ["dd", "ff"],
+      isPredictedList: [],
     };
   },
   persist: {
-    storage: sessionStorage,
+    storage: localStorage,
   },
 });
