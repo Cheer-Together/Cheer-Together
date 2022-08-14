@@ -1,8 +1,8 @@
 <template>
-  <div v-if="streamManager" >
+  <div v-if="streamManager" class="cam-range">
     <ov-video :stream-manager="streamManager" class="cam"/>
-    <div>
-      <p>{{ clientData }}</p>
+    <div class="cam-user-name">
+      {{ clientData }}
     </div>
   </div>
 </template>
@@ -37,11 +37,29 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.cam-range {
+  position:relative
+}
 .cam {
   width: 240px;
   border-radius: 5px;
   margin: 0 10px;
 }
 
+.cam-range:hover > .cam-user-name {
+  display: block;
+}
+
+.cam-user-name {
+
+  font-size: 20px;
+  font-family: var(--bold-font);
+  /* position: absolute;
+  top: 0;
+  right: 10px; */
+  display: none;
+  text-align: center;
+
+}
 </style>
