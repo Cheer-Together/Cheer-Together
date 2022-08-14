@@ -18,9 +18,20 @@
           </div>
         </div>
 
-        <div class="match-screen-layout" @click="clickLayoutButton">
-          레이아웃
+        <div id="game-prediction-1">
+          <div>1팀 : {{ team1_point}}, {{ team1_count}} 명</div>
+          <div>
+            <button @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
+          </div>
         </div>
+        vs
+        <div id="game-prediction-2">
+          <div>2팀 : {{ team2_point }}, {{team2_count }} 명</div>
+          <div>
+            <button @click="sendGamePrediction(2)" v-if="!this.isPredicted">예측</button>
+          </div>
+        </div>
+        <input type="number" v-if="!this.isPredicted" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()"/>
       </div>
       
       <!-- 스크린 -->
@@ -310,6 +321,7 @@ export default {
       mySessionId: undefined,
       myUserName: undefined,
       sessionInfo: undefined,
+      isSessionManager: false,
       roomStore: useRoomStore(),
       isOpenedChattingWindow: true,
       message: "",
@@ -317,15 +329,20 @@ export default {
       mic: false,
       cam: false,
 
+      myPoint: 0,
+      pointToSend: 0,
+      team1_point: 0,
+      team1_count: 0,
+      team1_predict_list: [],
+      team2_point: 0,
+      team2_count: 0,
+      team2_predict_list: [],
+      isPredicted: false,
     };
   },
   mounted() {
     this.mySessionId = this.$route.params.session;
 
-    console.log(this.sessionInfo)
-
-    this.myUserName = useAccountStore().profile.nickname;
-    this.joinSession();
     this.inMount();
 
     // 사용한 피니아 변수 초기화
@@ -341,8 +358,13 @@ export default {
     async inMount(){
       this.mySessionId = this.$route.params.session;
       this.myUserName = useAccountStore().profile.nickname;
+      this.myPoint = useAccountStore().profile.point;
+      console.log("포인트 : " + this.myPoint);
       await useRoomStore().getInfo(this.mySessionId)
-      .then(() => this.sessionInfo = useRoomStore().roomInfo);
+      .then(() =>  {
+        this.sessionInfo = useRoomStore().roomInfo;
+        this.isSessionManager = (this.sessionInfo.managerId == useAccountStore().profileId);
+      });
       this.joinSession();
     },
     joinSession() {
@@ -358,6 +380,20 @@ export default {
       this.session.on("streamCreated", ({ stream }) => {
         const subscriber = this.session.subscribe(stream);
         this.subscribers.push(subscriber);
+        if(this.isSessionManager) {
+          this.session
+          .signal({
+            data: (this.team1_point) + "/" + (this.team1_count) + "/" + (this.team2_point) + "/" + (this.team2_count),
+            to: [],
+            type: "game-prediction-broadcast",
+          })
+          .then(() => {
+            console.log("Message successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        }
       });
 
       // On every Stream destroyed...
@@ -378,7 +414,7 @@ export default {
         let userName = receive[0];
         let message = String(receive[1]);
 
-        for(const badWord in BAD_WORDS_LIST) {
+        for(let badWord of BAD_WORDS_LIST) {
           if(message.includes(badWord)) {
             message = '[삭제된 메세지]';
             break;
@@ -391,6 +427,33 @@ export default {
         var objDiv = document.getElementById("match-screen-chatting-section");
         objDiv.scrollTop = objDiv.scrollHeight;
 
+      });
+
+      this.session.on("signal:game-prediction", (event) => {
+        let receive = event.data.split("/");
+        let team = parseInt(receive[0]);
+        this.team1_point = parseInt(receive[1]);
+        this.team1_count = parseInt(receive[2]);
+        this.team2_point = parseInt(receive[3]);
+        this.team2_count = parseInt(receive[4]);
+        const memberId = parseInt(receive[5]);
+        
+        if(this.isSessionManager) {
+          if(team == 1) {
+            this.team1_predict_list.push(memberId);
+          } else if(team == 2) {
+            this.team2_predict_list.push(memberId);
+          }
+        }
+      });
+
+
+      this.session.on("signal:game-prediction-broadcast", (event) => {
+        let receive = event.data.split("/");
+        this.team1_point = parseInt(receive[0]);
+        this.team1_count = parseInt(receive[1]);
+        this.team2_point = parseInt(receive[2]);
+        this.team2_count = parseInt(receive[3]);
       });
 
       // --- Connect to the session with a valid user token ---
@@ -551,7 +614,7 @@ export default {
     },
 
     sendChat() {
-      if (this.message && this.message != "") {
+      if (this.message && this.message.trim() != "") {
         this.session
           .signal({
             data: this.myUserName + "/" + this.message,
@@ -566,6 +629,41 @@ export default {
           });
       }
       this.message = "";
+    },
+
+    sendGamePrediction(team) {
+      if (this.pointToSend && this.pointToSend > 0) {
+        if(team == 1) {
+          this.team1_point += this.pointToSend;
+          this.team1_count++;
+        } else if(team == 2) {
+          this.team2_point += this.pointToSend;
+          this.team2_count++;
+        }
+
+        this.session
+          .signal({
+            data: team + "/" + (this.team1_point) + "/" + (this.team1_count) 
+              + "/" + (this.team2_point) + "/" + (this.team2_count) + "/" + useAccountStore().profileId,
+            to: [],
+            type: "game-prediction",
+          })
+          .then(() => {
+            console.log("Message successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        useRoomStore().subtractPoint(useAccountStore().profileId, team, this.pointToSend);
+        this.pointToSend = 0;
+        this.isPredicted = true;
+      }
+    },
+
+    setMaxPoint() {
+      if(this.pointToSend > this.myPoint) {
+        this.pointToSend = this.myPoint;
+      }
     },
     
     toggleMic(){
