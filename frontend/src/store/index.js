@@ -968,100 +968,8 @@ export const useRoomStore = defineStore("room", {
     isClickSetting: false,
     screenWidth: '1400px',
     screenHeight: '800px',
-    gameInfo:[
-      {
-          "time": {
-              "elapsed": 20,
-              "extra": null
-          },
-          "team": {
-              "id": 42,
-              "name": "Arsenal",
-              "logo": "https://media.api-sports.io/football/teams/42.png"
-          },
-          "player": {
-              "id": 127769,
-              "name": "Gabriel Martinelli"
-          },
-          "assist": {
-              "id": 641,
-              "name": "O. Zinchenko"
-          },
-          "type": "Goal",
-          "detail": "Normal Goal",
-          "comments": null
-      },
-      {
-          "time": {
-              "elapsed": 44,
-              "extra": null
-          },
-          "team": {
-              "id": 42,
-              "name": "Arsenal",
-              "logo": "https://media.api-sports.io/football/teams/42.png"
-          },
-          "player": {
-              "id": 1464,
-              "name": "Granit Xhaka"
-          },
-          "assist": {
-              "id": null,
-              "name": null
-          },
-          "type": "Card",
-          "detail": "Yellow Card",
-          "comments": "Simulation"
-      },
-      
-    ],
-    gameInfoHalf: [
-      {
-        time: {
-          elapsed: 20,
-          extra: null,
-        },
-        team: {
-          id: 42,
-          name: "Arsenal",
-          logo: "https://media.api-sports.io/football/teams/42.png",
-        },
-        player: {
-          id: 127769,
-          name: "Gabriel Martinelli",
-        },
-        assist: {
-          id: 641,
-          name: "O. Zinchenko",
-        },
-        type: "Goal",
-        detail: "Normal Goal",
-        comments: null,
-      },
-      {
-        "time": {
-            "elapsed": 44,
-            "extra": null
-        },
-        "team": {
-            "id": 42,
-            "name": "Arsenal",
-            "logo": "https://media.api-sports.io/football/teams/42.png"
-        },
-        "player": {
-            "id": 1464,
-            "name": "Granit Xhaka"
-        },
-        "assist": {
-            "id": null,
-            "name": null
-        },
-        "type": "Card",
-        "detail": "Yellow Card",
-        "comments": "Simulation"
-    },
-    
-    ],
+    gameInfo: [],
+    gameInfoHalf: [],
     mic: true,
   
   }),
@@ -1181,18 +1089,19 @@ export const useRoomStore = defineStore("room", {
         )
         .catch((e) => console.log(e));
     },
+    update(id, apiId) {
+      axios({
+        url: cheertogether.game.update(id),
+        method: 'PUT',
+        params: {
+          apiId: apiId,
+        }  
+      }).then(res => {
+        console.log("경기정보 업데이트 후 응답 : " + res.data);
+        this.playTeams = res.data;
+      })
+    }
   },
 
-  update(id, apiId) {
-    axios({
-      url: cheertogether.game.update(id),
-      method: 'PUT',
-      params: {
-        apiId: apiId,
-      }  
-    }).then(res => {
-      console.log("경기정보 업데이트 후 응답 : " + res.data);
-      this.playTeams = res.data;
-    })
-  }
+
 });
