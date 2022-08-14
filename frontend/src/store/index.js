@@ -638,9 +638,11 @@ export const useScheduleStore = defineStore('schedule', {
 })
 export const useOnAirStore = defineStore('onair', {
   state: () => ({
-    rooms: [],
+    allRooms: [],
+    currentRooms: [],
     makeRoomDialog: false,
   }),
+  persist: true,
   actions: {
     moveOnairPage(){
       axios({
@@ -648,7 +650,8 @@ export const useOnAirStore = defineStore('onair', {
         method: 'GET',
       })
         .then(res => {
-          this.rooms = res.data
+          this.allRooms = res.data
+          this.currentRooms = res.data
           router.push({name: 'Onair', params: {leaguename: '모든 응원방 목록'}})
         })
         .catch(err => {
@@ -680,7 +683,8 @@ export const useOnAirStore = defineStore('onair', {
             method: 'GET',
           })
             .then(res => {
-              this.rooms = res.data
+              this.allRooms = res.data
+              this.currentRooms = res.data
               router.push({name: 'Onair' , params: {leaguename: `${item.league}`} })
             })
             .catch(err => {
@@ -732,6 +736,32 @@ export const useOnAirStore = defineStore('onair', {
           }
         })
       }
+    },
+
+    searchRooms(searchData){
+        if(searchData.text){
+          axios({
+            url: cheertogether.room.search(),
+            method: 'GET',
+            params: {
+              keyword: searchData.text,
+              type: searchData.category
+            }
+          })
+          .then((res) => {
+            let trueRes = []
+            for(let searchedRoom of res.data){
+              for(let room of this.currentRooms){
+                if(searchedRoom.roomId === room.roomId){
+                  trueRes.push(searchedRoom)
+                }
+              }
+            }
+            this.currentRooms = trueRes
+            router.go()
+          })
+        }
+      
     },
 
     makeRoomDialogToggle() {

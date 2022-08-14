@@ -13,7 +13,7 @@
 import { useOnAirStore } from '../store/index.js'
 
 const onairStore = useOnAirStore();
-const rooms = onairStore.rooms
+const rooms = onairStore.currentRooms
 
 </script>
 
