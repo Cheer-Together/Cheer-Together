@@ -4,7 +4,7 @@ import cheertogether from "@/api/cheertogether";
 import Swal from "sweetalert2";
 import router from "@/router/index.js";
 import jwt_decode from "jwt-decode";
-import { createRoom, getRoomInfo } from "@/api/room";
+import { createRoom, getRoomInfo, getPopularRooms } from "@/api/room";
 import { ref } from "vue";
 
 export const useCommunityStore = defineStore("community", {
@@ -896,6 +896,7 @@ export const useRoomStore = defineStore("room", {
         status: "PRIVATE",
       },
     ],
+    popularRooms: [],
     playTeams: {
       id: 31,
       home: {
@@ -976,6 +977,17 @@ export const useRoomStore = defineStore("room", {
           console.log(err);
         }
       );
+    },
+
+    async getPopularRooms(){
+      await getPopularRooms(
+        (res) => {
+          this.popularRooms = res.data;
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
     },
 
     getPlayTeams(gameId) {

@@ -17,4 +17,8 @@ async function updateRoomHeadCount(path, headcount, success, fail) {
   await api.put(`/rooms/${path}`, data).then(success).catch(fail);
 }
 
-export { createRoom, getRoomInfo, updateRoomHeadCount };
+async function getPopularRooms(success, fail) {
+  await api.get(`/rooms/popular`).then(success).catch(fail);
+}
+
+export { createRoom, getRoomInfo, updateRoomHeadCount, getPopularRooms };
