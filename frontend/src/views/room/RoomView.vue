@@ -38,7 +38,7 @@
         <div style="margin: 0 auto;" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}">
       <!-- 비디오 컴포넌트 사이즈 조절 필요 
             영상 시청하기 위해서는 CORS 설정 필요 -->
-          <GameVideo :stream_url="this.stream_urls" id="video-section" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}" /
+          <GameVideo :stream_url="this.stream_urls" id="video-section" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}" />
         </div>
 
       <!-- 캠 레이아웃 -->
