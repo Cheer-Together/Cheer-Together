@@ -962,6 +962,7 @@ export const useRoomStore = defineStore('room', {
     isClickChatting: '',
     isClickLayout: false,
     isClickSetting: false,
+    screenWidth: '1400px',
     screenHeight: '800px',
     gameInfo:[
       {
