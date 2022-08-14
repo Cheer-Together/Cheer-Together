@@ -35,11 +35,11 @@
       </div>
       
       <!-- 스크린 -->
-      <div class="match-screen-section" :style="{ height : roomStore.screenHeight }">
-        <GameVideo :stream_url="this.stream_urls"/>
-        <!-- 비디오 컴포넌트 사이즈 조절 필요 
-              영상 시청하기 위해서는 CORS 설정 필요 -->
-      </div>
+        <div style="margin: 0 auto;" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}">
+      <!-- 비디오 컴포넌트 사이즈 조절 필요 
+            영상 시청하기 위해서는 CORS 설정 필요 -->
+          <GameVideo :stream_url="this.stream_urls" id="video-section" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}" />
+        </div>
 
       <!-- 캠 레이아웃 -->
       <div id="video-container" v-if="roomStore.isClickLayout">
@@ -488,6 +488,7 @@ export default {
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
     this.roomStore.isClickLayout = false
+    this.roomStore.screenWidth = '1400px'
     this.roomStore.screenHeight = '800px'
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
@@ -736,9 +737,11 @@ export default {
       this.roomStore.isClickLayout = !this.roomStore.isClickLayout
 
       if ( this.roomStore.screenHeight === '800px') {
+        this.roomStore.screenWidth = '1000px'
         this.roomStore.screenHeight = '610px'
       }
       else {
+        this.roomStore.screenWidth = '1400px'
         this.roomStore.screenHeight = '800px'
       }
     },
@@ -857,7 +860,7 @@ export default {
   }
 }
 /* 메인 영역 */
-/* 상단 제목 + 레이아웃 버튼 */
+/* 상단 제목 */
 #session {
   width: 100%;
   height: 830px;
@@ -886,7 +889,7 @@ export default {
   font-size: 25px;
 }
 
-/* 스크린 영역*/
+/* 레이아웃 버튼 */
 .match-screen-layout {
   margin: 10px 30px 0 0;
   width: 100px;
@@ -896,19 +899,26 @@ export default {
   border-radius: 3px;
   border: 1px solid #54575b;
 }
-
-
-/* 하단 캠 */
 .match-screen-layout:hover {
   cursor: pointer;
 }
-.match-screen-section {
-  /* max-height: calc(100% - 240px - 100px); */
-  background-image: url('@/assets/image/손흥민.jpg');
-  background-size:auto;
-  background-position: center;
-  background-repeat: no-repeat;
+/* 스크린 영역*/
+#video-section {
+  width: 1400px;
+  height: 800px;
+  margin: 0 auto;
 }
+
+/* 하단 캠 */
+#video-container {
+  margin-top: 10px;
+  width: 98%;
+  height: 180px;
+  margin-right: 60px;
+  display: flex;
+
+}
+
 
 /* 하단 버튼  */
 .match-screen-footer {
@@ -963,14 +973,7 @@ export default {
   animation-timing-function: ease-out;
 }
 
-#video-container {
-  margin-top: 10px;
-  width: 98%;
-  height: 180px;
-  margin-right: 60px;
-  display: flex;
 
-}
 /* 채팅 헤더 */
 .match-screen-chatting-header {
   height: 100px;
