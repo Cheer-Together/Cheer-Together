@@ -677,8 +677,6 @@ export default {
     clickGameInfo() {
       this.roomStore.isClickSettingButton = false
       this.roomStore.isClickGameInfo = true
-      var objDiv2 = document.getElementById("room-game-info");
-      objDiv2.scrollTop = objDiv2.scrollHeight;
       // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId)
       this.cam = !this.cam;
 
