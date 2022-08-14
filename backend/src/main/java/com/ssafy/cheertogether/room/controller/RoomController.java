@@ -113,7 +113,7 @@ public class RoomController {
 
 	@GetMapping("/popular")
 	@ApiOperation(value = "인기 있는 응원방 4개", notes = "참여자가 많은 4개의 응원방")
-	public ResponseEntity<List<RoomResponse>> getPopularRooms(){
+	public ResponseEntity<List<RoomResponse>> getPopularRooms() {
 		return new ResponseEntity<>(roomService.getPopularRooms(), HttpStatus.OK);
 	}
 }
