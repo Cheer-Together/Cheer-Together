@@ -34,6 +34,7 @@ public class GameService {
 	private final GameRepository gameRepository;
 	private final TeamRepository teamRepository;
 
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 	public GameResponse findGameById(Long id){
 		Game game = gameRepository.findGameById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_GAME_ERROR_MESSAGE));
@@ -101,6 +102,7 @@ public class GameService {
 		}
 	}
 
+	@Transactional(readOnly = true)
 	public List<GameResponse> findGamesByLeagueApiId(Long leagueApiId) {
 		return gameRepository.findAllByLeagueApiId(leagueApiId)
 			.stream()
@@ -108,8 +110,8 @@ public class GameService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public List<GameResponse> findGamesByLeagueApiIdAndDay(Long leagueApiId, String date) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 		LocalDate dateTime = LocalDate.parse(date, formatter);
 		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
 			0, 0);
@@ -120,6 +122,7 @@ public class GameService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public List<GameResponse> findGamesByLeagueApiIdAndMonth(Long leagueApiId, String date) {
 		YearMonth yearMonth = YearMonth.parse(date);
 		LocalDateTime start = LocalDateTime.of(yearMonth.getYear(), yearMonth.getMonth(), 1, 0, 0);
@@ -138,6 +141,7 @@ public class GameService {
 		gameList.stream().forEach(game -> game.updateLive());
 	}
 
+	@Transactional(readOnly = true)
 	public List<GameResponse> findGamesByStatus() {
 		return gameRepository.findAllByStatus(GameStatus.LIVE)
 			.stream()
@@ -145,8 +149,21 @@ public class GameService {
 			.collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
 	public List<GameResponse> findGamesByLeagueApiIdAndStatus(Long leagueApiId) {
 		return gameRepository.findAllByLeagueApiIdAndStatus(leagueApiId, GameStatus.LIVE)
+			.stream()
+			.map(GameResponse::from)
+			.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<GameResponse> findGamesByDay(String date) {
+		LocalDate dateTime = LocalDate.parse(date, formatter);
+		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
+			0, 0);
+		LocalDateTime end = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(), 23, 59);
+		return gameRepository.findAllByKickoffBetween(start, end)
 			.stream()
 			.map(GameResponse::from)
 			.collect(Collectors.toList());

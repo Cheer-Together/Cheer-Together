@@ -146,12 +146,7 @@ public class ArticleService {
 		reply.update(replyRequest);
 	}
 
-	public void replyDelete(Long replyId, String jwtToken) {
-		Reply reply = replyRepository.findById(replyId)
-			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
-		if (reply.getMember().getId() != Long.parseLong(jwtTokenProvider.getMemberId(jwtToken))) {
-			throw new NoAccessException();
-		}
+	public void replyDelete(Long replyId) {
 		replyRepository.deleteById(replyId);
 	}
 

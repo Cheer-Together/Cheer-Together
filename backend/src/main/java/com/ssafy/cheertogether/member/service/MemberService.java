@@ -187,4 +187,16 @@ public class MemberService implements UserDetailsService {
 			throw new IllegalArgumentException(MISMATCH_PASSWORD_ERROR_MESSAGE);
 		}
 	}
+
+	public void plusPoint(Long id, int point) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
+		member.plusPoint(point);
+	}
+
+	public void subtractPoint(Long id, int point) {
+		Member member = memberRepository.findById(id)
+			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
+		member.subtractPoint(point);
+	}
 }

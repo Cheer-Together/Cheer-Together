@@ -62,6 +62,7 @@ export const useAccountStore = defineStore('account', {
       nickname: '',
       profileImage: '',
       role: '',
+      point: '',
     },
     otherProfile: {
       email: '',
@@ -71,6 +72,7 @@ export const useAccountStore = defineStore('account', {
       nickname: '',
       profileImage: '',
       role: '',
+      point: '',
     },
     profileId: false,
     isChangePasswordModal: false,
@@ -310,6 +312,7 @@ export const useAccountStore = defineStore('account', {
         }  
       })
         .then(res => {
+          console.log("유저정보 : " + res.data.point)
           this.profile = res.data
           if (this.profile.favoriteTeamList.length > 0 ) {
             this.profile["profileImage"] = this.profile.favoriteTeamList[0].logo
@@ -847,7 +850,6 @@ export const useGameStore = defineStore("game", {
         this.date[i] = this.today[i].getDate();
         this.day[i] = this.dayName[this.today[i].getDay()];
         this.todayGames[i] = await test(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
-        console.log(this.todayGames[i])
         while (this.todayGames[i].length == 0) {
           this.nextDate[i] = this.today[i];
           this.nextDate[i].setDate(this.nextDate[i].getDate() + 1);
@@ -909,8 +911,8 @@ export const useGameStore = defineStore("game", {
     },
   },
 });
-export const useRoomStore = defineStore('room', { 
-  state: () => ({ 
+export const useRoomStore = defineStore("room", {
+  state: () => ({
     roomInfo: undefined,
     roomsAll: [
       {
@@ -938,7 +940,7 @@ export const useRoomStore = defineStore('room', {
         hanName: "",
         logo: "",
         code: "",
-        apiId: 0
+        apiId: 0,
       },
       away: {
         leagueName: "",
@@ -946,7 +948,7 @@ export const useRoomStore = defineStore('room', {
         hanName: "",
         logo: "",
         code: "",
-        apiId: 1
+        apiId: 1,
       },
       kickoff: "",
       stadium: "",
@@ -954,12 +956,14 @@ export const useRoomStore = defineStore('room', {
       homeScore: 0,
       awayScore: 2,
       apiId: 867946,
-      leagueApiId: 39
+      leagueApiId: 39,
     },
+    homeGoal:[],
+    awayGoal:[],
     isClickSettingButton: false,
     isClickBillboard: false,
     isClickGameInfo: false,
-    isClickChatting: '',
+    isClickChatting: "",
     isClickLayout: false,
     isClickSetting: false,
     screenWidth: '1400px',
@@ -1013,30 +1017,30 @@ export const useRoomStore = defineStore('room', {
     ],
     gameInfoHalf: [
       {
+        time: {
+          elapsed: 20,
+          extra: null,
+        },
+        team: {
+          id: 42,
+          name: "Arsenal",
+          logo: "https://media.api-sports.io/football/teams/42.png",
+        },
+        player: {
+          id: 127769,
+          name: "Gabriel Martinelli",
+        },
+        assist: {
+          id: 641,
+          name: "O. Zinchenko",
+        },
+        type: "Goal",
+        detail: "Normal Goal",
+        comments: null,
+      },
+      {
         "time": {
-            "elapsed": 58,
-            "extra": null
-        },
-        "team": {
-            "id": 52,
-            "name": "Crystal Palace",
-            "logo": "https://media.api-sports.io/football/teams/52.png"
-        },
-        "player": {
-            "id": 1135,
-            "name": "O. Édouard"
-        },
-        "assist": {
-            "id": 25927,
-            "name": "J. Mateta"
-        },
-        "type": "subst",
-        "detail": "Substitution 1",
-        "comments": null
-    },
-    {
-        "time": {
-            "elapsed": 60,
+            "elapsed": 44,
             "extra": null
         },
         "team": {
@@ -1045,8 +1049,8 @@ export const useRoomStore = defineStore('room', {
             "logo": "https://media.api-sports.io/football/teams/42.png"
         },
         "player": {
-            "id": 19959,
-            "name": "Ben White"
+            "id": 1464,
+            "name": "Granit Xhaka"
         },
         "assist": {
             "id": null,
@@ -1054,183 +1058,230 @@ export const useRoomStore = defineStore('room', {
         },
         "type": "Card",
         "detail": "Yellow Card",
-        "comments": "Foul"
+        "comments": "Simulation"
     },
+    
+  ],
+  gameInfoHalf: [
     {
-        "time": {
-            "elapsed": 64,
-            "extra": null
-        },
-        "team": {
-            "id": 52,
-            "name": "Crystal Palace",
-            "logo": "https://media.api-sports.io/football/teams/52.png"
-        },
-        "player": {
-            "id": 18862,
-            "name": "Nathaniel Clyne"
-        },
-        "assist": {
-            "id": null,
-            "name": null
-        },
-        "type": "Card",
-        "detail": "Yellow Card",
-        "comments": "Foul"
-    },
-    {
-        "time": {
-            "elapsed": 75,
-            "extra": null
-        },
-        "team": {
-            "id": 52,
-            "name": "Crystal Palace",
-            "logo": "https://media.api-sports.io/football/teams/52.png"
-        },
-        "player": {
-            "id": 3339,
-            "name": "C. Doucouré"
-        },
-        "assist": {
-            "id": 18852,
-            "name": "L. Milivojević"
-        },
-        "type": "subst",
-        "detail": "Substitution 2",
-        "comments": null
-    },
-    {
-        "time": {
-            "elapsed": 83,
-            "extra": null
-        },
-        "team": {
-            "id": 42,
-            "name": "Arsenal",
-            "logo": "https://media.api-sports.io/football/teams/42.png"
-        },
-        "player": {
-            "id": 643,
-            "name": "Gabriel Jesus"
-        },
-        "assist": {
-            "id": 1468,
-            "name": "E. Nketiah"
-        },
-        "type": "subst",
-        "detail": "Substitution 1",
-        "comments": null
-    },
-    {
-        "time": {
-            "elapsed": 83,
-            "extra": null
-        },
-        "team": {
-            "id": 42,
-            "name": "Arsenal",
-            "logo": "https://media.api-sports.io/football/teams/42.png"
-        },
-        "player": {
-            "id": 641,
-            "name": "O. Zinchenko"
-        },
-        "assist": {
-            "id": 1117,
-            "name": "K. Tierney"
-        },
-        "type": "subst",
-        "detail": "Substitution 2",
-        "comments": null
-    },
-    {
-        "time": {
-            "elapsed": 85,
-            "extra": null
-        },
-        "team": {
-            "id": 42,
-            "name": "Arsenal",
-            "logo": "https://media.api-sports.io/football/teams/42.png"
-        },
-        "player": {
-            "id": 67971,
-            "name": "M. Guéhi"
-        },
-        "assist": {
-            "id": null,
-            "name": null
-        },
-        "type": "Goal",
-        "detail": "Own Goal",
-        "comments": null
-    },
-    {
-        "time": {
-            "elapsed": 86,
-            "extra": null
-        },
-        "team": {
-            "id": 52,
-            "name": "Crystal Palace",
-            "logo": "https://media.api-sports.io/football/teams/52.png"
-        },
-        "player": {
-            "id": 19586,
-            "name": "E. Eze"
-        },
-        "assist": {
-            "id": 328808,
-            "name": "M. Ebiowei"
-        },
-        "type": "subst",
-        "detail": "Substitution 3",
-        "comments": null
-    },
-    {
-        "time": {
-            "elapsed": 86,
-            "extra": null
-        },
-        "team": {
-            "id": 52,
-            "name": "Crystal Palace",
-            "logo": "https://media.api-sports.io/football/teams/52.png"
-        },
-        "player": {
-            "id": 18843,
-            "name": "J. Schlupp"
-        },
-        "assist": {
-            "id": 18806,
-            "name": "W. Hughes"
-        },
-        "type": "subst",
-        "detail": "Substitution 4",
-        "comments": null
-    },
-    {
-        "time": {
-            "elapsed": 90,
-            "extra": 3
-        },
-        "team": {
-            "id": 42,
-            "name": "Arsenal",
-            "logo": "https://media.api-sports.io/football/teams/42.png"
-        },
-        "player": {
-            "id": 37127,
-            "name": "M. Ødegaard"
-        },
-        "assist": {
-            "id": 1427,
-            "name": "A. Lokonga"
-        },
-        "type": "subst",
-        "detail": "Substitution 3",
-        "comments": null
+      "time": {
+          "elapsed": 58,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 1135,
+          "name": "O. Édouard"
+      },
+      "assist": {
+          "id": 25927,
+          "name": "J. Mateta"
+      },
+      "type": "subst",
+      "detail": "Substitution 1",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 60,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 19959,
+          "name": "Ben White"
+      },
+      "assist": {
+          "id": null,
+          "name": null
+      },
+      "type": "Card",
+      "detail": "Yellow Card",
+      "comments": "Foul"
+  },
+  {
+      "time": {
+          "elapsed": 64,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 18862,
+          "name": "Nathaniel Clyne"
+      },
+      "assist": {
+          "id": null,
+          "name": null
+      },
+      "type": "Card",
+      "detail": "Yellow Card",
+      "comments": "Foul"
+  },
+  {
+      "time": {
+          "elapsed": 75,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 3339,
+          "name": "C. Doucouré"
+      },
+      "assist": {
+          "id": 18852,
+          "name": "L. Milivojević"
+      },
+      "type": "subst",
+      "detail": "Substitution 2",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 83,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 643,
+          "name": "Gabriel Jesus"
+      },
+      "assist": {
+          "id": 1468,
+          "name": "E. Nketiah"
+      },
+      "type": "subst",
+      "detail": "Substitution 1",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 83,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 641,
+          "name": "O. Zinchenko"
+      },
+      "assist": {
+          "id": 1117,
+          "name": "K. Tierney"
+      },
+      "type": "subst",
+      "detail": "Substitution 2",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 85,
+          "extra": null
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 67971,
+          "name": "M. Guéhi"
+      },
+      "assist": {
+          "id": null,
+          "name": null
+      },
+      "type": "Goal",
+      "detail": "Own Goal",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 86,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 19586,
+          "name": "E. Eze"
+      },
+      "assist": {
+          "id": 328808,
+          "name": "M. Ebiowei"
+      },
+      "type": "subst",
+      "detail": "Substitution 3",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 86,
+          "extra": null
+      },
+      "team": {
+          "id": 52,
+          "name": "Crystal Palace",
+          "logo": "https://media.api-sports.io/football/teams/52.png"
+      },
+      "player": {
+          "id": 18843,
+          "name": "J. Schlupp"
+      },
+      "assist": {
+          "id": 18806,
+          "name": "W. Hughes"
+      },
+      "type": "subst",
+      "detail": "Substitution 4",
+      "comments": null
+  },
+  {
+      "time": {
+          "elapsed": 90,
+          "extra": 3
+      },
+      "team": {
+          "id": 42,
+          "name": "Arsenal",
+          "logo": "https://media.api-sports.io/football/teams/42.png"
+      },
+      "player": {
+          "id": 37127,
+          "name": "M. Ødegaard"
+      },
+      "assist": {
+          "id": 1427,
+          "name": "A. Lokonga"
+      },
+      "type": "subst",
+      "detail": "Substitution 3",
+      "comments": null
     }
     ],
     mic: true,
@@ -1247,50 +1298,50 @@ export const useRoomStore = defineStore('room', {
       */
       axios({
         url: cheertogether.room.rooms(),
-        method: 'GET',
+        method: "GET",
       })
-      .then(res => {
-        console.log(res.data)
-        // this.roomsAll = res.data
-      })
-      .catch(err => {
-        console.log(err)
-        
-      })
+        .then((res) => {
+          console.log(res.data);
+          // this.roomsAll = res.data
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     async getInfo(sessionId) {
-      await getRoomInfo(sessionId, 
+      await getRoomInfo(
+        sessionId,
         (res) => {
           console.log(res);
           this.roomInfo = res.data;
-          this.getPlayTeams(res.data.gameId)
+          this.getPlayTeams(res.data.gameId);
         },
         (err) => {
           console.log(err);
-        })
+        }
+      );
     },
 
     getPlayTeams(gameId) {
-    /* 
+      /* 
     GET: 경기 정보를 불러옴
       성공하면
 
       실패하면
         에러 메시지 표시
     */
-    axios({
-      url: cheertogether.game.playGameInfo(gameId),
-      method: 'GET', 
-    })
-      .then(res => {
-        console.log(res.data)
-        this.playTeams = res.data
+      axios({
+        url: cheertogether.game.playGameInfo(gameId),
+        method: "GET",
       })
-      .catch(err => {
-        console.log(err)
-      })
-        
+        .then((res) => {
+          console.log(res.data);
+          this.playTeams = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
 
     getGameInfo(apiId) {
@@ -1303,31 +1354,67 @@ export const useRoomStore = defineStore('room', {
       */
       axios({
         url: cheertogether.game.gameInfo(),
-        method: 'GET',
+        method: "GET",
         headers: {
-          "x-rapidapi-host" : process.env.VUE_APP_X_RAPIDAPI_HOST,
-          "x-rapidapi-key" : process.env.VUE_APP_X_RAPIDAPI_KEY
+          "x-rapidapi-host": process.env.VUE_APP_X_RAPIDAPI_HOST,
+          "x-rapidapi-key": process.env.VUE_APP_X_RAPIDAPI_KEY,
         },
         params: {
           fixture: apiId,
-        }  
+        },
       })
         .then(res => {
           this.gameInfo = []
           this.gameInfoHalf = []
+          this.homeGoal = []
+          this.awayGoal = []
           res.data.response.reverse().forEach((e) => {
+            if(e.type == "Goal") {
+              if(e.team.id == this.playTeams.home.apiId) {
+                this.homeGoal.push(e);
+              }
+              else {
+                this.awayGoal.push(e);
+              }
+            }
             if (e.time.elapsed <= 45) {
               this.gameInfo.push(e);
-            }
-            else {
+            } else {
               this.gameInfoHalf.push(e);
             }
           });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
 
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    }
+    subtractPoint(memberId, team, pointToSend) {
+      axios({
+        url: cheertogether.members.subtractPoint(memberId),
+        method: "PUT",
+        data: { point: pointToSend },
+      })
+        .then(() =>
+          Swal.fire({
+            icon: "success",
+            title: team + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
+          })
+        )
+        .catch((e) => console.log(e));
+    },
+  },
+
+  update(id, apiId) {
+    axios({
+      url: cheertogether.game.update(id),
+      method: 'PUT',
+      params: {
+        apiId: apiId,
+      }  
+    }).then(res => {
+      console.log("경기정보 업데이트 후 응답 : " + res.data);
+      this.playTeams = res.data;
+    })
   }
-})
+});

@@ -18,9 +18,20 @@
           </div>
         </div>
 
-        <div class="match-screen-layout" @click="clickLayoutButton">
-          레이아웃
+        <div id="game-prediction-1">
+          <div>1팀 : {{ team1_point}}, {{ team1_count}} 명</div>
+          <div>
+            <button @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
+          </div>
         </div>
+        vs
+        <div id="game-prediction-2">
+          <div>2팀 : {{ team2_point }}, {{team2_count }} 명</div>
+          <div>
+            <button @click="sendGamePrediction(2)" v-if="!this.isPredicted">예측</button>
+          </div>
+        </div>
+        <input type="number" v-if="!this.isPredicted" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()"/>
       </div>
       
       <!-- 스크린 -->
@@ -178,10 +189,48 @@
             경기 정보
           </div>
         </div>
-
         <!-- 전광판 -->
-        <div v-if="roomStore.isClickBillboard">
-          전광판
+        <div v-if="roomStore.isClickBillboard" style="position: relative;">
+          <div class="room-game-billboard-header" @click="roomStore.isClickBillboard = false">
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </div>
+          <div class="room-game-billboard">
+            <div>
+              <div style="float:left; width:45%; text-align:right; ">
+                {{roomStore.playTeams.home.hanName}}
+                <img :src="roomStore.playTeams.home.logo" alt="" width="16"> 
+                {{roomStore.playTeams.homeScore}}
+              </div>
+              <div style="float:left; width:10%; text-align:center">vs</div>
+              <div style="float:left; width:45%; text-align:left">
+                {{roomStore.playTeams.awayScore}}
+                <img :src="roomStore.playTeams.away.logo" alt="" width="16"> 
+                {{roomStore.playTeams.away.hanName}}
+              </div>
+            </div>
+            <div>
+              <div style="float:left; width:40%">
+                <div v-for="(homeGoal, i) in roomStore.homeGoal" :key="i">
+                  {{homeGoal.player.name}}
+                </div>
+              </div>
+              <div style="float:left; width:20%">
+                <div>
+                  {{roomStore.playTeams.stadium}}
+                </div>
+                <div>
+                  {{roomStore.playTeams.kickoff}}
+                </div>
+              </div>
+              <div style="float:left; width:40%">
+                <div v-for="(awayGoal, i) in roomStore.awayGoal" :key="i">
+                  {{awayGoal.player.name}}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 경기 정보 -->
         <div v-if="roomStore.isClickGameInfo" style="position: relative;">
@@ -405,6 +454,7 @@ export default {
       mySessionId: undefined,
       myUserName: undefined,
       sessionInfo: undefined,
+      isSessionManager: false,
       roomStore: useRoomStore(),
       isOpenedChattingWindow: true,
       message: "",
@@ -415,6 +465,17 @@ export default {
 
       mic: false,
       cam: false,
+
+      myPoint: 0,
+      pointToSend: 0,
+      team1_point: 0,
+      team1_count: 0,
+      team1_predict_list: [],
+      team2_point: 0,
+      team2_count: 0,
+      team2_predict_list: [],
+      isPredicted: false,
+
       bullhorn: false,
     };
   },
@@ -432,14 +493,21 @@ export default {
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
+
+    this.loading = setInterval(this.getGameInfo(), 60000);
   },
 
   methods: {
     async inMount(){
       this.mySessionId = this.$route.params.session;
       this.myUserName = useAccountStore().profile.nickname;
+      this.myPoint = useAccountStore().profile.point;
+      console.log("포인트 : " + this.myPoint);
       await useRoomStore().getInfo(this.mySessionId)
-      .then(() => this.sessionInfo = useRoomStore().roomInfo);
+      .then(() =>  {
+        this.sessionInfo = useRoomStore().roomInfo;
+        this.isSessionManager = (this.sessionInfo.managerId == useAccountStore().profileId);
+      });
       this.joinSession();
     },
     joinSession() {
@@ -455,6 +523,20 @@ export default {
       this.session.on("streamCreated", ({ stream }) => {
         const subscriber = this.session.subscribe(stream);
         this.subscribers.push(subscriber);
+        if(this.isSessionManager) {
+          this.session
+          .signal({
+            data: (this.team1_point) + "/" + (this.team1_count) + "/" + (this.team2_point) + "/" + (this.team2_count),
+            to: [],
+            type: "game-prediction-broadcast",
+          })
+          .then(() => {
+            console.log("Message successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        }
       });
 
       // On every Stream destroyed...
@@ -475,7 +557,7 @@ export default {
         let userName = receive[0];
         let message = String(receive[1]);
 
-        for(const badWord in BAD_WORDS_LIST) {
+        for(let badWord of BAD_WORDS_LIST) {
           if(message.includes(badWord)) {
             message = '[삭제된 메세지]';
             break; 
@@ -488,6 +570,33 @@ export default {
         var objDiv = document.getElementById("match-screen-chatting-section");
         objDiv.scrollTop = objDiv.scrollHeight;
 
+      });
+
+      this.session.on("signal:game-prediction", (event) => {
+        let receive = event.data.split("/");
+        let team = parseInt(receive[0]);
+        this.team1_point = parseInt(receive[1]);
+        this.team1_count = parseInt(receive[2]);
+        this.team2_point = parseInt(receive[3]);
+        this.team2_count = parseInt(receive[4]);
+        const memberId = parseInt(receive[5]);
+        
+        if(this.isSessionManager) {
+          if(team == 1) {
+            this.team1_predict_list.push(memberId);
+          } else if(team == 2) {
+            this.team2_predict_list.push(memberId);
+          }
+        }
+      });
+
+
+      this.session.on("signal:game-prediction-broadcast", (event) => {
+        let receive = event.data.split("/");
+        this.team1_point = parseInt(receive[0]);
+        this.team1_count = parseInt(receive[1]);
+        this.team2_point = parseInt(receive[2]);
+        this.team2_count = parseInt(receive[3]);
       });
 
       // --- Connect to the session with a valid user token ---
@@ -650,7 +759,7 @@ export default {
     },
 
     sendChat() {
-      if (this.message && this.message != "") {
+      if (this.message && this.message.trim() != "") {
         this.session
           .signal({
             data: this.myUserName + "/" + this.message,
@@ -665,6 +774,41 @@ export default {
           });
       }
       this.message = "";
+    },
+
+    sendGamePrediction(team) {
+      if (this.pointToSend && this.pointToSend > 0) {
+        if(team == 1) {
+          this.team1_point += this.pointToSend;
+          this.team1_count++;
+        } else if(team == 2) {
+          this.team2_point += this.pointToSend;
+          this.team2_count++;
+        }
+
+        this.session
+          .signal({
+            data: team + "/" + (this.team1_point) + "/" + (this.team1_count) 
+              + "/" + (this.team2_point) + "/" + (this.team2_count) + "/" + useAccountStore().profileId,
+            to: [],
+            type: "game-prediction",
+          })
+          .then(() => {
+            console.log("Message successfully sent");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        useRoomStore().subtractPoint(useAccountStore().profileId, team, this.pointToSend);
+        this.pointToSend = 0;
+        this.isPredicted = true;
+      }
+    },
+
+    setMaxPoint() {
+      if(this.pointToSend > this.myPoint) {
+        this.pointToSend = this.myPoint;
+      }
     },
     
     toggleMic(){
@@ -685,9 +829,14 @@ export default {
     clickGameInfo() {
       this.roomStore.isClickSettingButton = false
       this.roomStore.isClickGameInfo = true
-      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId)
       this.cam = !this.cam;
-
+    },
+    getGameInfo() {
+      if(this.roomStore.playTeams.status == "FT"){
+        clearInterval(this.loading);
+      }
+      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
+      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     }
   },
 };
@@ -933,7 +1082,6 @@ export default {
   right: 20px;
   z-index: 10;
   padding-left: 260px;
-
 }
 .room-game-info-header:hover {
   cursor: pointer;
@@ -978,6 +1126,32 @@ export default {
   margin: 5px 0 0 30px;
   font-family: var(--bold-font);
   font-size: 18px;
+}
+.room-game-billboard-header {
+  position: absolute;
+  width: 279px;
+  height: 10px;
+  background-color: #ffffff;
+  top: 1px;
+  right: 20px;
+  z-index: 10;
+  padding-left: 260px;
+}
+.room-game-billboard-header:hover {
+  cursor: pointer;
+}
+.room-game-billboard {
+  position: absolute;
+  min-width: 700px;
+  height: 300px;
+  border: 1px solid grey;
+  overflow-y: auto;
+  margin-right: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  left: -460px;
+  padding-top: 10px;
+
 }
 #goal-player {
   font-size: 16px;
