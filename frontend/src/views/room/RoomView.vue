@@ -14,7 +14,7 @@
             <v-icon  size="40" @click="leaveSession">
               mdi-account-multiple
             </v-icon>
-            6 
+            {{subscribers.length + 1}}
           </div>
         </div>
 
