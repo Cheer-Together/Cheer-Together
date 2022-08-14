@@ -109,6 +109,7 @@
             :key="sub.stream.connection.connectionId"
             :stream-manager="sub"
             @click="updateMainVideoStreamManager(sub)"
+            @forceOut="forceOut"
           />
         </div>
 
@@ -854,11 +855,12 @@ export default {
       this.message = "";
     },
 
-    forceOut(userName) {
-      console.log(userName);
+    forceOut(clientData) {
+      console.log(clientData + this.isSessionManager);
+      if(this.isSessionManager == false) return;
       this.session
         .signal({
-          data: userName,
+          data: clientData,
           to: [],
           type: "force-out",
         })
