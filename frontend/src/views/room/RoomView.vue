@@ -20,7 +20,7 @@
         </div>
         
         <!-- 승부 예측 -->
-        <div class="game-prediction" >
+        <div class="game-prediction" v-if="roomStore.isClickPredictButton">
           <!-- 승부 예측 시간 -->
           <div style="font-size: 16px;">
             {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
@@ -78,12 +78,15 @@
             </div>
           </div>
         </div>
-        <div class="match-screen-layout" @click="roomStore.isClickPredictButton = !roomStore.isClickPredictButton">
-          승부예측
-        </div>
-        <!-- 레이아웃 -->
-        <div class="match-screen-layout" @click="clickLayoutButton">
-          레이아웃
+
+        <div style="display:flex">
+          <div class="match-screen-layout" @click="roomStore.isClickPredictButton = !roomStore.isClickPredictButton">
+            승부예측
+          </div>
+          <!-- 레이아웃 -->
+          <div class="match-screen-layout" @click="clickLayoutButton">
+            레이아웃
+          </div>
         </div>
 
         <!-- <div id="game-prediction-1">
@@ -905,7 +908,7 @@ export default {
         clearInterval(this.loading);
       }
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
-      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
+      // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     }
   },
 };
@@ -944,6 +947,7 @@ export default {
   padding: 0 0 0 30px;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 .match-screen-title {
   width: 740px;
@@ -967,6 +971,9 @@ export default {
   border-radius: 10px;
   padding: 10px;
   color: white;
+  position: absolute;
+  top: 50px;
+  right: 30px;
 }
 .game-prediction-team {
   width: 275px;
