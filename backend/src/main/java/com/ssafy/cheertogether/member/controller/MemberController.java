@@ -2,6 +2,8 @@ package com.ssafy.cheertogether.member.controller;
 
 import static com.ssafy.cheertogether.member.MemberConstant.*;
 
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -104,5 +106,21 @@ public class MemberController {
 		String tempPassword = memberService.findPassword(email);
 		emailService.sendTempPassword(email, tempPassword);
 		return new ResponseEntity<>(FIND_PASSWORD_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+	}
+
+	@PutMapping("/{id}/point/plus")
+	@ApiOperation(value = "축구공(포인트) 증가", notes = "일정 축구공(포인트)을 증가시킴")
+	public ResponseEntity<String> plusPoint(@PathVariable Long id,
+		@ApiParam(value = "증가시킬 축구공(포인트) 수", required = true, example = "10") @RequestBody Map<String, Integer> point) {
+		memberService.plusPoint(id, point.get("point"));
+		return new ResponseEntity<>(String.format(PLUS_POINT_SUCCESS_RESPONSE_MESSAGE, point.get("point")), HttpStatus.OK);
+	}
+
+	@PutMapping("/{id}/point/subtract")
+	@ApiOperation(value = "축구공(포인트) 감소", notes = "일정 축구공(포인트)을 감소시킴")
+	public ResponseEntity<String> subtractPoint(@PathVariable Long id,
+		@ApiParam(value = "감소시킬 축구공(포인트) 수", required = true, example = "10") @RequestBody Map<String, Integer> point) {
+		memberService.subtractPoint(id, point.get("point"));
+		return new ResponseEntity<>(String.format(SUBTRACT_POINT_SUCCESS_RESPONSE_MESSAGE, point.get("point")), HttpStatus.OK);
 	}
 }

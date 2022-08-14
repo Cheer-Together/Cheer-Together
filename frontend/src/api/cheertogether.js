@@ -19,6 +19,7 @@ export default {
     editUserProfile: (userId) => HOST + MEMBERS + `${userId}`, // 회원 수정
     withdrawal: (userId) => HOST + MEMBERS + `${userId}`, // 회원 탈퇴
     changePassword: (userId) => HOST + MEMBERS + `${userId}/` + 'password', // 비밀번호 변경
+    subtractPoint: (userId) => HOST + MEMBERS + `${userId}/` + 'point/subtract'  //포인트 감소
   },
   league: {
     leaguesAll: () => HOST + LEAGUES, // 모든 리그 정보 조회
@@ -29,7 +30,7 @@ export default {
   },
   game: {
     games: () => HOST + GAMES, // 경기일정 조회
-
+    update: (id) => HOST + GAMES + `${id}`,
     gamesByDate: (leagueApiId) => HOST + GAMES + `${leagueApiId}` + '/date',
     playGameInfo: (gameId) => HOST + GAMES + 'game/' + `${gameId}`, // 현재 응원 방의 게임 조회
 
@@ -40,6 +41,6 @@ export default {
   room: {
     rooms: () => HOST + ROOMS, // 모든 응원방 검색
     roomsLeague: (leagueApiId) => HOST + ROOMS + 'league/' + `${leagueApiId}`,
-    enterRoom: (roomId) => HOST + ROOMS + `${roomId}`
+    enterRoom: (roomId) => HOST + ROOMS + `${roomId}`,
   }
 }
