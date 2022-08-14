@@ -89,15 +89,15 @@
           </div>
         </div>
 
-        <!-- <div id="game-prediction-1">
-          <div>1팀 : {{ team1_point}}, {{ team1_count}} 명</div>
+        <div id="game-prediction-1">
+          <div>1팀 : {{ gamePredictionStore.team1_point}}, {{ gamePredictionStore.team1_count}} 명</div>
           <div>
             <button @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
           </div>
         </div>
         vs
         <div id="game-prediction-2">
-          <div>2팀 : {{ team2_point }}, {{team2_count }} 명</div>
+          <div>2팀 : {{ gamePredictionStore.team2_point }}, {{ gamePredictionStore.team2_count }} 명</div>
           <div>
             <button @click="sendGamePrediction(2)" v-if="!this.isPredicted">예측</button>
           </div>
@@ -498,7 +498,7 @@ import UserVideo from "@/components/video/UserVideo.vue";
 import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
-import { useAccountStore, useRoomStore,  } from "@/store/index.js";
+import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -538,16 +538,11 @@ export default {
       mic: false,
       cam: false,
 
+      gamePredictionStore : useGamePredictionStore(),
       myPoint: 0,
       pointToSend: 0,
-      team1_point: 0,
-      team1_count: 0,
-      team1_predict_list: [],
-      team2_point: 0,
-      team2_count: 0,
-      team2_predict_list: [],
       isPredicted: false,
-
+  
       bullhorn: false,
     };
   },
@@ -555,7 +550,6 @@ export default {
     this.mySessionId = this.$route.params.session;
 
     this.inMount();
-    console.log(this.sessionInfo)
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
@@ -574,12 +568,21 @@ export default {
       this.mySessionId = this.$route.params.session;
       this.myUserName = useAccountStore().profile.nickname;
       this.myPoint = useAccountStore().profile.point;
-      console.log("포인트 : " + this.myPoint);
+
+      let list = useGamePredictionStore().isPredictedList;
+      for(let predictedSession of list) {
+        if(predictedSession == this.mySessionId) {
+          this.isPredicted = true;
+          break;
+        }
+      }
+
       await useRoomStore().getInfo(this.mySessionId)
       .then(() =>  {
         this.sessionInfo = useRoomStore().roomInfo;
         this.isSessionManager = (this.sessionInfo.managerId == useAccountStore().profileId);
       });
+
       this.joinSession();
     },
     joinSession() {
@@ -655,9 +658,9 @@ export default {
         
         if(this.isSessionManager) {
           if(team == 1) {
-            this.team1_predict_list.push(memberId);
+            useGamePredictionStore().team1_predcit_list.push(memberId);
           } else if(team == 2) {
-            this.team2_predict_list.push(memberId);
+            useGamePredictionStore().team2_predict_list.push(memberId);
           }
         }
       });
@@ -665,10 +668,10 @@ export default {
 
       this.session.on("signal:game-prediction-broadcast", (event) => {
         let receive = event.data.split("/");
-        this.team1_point = parseInt(receive[0]);
-        this.team1_count = parseInt(receive[1]);
-        this.team2_point = parseInt(receive[2]);
-        this.team2_count = parseInt(receive[3]);
+        useGamePredictionStore().team1_point = parseInt(receive[0]);
+        useGamePredictionStore().team1_count = parseInt(receive[1]);
+        useGamePredictionStore().team2_point = parseInt(receive[2]);
+        useGamePredictionStore().team2_count = parseInt(receive[3]);
       });
 
       // --- Connect to the session with a valid user token ---
@@ -737,7 +740,7 @@ export default {
      * These methods retrieve the mandatory user token from OpenVidu Server.
      * This behavior MUST BE IN YOUR SERVER-SIDE IN PRODUCTION (by using
      * the API REST, openvidu-java-client or openvidu-node-client):
-     *   1) Initialize a Session in OpenVidu Server	(POST /openvidu/api/sessions)
+     *   1) Initialize a Session in OpenVidu Server (POST /openvidu/api/sessions)
      *   2) Create a Connection in OpenVidu Server (POST /openvidu/api/sessions/<SESSION_ID>/connection)
      *   3) The Connection.token must be consumed in Session.connect() method
      */
@@ -851,17 +854,17 @@ export default {
     sendGamePrediction(team) {
       if (this.pointToSend && this.pointToSend > 0) {
         if(team == 1) {
-          this.team1_point += this.pointToSend;
-          this.team1_count++;
+          useGamePredictionStore().team1_point += this.pointToSend;
+          useGamePredictionStore().team1_count++;
         } else if(team == 2) {
-          this.team2_point += this.pointToSend;
-          this.team2_count++;
+          useGamePredictionStore().team2_point += this.pointToSend;
+          useGamePredictionStore().team2_count++;
         }
 
         this.session
           .signal({
-            data: team + "/" + (this.team1_point) + "/" + (this.team1_count) 
-              + "/" + (this.team2_point) + "/" + (this.team2_count) + "/" + useAccountStore().profileId,
+            data: team + "/" + (useGamePredictionStore().team1_point) + "/" + (useGamePredictionStore().team1_count) 
+              + "/" + (useGamePredictionStore().team2_point) + "/" + (useGamePredictionStore().team2_count) + "/" + useAccountStore().profileId,
             to: [],
             type: "game-prediction",
           })
@@ -873,6 +876,7 @@ export default {
           });
         useRoomStore().subtractPoint(useAccountStore().profileId, team, this.pointToSend);
         this.pointToSend = 0;
+        useGamePredictionStore().isPredicted.push(this.mySessionId);
         this.isPredicted = true;
       }
     },
@@ -1306,3 +1310,4 @@ export default {
   top: 15px;
 }
 </style>
+
