@@ -110,4 +110,10 @@ public class RoomController {
 		roomService.updateHeadCount(roomId, headCount.get("headCount"));
 		return new ResponseEntity<>(UPDATE_ROOM_HEADCOUNT_SUCCESS_MESSAGE, HttpStatus.OK);
 	}
+
+	@GetMapping("/popular")
+	@ApiOperation(value = "인기 있는 응원방 4개", notes = "참여자가 많은 4개의 응원방")
+	public ResponseEntity<List<RoomResponse>> getPopularRooms(){
+		return new ResponseEntity<>(roomService.getPopularRooms(), HttpStatus.OK);
+	}
 }

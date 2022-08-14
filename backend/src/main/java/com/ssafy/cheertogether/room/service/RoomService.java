@@ -98,4 +98,11 @@ public class RoomService {
 			.orElseThrow(() -> new IllegalArgumentException(MODIFY_ROOM_ERROR_MESSAGE));
 		room.updateHeadCount(headCount);
 	}
+
+	public List<RoomResponse> getPopularRooms() {
+		return roomRepository.findTop4ByOrderByHeadCountDesc()
+			.stream()
+			.map(RoomResponse::new)
+			.collect(Collectors.toList());
+	}
 }
