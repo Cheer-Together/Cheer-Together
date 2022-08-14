@@ -599,6 +599,13 @@ export default {
         this.team2_count = parseInt(receive[3]);
       });
 
+      this.session.on("signal:force-out", (event) => {
+        console.log(event.data);
+        if(event.data === this.myUserName){
+          this.leaveSession();
+        }
+      });
+
       // --- Connect to the session with a valid user token ---
 
       // 'getToken' method is simulating what your server-side should do.
@@ -774,6 +781,22 @@ export default {
           });
       }
       this.message = "";
+    },
+
+    forceOut(userName) {
+      console.log(userName);
+      this.session
+        .signal({
+          data: userName,
+          to: [],
+          type: "force-out",
+        })
+        .then(() => {
+          console.log("force-out successfully requested");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
 
     sendGamePrediction(team) {
