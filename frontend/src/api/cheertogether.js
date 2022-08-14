@@ -29,7 +29,7 @@ export default {
   },
   game: {
     games: () => HOST + GAMES, // 경기일정 조회
-
+    update: (id) => HOST + GAMES + `${id}`,
     gamesByDate: (leagueApiId) => HOST + GAMES + `${leagueApiId}` + '/date',
     playGameInfo: (gameId) => HOST + GAMES + 'game/' + `${gameId}`, // 현재 응원 방의 게임 조회
 

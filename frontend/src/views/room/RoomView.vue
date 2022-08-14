@@ -373,6 +373,8 @@ export default {
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
+
+    this.loading = setInterval(this.getGameInfo(), 60000);
   },
 
   methods: {
@@ -625,9 +627,14 @@ export default {
       this.roomStore.isClickGameInfo = true
       var objDiv2 = document.getElementById("room-game-info");
       objDiv2.scrollTop = objDiv2.scrollHeight;
-      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId)
       this.cam = !this.cam;
-
+    },
+    getGameInfo() {
+      if(this.roomStore.playTeams.status == "FT"){
+        clearInterval(this.loading);
+      }
+      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
+      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     }
   },
 };

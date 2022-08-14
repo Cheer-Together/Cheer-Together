@@ -855,7 +855,6 @@ export const useGameStore = defineStore("game", {
         this.date[i] = this.today[i].getDate();
         this.day[i] = this.dayName[this.today[i].getDay()];
         this.todayGames[i] = await test(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
-        console.log(this.todayGames[i])
         while (this.todayGames[i].length == 0) {
           this.nextDate[i] = this.today[i];
           this.nextDate[i].setDate(this.nextDate[i].getDate() + 1);
@@ -1346,6 +1345,18 @@ export const useRoomStore = defineStore('room', {
         .catch(err => {
           console.log(err)
         })
+    },
+    update(id, apiId) {
+      axios({
+        url: cheertogether.game.update(id),
+        method: 'PUT',
+        params: {
+          apiId: apiId,
+        }  
+      }).then(res => {
+        console.log("경기정보 업데이트 후 응답 : " + res.data);
+        this.playTeams = res.data;
+      })
     }
   }
 })
