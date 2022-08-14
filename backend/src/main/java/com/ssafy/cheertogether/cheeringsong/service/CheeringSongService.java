@@ -18,7 +18,8 @@ public class CheeringSongService {
 	private final CheeringSongRepository cheeringSongRepository;
 
 	public List<CheeringSongResponse> findCheeringSongs(Long teamId) {
-		return cheeringSongRepository.findAllByTeam_Id(teamId).stream()
+		return cheeringSongRepository.findAllByTeam_Id(teamId)
+			.stream()
 			.map(CheeringSongResponse::new)
 			.collect(Collectors.toList());
 	}

@@ -9,6 +9,7 @@ import com.ssafy.cheertogether.room.domain.Room;
 
 public interface RoomRepository extends JpaRepository<Room, Long> {
 	Optional<Room> findRoomById(Long id);
+
 	Optional<Room> findRoomBySessionId(String sessionId);
 
 	List<Room> findAll();
@@ -18,4 +19,6 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 	List<Room> findRoomByNameContaining(String keyword);
 
 	List<Room> findRoomByManagerIdContaining(String keyword);
+
+	List<Room> findTop4ByOrderByHeadCountDesc();
 }

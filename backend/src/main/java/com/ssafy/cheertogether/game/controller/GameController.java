@@ -39,37 +39,32 @@ public class GameController {
 	private String apiKey;
 
 	@GetMapping
-	@ApiOperation(value = "모든 경기 정보 조회", notes = "모든 경기 정보 조회\n"
-		+ "Status 관련 설명\n"
-		+ "TBD : 경기 일정 미정\n"
-		+ "NS : 경기 시작 전\n"
-		+ "LIVE : 경기 진행 중\n"
-		+ "FT : 경기 종료\n")
-public ResponseEntity<List<GameResponse>> findGames() {
+	@ApiOperation(value = "모든 경기 정보 조회", notes = "모든 경기 정보 조회\n" + "Status 관련 설명\n" + "TBD : 경기 일정 미정\n"
+		+ "NS : 경기 시작 전\n" + "LIVE : 경기 진행 중\n" + "FT : 경기 종료\n")
+	public ResponseEntity<List<GameResponse>> findGames() {
 		return new ResponseEntity<>(gameService.findGames(), HttpStatus.OK);
 	}
 
 	@GetMapping("/game/{id}")
 	@ApiOperation(value = "경기 정보 단건 검색", notes = "경기 아이디로 경기정보 검색")
 	public ResponseEntity<GameResponse> findGameById(
-		@ApiParam(value = "경기 ID", required = true, example = "31")
-		@PathVariable Long id
-	){
+		@ApiParam(value = "경기 ID", required = true, example = "31") @PathVariable Long id) {
 		return new ResponseEntity<>(gameService.findGameById(id), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "해당 경기 정보 업데이트", notes = "해당 경기 정보 업데이트")
-	public ResponseEntity<String> modify(@PathVariable Long id,
+	public ResponseEntity<GameResponse> modify(@PathVariable Long id,
 		@ApiParam(value = "경기 api Id", required = true, example = "867946") @RequestParam String apiId) {
+		GameResponse gameResponse;
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("id", apiId);
 		try {
-			gameService.update(id, apiResponseToJson(params));
+			gameResponse = gameService.update(id, apiResponseToJson(params));
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
-		return new ResponseEntity<>(MODIFY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+		return new ResponseEntity<>(gameResponse, HttpStatus.OK);
 	}
 
 	@PostMapping
@@ -88,35 +83,23 @@ public ResponseEntity<List<GameResponse>> findGames() {
 	}
 
 	@GetMapping("/{leagueApiId}")
-	@ApiOperation(value = "리그별 경기 정보 조회", notes = "리그별 경기 정보 조회\n"
-		+ "Status 관련 설명\n"
-		+ "TBD : 경기 일정 미정\n"
-		+ "NS : 경기 시작 전\n"
-		+ "LIVE : 경기 진행 중\n"
-		+ "FT : 경기 종료\n")
+	@ApiOperation(value = "리그별 경기 정보 조회", notes = "리그별 경기 정보 조회\n" + "Status 관련 설명\n" + "TBD : 경기 일정 미정\n"
+		+ "NS : 경기 시작 전\n" + "LIVE : 경기 진행 중\n" + "FT : 경기 종료\n")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiId(@PathVariable Long leagueApiId) {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiId(leagueApiId), HttpStatus.OK);
 	}
 
 	@GetMapping("/{leagueApiId}/date")
-	@ApiOperation(value = "리그와 날짜 별 경기 정보 조회", notes = "리그와 날짜 별 경기 정보 조회\n"
-		+ "Status 관련 설명\n"
-		+ "TBD : 경기 일정 미정\n"
-		+ "NS : 경기 시작 전\n"
-		+ "LIVE : 경기 진행 중\n"
-		+ "FT : 경기 종료\n")
+	@ApiOperation(value = "리그와 날짜 별 경기 정보 조회", notes = "리그와 날짜 별 경기 정보 조회\n" + "Status 관련 설명\n" + "TBD : 경기 일정 미정\n"
+		+ "NS : 경기 시작 전\n" + "LIVE : 경기 진행 중\n" + "FT : 경기 종료\n")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(@PathVariable Long leagueApiId,
 		@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndDay(leagueApiId, date), HttpStatus.OK);
 	}
 
 	@GetMapping("/{leagueApiId}/month")
-	@ApiOperation(value = "리그와 월 별 경기 정보 조회", notes = "리그와 월 별 경기 정보 조회\n"
-		+ "Status 관련 설명\n"
-		+ "TBD : 경기 일정 미정\n"
-		+ "NS : 경기 시작 전\n"
-		+ "LIVE : 경기 진행 중\n"
-		+ "FT : 경기 종료\n")
+	@ApiOperation(value = "리그와 월 별 경기 정보 조회", notes = "리그와 월 별 경기 정보 조회\n" + "Status 관련 설명\n" + "TBD : 경기 일정 미정\n"
+		+ "NS : 경기 시작 전\n" + "LIVE : 경기 진행 중\n" + "FT : 경기 종료\n")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndMonth(@PathVariable Long leagueApiId,
 		@ApiParam(value = "연월", required = true, example = "yyyy-MM") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndMonth(leagueApiId, date), HttpStatus.OK);
@@ -135,13 +118,10 @@ public ResponseEntity<List<GameResponse>> findGames() {
 	}
 
 	@GetMapping("/date")
-	@ApiOperation(value = "리그와 날짜 별 경기 정보 조회", notes = "리그와 날짜 별 경기 정보 조회\n"
-		+ "Status 관련 설명\n"
-		+ "TBD : 경기 일정 미정\n"
-		+ "NS : 경기 시작 전\n"
-		+ "LIVE : 경기 진행 중\n"
-		+ "FT : 경기 종료\n")
-	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
+	@ApiOperation(value = "리그와 날짜 별 경기 정보 조회", notes = "리그와 날짜 별 경기 정보 조회\n" + "Status 관련 설명\n" + "TBD : 경기 일정 미정\n"
+		+ "NS : 경기 시작 전\n" + "LIVE : 경기 진행 중\n" + "FT : 경기 종료\n")
+	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(
+		@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByDay(date), HttpStatus.OK);
 	}
 
@@ -157,8 +137,7 @@ public ResponseEntity<List<GameResponse>> findGames() {
 				httpHeaders.add("x-rapidapi-host", "v3.football.api-sports.io");
 			})
 			.build();
-		return webClient
-			.get()
+		return webClient.get()
 			.uri(uriBuilder -> uriBuilder.path("/fixtures").queryParams(params).build())
 			.exchange()
 			.block()

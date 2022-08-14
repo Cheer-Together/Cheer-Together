@@ -3,7 +3,6 @@ package com.ssafy.cheertogether.room.service;
 import static com.ssafy.cheertogether.room.RoomConstant.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -39,6 +38,7 @@ public class RoomService {
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_ROOM_ID_ERROR_MESSAGE));
 		return new RoomResponse(room);
 	}
+
 	@Transactional(readOnly = true)
 	public RoomResponse findRoomBySessionId(String SessionId) {
 		Room room = roomRepository.findRoomBySessionId(SessionId)
@@ -91,5 +91,18 @@ public class RoomService {
 
 	public void deleteRoom(Long id) {
 		roomRepository.deleteRoomById(id);
+	}
+
+	public void updateHeadCount(Long roomId, int headCount) {
+		Room room = roomRepository.findById(roomId)
+			.orElseThrow(() -> new IllegalArgumentException(MODIFY_ROOM_ERROR_MESSAGE));
+		room.updateHeadCount(headCount);
+	}
+
+	public List<RoomResponse> getPopularRooms() {
+		return roomRepository.findTop4ByOrderByHeadCountDesc()
+			.stream()
+			.map(RoomResponse::new)
+			.collect(Collectors.toList());
 	}
 }

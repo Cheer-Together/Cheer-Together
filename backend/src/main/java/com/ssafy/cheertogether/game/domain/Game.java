@@ -63,7 +63,8 @@ public class Game {
 	private List<Room> roomList = new ArrayList<>();
 
 	@Builder
-	public Game(Team home, Team away, LocalDateTime kickoff, String stadium, GameStatus status, Integer homeScore, Integer awayScore, Long apiId, Long leagueApiId ){
+	public Game(Team home, Team away, LocalDateTime kickoff, String stadium, GameStatus status, Integer homeScore,
+		Integer awayScore, Long apiId, Long leagueApiId) {
 		this.home = home;
 		this.away = away;
 		this.kickoff = kickoff;
@@ -75,7 +76,7 @@ public class Game {
 		this.leagueApiId = leagueApiId;
 	}
 
-	public static Game from(GameRegisterRequest gameRegisterRequest, Team home, Team away){
+	public static Game from(GameRegisterRequest gameRegisterRequest, Team home, Team away) {
 		return Game.builder()
 			.home(home)
 			.away(away)
