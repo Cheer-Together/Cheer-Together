@@ -19,14 +19,14 @@
         </div>
 
         <div id="game-prediction-1">
-          <div>1팀 : {{ team1_point}}, {{ team1_count}} 명</div>
+          <div>1팀 : {{ gamePredictionStore.team1_point}}, {{ gamePredictionStore.team1_count}} 명</div>
           <div>
             <button @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
           </div>
         </div>
         vs
         <div id="game-prediction-2">
-          <div>2팀 : {{ team2_point }}, {{team2_count }} 명</div>
+          <div>2팀 : {{ gamePredictionStore.team2_point }}, {{ gamePredictionStore.team2_count }} 명</div>
           <div>
             <button @click="sendGamePrediction(2)" v-if="!this.isPredicted">예측</button>
           </div>
@@ -35,11 +35,11 @@
       </div>
       
       <!-- 스크린 -->
-      <div class="match-screen-section" :style="{ height : roomStore.screenHeight }">
-        <GameVideo :stream_url="this.stream_urls"/>
-        <!-- 비디오 컴포넌트 사이즈 조절 필요 
-              영상 시청하기 위해서는 CORS 설정 필요 -->
-      </div>
+        <div style="margin: 0 auto;" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}">
+      <!-- 비디오 컴포넌트 사이즈 조절 필요 
+            영상 시청하기 위해서는 CORS 설정 필요 -->
+          <GameVideo :stream_url="this.stream_urls" id="video-section" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}" />
+        </div>
 
       <!-- 캠 레이아웃 -->
       <div id="video-container" v-if="roomStore.isClickLayout">
@@ -426,7 +426,7 @@ import UserVideo from "@/components/video/UserVideo.vue";
 import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
-import { useAccountStore, useRoomStore,  } from "@/store/index.js";
+import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -466,16 +466,11 @@ export default {
       mic: false,
       cam: false,
 
+      gamePredictionStore : useGamePredictionStore(),
       myPoint: 0,
       pointToSend: 0,
-      team1_point: 0,
-      team1_count: 0,
-      team1_predict_list: [],
-      team2_point: 0,
-      team2_count: 0,
-      team2_predict_list: [],
       isPredicted: false,
-
+  
       bullhorn: false,
     };
   },
@@ -483,11 +478,11 @@ export default {
     this.mySessionId = this.$route.params.session;
 
     this.inMount();
-    console.log(this.sessionInfo)
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
     this.roomStore.isClickLayout = false
+    this.roomStore.screenWidth = '1400px'
     this.roomStore.screenHeight = '800px'
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
@@ -501,12 +496,21 @@ export default {
       this.mySessionId = this.$route.params.session;
       this.myUserName = useAccountStore().profile.nickname;
       this.myPoint = useAccountStore().profile.point;
-      console.log("포인트 : " + this.myPoint);
+
+      let list = useGamePredictionStore().isPredictedList;
+      for(let predictedSession of list) {
+        if(predictedSession == this.mySessionId) {
+          this.isPredicted = true;
+          break;
+        }
+      }
+
       await useRoomStore().getInfo(this.mySessionId)
       .then(() =>  {
         this.sessionInfo = useRoomStore().roomInfo;
         this.isSessionManager = (this.sessionInfo.managerId == useAccountStore().profileId);
       });
+
       this.joinSession();
     },
     joinSession() {
@@ -582,9 +586,9 @@ export default {
         
         if(this.isSessionManager) {
           if(team == 1) {
-            this.team1_predict_list.push(memberId);
+            useGamePredictionStore().team1_predcit_list.push(memberId);
           } else if(team == 2) {
-            this.team2_predict_list.push(memberId);
+            useGamePredictionStore().team2_predict_list.push(memberId);
           }
         }
       });
@@ -592,10 +596,10 @@ export default {
 
       this.session.on("signal:game-prediction-broadcast", (event) => {
         let receive = event.data.split("/");
-        this.team1_point = parseInt(receive[0]);
-        this.team1_count = parseInt(receive[1]);
-        this.team2_point = parseInt(receive[2]);
-        this.team2_count = parseInt(receive[3]);
+        useGamePredictionStore().team1_point = parseInt(receive[0]);
+        useGamePredictionStore().team1_count = parseInt(receive[1]);
+        useGamePredictionStore().team2_point = parseInt(receive[2]);
+        useGamePredictionStore().team2_count = parseInt(receive[3]);
       });
 
       // --- Connect to the session with a valid user token ---
@@ -664,7 +668,7 @@ export default {
      * These methods retrieve the mandatory user token from OpenVidu Server.
      * This behavior MUST BE IN YOUR SERVER-SIDE IN PRODUCTION (by using
      * the API REST, openvidu-java-client or openvidu-node-client):
-     *   1) Initialize a Session in OpenVidu Server	(POST /openvidu/api/sessions)
+     *   1) Initialize a Session in OpenVidu Server (POST /openvidu/api/sessions)
      *   2) Create a Connection in OpenVidu Server (POST /openvidu/api/sessions/<SESSION_ID>/connection)
      *   3) The Connection.token must be consumed in Session.connect() method
      */
@@ -736,9 +740,11 @@ export default {
       this.roomStore.isClickLayout = !this.roomStore.isClickLayout
 
       if ( this.roomStore.screenHeight === '800px') {
+        this.roomStore.screenWidth = '1000px'
         this.roomStore.screenHeight = '610px'
       }
       else {
+        this.roomStore.screenWidth = '1400px'
         this.roomStore.screenHeight = '800px'
       }
     },
@@ -776,17 +782,17 @@ export default {
     sendGamePrediction(team) {
       if (this.pointToSend && this.pointToSend > 0) {
         if(team == 1) {
-          this.team1_point += this.pointToSend;
-          this.team1_count++;
+          useGamePredictionStore().team1_point += this.pointToSend;
+          useGamePredictionStore().team1_count++;
         } else if(team == 2) {
-          this.team2_point += this.pointToSend;
-          this.team2_count++;
+          useGamePredictionStore().team2_point += this.pointToSend;
+          useGamePredictionStore().team2_count++;
         }
 
         this.session
           .signal({
-            data: team + "/" + (this.team1_point) + "/" + (this.team1_count) 
-              + "/" + (this.team2_point) + "/" + (this.team2_count) + "/" + useAccountStore().profileId,
+            data: team + "/" + (useGamePredictionStore().team1_point) + "/" + (useGamePredictionStore().team1_count) 
+              + "/" + (useGamePredictionStore().team2_point) + "/" + (useGamePredictionStore().team2_count) + "/" + useAccountStore().profileId,
             to: [],
             type: "game-prediction",
           })
@@ -798,6 +804,7 @@ export default {
           });
         useRoomStore().subtractPoint(useAccountStore().profileId, team, this.pointToSend);
         this.pointToSend = 0;
+        useGamePredictionStore().isPredicted.push(this.mySessionId);
         this.isPredicted = true;
       }
     },
@@ -857,7 +864,7 @@ export default {
   }
 }
 /* 메인 영역 */
-/* 상단 제목 + 레이아웃 버튼 */
+/* 상단 제목 */
 #session {
   width: 100%;
   height: 830px;
@@ -886,7 +893,7 @@ export default {
   font-size: 25px;
 }
 
-/* 스크린 영역*/
+/* 레이아웃 버튼 */
 .match-screen-layout {
   margin: 10px 30px 0 0;
   width: 100px;
@@ -896,19 +903,26 @@ export default {
   border-radius: 3px;
   border: 1px solid #54575b;
 }
-
-
-/* 하단 캠 */
 .match-screen-layout:hover {
   cursor: pointer;
 }
-.match-screen-section {
-  /* max-height: calc(100% - 240px - 100px); */
-  background-image: url('@/assets/image/손흥민.jpg');
-  background-size:auto;
-  background-position: center;
-  background-repeat: no-repeat;
+/* 스크린 영역*/
+#video-section {
+  width: 1400px;
+  height: 800px;
+  margin: 0 auto;
 }
+
+/* 하단 캠 */
+#video-container {
+  margin-top: 10px;
+  width: 98%;
+  height: 180px;
+  margin-right: 60px;
+  display: flex;
+
+}
+
 
 /* 하단 버튼  */
 .match-screen-footer {
@@ -963,14 +977,7 @@ export default {
   animation-timing-function: ease-out;
 }
 
-#video-container {
-  margin-top: 10px;
-  width: 98%;
-  height: 180px;
-  margin-right: 60px;
-  display: flex;
 
-}
 /* 채팅 헤더 */
 .match-screen-chatting-header {
   height: 100px;
@@ -1175,3 +1182,4 @@ export default {
   top: 15px;
 }
 </style>
+
