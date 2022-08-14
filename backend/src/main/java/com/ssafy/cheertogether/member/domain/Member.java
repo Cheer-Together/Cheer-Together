@@ -94,10 +94,7 @@ public class Member implements UserDetails {
 	}
 
 	public static Member from(MemberModifyRequest modifyRequest) {
-		return Member.builder()
-			.nickname(modifyRequest.getNickname())
-			.myInfo(modifyRequest.getMyInfo())
-			.build();
+		return Member.builder().nickname(modifyRequest.getNickname()).myInfo(modifyRequest.getMyInfo()).build();
 	}
 
 	public boolean confirmPassword(String password) {
@@ -168,7 +165,7 @@ public class Member implements UserDetails {
 
 	public void subtractPoint(int point) {
 		this.point -= point;
-		if(this.point < 0) {
+		if (this.point < 0) {
 			this.point = 0;
 		}
 	}

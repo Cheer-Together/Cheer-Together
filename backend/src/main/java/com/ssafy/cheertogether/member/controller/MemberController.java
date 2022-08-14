@@ -113,7 +113,8 @@ public class MemberController {
 	public ResponseEntity<String> plusPoint(@PathVariable Long id,
 		@ApiParam(value = "증가시킬 축구공(포인트) 수", required = true, example = "10") @RequestBody Map<String, Integer> point) {
 		memberService.plusPoint(id, point.get("point"));
-		return new ResponseEntity<>(String.format(PLUS_POINT_SUCCESS_RESPONSE_MESSAGE, point.get("point")), HttpStatus.OK);
+		return new ResponseEntity<>(String.format(PLUS_POINT_SUCCESS_RESPONSE_MESSAGE, point.get("point")),
+			HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}/point/subtract")
@@ -121,6 +122,7 @@ public class MemberController {
 	public ResponseEntity<String> subtractPoint(@PathVariable Long id,
 		@ApiParam(value = "감소시킬 축구공(포인트) 수", required = true, example = "10") @RequestBody Map<String, Integer> point) {
 		memberService.subtractPoint(id, point.get("point"));
-		return new ResponseEntity<>(String.format(SUBTRACT_POINT_SUCCESS_RESPONSE_MESSAGE, point.get("point")), HttpStatus.OK);
+		return new ResponseEntity<>(String.format(SUBTRACT_POINT_SUCCESS_RESPONSE_MESSAGE, point.get("point")),
+			HttpStatus.OK);
 	}
 }
