@@ -178,10 +178,48 @@
             경기 정보
           </div>
         </div>
-
         <!-- 전광판 -->
-        <div v-if="roomStore.isClickBillboard">
-          전광판
+        <div v-if="roomStore.isClickBillboard" style="position: relative;">
+          <div class="room-game-billboard-header" @click="roomStore.isClickBillboard = false">
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </div>
+          <div class="room-game-billboard">
+            <div>
+              <div style="float:left; width:45%; text-align:right; ">
+                {{roomStore.playTeams.home.hanName}}
+                <img :src="roomStore.playTeams.home.logo" alt="" width="16"> 
+                {{roomStore.playTeams.homeScore}}
+              </div>
+              <div style="float:left; width:10%; text-align:center">vs</div>
+              <div style="float:left; width:45%; text-align:left">
+                {{roomStore.playTeams.awayScore}}
+                <img :src="roomStore.playTeams.away.logo" alt="" width="16"> 
+                {{roomStore.playTeams.away.hanName}}
+              </div>
+            </div>
+            <div>
+              <div style="float:left; width:40%">
+                <div v-for="(homeGoal, i) in roomStore.homeGoal" :key="i">
+                  {{homeGoal.player.name}}
+                </div>
+              </div>
+              <div style="float:left; width:20%">
+                <div>
+                  {{roomStore.playTeams.stadium}}
+                </div>
+                <div>
+                  {{roomStore.playTeams.kickoff}}
+                </div>
+              </div>
+              <div style="float:left; width:40%">
+                <div v-for="(awayGoal, i) in roomStore.awayGoal" :key="i">
+                  {{awayGoal.player.name}}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 경기 정보 -->
         <div v-if="roomStore.isClickGameInfo" style="position: relative;">
@@ -431,6 +469,8 @@ export default {
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
+
+    this.loading = setInterval(this.getGameInfo(), 60000);
   },
 
   methods: {
@@ -682,9 +722,14 @@ export default {
     clickGameInfo() {
       this.roomStore.isClickSettingButton = false
       this.roomStore.isClickGameInfo = true
-      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId)
       this.cam = !this.cam;
-
+    },
+    getGameInfo() {
+      if(this.roomStore.playTeams.status == "FT"){
+        clearInterval(this.loading);
+      }
+      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
+      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     }
   },
 };
@@ -930,7 +975,6 @@ export default {
   right: 20px;
   z-index: 10;
   padding-left: 260px;
-
 }
 .room-game-info-header:hover {
   cursor: pointer;
@@ -975,6 +1019,32 @@ export default {
   margin: 5px 0 0 30px;
   font-family: var(--bold-font);
   font-size: 18px;
+}
+.room-game-billboard-header {
+  position: absolute;
+  width: 279px;
+  height: 10px;
+  background-color: #ffffff;
+  top: 1px;
+  right: 20px;
+  z-index: 10;
+  padding-left: 260px;
+}
+.room-game-billboard-header:hover {
+  cursor: pointer;
+}
+.room-game-billboard {
+  position: absolute;
+  min-width: 700px;
+  height: 300px;
+  border: 1px solid grey;
+  overflow-y: auto;
+  margin-right: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  left: -460px;
+  padding-top: 10px;
+
 }
 #goal-player {
   font-size: 16px;

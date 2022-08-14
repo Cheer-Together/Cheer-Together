@@ -847,7 +847,6 @@ export const useGameStore = defineStore("game", {
         this.date[i] = this.today[i].getDate();
         this.day[i] = this.dayName[this.today[i].getDay()];
         this.todayGames[i] = await test(this.leagueApiId[i], this.yyyymmdd(this.today[i]));
-        console.log(this.todayGames[i])
         while (this.todayGames[i].length == 0) {
           this.nextDate[i] = this.today[i];
           this.nextDate[i].setDate(this.nextDate[i].getDate() + 1);
@@ -956,6 +955,8 @@ export const useRoomStore = defineStore('room', {
       apiId: 867946,
       leagueApiId: 39
     },
+    homeGoal:[],
+    awayGoal:[],
     isClickSettingButton: false,
     isClickBillboard: false,
     isClickGameInfo: false,
@@ -1314,7 +1315,17 @@ export const useRoomStore = defineStore('room', {
         .then(res => {
           this.gameInfo = []
           this.gameInfoHalf = []
+          this.homeGoal = []
+          this.awayGoal = []
           res.data.response.reverse().forEach((e) => {
+            if(e.type == "Goal") {
+              if(e.team.id == this.playTeams.home.apiId) {
+                this.homeGoal.push(e);
+              }
+              else {
+                this.awayGoal.push(e);
+              }
+            }
             if (e.time.elapsed <= 45) {
               this.gameInfo.push(e);
             }
@@ -1327,6 +1338,18 @@ export const useRoomStore = defineStore('room', {
         .catch(err => {
           console.log(err)
         })
+    },
+    update(id, apiId) {
+      axios({
+        url: cheertogether.game.update(id),
+        method: 'PUT',
+        params: {
+          apiId: apiId,
+        }  
+      }).then(res => {
+        console.log("경기정보 업데이트 후 응답 : " + res.data);
+        this.playTeams = res.data;
+      })
     }
   }
 })
