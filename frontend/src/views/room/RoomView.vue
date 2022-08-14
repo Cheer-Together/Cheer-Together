@@ -25,7 +25,9 @@
       
       <!-- 스크린 -->
       <div class="match-screen-section" :style="{ height : roomStore.screenHeight }">
-
+        <GameVideo :stream_url="this.stream_urls"/>
+        <!-- 비디오 컴포넌트 사이즈 조절 필요 
+              영상 시청하기 위해서는 CORS 설정 필요 -->
       </div>
 
       <!-- 캠 레이아웃 -->
@@ -372,6 +374,7 @@
 <script>
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
+import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore,  } from "@/store/index.js";
@@ -388,6 +391,7 @@ export default {
 
   components: {
     UserVideo,
+    GameVideo,
   },
 
   data() {
@@ -404,6 +408,10 @@ export default {
       roomStore: useRoomStore(),
       isOpenedChattingWindow: true,
       message: "",
+      //테스트용 스트리밍 URL.
+      //서버에서 스트리밍을 시작해야 보임
+      //추후 스트리밍 서버 설정 방법 고려 후 변경 예정
+      stream_urls: "https://i7b204.p.ssafy.io/tmp/hls/test/index.m3u8",
 
       mic: false,
       cam: false,
@@ -413,11 +421,8 @@ export default {
   mounted() {
     this.mySessionId = this.$route.params.session;
 
-    console.log(this.sessionInfo)
-
-    this.myUserName = useAccountStore().profile.nickname;
-    this.joinSession();
     this.inMount();
+    console.log(this.sessionInfo)
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
