@@ -15,7 +15,7 @@
             <v-icon  size="40" @click="leaveSession">
               mdi-account-multiple
             </v-icon>
-            6 
+            {{subscribers.length + 1}}
           </div>
         </div>
         
@@ -41,7 +41,7 @@
                   {{ roomStore.playTeams.home.hanName }}
                 </div>
                 <div style="font-size:16px;">
-                  {{ team1_point}}, {{ team1_count}} 명
+                  {{ gamePredictionStore.team1_point}}, {{ gamePredictionStore.team1_count}} 명
                 </div>
               </div>
             </div>
@@ -58,23 +58,23 @@
                   {{ roomStore.playTeams.away.hanName }}
                 </div>
                 <div style="font-size:16px;">
-                  {{ team1_point}}, {{ team1_count}} 명
+                  {{ gamePredictionStore.team2_point}}, {{ gamePredictionStore.team2_count}} 명
                 </div>
               </div>
             </div>  
           </div>
-          <div style="display:flex; margin-top:10px;">
+          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted">
             <!--  -->
             <div>
-              <input class="predict-input" type="number" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()">
-              <button class="predict-button" @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
+              <input class="predict-input" type="number" v-model="team1_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(1)">
+              <button class="predict-button" @click="sendGamePrediction(1)">예측</button>
             </div>
             <div style="width:30px;">
 
             </div>
             <div>
-              <input class="predict-input" type="number" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()">
-              <button class="predict-button" @click="sendGamePrediction(2)" v-if="!this.isPredicted">예측</button>
+              <input class="predict-input" type="number" v-model="team2_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(2)">
+              <button class="predict-button" @click="sendGamePrediction(2)">예측</button>
             </div>
           </div>
         </div>
@@ -590,7 +590,8 @@ export default {
 
       gamePredictionStore : useGamePredictionStore(),
       myPoint: 0,
-      pointToSend: 0,
+      team1_pointToSend: 0,
+      team2_pointToSend: 0,
       isPredicted: false,
   
       bullhorn: false,
@@ -774,6 +775,16 @@ export default {
       this.subscribers = [];
       this.OV = undefined;
 
+      useGamePredictionStore().team1_point = 0;
+      useGamePredictionStore().team1_count = 0;
+      useGamePredictionStore().team2_point = 0;
+      useGamePredictionStore().team2_count = 0;
+
+      if(this.isSessionManager){
+        useGamePredictionStore().team1_predict_list = [];
+        useGamePredictionStore().team2_predict_list = [];
+      }
+
       window.removeEventListener("beforeunload", this.leaveSession);
       this.$router.push({ name: "MainPage" });
     },
@@ -902,12 +913,19 @@ export default {
     },
 
     sendGamePrediction(team) {
-      if (this.pointToSend && this.pointToSend > 0) {
+      let pointToSend;
+      if(team == 1) {
+        pointToSend = this.team1_pointToSend;
+      } else if(team == 2) {
+        pointToSend = this.team2_pointToSend;
+      }
+
+      if (pointToSend && pointToSend > 0) {
         if(team == 1) {
-          useGamePredictionStore().team1_point += this.pointToSend;
+          useGamePredictionStore().team1_point += pointToSend;
           useGamePredictionStore().team1_count++;
         } else if(team == 2) {
-          useGamePredictionStore().team2_point += this.pointToSend;
+          useGamePredictionStore().team2_point += pointToSend;
           useGamePredictionStore().team2_count++;
         }
 
@@ -924,16 +942,20 @@ export default {
           .catch((error) => {
             console.error(error);
           });
-        useRoomStore().subtractPoint(useAccountStore().profileId, team, this.pointToSend);
-        this.pointToSend = 0;
-        useGamePredictionStore().isPredicted.push(this.mySessionId);
+        useRoomStore().subtractPoint(useAccountStore().profileId, team, pointToSend);
+        this.team1_pointToSend = 0;
+        this.team2_pointToSend = 0;
+        useGamePredictionStore().isPredictedList.push(this.mySessionId);
         this.isPredicted = true;
       }
     },
 
     setMaxPoint() {
-      if(this.pointToSend > this.myPoint) {
-        this.pointToSend = this.myPoint;
+      if(this.team1_pointToSend > this.myPoint) {
+        this.team1_pointToSend = this.myPoint;
+      }
+      if(this.team2_pointToSend > this.myPoint) {
+        this.team2_pointToSend = this.myPoint;
       }
     },
     
