@@ -24,7 +24,7 @@
       </div>
       
       <!-- 스크린 -->
-      <div class="match-screen-section" :style="{ height : matchScreenStore.screenHeight }">
+      <div class="match-screen-section" :style="{ height : roomStore.screenHeight }">
         <GameVideo :stream_url="this.stream_urls"/>
         <!-- 비디오 컴포넌트 사이즈 조절 필요 
               영상 시청하기 위해서는 CORS 설정 필요 -->
@@ -330,11 +330,8 @@ export default {
   mounted() {
     this.mySessionId = this.$route.params.session;
 
-    console.log(this.sessionInfo)
-
-    this.myUserName = useAccountStore().profile.nickname;
-    this.joinSession();
     this.inMount();
+    console.log(this.sessionInfo)
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
