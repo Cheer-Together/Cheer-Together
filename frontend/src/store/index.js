@@ -922,8 +922,9 @@ export const useRoomStore = defineStore("room", {
       apiId: 867946,
       leagueApiId: 39,
     },
-    homeGoal: [],
-    awayGoal: [],
+    goal: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    homeGoalPoint : 0,
+    awayGoalPoint : 0,
     isClickSettingButton: false,
     isClickBillboard: false,
     isClickGameInfo: false,
@@ -1031,22 +1032,32 @@ export const useRoomStore = defineStore("room", {
         .then((res) => {
           this.gameInfo = [];
           this.gameInfoHalf = [];
-          this.homeGoal = [];
-          this.awayGoal = [];
+          this.goal = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+
+          this.homeGoalPoint = 0
+          this.awayGoalPoint = 0
+
           res.data.response.reverse().forEach((e) => {
-            if (e.type == "Goal") {
-              if (e.team.id == this.playTeams.home.apiId) {
-                this.homeGoal.push(e);
-              } else {
-                this.awayGoal.push(e);
-              }
+            if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
+              this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
+              this.homeGoalPoint = this.homeGoalPoint + 1
+            }
+            else if (e.type === "Goal") {
+              this.goal[this.awayGoalPoint]["awayGoal"] = e.player.name;
+              this.awayGoalPoint = this.awayGoalPoint + 1
             }
             if (e.time.elapsed <= 45) {
               this.gameInfo.push(e);
-            } else {
+            } 
+            else {
               this.gameInfoHalf.push(e);
             }
+
+
           });
+
+          this.goal.homeGoal = this.homeGoal
+          this.goal.awayGoal = this.awayGoal
         })
         .catch((err) => {
           console.log(err);
