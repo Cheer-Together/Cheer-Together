@@ -92,4 +92,10 @@ public class RoomService {
 	public void deleteRoom(Long id) {
 		roomRepository.deleteRoomById(id);
 	}
+
+	public void updateHeadCount(Long roomId, int headCount) {
+		Room room = roomRepository.findById(roomId)
+			.orElseThrow(() -> new IllegalArgumentException(MODIFY_ROOM_ERROR_MESSAGE));
+		room.updateHeadCount(headCount);
+	}
 }

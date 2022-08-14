@@ -14,6 +14,7 @@ public class RoomResponse {
 	private final String password;
 	private final String managerId;
 	private final String sessionId;
+	private final int headCount;
 
 	public RoomResponse(Room room) {
 		roomId = room.getId();
@@ -23,5 +24,6 @@ public class RoomResponse {
 		password = room.getPassword();
 		managerId = room.getManagerId();
 		sessionId = room.getSessionId();
+		headCount = room.getHeadCount();
 	}
 }
