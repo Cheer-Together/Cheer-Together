@@ -485,6 +485,7 @@ import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
+import { updateRoomHeadCount } from '@/api/room.js';
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -598,6 +599,7 @@ export default {
           .catch((error) => {
             console.error(error);
           });
+          this.updateRoomHeadCount(this.subscribers.length+1);
         }
       });
 
@@ -727,6 +729,7 @@ export default {
         useGamePredictionStore().team1_predict_list = [];
         useGamePredictionStore().team2_predict_list = [];
       }
+      this.updateRoomHeadCount(this.subscribers.length+1);
 
       window.removeEventListener("beforeunload", this.leaveSession);
       this.$router.push({ name: "MainPage" });
@@ -945,6 +948,16 @@ export default {
       }
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
       // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
+    },
+    updateRoomHeadCount(number){
+      updateRoomHeadCount(this.sessionInfo.roomId, number,
+        () => {
+          console.log("HeadCount Successfully updated");
+        },
+        (err) => {
+          console.log(err)
+        }
+      );
     }
   },
 };
