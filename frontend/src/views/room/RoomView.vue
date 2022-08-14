@@ -7,6 +7,7 @@
       <!-- 헤더 -->
       <div class="match-screen-header">
         <div style="display:flex;">
+          <!-- 방 제목 -->
           <div class="match-screen-title">
             {{ sessionInfo.name }}
           </div>
@@ -17,8 +18,75 @@
             {{subscribers.length + 1}}
           </div>
         </div>
+        
+        <!-- 승부 예측 -->
+        <div class="game-prediction" >
+          <!-- 승부 예측 시간 -->
+          <div style="font-size: 16px;">
+            {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
+          </div>
+          <!-- 승부 예측 제목 -->
+          <div v-if="roomStore.playTeams.home">
+            <span style="font-family: var(--bold-font); color: var(--main-color); font-size: 15px">{{ roomStore.predictTime }}</span>
+            {{ roomStore.playTeams.home.hanName }} vs
+            {{ roomStore.playTeams.away.hanName }}
+          </div>
+          <div style="display:flex;">
+            <!-- 홈 팀 -->
+            <div class="game-prediction-team">
+              <!-- 홈팀 이미지 -->
+              <img :src="roomStore.playTeams.home.logo" class="game-prediction-image" style="margin-right:10px;">
+              <div>
+                <div>
+                  {{ roomStore.playTeams.home.hanName }}
+                </div>
+                <div style="font-size:16px;">
+                  {{ team1_point}}, {{ team1_count}} 명
+                </div>
+              </div>
+            </div>
 
-        <div id="game-prediction-1">
+            <div class="game-prediction-vs">
+              vs
+            </div>
+              <!-- 어웨이 팀 -->
+            <div class="game-prediction-team" style="flex-direction: row-reverse">
+              <!-- 어웨이팀 이미지 -->
+              <img :src="roomStore.playTeams.away.logo" class="game-prediction-image" style="margin-left:10px;">
+              <div>
+                <div>
+                  {{ roomStore.playTeams.away.hanName }}
+                </div>
+                <div style="font-size:16px;">
+                  {{ team1_point}}, {{ team1_count}} 명
+                </div>
+              </div>
+            </div>  
+          </div>
+          <div style="display:flex; margin-top:10px;">
+            <!--  -->
+            <div>
+              <input class="predict-input" type="number" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()">
+              <button class="predict-button" @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
+            </div>
+            <div style="width:30px;">
+
+            </div>
+            <div>
+              <input class="predict-input" type="number" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()">
+              <button class="predict-button" @click="sendGamePrediction(2)" v-if="!this.isPredicted">예측</button>
+            </div>
+          </div>
+        </div>
+        <div class="match-screen-layout" @click="roomStore.isClickPredictButton = !roomStore.isClickPredictButton">
+          승부예측
+        </div>
+        <!-- 레이아웃 -->
+        <div class="match-screen-layout" @click="clickLayoutButton">
+          레이아웃
+        </div>
+
+        <!-- <div id="game-prediction-1">
           <div>1팀 : {{ team1_point}}, {{ team1_count}} 명</div>
           <div>
             <button @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
@@ -32,6 +100,7 @@
           </div>
         </div>
         <input type="number" v-if="!this.isPredicted" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()"/>
+      -->
       </div>
       
       <!-- 스크린 -->
@@ -493,7 +562,7 @@ export default {
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
-
+    this.roomStore.isClickPredictButton = false
     this.loading = setInterval(this.getGameInfo(), 60000);
   },
 
@@ -835,7 +904,7 @@ export default {
       if(this.roomStore.playTeams.status == "FT"){
         clearInterval(this.loading);
       }
-      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
+      this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
       this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     }
   },
@@ -887,6 +956,58 @@ export default {
   padding-top: 8px;
   margin-left: 10px;
   font-size: 25px;
+}
+
+/* 승부 예측 */
+.game-prediction {
+  width: 600px;
+  height: 215px;
+  background-color: #1a1a1c;
+  z-index: 10;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+}
+.game-prediction-team {
+  width: 275px;
+  background-color: #323236;
+  border-radius: 10px;
+  height: 70px;
+  padding-top: 10px;
+  display: flex;
+}
+.game-prediction-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  border: 1px solid #ecf0f5;
+  vertical-align: middle;
+}
+.game-prediction-vs {
+  height: 50px;
+  width: 30px;
+  padding-top: 9px;
+  text-align: center;
+}
+.predict-input {
+  width: 100px;
+  outline: 1px solid black;
+  background-color: #ecf0f5;
+  border-radius: 10px;
+  padding: 1px 10px;
+  text-align: right;
+}
+.predict-input::-webkit-outer-spin-button,
+.predict-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.predict-button {
+ width: 165px;
+ margin-left: 10px;
+ background-color: #323236;
+ color: white; 
 }
 
 /* 레이아웃 버튼 */

@@ -42,7 +42,7 @@ public class GameService {
 		return GameResponse.from(game);
 	}
 
-	public void update(Long id, String responseJson) throws ParseException {
+	public GameResponse update(Long id, String responseJson) throws ParseException {
 		Game game = gameRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_GAME_ERROR_MESSAGE));
 		JSONParser jsonParser = new JSONParser();
@@ -56,10 +56,15 @@ public class GameService {
 		gameModifyRequest.setApiId(game.getApiId());
 		gameModifyRequest.setKickoff(game.getKickoff());
 		gameModifyRequest.setStadium(game.getStadium());
-		gameModifyRequest.setStatus(GameStatus.valueOf(status.get("short").toString()));
+		try {
+			gameModifyRequest.setStatus(GameStatus.valueOf(status.get("short").toString()));
+		} catch (java.lang.IllegalStateException e) {
+			gameModifyRequest.setStatus(game.getStatus());
+		}
 		gameModifyRequest.setHomeScore(Integer.parseInt(goals.get("home").toString()));
 		gameModifyRequest.setAwayScore(Integer.parseInt(goals.get("away").toString()));
 		game.updateGameInfos(gameModifyRequest);
+		return GameResponse.from(game);
 	}
 
 	@Transactional(readOnly = true)
