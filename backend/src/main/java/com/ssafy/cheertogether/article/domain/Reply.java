@@ -48,9 +48,7 @@ public class Reply {
 	}
 
 	public static Reply from(ReplyRequest replyRequest) {
-		return Reply.builder()
-			.content(replyRequest.getContent())
-			.build();
+		return Reply.builder().content(replyRequest.getContent()).build();
 	}
 
 	public void setMember(Member member) {

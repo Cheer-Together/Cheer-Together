@@ -3,7 +3,6 @@ package com.ssafy.cheertogether.room.service;
 import static com.ssafy.cheertogether.room.RoomConstant.*;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -39,6 +38,7 @@ public class RoomService {
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_ROOM_ID_ERROR_MESSAGE));
 		return new RoomResponse(room);
 	}
+
 	@Transactional(readOnly = true)
 	public RoomResponse findRoomBySessionId(String SessionId) {
 		Room room = roomRepository.findRoomBySessionId(SessionId)

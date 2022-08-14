@@ -89,9 +89,8 @@ public class EmailService {
 			+ "<img width=300 src='https://cdn.discordapp.com/attachments/994479416413540422/1002104410060632064/-_-011.png'>"
 			+ "	<p style=\"font-size: 17px; line-height: 26px; margin-top: 10px; padding: 0 5px;\">" + "안녕하세요.<br />"
 			+ "현재 회원님의 비밀번호를 아래 임시 비밀번호로 변경해두었습니다.<br /> 아래 임시 비밀번호를 입력하여 로그인을 완료한 후에, <br />"
-			+ "비밀번호를 수정하시는 것을 권장드립니다.<br />		감사합니다.</p>"
-			+ "<h2>" + tempPassword + "</h2>" + "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>"
-			+ " </div>" + "</body>" + "</html>";
+			+ "비밀번호를 수정하시는 것을 권장드립니다.<br />		감사합니다.</p>" + "<h2>" + tempPassword + "</h2>"
+			+ "	<div style=\"border-top: 1px solid #DDD; padding: 5px;\"></div>" + " </div>" + "</body>" + "</html>";
 	}
 
 	private String getCertifiedCode() {
