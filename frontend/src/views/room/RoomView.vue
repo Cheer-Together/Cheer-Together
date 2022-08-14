@@ -7,6 +7,7 @@
       <!-- 헤더 -->
       <div class="match-screen-header">
         <div style="display:flex;">
+          <!-- 방 제목 -->
           <div class="match-screen-title">
             {{ sessionInfo.name }}
           </div>
@@ -17,21 +18,77 @@
             {{subscribers.length + 1}}
           </div>
         </div>
+        
+        <!-- 승부 예측 -->
+        <div class="game-prediction" v-if="roomStore.isClickPredictButton">
+          <!-- 승부 예측 시간 -->
+          <div style="font-size: 16px;">
+            {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
+          </div>
+          <!-- 승부 예측 제목 -->
+          <div v-if="roomStore.playTeams.home">
+            <span style="font-family: var(--bold-font); color: var(--main-color); font-size: 15px">{{ roomStore.predictTime }}</span>
+            {{ roomStore.playTeams.home.hanName }} vs
+            {{ roomStore.playTeams.away.hanName }}
+          </div>
+          <div style="display:flex;">
+            <!-- 홈 팀 -->
+            <div class="game-prediction-team">
+              <!-- 홈팀 이미지 -->
+              <img :src="roomStore.playTeams.home.logo" class="game-prediction-image" style="margin-right:10px;">
+              <div>
+                <div>
+                  {{ roomStore.playTeams.home.hanName }}
+                </div>
+                <div style="font-size:16px;">
+                  {{ gamePredictionStore.team1_point}}, {{ gamePredictionStore.team1_count}} 명
+                </div>
+              </div>
+            </div>
 
-        <div id="game-prediction-1">
-          <div>1팀 : {{ team1_point}}, {{ team1_count}} 명</div>
-          <div>
-            <button @click="sendGamePrediction(1)" v-if="!this.isPredicted">예측</button>
+            <div class="game-prediction-vs">
+              vs
+            </div>
+              <!-- 어웨이 팀 -->
+            <div class="game-prediction-team" style="flex-direction: row-reverse">
+              <!-- 어웨이팀 이미지 -->
+              <img :src="roomStore.playTeams.away.logo" class="game-prediction-image" style="margin-left:10px;">
+              <div>
+                <div>
+                  {{ roomStore.playTeams.away.hanName }}
+                </div>
+                <div style="font-size:16px;">
+                  {{ gamePredictionStore.team2_point}}, {{ gamePredictionStore.team2_count}} 명
+                </div>
+              </div>
+            </div>  
+          </div>
+          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted">
+            <!--  -->
+            <div>
+              <input class="predict-input" type="number" v-model="team1_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(1)">
+              <button class="predict-button" @click="sendGamePrediction(1)">예측</button>
+            </div>
+            <div style="width:30px;">
+
+            </div>
+            <div>
+              <input class="predict-input" type="number" v-model="team2_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(2)">
+              <button class="predict-button" @click="sendGamePrediction(2)">예측</button>
+            </div>
           </div>
         </div>
-        vs
-        <div id="game-prediction-2">
-          <div>2팀 : {{ team2_point }}, {{team2_count }} 명</div>
-          <div>
-            <button @click="sendGamePrediction(2)" v-if="!this.isPredicted">예측</button>
+
+        <div style="display:flex">
+          <div class="match-screen-layout" @click="roomStore.isClickPredictButton = !roomStore.isClickPredictButton">
+            승부예측
+          </div>
+          <!-- 레이아웃 -->
+          <div class="match-screen-layout" @click="clickLayoutButton">
+            레이아웃
           </div>
         </div>
-        <input type="number" v-if="!this.isPredicted" v-model="pointToSend" min="0" :max="myPoint" @blur="setMaxPoint()"/>
+      -->
       </div>
       
       <!-- 스크린 -->
@@ -426,7 +483,7 @@ import UserVideo from "@/components/video/UserVideo.vue";
 import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
-import { useAccountStore, useRoomStore,  } from "@/store/index.js";
+import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -466,16 +523,12 @@ export default {
       mic: false,
       cam: false,
 
+      gamePredictionStore : useGamePredictionStore(),
       myPoint: 0,
-      pointToSend: 0,
-      team1_point: 0,
-      team1_count: 0,
-      team1_predict_list: [],
-      team2_point: 0,
-      team2_count: 0,
-      team2_predict_list: [],
+      team1_pointToSend: 0,
+      team2_pointToSend: 0,
       isPredicted: false,
-
+  
       bullhorn: false,
     };
   },
@@ -483,7 +536,6 @@ export default {
     this.mySessionId = this.$route.params.session;
 
     this.inMount();
-    console.log(this.sessionInfo)
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
@@ -493,7 +545,7 @@ export default {
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
-
+    this.roomStore.isClickPredictButton = false
     this.loading = setInterval(this.getGameInfo(), 60000);
   },
 
@@ -502,12 +554,21 @@ export default {
       this.mySessionId = this.$route.params.session;
       this.myUserName = useAccountStore().profile.nickname;
       this.myPoint = useAccountStore().profile.point;
-      console.log("포인트 : " + this.myPoint);
+
+      let list = useGamePredictionStore().isPredictedList;
+      for(let predictedSession of list) {
+        if(predictedSession == this.mySessionId) {
+          this.isPredicted = true;
+          break;
+        }
+      }
+
       await useRoomStore().getInfo(this.mySessionId)
       .then(() =>  {
         this.sessionInfo = useRoomStore().roomInfo;
         this.isSessionManager = (this.sessionInfo.managerId == useAccountStore().profileId);
       });
+
       this.joinSession();
     },
     joinSession() {
@@ -583,9 +644,9 @@ export default {
         
         if(this.isSessionManager) {
           if(team == 1) {
-            this.team1_predict_list.push(memberId);
+            useGamePredictionStore().team1_predcit_list.push(memberId);
           } else if(team == 2) {
-            this.team2_predict_list.push(memberId);
+            useGamePredictionStore().team2_predict_list.push(memberId);
           }
         }
       });
@@ -593,10 +654,10 @@ export default {
 
       this.session.on("signal:game-prediction-broadcast", (event) => {
         let receive = event.data.split("/");
-        this.team1_point = parseInt(receive[0]);
-        this.team1_count = parseInt(receive[1]);
-        this.team2_point = parseInt(receive[2]);
-        this.team2_count = parseInt(receive[3]);
+        useGamePredictionStore().team1_point = parseInt(receive[0]);
+        useGamePredictionStore().team1_count = parseInt(receive[1]);
+        useGamePredictionStore().team2_point = parseInt(receive[2]);
+        useGamePredictionStore().team2_count = parseInt(receive[3]);
       });
 
       this.session.on("signal:force-out", (event) => {
@@ -656,6 +717,16 @@ export default {
       this.subscribers = [];
       this.OV = undefined;
 
+      useGamePredictionStore().team1_point = 0;
+      useGamePredictionStore().team1_count = 0;
+      useGamePredictionStore().team2_point = 0;
+      useGamePredictionStore().team2_count = 0;
+
+      if(this.isSessionManager){
+        useGamePredictionStore().team1_predict_list = [];
+        useGamePredictionStore().team2_predict_list = [];
+      }
+
       window.removeEventListener("beforeunload", this.leaveSession);
       this.$router.push({ name: "MainPage" });
     },
@@ -672,7 +743,7 @@ export default {
      * These methods retrieve the mandatory user token from OpenVidu Server.
      * This behavior MUST BE IN YOUR SERVER-SIDE IN PRODUCTION (by using
      * the API REST, openvidu-java-client or openvidu-node-client):
-     *   1) Initialize a Session in OpenVidu Server	(POST /openvidu/api/sessions)
+     *   1) Initialize a Session in OpenVidu Server (POST /openvidu/api/sessions)
      *   2) Create a Connection in OpenVidu Server (POST /openvidu/api/sessions/<SESSION_ID>/connection)
      *   3) The Connection.token must be consumed in Session.connect() method
      */
@@ -800,19 +871,26 @@ export default {
     },
 
     sendGamePrediction(team) {
-      if (this.pointToSend && this.pointToSend > 0) {
+      let pointToSend;
+      if(team == 1) {
+        pointToSend = this.team1_pointToSend;
+      } else if(team == 2) {
+        pointToSend = this.team2_pointToSend;
+      }
+
+      if (pointToSend && pointToSend > 0) {
         if(team == 1) {
-          this.team1_point += this.pointToSend;
-          this.team1_count++;
+          useGamePredictionStore().team1_point += pointToSend;
+          useGamePredictionStore().team1_count++;
         } else if(team == 2) {
-          this.team2_point += this.pointToSend;
-          this.team2_count++;
+          useGamePredictionStore().team2_point += pointToSend;
+          useGamePredictionStore().team2_count++;
         }
 
         this.session
           .signal({
-            data: team + "/" + (this.team1_point) + "/" + (this.team1_count) 
-              + "/" + (this.team2_point) + "/" + (this.team2_count) + "/" + useAccountStore().profileId,
+            data: team + "/" + (useGamePredictionStore().team1_point) + "/" + (useGamePredictionStore().team1_count) 
+              + "/" + (useGamePredictionStore().team2_point) + "/" + (useGamePredictionStore().team2_count) + "/" + useAccountStore().profileId,
             to: [],
             type: "game-prediction",
           })
@@ -822,15 +900,20 @@ export default {
           .catch((error) => {
             console.error(error);
           });
-        useRoomStore().subtractPoint(useAccountStore().profileId, team, this.pointToSend);
-        this.pointToSend = 0;
+        useRoomStore().subtractPoint(useAccountStore().profileId, team, pointToSend);
+        this.team1_pointToSend = 0;
+        this.team2_pointToSend = 0;
+        useGamePredictionStore().isPredictedList.push(this.mySessionId);
         this.isPredicted = true;
       }
     },
 
     setMaxPoint() {
-      if(this.pointToSend > this.myPoint) {
-        this.pointToSend = this.myPoint;
+      if(this.team1_pointToSend > this.myPoint) {
+        this.team1_pointToSend = this.myPoint;
+      }
+      if(this.team2_pointToSend > this.myPoint) {
+        this.team2_pointToSend = this.myPoint;
       }
     },
     
@@ -858,8 +941,8 @@ export default {
       if(this.roomStore.playTeams.status == "FT"){
         clearInterval(this.loading);
       }
-      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
-      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
+      this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
+      // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     }
   },
 };
@@ -898,6 +981,7 @@ export default {
   padding: 0 0 0 30px;
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 .match-screen-title {
   width: 740px;
@@ -910,6 +994,61 @@ export default {
   padding-top: 8px;
   margin-left: 10px;
   font-size: 25px;
+}
+
+/* 승부 예측 */
+.game-prediction {
+  width: 600px;
+  height: 215px;
+  background-color: #1a1a1c;
+  z-index: 10;
+  border-radius: 10px;
+  padding: 10px;
+  color: white;
+  position: absolute;
+  top: 50px;
+  right: 30px;
+}
+.game-prediction-team {
+  width: 275px;
+  background-color: #323236;
+  border-radius: 10px;
+  height: 70px;
+  padding-top: 10px;
+  display: flex;
+}
+.game-prediction-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  border: 1px solid #ecf0f5;
+  vertical-align: middle;
+}
+.game-prediction-vs {
+  height: 50px;
+  width: 30px;
+  padding-top: 9px;
+  text-align: center;
+}
+.predict-input {
+  width: 100px;
+  outline: 1px solid black;
+  background-color: #ecf0f5;
+  border-radius: 10px;
+  padding: 1px 10px;
+  text-align: right;
+}
+.predict-input::-webkit-outer-spin-button,
+.predict-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.predict-button {
+ width: 165px;
+ margin-left: 10px;
+ background-color: #323236;
+ color: white; 
 }
 
 /* 레이아웃 버튼 */
@@ -1201,3 +1340,4 @@ export default {
   top: 15px;
 }
 </style>
+

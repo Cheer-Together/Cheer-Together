@@ -54,16 +54,17 @@ public class GameController {
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "해당 경기 정보 업데이트", notes = "해당 경기 정보 업데이트")
-	public ResponseEntity<String> modify(@PathVariable Long id,
+	public ResponseEntity<GameResponse> modify(@PathVariable Long id,
 		@ApiParam(value = "경기 api Id", required = true, example = "867946") @RequestParam String apiId) {
+		GameResponse gameResponse;
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 		params.add("id", apiId);
 		try {
-			gameService.update(id, apiResponseToJson(params));
+			gameResponse = gameService.update(id, apiResponseToJson(params));
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
-		return new ResponseEntity<>(MODIFY_SUCCESS_RESPONSE_MESSAGE, HttpStatus.OK);
+		return new ResponseEntity<>(gameResponse, HttpStatus.OK);
 	}
 
 	@PostMapping
