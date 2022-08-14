@@ -21,4 +21,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 	List<Game> findAllByStatus(GameStatus status);
 
 	List<Game> findAllByLeagueApiIdAndStatus(Long leagueApiId, GameStatus status);
+
+	List<Game> findAllByKickoffBetween(LocalDateTime start, LocalDateTime end);
 }

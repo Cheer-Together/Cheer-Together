@@ -36,7 +36,9 @@
       
       <!-- 스크린 -->
       <div class="match-screen-section" :style="{ height : roomStore.screenHeight }">
-
+        <GameVideo :stream_url="this.stream_urls"/>
+        <!-- 비디오 컴포넌트 사이즈 조절 필요 
+              영상 시청하기 위해서는 CORS 설정 필요 -->
       </div>
 
       <!-- 캠 레이아웃 -->
@@ -57,25 +59,116 @@
       <div class="match-screen-footer">
 
         <!-- 나가기 -->
-        <v-icon size="40" class="match-screen-footer-icon" @click="leaveSession">
-          mdi-exit-run
-        </v-icon>
+        <div class="button-range" style="width: 150px;" @click="leaveSession">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-exit-run
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            <span style="color: red;">나가기</span>
+          </div>
+        </div>
+
         <!-- 채팅 -->
-        <v-icon size="40" @click="chattingOnOff" class="match-screen-footer-icon">
-          mdi-chat-processing-outline
-        </v-icon>
+        <!-- 채팅창이 켜져있을 때 -->
+        <div class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === 'a'">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-chat-processing-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            채팅 <span style="color: red;">끄기</span>
+          </div>
+        </div>
+
+        <!-- 채팅창이 꺼져있을 때 -->
+        <div class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === '' || roomStore.isClickChatting === 'b'">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-chat-processing
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            채팅 보기
+          </div>
+        </div>
+
         <!-- 비디오 -->
-        <v-icon size="40" @click="toggleCam" class="match-screen-footer-icon">
-          mdi-video-outline
-        </v-icon>
+        <!-- 비디오가 켜져있을 때 -->
+        <div class="button-range" @click="toggleCam" v-if="!cam">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-video-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            비디오 <span style="color: red;">끄기</span>
+          </div>
+        </div>
+
+        <!-- 비디오가 꺼져있을 때 -->
+        <div class="button-range" @click="toggleCam" v-else>
+          <div class="icon-range">
+            <v-icon size="40" color="red">
+              mdi-video-off-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            비디오 켜기
+          </div>
+        </div>
+
         <!-- 마이크 -->
-        <v-icon size="40" @click="toggleMic" class="match-screen-footer-icon">
-          mdi-microphone
-        </v-icon>
+        <!-- 마이크가 켜져있을 때 -->
+        <div class="button-range" @click="toggleMic" v-if="!mic">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-microphone
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            마이크 <span style="color: red;">끄기</span>
+          </div>
+        </div>
+
+        <!-- 마이크가 꺼져있을 때 -->
+        <div class="button-range" @click="toggleMic" v-else>
+          <div class="icon-range">
+            <v-icon size="40" color="red">
+              mdi-microphone-off
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            마이크 켜기
+          </div>
+        </div>
+
         <!-- 응원가 -->
-        <v-icon size="40" class="match-screen-footer-icon">
-          mdi-bullhorn
-        </v-icon>
+        <!-- 응원가가 켜져있을 때 -->
+        <div class="button-range" @click="toggleBullhorn" v-if="!bullhorn">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-bullhorn-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            응원가 <span style="color: red;">끄기</span>
+          </div>
+        </div>
+
+        <!-- 응원가가 꺼져있을 때 -->
+        <div class="button-range" @click="toggleBullhorn" v-else>
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-bullhorn
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            응원가 켜기
+          </div>
+        </div>
       </div>
     </div>
 
@@ -96,10 +189,48 @@
             경기 정보
           </div>
         </div>
-
         <!-- 전광판 -->
-        <div v-if="roomStore.isClickBillboard">
-          전광판
+        <div v-if="roomStore.isClickBillboard" style="position: relative;">
+          <div class="room-game-billboard-header" @click="roomStore.isClickBillboard = false">
+            <v-icon>
+              mdi-close
+            </v-icon>
+          </div>
+          <div class="room-game-billboard">
+            <div>
+              <div style="float:left; width:45%; text-align:right; ">
+                {{roomStore.playTeams.home.hanName}}
+                <img :src="roomStore.playTeams.home.logo" alt="" width="16"> 
+                {{roomStore.playTeams.homeScore}}
+              </div>
+              <div style="float:left; width:10%; text-align:center">vs</div>
+              <div style="float:left; width:45%; text-align:left">
+                {{roomStore.playTeams.awayScore}}
+                <img :src="roomStore.playTeams.away.logo" alt="" width="16"> 
+                {{roomStore.playTeams.away.hanName}}
+              </div>
+            </div>
+            <div>
+              <div style="float:left; width:40%">
+                <div v-for="(homeGoal, i) in roomStore.homeGoal" :key="i">
+                  {{homeGoal.player.name}}
+                </div>
+              </div>
+              <div style="float:left; width:20%">
+                <div>
+                  {{roomStore.playTeams.stadium}}
+                </div>
+                <div>
+                  {{roomStore.playTeams.kickoff}}
+                </div>
+              </div>
+              <div style="float:left; width:40%">
+                <div v-for="(awayGoal, i) in roomStore.awayGoal" :key="i">
+                  {{awayGoal.player.name}}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <!-- 경기 정보 -->
         <div v-if="roomStore.isClickGameInfo" style="position: relative;">
@@ -272,7 +403,7 @@
       <!-- 채팅 내용 창 -->
       <div class="match-screen-chatting-section" id="match-screen-chatting-section">
         <div v-show="isOpenedChattingWindow" class="chatting-window">
-          <span id="chatting-content"></span>
+          <div id="chatting-content" style="max-width:222px;"></div>
         </div>
       </div>
       <!-- 채팅 입력하는 곳 -->
@@ -292,6 +423,7 @@
 <script>
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
+import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore,  } from "@/store/index.js";
@@ -308,6 +440,7 @@ export default {
 
   components: {
     UserVideo,
+    GameVideo,
   },
 
   data() {
@@ -325,6 +458,10 @@ export default {
       roomStore: useRoomStore(),
       isOpenedChattingWindow: true,
       message: "",
+      //테스트용 스트리밍 URL.
+      //서버에서 스트리밍을 시작해야 보임
+      //추후 스트리밍 서버 설정 방법 고려 후 변경 예정
+      stream_urls: "https://i7b204.p.ssafy.io/tmp/hls/test/index.m3u8",
 
       mic: false,
       cam: false,
@@ -338,12 +475,15 @@ export default {
       team2_count: 0,
       team2_predict_list: [],
       isPredicted: false,
+
+      bullhorn: false,
     };
   },
   mounted() {
     this.mySessionId = this.$route.params.session;
 
     this.inMount();
+    console.log(this.sessionInfo)
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
@@ -352,6 +492,8 @@ export default {
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
+
+    this.loading = setInterval(this.getGameInfo(), 60000);
   },
 
   methods: {
@@ -417,12 +559,12 @@ export default {
         for(let badWord of BAD_WORDS_LIST) {
           if(message.includes(badWord)) {
             message = '[삭제된 메세지]';
-            break;
+            break; 
           }
         }
 
         document.getElementById("chatting-content").innerHTML += `<div>${userName}:</div>`;
-        document.getElementById("chatting-content").innerHTML += `<div style:'word-break:break-all;'>${message}<div>`;
+        document.getElementById("chatting-content").innerHTML += `<div style:'word-break:break-all; max-width: 222px;'>${message}<div>`;
         
         var objDiv = document.getElementById("match-screen-chatting-section");
         objDiv.scrollTop = objDiv.scrollHeight;
@@ -667,14 +809,15 @@ export default {
     },
     
     toggleMic(){
-      console.log("toggleMic");
       this.publisher.publishAudio(this.mic);   // true to unmute the audio track, false to mute it
       this.mic = !this.mic;
     },
     toggleCam(){
-      console.log("toggleCam");
       this.publisher.publishVideo(this.cam);   // true to enable the video track, false to disable it
-
+      this.cam = !this.cam;
+    },
+    toggleBullhorn(){
+      this.bullhorn = !this.bullhorn;
     },
     clickBillboard() {
       this.roomStore.isClickSettingButton = false
@@ -683,11 +826,14 @@ export default {
     clickGameInfo() {
       this.roomStore.isClickSettingButton = false
       this.roomStore.isClickGameInfo = true
-      var objDiv2 = document.getElementById("room-game-info");
-      objDiv2.scrollTop = objDiv2.scrollHeight;
-      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId)
       this.cam = !this.cam;
-
+    },
+    getGameInfo() {
+      if(this.roomStore.playTeams.status == "FT"){
+        clearInterval(this.loading);
+      }
+      // this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
+      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     }
   },
 };
@@ -710,14 +856,15 @@ export default {
     width: 0px;
   }
 }
-
+/* 메인 영역 */
+/* 상단 제목 + 레이아웃 버튼 */
 #session {
   width: 100%;
   height: 830px;
   margin: 50px 0 0 30px;
 }
 .match-screen-header {
-  font-family: 'MICEGothic Bold';
+  font-family: var(--bold-font);
   font-size: 20px;
   width: 100%;
   height: 50px;
@@ -738,6 +885,8 @@ export default {
   margin-left: 10px;
   font-size: 25px;
 }
+
+/* 스크린 영역*/
 .match-screen-layout {
   margin: 10px 30px 0 0;
   width: 100px;
@@ -747,6 +896,9 @@ export default {
   border-radius: 3px;
   border: 1px solid #54575b;
 }
+
+
+/* 하단 캠 */
 .match-screen-layout:hover {
   cursor: pointer;
 }
@@ -757,21 +909,46 @@ export default {
   background-position: center;
   background-repeat: no-repeat;
 }
+
+/* 하단 버튼  */
 .match-screen-footer {
+  margin: 50px 0 0 0;
   display: flex;
   flex-direction: row-reverse;
   height: 50px;
 }
-.match-screen-footer-icon {
-  padding: 7px 0 0 0;
-  margin-right: 10px;
+.match-screen-footer > div {
+  margin: 0 30px 0 0 ;
 }
-.match-screen-footer-icon:first-child {
-  margin-right: 30px;
+.button-range {
+  width: 190px;
+  height: 70px;
+  background-color: #cfd3d8;
+  display: flex;
+  font-family: var(--bold-font);
+  font-size: 20px;
+  border-radius: 90px;
+
 }
+.button-range:hover {
+  cursor: pointer;
+}
+.icon-range {
+  margin: 9px 0 0 9px;
+  padding: 4px;
+  background-color: darkgray;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
+.button-range-title {
+  padding: 20px 0 0 10px;
+}
+
+/* 채팅 영역 */
 .match-screen-chatting-area {
   width: 295px;
-  height: 1000px;
+  height: 980px;
   margin: 76px 30px 0 0;
   animation-name: chattingOver;
   animation-duration: 0.3s;
@@ -785,6 +962,7 @@ export default {
   animation-duration: 0.3s;
   animation-timing-function: ease-out;
 }
+
 #video-container {
   margin-top: 10px;
   width: 98%;
@@ -793,6 +971,7 @@ export default {
   display: flex;
 
 }
+/* 채팅 헤더 */
 .match-screen-chatting-header {
   height: 100px;
   border-bottom: 1px solid #cfd2d6;
@@ -803,16 +982,21 @@ export default {
   height: 20px;
   margin: 10px 10px auto 220px;
 }
+
+/* 채팅 내용 */
 .match-screen-chatting-section {
-  height: 800px;
+  height: 780px;
   overflow-y: scroll;
   border-bottom: 1px solid #cfd2d6;
   padding: 10px 15px 10px 10px;
+  word-wrap: break-word;
 }
 .match-screen-chatting-section::-webkit-scrollbar {
   width: 3px;
   background-color: var(--sub-color);
 }
+
+/* 채팅 입력 */
 .match-screen-chatting-footer {
   padding: 10px;
   position: relative;
@@ -846,6 +1030,9 @@ export default {
   width: 50px;
   color: var(--main-color);
 }
+
+/* 드롭다운 영역 */
+
 .setting-dropdown {
   position: absolute;
   right: 10px;
@@ -867,6 +1054,9 @@ export default {
 .setting-dropdown div:first-child {
   border-right: 1px solid grey;
 }
+
+/* 드롭다운 경기 정보 */
+
 .room-game-info {
   position: absolute;
   min-width: 300px;
@@ -889,7 +1079,6 @@ export default {
   right: 20px;
   z-index: 10;
   padding-left: 260px;
-
 }
 .room-game-info-header:hover {
   cursor: pointer;
@@ -935,12 +1124,38 @@ export default {
   font-family: var(--bold-font);
   font-size: 18px;
 }
+.room-game-billboard-header {
+  position: absolute;
+  width: 279px;
+  height: 10px;
+  background-color: #ffffff;
+  top: 1px;
+  right: 20px;
+  z-index: 10;
+  padding-left: 260px;
+}
+.room-game-billboard-header:hover {
+  cursor: pointer;
+}
+.room-game-billboard {
+  position: absolute;
+  min-width: 700px;
+  height: 300px;
+  border: 1px solid grey;
+  overflow-y: auto;
+  margin-right: 50px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  left: -460px;
+  padding-top: 10px;
+
+}
 #goal-player {
   font-size: 16px;
   position: relative;
 }
 #assist-player {
-  font-family: "MICEGothic";
+  font-family: var(--bold-font);
   font-size: 10px;
 }
 #yellow-card {

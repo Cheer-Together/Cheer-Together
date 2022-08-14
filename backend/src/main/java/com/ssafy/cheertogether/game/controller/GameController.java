@@ -134,6 +134,17 @@ public ResponseEntity<List<GameResponse>> findGames() {
 		return new ResponseEntity<>(gameService.findGamesByLeagueApiIdAndStatus(leagueApiId), HttpStatus.OK);
 	}
 
+	@GetMapping("/date")
+	@ApiOperation(value = "리그와 날짜 별 경기 정보 조회", notes = "리그와 날짜 별 경기 정보 조회\n"
+		+ "Status 관련 설명\n"
+		+ "TBD : 경기 일정 미정\n"
+		+ "NS : 경기 시작 전\n"
+		+ "LIVE : 경기 진행 중\n"
+		+ "FT : 경기 종료\n")
+	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
+		return new ResponseEntity<>(gameService.findGamesByDay(date), HttpStatus.OK);
+	}
+
 	private String apiResponseToJson(MultiValueMap<String, String> params) {
 		ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
 			.codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1)) // to unlimited memory size
