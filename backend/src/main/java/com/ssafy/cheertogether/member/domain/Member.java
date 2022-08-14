@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,6 +34,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Member implements UserDetails {
 
 	@Id
@@ -43,9 +46,13 @@ public class Member implements UserDetails {
 	private String password;
 
 	@Enumerated(EnumType.STRING)
+	@ColumnDefault("USER")
 	private Role role;
 
 	private String myInfo;
+
+	@ColumnDefault("0")
+	private Integer point;
 
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	@JsonManagedReference
@@ -56,12 +63,13 @@ public class Member implements UserDetails {
 	private List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
 
 	@Builder
-	public Member(String email, String nickname, String password, Role role, String myInfo) {
+	public Member(String email, String nickname, String password, Role role, String myInfo, Integer point) {
 		this.email = email;
 		this.nickname = nickname;
 		this.password = password;
 		this.role = role;
 		this.myInfo = myInfo;
+		this.point = point;
 	}
 
 	public static Member from(MemberJoinRequest memberJoinRequest) {
@@ -71,6 +79,7 @@ public class Member implements UserDetails {
 			.password(memberJoinRequest.getPassword())
 			.role(memberJoinRequest.getRole())
 			.myInfo(memberJoinRequest.getMyInfo())
+			.point(0)
 			.build();
 	}
 
@@ -80,6 +89,7 @@ public class Member implements UserDetails {
 			.nickname(oauth2JoinRequest.getNickname())
 			.role(oauth2JoinRequest.getRole())
 			.myInfo(oauth2JoinRequest.getMyInfo())
+			.point(0)
 			.build();
 	}
 
@@ -152,4 +162,14 @@ public class Member implements UserDetails {
 		password = tempPassword;
 	}
 
+	public void plusPoint(int point) {
+		this.point += point;
+	}
+
+	public void subtractPoint(int point) {
+		this.point -= point;
+		if(this.point < 0) {
+			this.point = 0;
+		}
+	}
 }
