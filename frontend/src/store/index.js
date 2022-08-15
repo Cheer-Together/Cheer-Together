@@ -110,7 +110,7 @@ export const useAccountStore = defineStore("account", {
         실패하면
           에러 메시지 표시
       */
-
+      
       axios({
         url: cheertogether.members.emailAuth(),
         method: "GET",
@@ -230,6 +230,10 @@ export const useAccountStore = defineStore("account", {
         },
       })
         .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "성공적으로 회원가입 되었습니다.",
+          });
           router.push({ name: "MainPage" });
         })
         .catch((err) => {

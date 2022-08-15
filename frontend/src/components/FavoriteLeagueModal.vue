@@ -14,7 +14,7 @@
     </div>
     <!-- 섹션 -->
     <div class="favorite-league-modal-section">
-      <div v-for="bigLeague in leagueStore.leaguesNoTeam" :key="bigLeague.id" class="favorite-league-modal-section-item" @click="addSelectLeague(bigLeague)">
+      <div v-for="bigLeague in leagueStore.leaguesNoTeam" :key="bigLeague.id" class="favorite-league-modal-section-item" @click="addSelectLeague(bigLeague)" >
         <img :src="bigLeague.logo" >
         <div class="bigleague-title">
           {{ bigLeague.hanName }}
@@ -45,7 +45,7 @@
         </div>
       </div>
 
-      <button class="save-button" @click="leagueStore.favoriteLeague = false">저장</button>
+      <v-btn style="color:white; font-family:var(--bold-font); font-size:16px;" class="save-button" @click="leagueStore.favoriteLeague = false">저장</v-btn>
     </div>
 
   </v-card>
@@ -95,7 +95,7 @@ const spliceLeague = (myLeague) => {
 <style>
 .favorite-league-modal {
   width: 600px;
-  height: 720px;
+  height: 770px;
   position: relative;
 }
 .favorite-league-modal-title {
@@ -114,7 +114,7 @@ const spliceLeague = (myLeague) => {
 }
 .favorite-league-modal-section {
   width: 600px;
-  height: 450px;
+  height: 500px;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
@@ -133,12 +133,14 @@ const spliceLeague = (myLeague) => {
 .favorite-league-modal-section-item img {
   width: 133px;
   height: 133px;
+  object-fit: contain;
 }
 .bigleague-title {
   width: 133px;
   height: 17px;
   text-align: center;
-  font-size: 15px;
+  font-size: 18px;
+  font-family: var(--bold-font);
 }
 .favorite-league-modal-footer {
   border-top: 1px solid black;
@@ -148,21 +150,28 @@ const spliceLeague = (myLeague) => {
 .favorite-league-modal-footer-item {
   margin: 15px 20px;
 }
+.favorite-league-modal-footer-item:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
 .favorite-league-modal-footer-image {
   width: 70px;
   height: 70px;
+  object-fit: contain;
 }
 .favorite-league-modal-footer-item-title {
   width: 70px;
   height: 12px;
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-family: var(--bold-font);
 }
 .save-button {
   position: absolute;
   width: 100px;
   height: 40px;
-  bottom: 40px;
+  bottom: 70px;
   color: white;
   background-color: #0066A2;
   border-radius: 5px;

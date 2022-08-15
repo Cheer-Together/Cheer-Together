@@ -28,9 +28,9 @@
         </div>
         <div style="position: relative;">
           <input type="email" class="signup-range-input" v-model="credentialsSignup.email" maxlength="40">
-          <button class="signup-range-button" @click.prevent="accountStore.checkEmail(credentialsSignup.email)">
+          <v-btn style="color:white;" class="signup-range-button" @click.prevent="accountStore.checkEmail(credentialsSignup.email)">
             중복 확인
-          </button>
+          </v-btn>
         </div>
       </div>
 
@@ -61,16 +61,16 @@
         </div>
         <div style="position: relative;">
           <input type="text" class="signup-range-input" maxlength="10" v-model="userInputEmailAuthCode">
-          <button v-if="!accountStore.isPushEmail" class="signup-range-button" @click.prevent="pushEmail(credentialsSignup.email)" style="background-color:brown;">
+          <v-btn v-if="!accountStore.isPushEmail" class="signup-range-button" @click.prevent="pushEmail(credentialsSignup.email)" style="background-color:brown; color:white;">
             보내기 
           <v-icon>
             mdi-send
           </v-icon>
-          </button>
+          </v-btn>
 
-          <button v-else class="signup-range-button" @click.prevent="accountStore.emailAuthCodeCheck(userInputEmailAuthCode)">
+          <v-btn style="color:white;" v-else class="signup-range-button" @click.prevent="accountStore.emailAuthCodeCheck(userInputEmailAuthCode)">
             확인
-          </button>
+          </v-btn>
         </div>
       </div>
 
@@ -240,12 +240,12 @@
 
       <!-- 회원 가입!! -->
       <div class="signup-range-bottom">
-        <button class="signup-submit-button"  @click="router.push({name:'MainPage'})">
+        <v-btn class="signup-submit-button"  @click="router.push({name:'MainPage'})" style="height:50px; font-size:21px;">
           이전
-        </button>
-        <button class="signup-submit-button next" @click.prevent="changeSignUp(credentialsSignup)">
+        </v-btn>
+        <v-btn class="signup-submit-button next" @click.prevent="changeSignUp(credentialsSignup)" style="height:50px; font-size:21px; color:white;">
           다음
-        </button>
+        </v-btn>
       </div>
     </div>
   </div>
@@ -303,6 +303,10 @@ const pushEmail = (email) => {
     })
   }
   else {
+    Swal.fire({
+      icon: 'success',
+      title: '인증번호를 발송했습니다.',
+    })
     accountStore.isPushEmail = true
     accountStore.emailAuth(email)
   }
@@ -333,6 +337,12 @@ const changeSignUp = (credentialsSignup) => {
       title: '비밀번호가 일치하지 않습니다!',
     })
   }
+  else if ( accountStore.isShowPasswordError === true ) {
+    Swal.fire({
+      icon: 'error',
+      title: '올바르지 않은 비밀번호입니다. 영어, 숫자, 특수문자 조합 8- 20자',
+    })
+  } 
   else {
     // 사용한 피니아 변수들 감기
     credentialsSignup.password = accountStore.passwordAccordance
@@ -437,8 +447,8 @@ const changeSignUp = (credentialsSignup) => {
   height: 200px;
   border: 1px solid #D9D9D9;
   white-space: pre-wrap;
-  padding: 0 10px;
-
+  padding: 10px;
+  resize: none;
 }
 .signup-range-introduce{
   height: 233px; 
@@ -457,9 +467,10 @@ const changeSignUp = (credentialsSignup) => {
 }
 .signup-favorite-league-item-title {
   width: 70px;
-  height: 12px;
+  height: 24px;
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
+  font-family: var(--bold-font);
 }
 .signup-range-bottom {
   width: 420px;
