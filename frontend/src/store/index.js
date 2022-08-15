@@ -623,8 +623,13 @@ export const useOnAirStore = defineStore("onair", {
     allRooms: [],
     currentRooms: [],
     makeRoomDialog: false,
+    isSearched: false,
+    searchWord: ''
   }),
-  persist: true,
+  persist: {
+    paths: ['allRooms', 'currentRooms', 'makeRoomDialog', 'isSearched', 'searchWord']
+  },
+
   actions: {
     moveOnairPage() {
       axios({
@@ -730,7 +735,10 @@ export const useOnAirStore = defineStore("onair", {
               }
             }
             this.currentRooms = trueRes
+            this.isSearched = true
+            this.searchWord = searchData.text
             router.go()
+            
           })
         }  
     },
