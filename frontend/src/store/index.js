@@ -615,18 +615,26 @@ export const useScheduleStore = defineStore("schedule", {
 });
 export const useOnAirStore = defineStore("onair", {
   state: () => ({
-    rooms: [],
+    allRooms: [],
+    currentRooms: [],
     makeRoomDialog: false,
   }),
+  persist: true,
   actions: {
     moveOnairPage() {
       axios({
         url: cheertogether.room.rooms(),
         method: "GET",
       })
-        .then((res) => {
-          this.rooms = res.data;
-          router.push({ name: "Onair", params: { leaguename: "모든 응원방 목록" } });
+
+        .then(res => {
+          this.allRooms = res.data
+          this.currentRooms = res.data
+          router.push({name: 'Onair', params: {leaguename: '모든 응원방 목록'}})
+        })
+        .catch(err => {
+          console.log(err)
+
         })
         .catch((err) => {
           console.log(err);
@@ -656,9 +664,12 @@ export const useOnAirStore = defineStore("onair", {
             url: cheertogether.room.roomsLeague(item.id),
             method: "GET",
           })
-            .then((res) => {
-              this.rooms = res.data;
-              router.push({ name: "Onair", params: { leaguename: `${item.league}` } });
+
+            .then(res => {
+              this.allRooms = res.data
+              this.currentRooms = res.data
+              router.push({name: 'Onair' , params: {leaguename: `${item.league}`} })
+
             })
             .catch((err) => {
               console.log(err);
@@ -705,6 +716,42 @@ export const useOnAirStore = defineStore("onair", {
           }
         });
       }
+    },
+
+    searchRooms(searchData){
+        if(searchData.text){
+          axios({
+            url: cheertogether.room.search(),
+            method: 'GET',
+            params: {
+              keyword: searchData.text,
+              type: searchData.category
+            }
+          })
+          .then((res) => {
+            let trueRes = []
+            for(let searchedRoom of res.data){
+              for(let room of this.currentRooms){
+                if(searchedRoom.roomId === room.roomId){
+                  trueRes.push(searchedRoom)
+                }
+              }
+            }
+            this.currentRooms = trueRes
+            router.go()
+          })
+        }  
+    },
+
+    selectMatch(gameId){
+      axios({
+        url: cheertogether.room.searchGame(gameId),
+        method: 'GET'
+      })
+      .then((res) => {
+        this.currentRooms = res.data
+        router.go()
+      })
     },
 
     makeRoomDialogToggle() {
