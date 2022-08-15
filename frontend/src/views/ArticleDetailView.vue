@@ -2,60 +2,62 @@
   <NavBar/>
   <div style="display:flex;">
     <SideBar/>
-    <div v-if="axiosLoaded" class="community-main">
-      <div class="community-detail-top">
-        <div style="height:36px; width:36px; margin-right:10px;">
-          <img :src="maincontent.leagueResponseExceptTeamList.logo" style="height:36px; width:36px;">
-        </div>
-        <a>{{maincontent.leagueResponseExceptTeamList.hanName}}</a>
-      </div>
-      <div class="community-detail-header">
-        <div style="font-size:20px; font-family: 'MICEGothic Bold';">
-          {{maincontent.title}}
-        </div>
-        <div style="font-size:13px;">
-          <a class="word-link" @click="reportModalToggle()">신고하기</a><a> | </a>
-          <a class="word-link" @click="toArticleListBtn()">글 목록</a>
-        </div>
-      </div>
-      <div class="community-detail-content-top">
-        <div style="display: flex; align-items: center;">
-          <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
+    <div class="community">
+      <div v-if="axiosLoaded" class="community-main">
+        <div class="community-detail-top">
+          <div style="height:36px; width:36px; margin-right:10px;">
+            <img :src="maincontent.leagueResponseExceptTeamList.logo" style="height:36px; width:36px;">
           </div>
-          <a style="font-size:14px">{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
+          <a>{{maincontent.leagueResponseExceptTeamList.hanName}}</a>
         </div>
-        <div v-if="userEmail==maincontent.memberResponse.email||userRole=='ADMIN'" class="community-detail-btns">
-          <div @click="modifyArticle()" class="word-link">
-            <v-icon size="20px">
-              mdi-pencil
+        <div class="community-detail-header">
+          <div style="font-size:20px; font-family: 'MICEGothic Bold';">
+            {{maincontent.title}}
+          </div>
+          <div style="font-size:13px;">
+            <a class="word-link" @click="reportModalToggle()">신고하기</a><a> | </a>
+            <a class="word-link" @click="toArticleListBtn()">글 목록</a>
+          </div>
+        </div>
+        <div class="community-detail-content-top">
+          <div style="display: flex; align-items: center;">
+            <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
+            </div>
+            <a style="font-size:14px">{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
+          </div>
+          <div v-if="userEmail==maincontent.memberResponse.email||userRole=='ADMIN'" class="community-detail-btns">
+            <div @click="modifyArticle()" class="word-link">
+              <v-icon size="20px">
+                mdi-pencil
+              </v-icon>
+              <a>수정하기</a>
+            </div>
+            <div @click="deleteArticle()" class="word-link" style="margin-left:10px">
+              <v-icon size="20px">
+                mdi-delete
+              </v-icon>
+              <a>삭제하기</a>
+            </div>
+          </div>
+        </div>
+        <div style="margin: 10px; line-height: 200%;">
+          {{maincontent.content}}
+        </div>
+        <div style="height:50px; margin-top: 50px;">
+          <div @click="likeArticle" class="like-btn">
+            <v-icon size="35px" color="white">
+              mdi-thumb-up
             </v-icon>
-            <a>수정하기</a>
-          </div>
-          <div @click="deleteArticle()" class="word-link" style="margin-left:10px">
-            <v-icon size="20px">
-              mdi-delete
-            </v-icon>
-            <a>삭제하기</a>
           </div>
         </div>
-      </div>
-      <div style="margin: 10px">
-        {{maincontent.content}}
-      </div>
-      <div style="height:50px; margin-top: 50px;">
-        <div @click="likeArticle" class="like-btn">
-          <v-icon size="35px" color="white">
-            mdi-thumb-up
-          </v-icon>
+        <div class="community-detail-writecomment">
+          <input type="text" v-model="commentText" maxlength="30" placeholder=" 여기에 댓글을 달아주세요." class="community-detail-commentcontent">
+          <v-btn @click="writeReply" style="height:34px; margin-left:20px">댓글작성</v-btn>
         </div>
+        <ArticleDetailComment v-for="reply in maincontent.replyResponseList" :key="reply.id" :reply="reply" :userRole="userRole"/>
       </div>
-      <div class="community-detail-writecomment">
-        <input type="text" v-model="commentText" maxlength="30" placeholder=" 여기에 댓글을 달아주세요." class="community-detail-commentcontent">
-        <v-btn @click="writeReply" style="height:34px; margin-left:20px">댓글작성</v-btn>
-      </div>
-      <ArticleDetailComment v-for="reply in maincontent.replyResponseList" :key="reply.id" :reply="reply" :userRole="userRole"/>
+      <ArticleSides/>
     </div>
-    <ArticleSides/>
   </div>
 
   <div>
@@ -302,6 +304,21 @@ function writeReply() {
 </script>
 
 <style>
+.community {
+  display: flex;
+  margin-top: 160px;
+  margin-left: 210px;
+  width:100%;
+  justify-content: center;
+  align-content: flex-start;
+  min-width: 1400px;
+}
+@media (max-width: 1580px) {
+  .community {
+    margin-top: 120px;
+    margin-left: 175px;
+  }
+}
 .community-detail-top {
   display:flex;
   align-items: center;

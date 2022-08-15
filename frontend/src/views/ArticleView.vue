@@ -2,9 +2,11 @@
   <NavBar/>
   <div style="display:flex;">
     <SideBar/>
-    <ArticleForm v-if="communityStore.toggle"/>
-    <ArticleList v-else/>
-    <ArticleSides/>
+    <div class="community">    
+      <ArticleForm v-if="communityStore.toggle"/>
+      <ArticleList v-else/>
+      <ArticleSides/>
+    </div>
   </div>
 </template>
 
@@ -22,16 +24,23 @@ if (!communityStore.isModify) {
 </script>
 
 <style>
-.community-main {
-  width: 790px;
+.community {
+  display: flex;
   margin-top: 160px;
-  margin-left: 270px;
+  margin-left: 210px;
+  width:100%;
+  justify-content: center;
+  align-content: flex-start;
+  min-width: 1400px;
 }
 @media (max-width: 1580px) {
-  .community-main {
+  .community {
     margin-top: 120px;
-    margin-left: 235px;
+    margin-left: 175px;
   }
+}
+.community-main {
+  width: 790px;
 }
 .maincolor {
   color: var(--main-color);
