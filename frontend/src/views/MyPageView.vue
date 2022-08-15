@@ -25,19 +25,19 @@
         </div>
         <!-- 회원정보수정 -->
         <div style="display:flex;" v-if="accountStore.otherProfile.email === accountStore.profile.email">
-          <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
+          <v-btn  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
             <v-icon>
               mdi-pencil-box
             </v-icon>
             회원정보수정
-          </div>
+          </v-btn>
 
-          <div  class="mypage-header-editinfo" @click="router.push({name: 'MypageEdit' , params: { userid: accountStore.profileId } })">
-            <v-icon>
+          <v-btn style="color:red; width:140px;" class="mypage-header-editinfo" @click="withdrawal">
+            <v-icon >
               mdi-delete-forever
             </v-icon>
             회원 탈퇴
-          </div>
+          </v-btn>
         </div>        
       </div>
       <!-- 본문 -->
@@ -49,10 +49,10 @@
           </div>
           <div style="display:flex;">
             <div class="mypage-favorite-league" v-for="favoriteLeague in accountStore.otherProfile.favoriteLeagueList" :key="favoriteLeague.apiId">
-            <img :src="favoriteLeague.logo" alt="" >
-            <div class="mypage-favorite-league-title">
-              {{ favoriteLeague.hanName }}
-            </div>
+              <img :src="favoriteLeague.logo" alt="" >
+              <div class="mypage-favorite-league-title">
+                {{ favoriteLeague.hanName }}
+              </div>
           </div>
           </div>
         </div>
@@ -91,15 +91,21 @@ const route = useRoute()
 
 const accountStore = useAccountStore()
 accountStore.presentUserProfile(route.params.userid)
+
+// 회원 탈퇴 함수
+const withdrawal = () => {
+
+  accountStore.withdrawal(accountStore.profileId)
+}
 </script>
 
 <style>
 .mypage {
   width: 100%;
-  margin: 80px 0 0 210px;
+  margin: 30px 0 0 210px;
 }
 .mypage-header {
-  margin: 50px auto;
+  margin: 30px auto;
   width: 1300px;
   height: 350px;
   border-bottom: 1px solid #b6b9ba;
@@ -109,7 +115,7 @@ accountStore.presentUserProfile(route.params.userid)
   width: 200px;
   height: 200px;
   border-radius: 150px;
-  border: 1px solid #b6b9ba;
+
   margin-right:50px;
   overflow: hidden;
 }
@@ -118,6 +124,7 @@ accountStore.presentUserProfile(route.params.userid)
   width: 300px;
   height: 50px;
   font-size: 32px;
+  font-family: var(--bold-font);
 }
 .mypage-header-info {
   margin-top: 30px;
@@ -137,6 +144,7 @@ accountStore.presentUserProfile(route.params.userid)
   border-radius: 30px;
   font-size: 18px;
   text-align: center;
+  font-family: var(--bold-font);
 }
 .mypage-header-editinfo:first-child {
   margin-left: auto;
@@ -160,18 +168,20 @@ accountStore.presentUserProfile(route.params.userid)
 }
 .mypage-favorite-league {
   margin: 35px;
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
 }
 .mypage-favorite-league img {
-  width: 150px;
-  height: 150px;
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
 }
 .mypage-favorite-league-title {
   margin-top: 10px;
   font-size: 18px;
-  width: 150px;
+  width: 130px;
   text-align: center;
+  font-family: var(--bold-font);
 }
 .mypage-section-favorite-team {
     padding: 10px;

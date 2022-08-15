@@ -245,7 +245,7 @@ export const useAccountStore = defineStore("account", {
       /* 
       DELETE: 회원 탈퇴를 진행한다.
         성공하면
-          유저 정보를 profile에 저장한다.
+
         실패하면
 
       */
@@ -255,6 +255,7 @@ export const useAccountStore = defineStore("account", {
       })
         .then((res) => {
           console.log(res.data);
+          this.logoutAccount()
         })
         .catch((err) => {
           console.log(err);
