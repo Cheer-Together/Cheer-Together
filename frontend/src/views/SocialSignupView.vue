@@ -105,6 +105,7 @@ import router from '@/router'
 import { useRoute } from "vue-router"
 import axios from "axios"
 import { ref } from "vue"
+import jwt_decode from "jwt-decode";
 
 const route = useRoute()
 const leagueStore = useLeagueStore()
@@ -143,10 +144,24 @@ function socialSignupBtn() {
   .then(res => {
     sessionStorage.setItem('token', res.data)
     sessionStorage.setItem('isSocialLogin', true)
-    accountStore.socialLoginComplete(res.data)
+    let userId = jwt_decode(res.data)
+    axios({
+      url: 'https://i7b204.p.ssafy.io/cheertogether/members/'+userId,
+      method: "GET",
+      params: {
+        id: userId,
+      },
+    })
+    .then((res) => {
+      console.log("유저정보 : " + res.data.point);
+      accountStore.socialLoginComplete(res)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
     Swal.fire({
       icon: 'success',
-      title: '가입되었습니다!',
+      title: '성공적으로 로그인 되었습니다.',
     })
   })
   .catch(err => {
@@ -167,7 +182,21 @@ axios({
       if (!res.data.newMember) {
         sessionStorage.setItem('token', res.data.token)
         sessionStorage.setItem('isSocialLogin', true)
-        accountStore.socialLoginComplete(res.data.token)
+        let userId = jwt_decode(res.data.token)
+        axios({
+          url: 'https://i7b204.p.ssafy.io/cheertogether/members/'+userId,
+          method: "GET",
+          params: {
+            id: userId,
+          },
+        })
+        .then((res) => {
+          console.log("유저정보 : " + res.data.point);
+          accountStore.socialLoginComplete(res)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
         Swal.fire({
           icon: 'success',
           title: '성공적으로 로그인 되었습니다.',

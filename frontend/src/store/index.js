@@ -42,8 +42,8 @@ export const useAccountStore = defineStore("account", {
   state: () => ({
     loginDialog: false,
     loginDialogMsg : '같이 집관에 오신 것을 환영합니다.',
+    signupAlarm: 'false',
     isLogin: sessionStorage.getItem("token") ?? false,
-    socialLoginRefresh: false,
     emailDoubleChecked: false,
     emailAuthCodeChecked: false,
     emailAuthCode: "AAAAAAAAAAA",
@@ -231,6 +231,7 @@ export const useAccountStore = defineStore("account", {
         },
       })
         .then(() => {
+          this.signupAlarm = true
           router.push({ name: "MainPage" });
         })
         .catch((err) => {
@@ -390,7 +391,6 @@ export const useAccountStore = defineStore("account", {
         }
       }
     },
-
     loginAccount(user) {
       /*
       email과 password를 담은 user: Object를 입력받아 로그인을 시도합니다.
@@ -436,16 +436,14 @@ export const useAccountStore = defineStore("account", {
       const url = "https://kauth.kakao.com/oauth/authorize?client_id=" + decodeURIComponent(API_KEY) + "&redirect_uri=" + decodeURIComponent(REDIRECT_URI) + "&response_type=code";
       window.location.replace(url);
     },
-    socialLoginComplete(token) {
+    socialLoginComplete(res) {
       this.isLogin = true;
-      let userId = jwt_decode(token);
-      this.profileId = userId;
-      this.userProfile(userId);
-      this.socialLoginRefresh = true;
-      router.push({name:'MainPage'});
-    },
-    socialLoginRefreshComplete() {
-      this.socialLoginRefresh = false;
+      this.profile = res.data;
+      if (this.profile.favoriteTeamList.length > 0) {
+        this.profile["profileImage"] = this.profile.favoriteTeamList[0].logo;
+      } else {
+        this.profile["profileImage"] = require("../assets/image/로고.png");
+      }
     },
     logoutAccount() {
       sessionStorage.removeItem("token");
@@ -471,6 +469,13 @@ export const useAccountStore = defineStore("account", {
           console.log(err);
         });
     },
+    isNewMember() {
+      Swal.fire({
+        icon: "success",
+        title: "회원가입에 성공했습니다.",
+      })
+      this.signupAlarm = false
+    }
   },
 });
 export const useLeagueStore = defineStore("league", {
