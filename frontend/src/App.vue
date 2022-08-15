@@ -39,6 +39,7 @@ if (accountStore.socialLoginRefresh) {
   accountStore.socialLoginRefreshComplete()
   router.go()
 }
+accountStore.getPointRanking();
 
 // 리그데이터 불러오기
 leagueStore.leaguesAll();

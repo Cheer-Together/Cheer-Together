@@ -192,7 +192,7 @@ public class MemberService implements UserDetailsService {
 	}
 
 	public List<MemberPointRankingResponse> getPointRanking() {
-		return memberRepository.findTop4ByOrderByPointDesc().stream()
+		return memberRepository.findTop3ByOrderByPointDesc().stream()
 			.map(MemberPointRankingResponse::new)
 			.collect(Collectors.toList());
 	}

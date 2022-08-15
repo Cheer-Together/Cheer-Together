@@ -10,5 +10,5 @@ import com.ssafy.cheertogether.member.domain.Member;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	Optional<Member> findByEmail(String email);
 
-	List<Member> findTop4ByOrderByPointDesc();
+	List<Member> findTop3ByOrderByPointDesc();
 }
