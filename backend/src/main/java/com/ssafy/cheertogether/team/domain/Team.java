@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.google.firebase.database.annotations.NotNull;
 import com.ssafy.cheertogether.league.domain.League;
 
 import lombok.Getter;
@@ -31,11 +32,15 @@ public class Team implements Serializable {
 	@JoinColumn(name = "league_id")
 	@JsonBackReference
 	private League league;
-
+	@NotNull
 	private String name;
+	@NotNull
 	private String logo;
+	@NotNull
 	private String code;
 	@Column(name = "api_id", unique = true)
+	@NotNull
 	private Long apiId;
+	@NotNull
 	private String hanName;
 }

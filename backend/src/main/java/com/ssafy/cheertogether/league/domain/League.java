@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.firebase.database.annotations.NotNull;
 import com.ssafy.cheertogether.team.domain.Team;
 
 import lombok.Getter;
@@ -25,9 +26,12 @@ public class League {
 	@OneToMany(mappedBy = "league")
 	@JsonManagedReference
 	private List<Team> teamList = new ArrayList<>();
-
+	@NotNull
 	private String name;
+	@NotNull
 	private String logo;
+	@NotNull
 	private Long apiId;
+	@NotNull
 	private String hanName;
 }
