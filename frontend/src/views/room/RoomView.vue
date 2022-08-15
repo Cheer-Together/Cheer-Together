@@ -21,7 +21,7 @@
         
         <!-- 승부 예측 -->
         <div class="game-prediction" v-if="roomStore.isClickPredictButton">
-          <div style="font-size: 30px;">예측 종료</div>
+          <div v-if="!this.validateTime()" style="font-size: 30px;">예측 종료</div>
           <!-- 승부 예측 시간 -->
           <div style="font-size: 16px;">
             {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
@@ -713,7 +713,7 @@ export default {
         
         if(this.isSessionManager == true) {
           if(team == 1) {
-            useGamePredictionStore().team1_predcit_list.push(memberId);
+            useGamePredictionStore().team1_predict_list.push(memberId);
           } else if(team == 2) {
             useGamePredictionStore().team2_predict_list.push(memberId);
           }
@@ -727,6 +727,12 @@ export default {
         useGamePredictionStore().team1_count = parseInt(receive[1]);
         useGamePredictionStore().team2_point = parseInt(receive[2]);
         useGamePredictionStore().team2_count = parseInt(receive[3]);
+      });
+
+      this.session.on("signal:game-prediction-result", (event) => {
+        let receive = event.data.split("/");
+        useGamePredictionStore().team1_predict_list = receive[0];
+        useGamePredictionStore().team2_predict_list = receive[1];
       });
 
       this.session.on("signal:force-out", (event) => {
@@ -990,7 +996,8 @@ export default {
     },
 
     validateTime() {
-      return (new Date() <= this.roomStore.gamePredictionDeadline);
+      console.log("시간:" + useRoomStore().gamePredictionDeadline);
+      return (new Date() <= new Date(useRoomStore().gamePredictionDeadline));
     },
     
     toggleMic(){
@@ -1015,6 +1022,20 @@ export default {
     },
     getGameInfo() {
       if(this.roomStore.playTeams.status == "FT") {
+        if(this.isSessionManager == true) {
+          this.session
+            .signal({
+              data: this.useGamePredictionStore.team1_predict_list + "/" + this.useGamePredictionStore.team2_predict_list,
+              to: [],
+              type: "game-prediction-result",
+            })
+            .then(() => {
+              console.log("Message successfully sent");
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
         this.gamePredictionStore.distributePoints();
         clearInterval(this.loading);
       }
