@@ -15,9 +15,13 @@ export const useGamesStore = defineStore("gameStore", {
             this.liveGames.push({
               title: title,
               id: e.id,
+              homeLogo: e.home.logo,
+              awayLogo: e.away.logo
             });
           });
           console.log(this.liveGames);
+          sessionStorage.setItem('AllLiveGames', JSON.stringify(this.liveGames))
+          console.log(JSON.parse(sessionStorage.getItem('AllLiveGames')))
         },
         (err) => {
           console.log(err);

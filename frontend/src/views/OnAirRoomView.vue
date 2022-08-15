@@ -23,6 +23,7 @@
           <!-- 경기 목록 별로 정렬 -->
           <div class="select-live-match">
             <select name="liveMatch" @change="changeMatch()">
+              <option value="none">=== 선택 ===</option>
               <option :value="match.id" v-for="match in items" :key="match.id">{{ match.title }}</option>
             </select>
           </div>
@@ -46,7 +47,8 @@ import SideBar from "../components/SideBar.vue"
 import RoomsList from "../components/RoomsList.vue"
 import OnAirMakeModal from "../components/OnAirMakeModal.vue"
 import { useOnAirStore, useAccountStore } from "@/store"
-import { useGamesStore } from  '@/store/modules/game.js'
+
+
 
  
 const onAirStore = useOnAirStore()
@@ -58,6 +60,7 @@ const searchData = {
 const liveMatchData = {
   id: ''
 }
+const items = JSON.parse(sessionStorage.getItem('AllLiveGames'))
 const changeCategory = () => {
   const selectMenu = document.querySelector('.select-league select')
   searchData.category = selectMenu.options[document.querySelector(".select-league select").selectedIndex].value
@@ -69,7 +72,7 @@ const changeMatch = () => {
   onAirStore.selectMatch(liveMatchData.id)
 }
 
-let items = useGamesStore().liveGames
+
 
 
 
