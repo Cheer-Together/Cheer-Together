@@ -20,7 +20,8 @@ export default {
     withdrawal: (userId) => HOST + MEMBERS + `${userId}`, // 회원 탈퇴
     changePassword: (userId) => HOST + MEMBERS + `${userId}/` + 'password', // 비밀번호 변경
     plusPoint : (userId) => HOST + MEMBERS + `${userId}/` + 'point/plus',
-    subtractPoint: (userId) => HOST + MEMBERS + `${userId}/` + 'point/subtract'  //포인트 감소
+    subtractPoint: (userId) => HOST + MEMBERS + `${userId}/` + 'point/subtract',  //포인트 감소
+    getPointRanking: () => HOST + MEMBERS + 'point/ranking'
   },
   league: {
     leaguesAll: () => HOST + LEAGUES, // 모든 리그 정보 조회

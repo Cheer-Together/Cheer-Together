@@ -31,6 +31,7 @@
             <span style="font-family: var(--bold-font); color: var(--main-color); font-size: 15px">{{ roomStore.predictTime }}</span>
             {{ roomStore.playTeams.home.hanName }} vs
             {{ roomStore.playTeams.away.hanName }}
+            <span style="float:right">잔여 축구공 : {{ myPoint }}</span>
           </div>
           <div style="display:flex;">
             <!-- 홈 팀 -->
@@ -576,6 +577,8 @@ export default {
       publisher: undefined,
       subscribers: [],
 
+      accountStore: useAccountStore(),
+
       mySessionId: undefined,
       myUserName: undefined,
       sessionInfo: undefined,
@@ -655,7 +658,7 @@ export default {
         if(this.isSessionManager == true) {
           this.session
           .signal({
-            data: (this.team1_point) + "/" + (this.team1_count) + "/" + (this.team2_point) + "/" + (this.team2_count),
+            data: (this.useGamePredictionStore.team1_point) + "/" + (this.useGamePredictionStore.team1_count) + "/" + (this.useGamePredictionStore.team2_point) + "/" + (this.useGamePredictionStore.team2_count),
             to: [],
             type: "game-prediction-broadcast",
           })
@@ -983,6 +986,7 @@ export default {
         this.team2_pointToSend = 0;
         useGamePredictionStore().isPredictedList.push(this.mySessionId);
         this.isPredicted = true;
+        this.myPoint -= pointToSend;
       }
     },
 
@@ -1021,7 +1025,9 @@ export default {
       this.cam = !this.cam;
     },
     getGameInfo() {
+      console.log("받아옴")
       if(this.roomStore.playTeams.status == "FT") {
+        console.log("!!!!!!!finish!!!!!!!!!!!!")
         if(this.isSessionManager == true) {
           this.session
             .signal({
