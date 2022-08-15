@@ -83,13 +83,13 @@ public class MemberService implements UserDetailsService {
 	 * @param password 사용자 패스워드
 	 *
 	 */
-	@Transactional(readOnly = true)
 	public Long login(String email, String password) {
 		Member findMember = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_EMAIL_ERROR_MESSAGE));
 		if (!findMember.confirmPassword(password)) {
 			throw new IllegalArgumentException(MISMATCH_PASSWORD_ERROR_MESSAGE);
 		}
+		findMember.checkAttendance();
 		return findMember.getId();
 	}
 
