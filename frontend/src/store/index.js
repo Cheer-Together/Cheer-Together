@@ -962,14 +962,14 @@ export const useRoomStore = defineStore("room", {
     ],
     popularRooms: [],
     playTeams: {
-      id: 31,
+      id: "",
       home: {
         leagueName: "",
         name: "",
         hanName: "",
         logo: "",
         code: "",
-        apiId: 0,
+        apiId: "",
       },
       away: {
         leagueName: "",
@@ -977,15 +977,15 @@ export const useRoomStore = defineStore("room", {
         hanName: "",
         logo: "",
         code: "",
-        apiId: 1,
+        apiId: "",
       },
       kickoff: "",
       stadium: "",
       status: "",
-      homeScore: 0,
-      awayScore: 2,
-      apiId: 867946,
-      leagueApiId: 39,
+      homeScore: "",
+      awayScore: "",
+      apiId: "",
+      leagueApiId: "",
     },
     goal: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
     homeGoalPoint : 0,
@@ -1076,6 +1076,7 @@ export const useRoomStore = defineStore("room", {
           this.gamePredictionDeadline = date;
 
           this.playTeams = res.data;
+          this.getGameInfo(res.data.apiId);
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
 
@@ -1119,7 +1120,7 @@ export const useRoomStore = defineStore("room", {
           this.homeGoalPoint = 0
           this.awayGoalPoint = 0
 
-          res.data.response.reverse().forEach((e) => {
+          res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
             if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
               this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
               this.homeGoalPoint = this.homeGoalPoint + 1

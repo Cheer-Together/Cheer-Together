@@ -9,7 +9,7 @@
         <div style="display:flex;">
           <!-- 방 제목 -->
           <div class="match-screen-title">
-            {{ sessionInfo.name }}
+            {{ sessionInfo?.name }}
           </div>
           <div class="match-screen-icon">
             <v-icon  size="40" @click="leaveSession">
@@ -614,7 +614,8 @@ export default {
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
     this.roomStore.isClickPredictButton = false
-    this.loading = setInterval(this.getGameInfo(), 60000);
+    this.loading = setInterval(this.getGameInfo, 60000);
+
   },
 
   methods: {
