@@ -17,6 +17,7 @@ public class MemberResponse {
 	private final String nickname;
 	private final Role role;
 	private final String myInfo;
+	private final Integer point;
 	private final List<LeagueResponseExceptTeamList> favoriteLeagueList = new ArrayList<>();
 	private final List<TeamResponse> favoriteTeamList = new ArrayList<>();
 
@@ -25,6 +26,7 @@ public class MemberResponse {
 		nickname = member.getNickname();
 		role = member.getRole();
 		myInfo = member.getMyInfo();
+		point = member.getPoint();
 		favoriteLeagueList.addAll(
 			member.getFavoriteLeagueList()
 				.stream()
