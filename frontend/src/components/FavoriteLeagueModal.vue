@@ -155,12 +155,12 @@ const spliceLeague = (myLeague) => {
   cursor: pointer;
 }
 .favorite-league-modal-footer-image {
-  width: 70px;
+  width: 90px;
   height: 70px;
   object-fit: contain;
 }
 .favorite-league-modal-footer-item-title {
-  width: 70px;
+  width: 90px;
   height: 12px;
   text-align: center;
   font-size: 16px;

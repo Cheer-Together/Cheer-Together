@@ -145,7 +145,7 @@
         </div>
       </div>
       <!-- 좋아하는 리그 -->
-      <div class="signup-range" style="height:182px;">
+      <div class="signup-range" style="height:230px;">
         <div class="signup-range-title">
           좋아하는 리그
           <v-dialog
@@ -159,24 +159,24 @@
             <!-- 모달 창 -->
             <FavoriteLeagueModal/>
           </v-dialog>
-          <div v-if="accountStore.profile.favoriteLeagueList.length !== 0" class="signup-favorite-league">
-            <div class="signup-favorite-league-item">
-              <img :src="accountStore.profile.favoriteLeagueList[0].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+          <div v-if="accountStore.profile.favoriteLeagueList.length !== 0" class="signup-favorite-league" >
+            <div class="signup-favorite-league-item" style="margin-left:0px;">
+              <img :src="accountStore.profile.favoriteLeagueList[0].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteLeagueList[0].hanName }}
               </div>
             </div>
 
             <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteLeagueList.length >= 2" >
-              <img :src="accountStore.profile.favoriteLeagueList[1].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteLeagueList[1].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteLeagueList[1].hanName }}
               </div>
             </div>
 
             <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteLeagueList.length == 3" >
-              <img :src="accountStore.profile.favoriteLeagueList[2].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteLeagueList[2].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteLeagueList[2].hanName }}
               </div>
             </div>
@@ -185,7 +185,7 @@
       </div>
 
       <!-- 좋아하는 팀 -->
-      <div class="signup-range" style="height:182px;">
+      <div class="signup-range" style="height:230px;">
         <div class="signup-range-title">
           좋아하는 팀    
           <v-dialog
@@ -200,37 +200,37 @@
             <FavoriteTeamModal/>
           </v-dialog>
           <div v-if="accountStore.profile.favoriteTeamList.length !== 0" class="signup-favorite-league">
-            <div class="signup-favorite-league-item">
-              <img :src="accountStore.profile.favoriteTeamList[0].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+            <div class="signup-favorite-league-item" style="margin-left:0px;">
+              <img :src="accountStore.profile.favoriteTeamList[0].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[0].hanName }}
               </div>
             </div>
 
             <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length >= 2" >
-              <img :src="accountStore.profile.favoriteTeamList[1].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[1].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[1].hanName }}
               </div>
             </div>
 
             <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length >= 3" >
-              <img :src="accountStore.profile.favoriteTeamList[2].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[2].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[2].hanName }}
               </div>
             </div>
 
             <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length >= 4" >
-              <img :src="accountStore.profile.favoriteTeamList[3].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[3].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[3].hanName }}
               </div>
             </div>
 
             <div class="signup-favorite-league-item" v-if="accountStore.profile.favoriteTeamList.length == 5" >
-              <img :src="accountStore.profile.favoriteTeamList[4].logo" class="signup-favorite-league-image">
-              <div class="signup-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[4].logo" class="signup-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="signup-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[4].hanName }}
               </div>
             </div>
@@ -239,8 +239,8 @@
       </div>
 
       <!-- 회원 가입!! -->
-      <div class="signup-range-bottom">
-        <v-btn class="signup-submit-button"  @click="router.push({name:'MainPage'})" style="height:50px; font-size:21px;">
+      <div class="signup-range-bottom" style="margin-top: 120px;">
+        <v-btn class="signup-submit-button"  @click="router.push({ name:'Mypage', params: { userid: accountStore.profileId } })" style="height:50px; font-size:21px;">
           이전
         </v-btn>
         <v-btn class="signup-submit-button next" @click.prevent="changeSignUp(credentialsSignup)" style="height:50px; font-size:21px; color:white;">
@@ -460,14 +460,16 @@ const changeSignUp = (credentialsSignup) => {
 }
 .signup-favorite-league-item {
   margin: 15px 20px;
+  width: 100px;
+  height: 120px;
 }
 .signup-favorite-league-image {
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
 }
 .signup-favorite-league-item-title {
-  width: 70px;
-  height: 24px;
+  width: 100px;
+  height: 20px;
   text-align: center;
   font-size: 16px;
   font-family: var(--bold-font);
