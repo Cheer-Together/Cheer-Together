@@ -21,4 +21,8 @@ async function getPopularRooms(success, fail) {
   await api.get(`/rooms/popular`).then(success).catch(fail);
 }
 
-export { createRoom, getRoomInfo, updateRoomHeadCount, getPopularRooms };
+async function deleteRoom(roomId, success, fail) {
+  await api.delete(`/rooms/${roomId}`).then(success).catch(fail);
+}
+
+export { createRoom, getRoomInfo, updateRoomHeadCount, getPopularRooms, deleteRoom };

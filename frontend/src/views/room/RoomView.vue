@@ -551,7 +551,7 @@ import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
-import { updateRoomHeadCount } from '@/api/room.js';
+import { updateRoomHeadCount, deleteRoom } from '@/api/room.js';
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -778,24 +778,50 @@ export default {
 
     leaveSession() {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
-      if (this.session) this.session.disconnect();
-
-      this.session = undefined;
-      this.mainStreamManager = undefined;
-      this.publisher = undefined;
-      this.subscribers = [];
-      this.OV = undefined;
+      
 
       useGamePredictionStore().team1_point = 0;
       useGamePredictionStore().team1_count = 0;
       useGamePredictionStore().team2_point = 0;
       useGamePredictionStore().team2_count = 0;
 
-      if(this.isSessionManager == true){
+      if(this.isSessionManager == true) {
         useGamePredictionStore().team1_predict_list = [];
         useGamePredictionStore().team2_predict_list = [];
+        console.log("I'm SessionManager!!");
+        this.subscribers.forEach(async e => {
+          let userId = JSON.parse(e.stream.connection.data).clientData;
+          console.log("foreach: "+userId);
+          await this.session
+            .signal({
+              data: userId,
+              to: [],
+              type: "force-out",
+            })
+            .then(() => {
+              console.log("force-out successfully requested");
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        });
+        deleteRoom(this.sessionInfo.roomId,
+          () => {
+            console.log("Room Delete Complete");
+          },
+          (err) => {
+            console.log(err);
+        });
+      } else {
+        this.updateRoomHeadCount(this.subscribers.length+1);
       }
-      this.updateRoomHeadCount(this.subscribers.length+1);
+      if (this.session) this.session.disconnect();
+      
+      this.session = undefined;
+      this.mainStreamManager = undefined;
+      this.publisher = undefined;
+      this.subscribers = [];
+      this.OV = undefined;
 
       window.removeEventListener("beforeunload", this.leaveSession);
       this.$router.push({ name: "MainPage" });
@@ -925,7 +951,7 @@ export default {
     },
 
     forceOut(clientData) {
-      console.log(clientData + this.isSessionManager);
+      console.log(clientData + " " + this.isSessionManager);
       if(this.isSessionManager == false) return;
       this.session
         .signal({
