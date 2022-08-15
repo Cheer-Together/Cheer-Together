@@ -5,7 +5,7 @@
     <div style="font-size:13px; margin-left: 2px;">
       <div style="color:#8D8D8D; display: flex;">
         {{replyNickName}} | {{replyCreatedDate}}
-        <div v-if="loginUserId==props.reply.memberId" @click="deleteComment()" class="word-link" style="margin-left:5px">
+        <div v-if="loginUserId==props.reply.memberId||userRole=='ADMIN'" @click="deleteComment()" class="word-link" style="margin-left:5px">
           <v-icon>
             mdi-delete
           </v-icon>
@@ -25,7 +25,8 @@ import { defineProps, ref } from 'vue'
 import jwt_decode from "jwt-decode"
 import router from '@/router';
 const props = defineProps({
-  reply: Object
+  reply: Object,
+  userRole: String
 })
 const replyNickName = ref('')
 const replyCreatedDate = ref('')

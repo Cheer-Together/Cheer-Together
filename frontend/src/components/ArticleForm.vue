@@ -13,7 +13,7 @@
         ></v-select>
       </div>
       <div>
-        <input v-model="title" type="text" placeholder=" 제목을 입력하세요." class="write-title">
+        <input v-model="title" type="text" maxlength="25" placeholder=" 제목을 입력하세요." class="write-title">
       </div>
     </div>
 
@@ -67,30 +67,37 @@ const items = [
 const time = new Date();
 const now = time.toLocaleString();
 function completeButton() {
-  axios({
-    url: "https://i7b204.p.ssafy.io/cheertogether/articles",
-    method: 'POST',
-    data: {
-      content: content.value,
-      leagueApiId: category.value,
-      title: title.value,
-    },
-    params: {
-      jwtToken: sessionStorage.getItem('token')
-    }
-  })
-  .then(res => {
-    console.log(res.data)
-    router.go()
-  })
-  .catch(err => {
-    console.log(err)
+  if (title.value.length < 26&&!title.value=='') {
+    axios({
+      url: "https://i7b204.p.ssafy.io/cheertogether/articles",
+      method: 'POST',
+      data: {
+        content: content.value,
+        leagueApiId: category.value,
+        title: title.value,
+      },
+      params: {
+        jwtToken: sessionStorage.getItem('token')
+      }
+    })
+    .then(res => {
+      console.log(res.data)
+      router.go()
+    })
+    .catch(err => {
+      console.log(err)
+      Swal.fire({
+        icon: 'error',
+        title: '작성 실패'
+      })
+    })
+    communityStore.communityToggle()
+  } else {
     Swal.fire({
       icon: 'error',
-      title: '작성 실패'
+      title: '제목이 올바르지 않습니다.'
     })
-  })
-  communityStore.communityToggle()
+  }
 }
 function modifyButton() {
   axios({
