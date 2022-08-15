@@ -534,16 +534,7 @@ export const useScheduleStore = defineStore("schedule", {
     },
 
     clickLeague(event) {
-      // 현재 라우터에 색깔 입히기
-      const activeTag = document.querySelector(".league-active");
-      activeTag.classList.remove("league-active");
       const clickedTag = event.target;
-      clickedTag.classList.add("league-active");
-      // 리그 클릭 시 가장 앞 달로 강제 이동
-      const activeMonthTag = document.querySelector(".item-active");
-      activeMonthTag.classList.remove("item-active");
-      const firstMonthTag = document.querySelector(".schedule-page-month-item p");
-      firstMonthTag.classList.add("item-active");
       // 해당 리그의 8월 정보를 보여준다.
       // state 변경하기
       if (clickedTag.innerText === "프리미어리그") {
@@ -604,12 +595,7 @@ export const useScheduleStore = defineStore("schedule", {
     },
 
     clickMonth(leagueId, event) {
-      // 색 바꾸기
-      if (document.querySelector(".item-active")) {
-        document.querySelector(".item-active").classList.remove("item-active");
-      }
       const clickedTag = event.target;
-      clickedTag.classList.add("item-active");
       const activeMonth = clickedTag.innerText.slice(-3, -1).trim();
       let alteredDate = "";
       if (activeMonth === "8" || activeMonth === "9") {
