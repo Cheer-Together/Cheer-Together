@@ -1146,6 +1146,7 @@ export const useRoomStore = defineStore("room", {
             title: team + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
           })
         )
+          this.useAccountStore().profile.point -= pointToSend;
         .catch((e) => console.log(e));
     },
     update(id, apiId) {
