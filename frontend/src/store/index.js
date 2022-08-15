@@ -42,6 +42,7 @@ export const useAccountStore = defineStore("account", {
   state: () => ({
     loginDialog: false,
     isLogin: sessionStorage.getItem("token") ?? false,
+    socialLoginRefresh: false,
     emailDoubleChecked: false,
     emailAuthCodeChecked: false,
     emailAuthCode: "AAAAAAAAAAA",
@@ -421,6 +422,11 @@ export const useAccountStore = defineStore("account", {
       let userId = jwt_decode(token);
       this.profileId = userId;
       this.userProfile(userId);
+      this.socialLoginRefresh = true;
+      router.push({name:'MainPage'});
+    },
+    socialLoginRefreshComplete() {
+      this.socialLoginRefresh = false;
     },
     logoutAccount() {
       sessionStorage.removeItem("token");

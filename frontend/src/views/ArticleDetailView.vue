@@ -155,8 +155,10 @@ axios({
   maincontent.value = res.data
   const createdTime = new Date(res.data.createDate)
   let yy = createdTime.getFullYear()
-  let mm = createdTime.getMonth()
+  let mm = createdTime.getMonth()+1
+  if (mm < 10) {mm = '0' + mm}
   let dd = createdTime.getDate()
+  if (dd < 10) {dd = '0' + dd}
   let hh = createdTime.getHours()
   if (hh < 10) {hh = '0' + hh}
   let mmm = createdTime.getMinutes()
