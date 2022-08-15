@@ -44,7 +44,8 @@ public class GameService {
 	private String apiKey;
 
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-	public GameResponse findGameById(Long id){
+
+	public GameResponse findGameById(Long id) {
 		Game game = gameRepository.findGameById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_GAME_ERROR_MESSAGE));
 		return GameResponse.from(game);
@@ -81,9 +82,7 @@ public class GameService {
 
 	@Transactional(readOnly = true)
 	public List<GameResponse> findGames() {
-		return gameRepository.findAll().stream()
-			.map(GameResponse::from)
-			.collect(Collectors.toList());
+		return gameRepository.findAll().stream().map(GameResponse::from).collect(Collectors.toList());
 	}
 
 	public void insert(String leagueApiId, String season) throws ParseException {
@@ -135,8 +134,7 @@ public class GameService {
 	@Transactional(readOnly = true)
 	public List<GameResponse> findGamesByLeagueApiIdAndDay(Long leagueApiId, String date) {
 		LocalDate dateTime = LocalDate.parse(date, formatter);
-		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
-			0, 0);
+		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(), 0, 0);
 		LocalDateTime end = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(), 23, 59);
 		return gameRepository.findAllByLeagueApiIdAndKickoffBetween(leagueApiId, start, end)
 			.stream()
@@ -182,8 +180,7 @@ public class GameService {
 	@Transactional(readOnly = true)
 	public List<GameResponse> findGamesByDay(String date) {
 		LocalDate dateTime = LocalDate.parse(date, formatter);
-		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(),
-			0, 0);
+		LocalDateTime start = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(), 0, 0);
 		LocalDateTime end = LocalDateTime.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth(), 23, 59);
 		return gameRepository.findAllByKickoffBetween(start, end, Sort.by(Sort.Direction.ASC, "kickoff"))
 			.stream()

@@ -41,10 +41,7 @@ public class FavoriteLeague {
 	}
 
 	public static FavoriteLeague from(Member member, League league) {
-		return FavoriteLeague.builder()
-			.member(member)
-			.league(league)
-			.build();
+		return FavoriteLeague.builder().member(member).league(league).build();
 	}
 
 }

@@ -3,6 +3,7 @@ package com.ssafy.cheertogether.room.controller;
 import static com.ssafy.cheertogether.room.RoomConstant.*;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -99,5 +100,20 @@ public class RoomController {
 		@ApiParam(value = "검색하고 싶은 위치(방이름=type, 방장아이디=managerId)", required = true, example = "name") @RequestParam(value = "type") String type,
 		@ApiParam(value = "검색하고 싶은 키워드", required = true, example = "손흥민") @RequestParam(value = "keyword") String keyword) {
 		return new ResponseEntity<>(roomService.findRoomByContaining(type, keyword), HttpStatus.OK);
+	}
+
+	@PutMapping("/{roomId}")
+	@ApiOperation(value = "응원방 인원수 변경", notes = "응원방에 현재 참여중인 인원수 변경")
+	public ResponseEntity<String> updateHeadCount(
+		@ApiParam(value = "증가 시킬 응원방 아이디", required = true) @PathVariable Long roomId,
+		@ApiParam(value = "현재 인원수", required = true, example = "{\nheadCount: 1\n}") @RequestBody Map<String, Integer> headCount) {
+		roomService.updateHeadCount(roomId, headCount.get("headCount"));
+		return new ResponseEntity<>(UPDATE_ROOM_HEADCOUNT_SUCCESS_MESSAGE, HttpStatus.OK);
+	}
+
+	@GetMapping("/popular")
+	@ApiOperation(value = "인기 있는 응원방 4개", notes = "참여자가 많은 4개의 응원방")
+	public ResponseEntity<List<RoomResponse>> getPopularRooms() {
+		return new ResponseEntity<>(roomService.getPopularRooms(), HttpStatus.OK);
 	}
 }

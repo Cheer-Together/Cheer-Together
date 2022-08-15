@@ -61,10 +61,7 @@ public class Oauth2Service {
 
 			//POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
-			String sb = "grant_type=authorization_code"
-				+ "&client_id="
-				+ kakao_restApiKey
-				+ "&redirect_uri="
+			String sb = "grant_type=authorization_code" + "&client_id=" + kakao_restApiKey + "&redirect_uri="
 				+ kakao_redirectUri // TODO 인가코드 받은 redirect_uri 입력
 				+ "&code=" + code;
 			bw.write(sb);
@@ -155,22 +152,18 @@ public class Oauth2Service {
 		Member member = Member.from(oauth2JoinRequest);
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
 		if (!oauth2JoinRequest.getFavoriteLeagueList().isEmpty()) {
-			favoriteLeagueList.addAll(oauth2JoinRequest
-				.getFavoriteLeagueList()
+			favoriteLeagueList.addAll(oauth2JoinRequest.getFavoriteLeagueList()
 				.stream()
-				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository
-					.findLeagueByApiId(leagueApiId)
+				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId)
 					.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		member.setFavoriteLeagueList(favoriteLeagueList);
 		List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
 		if (!oauth2JoinRequest.getFavoriteTeamList().isEmpty()) {
-			favoriteTeamList.addAll(oauth2JoinRequest
-				.getFavoriteTeamList()
+			favoriteTeamList.addAll(oauth2JoinRequest.getFavoriteTeamList()
 				.stream()
-				.map(teamApiId -> FavoriteTeam.from(member, teamRepository
-					.findTeamByApiId(teamApiId)
+				.map(teamApiId -> FavoriteTeam.from(member, teamRepository.findTeamByApiId(teamApiId)
 					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
