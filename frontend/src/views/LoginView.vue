@@ -13,7 +13,7 @@
               <div class="login-dialog-logo">
                 <img :src="loginLogo" class="login-logo">
               </div>
-              <button @click="accountStore.loginDialog = false" style="position:absolute; top:0; right:0;">
+              <button @click="accountStore.loginDialog = false, accountStore.loginDialogMsg = '같이 집관에 오신 것을 환영합니다.'" style="position:absolute; top:0; right:0;">
                 <v-icon>
                   mdi-close-box
                 </v-icon>
@@ -33,7 +33,7 @@
               </div>
               <v-btn
                 v-if="isValidId"
-                style="margin-top:22px; color:white;"
+                style="margin-top:22px; color:white; font-family: 'MICEGothic Bold';"
                 color="#2E6AFD"
                 width="340px"
                 @click.prevent="loginButton()"
@@ -42,19 +42,20 @@
               </v-btn>
               <v-btn
                 v-else
-                style="margin-top:22px;"
+                style="margin-top:22px; font-family: 'MICEGothic Bold';"
                 width="340px"
                 disabled
               >
                 아이디가 유효하지 않습니다.
               </v-btn>
               <v-btn
-                style="margin-top:22px; margin-bottom: 40px"
+                style="margin-top:22px; margin-bottom: 40px; font-family: 'MICEGothic Bold';"
                 color="#FEE500"
                 width="340px"
                 @click.prevent="accountStore.kakaoLogin()"
               >
-              카카오로 로그인
+                <img :src="kakaoLogo" style="height:18px; width:18px;">
+                <a style="margin:0 95px 0 95px">카카오로 로그인</a>
               </v-btn>
             </div>   
           </v-card-text>
@@ -148,6 +149,8 @@ const loginLogo = require('../assets/image/로고.png')
 const isVaildEmail = ref(false)
 const isValidId = ref(false)
 const errorText = ref('')
+const kakaoLogo = ref(require("../assets/image/kakaologo.png"))
+
 function loginButton() {
   if (loginId.value&&loginPassword.value) {
     const user = {email:loginId.value, password:loginPassword.value}

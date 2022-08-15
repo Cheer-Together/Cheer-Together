@@ -388,6 +388,7 @@ export const useAccountStore = defineStore("account", {
       if (!sessionStorage.getItem("token")) {
         if (this.loginDialog) {
           this.loginDialog = false;
+          this.loginDialogMsg = '같이 집관에 오신 것을 환영합니다.'
         } else {
           this.loginDialog = true;
         }
