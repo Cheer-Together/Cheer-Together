@@ -18,7 +18,8 @@
     </div>
 
     <div class="write-author">
-      <div style="width:34px; height:34px; background-color: aquamarine; margin:0 10px 0 10px;">
+      <div style="width:34px; height:34px; margin:0 10px 0 10px;">
+        <img :src="accountStore.profile.profileImage" style="width:34px; height:34px;">
       </div>
       <a>{{accountStore.profile.nickname}} | {{ now }}</a>
     </div>

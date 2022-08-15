@@ -21,7 +21,8 @@
         </div>
         <div class="community-detail-content-top">
           <div style="display: flex; align-items: center;">
-            <div style="height:36px; width:36px; margin:0 10px 0 10px; background-color:bisque;">
+            <div style="height:36px; width:36px; margin:0 10px 0 10px;">
+              <img :src="writerLogo" style="height:36px; width:36px;">
             </div>
             <a style="font-size:14px">{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
           </div>
@@ -150,6 +151,7 @@ const check5 = ref(false)
 const userEmail = ref('')
 const userRole = ref('')
 const loginUserId = jwt_decode(sessionStorage.getItem('token')).sub
+const writerLogo = ref(require("../assets/image/로고.png"))
 
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + articleid,
@@ -167,6 +169,9 @@ axios({
   let mmm = createdTime.getMinutes()
   if (mmm < 10) {mmm = '0' + mmm}
   createdDate.value = yy +'/'+ mm +'/'+ dd + ' ' + hh + ":" + mmm
+  if (res.data.memberResponse.favoriteTeamList.length > 0) {
+    writerLogo.value = res.data.memberResponse.favoriteTeamList[0].logo
+  }
   axiosLoaded.value = true
 }).catch(err => {
   console.log(err)
