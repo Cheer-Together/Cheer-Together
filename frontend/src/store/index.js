@@ -655,13 +655,8 @@ export const useOnAirStore = defineStore("onair", {
         { id: "61", league: "리그 1" },
         { id: "292", league: "K리그 1" },
       ];
-      // 색 입히기
-      if (document.querySelector(".sideBar-subtitle-active")) {
-        const fromSubtitle = document.querySelector(".sideBar-subtitle-active");
-        fromSubtitle.classList.remove("sideBar-subtitle-active");
-      }
+      
       const toSubtitle = event.target;
-      toSubtitle.classList.add("sideBar-subtitle-active");
 
       for (let item of leagues) {
         if (toSubtitle.innerText === item.league) {
