@@ -13,6 +13,7 @@ import lombok.Getter;
 
 @Getter
 public class MemberResponse {
+	private final Long id;
 	private final String email;
 	private final String nickname;
 	private final Role role;
@@ -22,6 +23,7 @@ public class MemberResponse {
 	private final List<TeamResponse> favoriteTeamList = new ArrayList<>();
 
 	public MemberResponse(Member member) {
+		id = member.getId();
 		email = member.getEmail();
 		nickname = member.getNickname();
 		role = member.getRole();

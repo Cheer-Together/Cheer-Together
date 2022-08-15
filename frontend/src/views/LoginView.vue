@@ -13,14 +13,23 @@
               <div class="login-dialog-logo">
                 <img :src="loginLogo" class="login-logo">
               </div>
+              <button @click="accountStore.loginDialog = false" style="position:absolute; top:0; right:0;">
+                <v-icon>
+                  mdi-close-box
+                </v-icon>
+              </button>
               <div class="login-dialog-info">
-                <p>로그인 후 이용하실 수 있습니다.</p>
+                <p>{{accountStore.loginDialogMsg}}</p>
               </div>
               <div style="margin-top:20px">
                 <input v-model="loginId" type="text" placeholder="아이디" class="login-dialog-textinput">
               </div>
               <div style="margin-top:20px">
                 <input v-model="loginPassword" @keyup.enter="loginButton()" type="password" placeholder="비밀번호" class="login-dialog-textinput">
+              </div>
+              <div style="margin-top: 20px;">
+                <a class="word-link" @click="passwordModalBtn()">비밀번호 찾기</a><a> | </a>
+                <a class="word-link" @click="toSignupBtn()">회원가입</a>
               </div>
               <v-btn
                 v-if="isValidId"
@@ -39,74 +48,23 @@
               >
                 아이디가 유효하지 않습니다.
               </v-btn>
-              <div style="margin-top: 70px;">
-                <a class="word-link">아이디 찾기</a><a> | </a>
-                <a class="word-link" @click="passwordModalBtn()">비밀번호 찾기</a><a> | </a>
-                <a class="word-link" @click="toSignupBtn()">회원가입</a>
-              </div>
               <v-btn
-                style="margin-top:22px; color:white;"
-                color="#1EC800"
-                width="340px"
-                @click.prevent="social='네이버', dialog2=true"
-              >
-              네이버로 로그인
-              </v-btn>
-              <v-btn
-                style="margin-top:22px;"
+                style="margin-top:22px; margin-bottom: 40px"
                 color="#FEE500"
                 width="340px"
                 @click.prevent="accountStore.kakaoLogin()"
               >
               카카오로 로그인
               </v-btn>
-            </div>
-            
+            </div>   
           </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              color="primary"
-              text
-              @click="accountStore.loginDialogToggle()"
-            >
-              Close
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
       <!-- 모달창2 -->
       <v-dialog
-        v-model="dialog2"
-      >
-        <v-card>
-          <v-card-title>
-            소셜 로그인 페이지
-          </v-card-title>
-          <v-card-text>
-            <p>
-              {{social}}로 로그인 페이지
-            </p>
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              color="primary"
-              text
-              @click="dialog2 = false"
-            >
-              Close
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-
-      <v-dialog
         v-model="dialog3"
       >
         <v-card>
-          <v-card-title>
-            <span>에러 표시용 모달</span>
-          </v-card-title>
           <v-card-text>
             {{errorText}}
           </v-card-text>
@@ -132,6 +90,11 @@
               <div class="password-dialog-top">
                 <p>비밀번호를 재설정합니다.</p>
               </div>
+              <button @click="findPasswordModal = false" style="position:absolute; top:0; right:0;">
+                <v-icon>
+                  mdi-close-box
+                </v-icon>
+              </button>
               <div class="password-dialog-info">
                 <a>가입하신 계정의 이메일을 입력해 주세요</a>
               </div>
@@ -174,14 +137,13 @@
 import { ref,watchEffect } from 'vue'
 import { useAccountStore } from "@/store"
 import router from '@/router/index.js'
+import axios from 'axios'
 const accountStore = useAccountStore()
-const dialog2 = ref(false) // 추후에 소셜 로그인을 위한 모달
 const dialog3 = ref(false) // 에러 발생시 모달
 const findPasswordModal = ref(false)
 const findPasswordEmail = ref('')
 const loginId = ref('')
 const loginPassword = ref('')
-const social = ref('')
 const loginLogo = require('../assets/image/로고.png')
 const isVaildEmail = ref(false)
 const isValidId = ref(false)
@@ -202,7 +164,24 @@ function passwordModalBtn() {
   findPasswordModal.value = true
 }
 function findPasswordBtn() {
-  accountStore.findPassword(findPasswordEmail.value)
+  findPasswordModal.value = false
+  axios({
+    url: 'https://i7b204.p.ssafy.io/cheertogether/members/find/password',
+    method: "GET",
+    params: {
+      email: findPasswordEmail.value,
+    },
+  })
+  .then((res) => {
+    console.log(res.data)
+    dialog3.value = true
+    errorText.value = '해당 이메일로 임시 비밀번호를 전송했습니다.'
+  })
+  .catch((err) => {
+    console.log(err)
+    dialog3.value = true
+    errorText.value = '올바른 이메일인지 확인해주세요.'
+  })
   findPasswordEmail.value = ''
 }
 watchEffect(() => {
@@ -227,7 +206,7 @@ function toSignupBtn() {
 .login-dialog-logo {
   display: flex;
   justify-content: center;
-  width:550px;
+  width:450px;
   height:140px;
   margin-top: 10px;
 }
@@ -235,6 +214,7 @@ function toSignupBtn() {
   height:20px;
   font-size:18px;
   margin-top: 10px;
+  font-family: 'MICEGothic Bold';
 }
 .login-dialog-textinput {
   width:340px;

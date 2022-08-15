@@ -60,17 +60,27 @@
         커뮤니티
       </div>
     </div>
+
+    <!-- 명예의 전당 -->
+    <div style="background-color:#ffebb0; padding:10px; font-size:11px">
+      <b style="font-size:15px">🏆 명예의 전당 🏆</b>
+      <div v-for="(m, index) in accountStore.pointRanking" :key="m.id" @click="router.push({name:'Mypage', params:{userid: m.id}})">
+        {{index + 1}}위 {{m.nickname}} ({{m.point}}개)
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { useOnAirStore } from '../store/index.js'
+import { useAccountStore, useOnAirStore } from '../store/index.js'
 import { useScheduleStore } from '../store/index.js'
 import router from '@/router/index.js'
 const onairStore = useOnAirStore()
 const scheduleStore = useScheduleStore()
+const accountStore = useAccountStore()
 
 </script>
+
 
 <style>
 .sideBar {

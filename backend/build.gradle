@@ -31,7 +31,6 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.9.0'
 	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
-	implementation group: 'com.google.firebase', name: 'firebase-admin', version: '8.1.0'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation 'org.projectreactor:reactor-spring:1.0.1.RELEASE'
 

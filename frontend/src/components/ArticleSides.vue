@@ -13,7 +13,7 @@
     </div>
 
     <div class="community-matches-top">
-      <p style="font-size: 20px;">오늘의 경기</p>
+      <p style="font-size: 20px; font-family: 'MICEGothic Bold';">오늘의 경기</p>
       <p class="word-link" @click="onairStore.moveOnairPage" style="font-size: 14px;">자세히 보기</p>
     </div>
     <div v-for="match in todayMatches" :key="match.id" class="community-matches">
@@ -51,6 +51,7 @@ import axios from 'axios'
 import { ref } from "vue"
 const onairStore = useOnAirStore()
 const news = ref([])
+const todayMatches = ref({})
 let loadnews = []
 
 
@@ -63,8 +64,6 @@ if (dd < 10) {dd = '0' + dd}
 const DD = dd.toLocaleString()
 const yyyymmdd = yyyy+mm+DD
 console.log(yyyymmdd)
-const todayMatches = ref({})
-
 let matches = []
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/games/date',
@@ -148,13 +147,7 @@ axios({
 <style>
 .community-side {
   width: 350px;
-  margin-top: 160px;
   margin-left: 80px;
-}
-@media (max-width: 1580px) {
-  .community-side {
-    margin-top: 120px;
-  }
 }
 .article-list { 
   text-overflow: ellipsis; 
@@ -170,6 +163,7 @@ axios({
   height:30px; 
   border-bottom: 1px solid #bcbcbc; 
   font-size: 20px;
+  font-family: 'MICEGothic Bold';
 }
 .community-matches-top {
   display: flex;

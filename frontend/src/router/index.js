@@ -78,7 +78,7 @@ router.beforeEach((to, from, next) => {
   const token = sessionStorage.getItem('token')
 
   //authPages에 로그인이 필요한 RouterView를 등록하면 됨
-  const authPages = ['ArticleDetail',]
+  const authPages = ['ArticleDetail', 'Room', 'Mypage']
 
   const isAuthRequired = authPages.includes(to.name)
   if (isAuthRequired && !token) {

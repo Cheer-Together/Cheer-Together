@@ -16,9 +16,13 @@ public class GameSchedule {
 	private final GameService gameService;
 
 	@Scheduled(cron = "0 0/15 * * * *")
-	public void gameLiveUpdate() {
-		gameService.updateLiveGames(LocalDateTime.now());
-		System.out.println(LocalDateTime.now());
+	public void gameLiveUpdate(){
+		gameService.updateGameLive(LocalDateTime.now());
+	}
+
+	@Scheduled(cron = "0 0/5 * * * *")
+	public void liveGameUpdate(){
+		// gameService.updateLiveGames();
 	}
 
 }

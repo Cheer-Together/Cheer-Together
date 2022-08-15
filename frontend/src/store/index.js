@@ -41,8 +41,9 @@ export const useCommunityStore = defineStore("community", {
 export const useAccountStore = defineStore("account", {
   state: () => ({
     loginDialog: false,
+    loginDialogMsg : '같이 집관에 오신 것을 환영합니다.',
+    signupAlarm: 'false',
     isLogin: sessionStorage.getItem("token") ?? false,
-    socialLoginRefresh: false,
     emailDoubleChecked: false,
     emailAuthCodeChecked: false,
     emailAuthCode: "AAAAAAAAAAA",
@@ -74,6 +75,8 @@ export const useAccountStore = defineStore("account", {
     },
     profileId: false,
     isChangePasswordModal: false,
+
+    pointRanking: []
   }),
   getters: {},
   actions: {
@@ -234,10 +237,15 @@ export const useAccountStore = defineStore("account", {
             icon: "success",
             title: "성공적으로 회원가입 되었습니다.",
           });
+          this.signupAlarm = true
           router.push({ name: "MainPage" });
         })
         .catch((err) => {
           console.log(err);
+          Swal.fire({
+            icon: 'warning',
+            title: '회원가입에 실패했습니다.'
+          });
         });
     },
 
@@ -390,7 +398,6 @@ export const useAccountStore = defineStore("account", {
         }
       }
     },
-
     loginAccount(user) {
       /*
       email과 password를 담은 user: Object를 입력받아 로그인을 시도합니다.
@@ -410,10 +417,24 @@ export const useAccountStore = defineStore("account", {
           decoded.value = jwt_decode(res.data);
           this.profileId = decoded.value.sub;
           this.userProfile(decoded.value.sub);
-          router.push({ name: "MainPage" });
+          Swal.fire({
+            icon: "success",
+            title: "성공적으로 로그인 되었습니다.",
+          });
         })
         .catch((err) => {
-          console.log(err);
+          if (err.response.status=='500') {
+            Swal.fire({
+              icon: 'warning',
+              title: '아이디와 비밀번호를 다시 확인해 주세요'
+            })
+          } else {
+            console.log(err)
+            Swal.fire({
+              icon: 'error',
+              title: '로그인 실패'
+            })
+          }
         });
     },
     kakaoLogin() {
@@ -422,16 +443,14 @@ export const useAccountStore = defineStore("account", {
       const url = "https://kauth.kakao.com/oauth/authorize?client_id=" + decodeURIComponent(API_KEY) + "&redirect_uri=" + decodeURIComponent(REDIRECT_URI) + "&response_type=code";
       window.location.replace(url);
     },
-    socialLoginComplete(token) {
+    socialLoginComplete(res) {
       this.isLogin = true;
-      let userId = jwt_decode(token);
-      this.profileId = userId;
-      this.userProfile(userId);
-      this.socialLoginRefresh = true;
-      router.push({name:'MainPage'});
-    },
-    socialLoginRefreshComplete() {
-      this.socialLoginRefresh = false;
+      this.profile = res.data;
+      if (this.profile.favoriteTeamList.length > 0) {
+        this.profile["profileImage"] = this.profile.favoriteTeamList[0].logo;
+      } else {
+        this.profile["profileImage"] = require("../assets/image/로고.png");
+      }
     },
     logoutAccount() {
       sessionStorage.removeItem("token");
@@ -442,13 +461,10 @@ export const useAccountStore = defineStore("account", {
         title: "성공적으로 로그아웃 되었습니다.",
       });
     },
-    findPassword(email) {
-      axios({
-        url: cheertogether.members.findPassword(),
-        method: "GET",
-        params: {
-          email: email,
-        },
+    isNewMember() {
+      Swal.fire({
+        icon: "success",
+        title: "회원가입에 성공했습니다.",
       })
         .then((res) => {
           console.log(res.data);
@@ -457,6 +473,19 @@ export const useAccountStore = defineStore("account", {
           console.log(err);
         });
     },
+    getPointRanking() {
+      axios({
+        url: cheertogether.members.getPointRanking(),
+        method: 'GET',
+      })
+      .then((res) => {
+        this.pointRanking = [];
+        res.data.forEach((member) => {
+          this.pointRanking.push({ id: member.id, email: member.email, nickname: member.nickname, point: member.point });
+        });
+      })
+      .catch((err) => console.log(err));
+    }
   },
 });
 export const useLeagueStore = defineStore("league", {
@@ -684,43 +713,35 @@ export const useOnAirStore = defineStore("onair", {
     },
 
     enterRoom(roomId) {
-      if (!sessionStorage.getItem("token")) {
-        Swal.fire({
-          title: "로그인이 필요합니다",
-          icon: "warning",
-        });
-        console.log(sessionStorage.getItem("token"));
-      } else {
-        axios({
-          url: cheertogether.room.enterRoom(roomId),
-          method: "GET",
-        }).then((res) => {
-          if (res.data.status === "PUBLIC") {
-            router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
-          } else if (res.data.status === "PRIVATE") {
-            Swal.fire({
-              title: "비밀번호를 입력하세요",
-              icon: "info",
-              input: "password",
-              inputPlaceholder: "********",
-              inputAttributes: {
-                maxlength: 10,
-                autocapitalize: "off",
-                autocorrect: "off",
-              },
-            }).then((pw) => {
-              if (pw.value === res.data.password) {
-                router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
-              } else {
-                Swal.fire({
-                  title: "비밀번호가 틀렸습니다",
-                  icon: "error",
-                });
-              }
-            });
-          }
-        });
-      }
+      axios({
+        url: cheertogether.room.enterRoom(roomId),
+        method: "GET",
+      }).then((res) => {
+        if (res.data.status === "PUBLIC") {
+          router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+        } else if (res.data.status === "PRIVATE") {
+          Swal.fire({
+            title: "비밀번호를 입력하세요",
+            icon: "info",
+            input: "password",
+            inputPlaceholder: "********",
+            inputAttributes: {
+              maxlength: 10,
+              autocapitalize: "off",
+              autocorrect: "off",
+            },
+          }).then((pw) => {
+            if (pw.value === res.data.password) {
+              router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+            } else {
+              Swal.fire({
+                title: "비밀번호가 틀렸습니다",
+                icon: "error",
+              });
+            }
+          });
+        }
+      });
     },
 
     searchRooms(searchData){
@@ -957,14 +978,14 @@ export const useRoomStore = defineStore("room", {
     popularRooms: [],
     popularRoomGames: [],
     playTeams: {
-      id: 31,
+      id: "",
       home: {
         leagueName: "",
         name: "",
         hanName: "",
         logo: "",
         code: "",
-        apiId: 0,
+        apiId: "",
       },
       away: {
         leagueName: "",
@@ -972,15 +993,15 @@ export const useRoomStore = defineStore("room", {
         hanName: "",
         logo: "",
         code: "",
-        apiId: 1,
+        apiId: "",
       },
       kickoff: "",
       stadium: "",
       status: "",
-      homeScore: 0,
-      awayScore: 2,
-      apiId: 867946,
-      leagueApiId: 39,
+      homeScore: "",
+      awayScore: "",
+      apiId: "",
+      leagueApiId: "",
     },
     goal: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
     homeGoalPoint : 0,
@@ -1093,6 +1114,7 @@ export const useRoomStore = defineStore("room", {
           this.gamePredictionDeadline = date;
 
           this.playTeams = res.data;
+          this.getGameInfo(res.data.apiId);
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
 
@@ -1135,7 +1157,7 @@ export const useRoomStore = defineStore("room", {
           this.homeGoalPoint = 0
           this.awayGoalPoint = 0
 
-          res.data.response.reverse().forEach((e) => {
+          res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
             if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
               this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
               this.homeGoalPoint = this.homeGoalPoint + 1
@@ -1167,12 +1189,13 @@ export const useRoomStore = defineStore("room", {
         method: "PUT",
         data: { point: pointToSend },
       })
-        .then(() =>
+        .then(() => {
           Swal.fire({
             icon: "success",
             title: team + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
-          })
-        )
+          });
+          this.useAccountStore().profile.point -= pointToSend;
+        })
         .catch((e) => console.log(e));
     },
     update(id, apiId) {

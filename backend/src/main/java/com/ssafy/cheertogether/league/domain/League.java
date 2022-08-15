@@ -25,7 +25,6 @@ public class League {
 	@OneToMany(mappedBy = "league")
 	@JsonManagedReference
 	private List<Team> teamList = new ArrayList<>();
-
 	private String name;
 	private String logo;
 	private Long apiId;

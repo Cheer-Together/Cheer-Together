@@ -24,6 +24,7 @@ import com.ssafy.cheertogether.member.domain.Member;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyPasswordRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
+import com.ssafy.cheertogether.member.dto.MemberPointRankingResponse;
 import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.exception.DuplicatedEmailException;
 import com.ssafy.cheertogether.member.repository.MemberRepository;
@@ -83,13 +84,13 @@ public class MemberService implements UserDetailsService {
 	 * @param password 사용자 패스워드
 	 *
 	 */
-	@Transactional(readOnly = true)
 	public Long login(String email, String password) {
 		Member findMember = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_EMAIL_ERROR_MESSAGE));
 		if (!findMember.confirmPassword(password)) {
 			throw new IllegalArgumentException(MISMATCH_PASSWORD_ERROR_MESSAGE);
 		}
+		findMember.checkAttendance();
 		return findMember.getId();
 	}
 
@@ -188,5 +189,11 @@ public class MemberService implements UserDetailsService {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
 		member.subtractPoint(point);
+	}
+
+	public List<MemberPointRankingResponse> getPointRanking() {
+		return memberRepository.findTop3ByOrderByPointDesc().stream()
+			.map(MemberPointRankingResponse::new)
+			.collect(Collectors.toList());
 	}
 }

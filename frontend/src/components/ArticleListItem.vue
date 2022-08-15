@@ -39,7 +39,7 @@ if (createdTime.getDate()==now.getDate() && createdTime.getMonth()==now.getMonth
   if (mm < 10) {mm = '0' + mm}
   let dd = createdTime.getDate()
   if (dd < 10) {dd = '0' + dd}
-  createdDate.value = createdTime.getFullYear() +'/'+ mm +'/'+ dd
+  createdDate.value = (createdTime.getFullYear()-2000) +'/'+ mm +'/'+ dd
 }
 function toArticleDetail(id) {
   router.push({name: 'ArticleDetail', params: { articleid: id }})

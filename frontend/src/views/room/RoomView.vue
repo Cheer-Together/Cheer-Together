@@ -9,7 +9,7 @@
         <div style="display:flex;">
           <!-- 방 제목 -->
           <div class="match-screen-title">
-            {{ sessionInfo.name }}
+            {{ sessionInfo?.name }}
           </div>
           <div class="match-screen-icon">
             <v-icon  size="40" @click="leaveSession">
@@ -21,7 +21,7 @@
         
         <!-- 승부 예측 -->
         <div class="game-prediction" v-if="roomStore.isClickPredictButton">
-          <div style="font-size: 30px;">예측 종료</div>
+          <div v-if="!this.validateTime()" style="font-size: 30px;">예측 종료</div>
           <!-- 승부 예측 시간 -->
           <div style="font-size: 16px;">
             {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
@@ -31,6 +31,7 @@
             <span style="font-family: var(--bold-font); color: var(--main-color); font-size: 15px">{{ roomStore.predictTime }}</span>
             {{ roomStore.playTeams.home.hanName }} vs
             {{ roomStore.playTeams.away.hanName }}
+            <span style="float:right">잔여 축구공 : {{ myPoint }}</span>
           </div>
           <div style="display:flex;">
             <!-- 홈 팀 -->
@@ -576,6 +577,8 @@ export default {
       publisher: undefined,
       subscribers: [],
 
+      accountStore: useAccountStore(),
+
       mySessionId: undefined,
       myUserName: undefined,
       sessionInfo: undefined,
@@ -614,7 +617,8 @@ export default {
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
     this.roomStore.isClickPredictButton = false
-    this.loading = setInterval(this.getGameInfo(), 60000);
+    this.loading = setInterval(this.getGameInfo, 60000);
+
   },
 
   methods: {
@@ -655,7 +659,7 @@ export default {
         if(this.isSessionManager == true) {
           this.session
           .signal({
-            data: (this.team1_point) + "/" + (this.team1_count) + "/" + (this.team2_point) + "/" + (this.team2_count),
+            data: (this.useGamePredictionStore.team1_point) + "/" + (this.useGamePredictionStore.team1_count) + "/" + (this.useGamePredictionStore.team2_point) + "/" + (this.useGamePredictionStore.team2_count),
             to: [],
             type: "game-prediction-broadcast",
           })
@@ -713,7 +717,7 @@ export default {
         
         if(this.isSessionManager == true) {
           if(team == 1) {
-            useGamePredictionStore().team1_predcit_list.push(memberId);
+            useGamePredictionStore().team1_predict_list.push(memberId);
           } else if(team == 2) {
             useGamePredictionStore().team2_predict_list.push(memberId);
           }
@@ -727,6 +731,12 @@ export default {
         useGamePredictionStore().team1_count = parseInt(receive[1]);
         useGamePredictionStore().team2_point = parseInt(receive[2]);
         useGamePredictionStore().team2_count = parseInt(receive[3]);
+      });
+
+      this.session.on("signal:game-prediction-result", (event) => {
+        let receive = event.data.split("/");
+        useGamePredictionStore().team1_predict_list = receive[0];
+        useGamePredictionStore().team2_predict_list = receive[1];
       });
 
       this.session.on("signal:force-out", (event) => {
@@ -977,6 +987,7 @@ export default {
         this.team2_pointToSend = 0;
         useGamePredictionStore().isPredictedList.push(this.mySessionId);
         this.isPredicted = true;
+        this.myPoint -= pointToSend;
       }
     },
 
@@ -990,7 +1001,8 @@ export default {
     },
 
     validateTime() {
-      return (new Date() <= this.roomStore.gamePredictionDeadline);
+      console.log("시간:" + useRoomStore().gamePredictionDeadline);
+      return (new Date() <= new Date(useRoomStore().gamePredictionDeadline));
     },
     
     toggleMic(){
@@ -1014,7 +1026,23 @@ export default {
       this.cam = !this.cam;
     },
     getGameInfo() {
+      console.log("받아옴")
       if(this.roomStore.playTeams.status == "FT") {
+        console.log("!!!!!!!finish!!!!!!!!!!!!")
+        if(this.isSessionManager == true) {
+          this.session
+            .signal({
+              data: this.useGamePredictionStore.team1_predict_list + "/" + this.useGamePredictionStore.team2_predict_list,
+              to: [],
+              type: "game-prediction-result",
+            })
+            .then(() => {
+              console.log("Message successfully sent");
+            })
+            .catch((error) => {
+              console.error(error);
+            });
+        }
         this.gamePredictionStore.distributePoints();
         clearInterval(this.loading);
       }

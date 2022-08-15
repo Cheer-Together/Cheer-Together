@@ -18,6 +18,11 @@ import FavoriteTeam from "../components/FavoriteTeam.vue"
 import PopularMatch from "../components/PopularMatch.vue"
 import TodayMatchList from "../components/TodayMatchList.vue"
 import MainNews from "../components/MainNews.vue"
+import { useAccountStore } from "@/store"
+const accountStore = useAccountStore()
+if (accountStore.signupAlarm==true) {
+  accountStore.isNewMember()
+}
 </script>
 
 <style>
