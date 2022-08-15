@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ssafy.cheertogether.game.domain.Game;
@@ -22,5 +23,5 @@ public interface GameRepository extends JpaRepository<Game, Long> {
 
 	List<Game> findAllByLeagueApiIdAndStatus(Long leagueApiId, GameStatus status);
 
-	List<Game> findAllByKickoffBetween(LocalDateTime start, LocalDateTime end);
+	List<Game> findAllByKickoffBetween(LocalDateTime start, LocalDateTime end, Sort sort);
 }

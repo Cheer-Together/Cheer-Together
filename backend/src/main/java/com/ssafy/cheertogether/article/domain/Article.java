@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.firebase.database.annotations.NotNull;
 import com.ssafy.cheertogether.article.dto.ArticleModifyRequest;
 import com.ssafy.cheertogether.article.dto.ArticleRegisterRequest;
 import com.ssafy.cheertogether.league.domain.League;
@@ -47,8 +49,11 @@ public class Article {
 	@JoinColumn(name = "league_id")
 	private League league;
 
+	@NotNull
 	private String title;
+
 	@Column(columnDefinition = "TEXT")
+	@NotNull
 	private String content;
 	private Timestamp createDate;
 	@ColumnDefault("0")
@@ -57,7 +62,7 @@ public class Article {
 	private Long unlike;
 	@ColumnDefault("0")
 	private Long hit;
-	@OneToMany(mappedBy = "article")
+	@OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
 	@JsonManagedReference
 	private List<Reply> replyList = new ArrayList<>();
 
