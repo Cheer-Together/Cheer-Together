@@ -22,8 +22,7 @@ public class GameSchedule {
 
 	@Scheduled(cron = "0 0/5 * * * *")
 	public void liveGameUpdate(){
-		System.out.println("실행됨?");
-		gameService.updateLiveGames();
+		// gameService.updateLiveGames();
 	}
 
 }
