@@ -2,6 +2,7 @@ package com.ssafy.cheertogether.member.controller;
 
 import static com.ssafy.cheertogether.member.MemberConstant.*;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberLoginRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyPasswordRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyRequest;
+import com.ssafy.cheertogether.member.dto.MemberPointRankingResponse;
 import com.ssafy.cheertogether.member.dto.MemberResponse;
 import com.ssafy.cheertogether.member.service.EmailService;
 import com.ssafy.cheertogether.member.service.MemberService;
@@ -124,5 +126,11 @@ public class MemberController {
 		memberService.subtractPoint(id, point.get("point"));
 		return new ResponseEntity<>(String.format(SUBTRACT_POINT_SUCCESS_RESPONSE_MESSAGE, point.get("point")),
 			HttpStatus.OK);
+	}
+
+	@GetMapping("/point/ranking")
+	@ApiOperation(value = "축구공(포인트) 랭킹 가져오기", notes = "축구공(포인트) 랭킹 top3 회원을 가져옴")
+	public ResponseEntity<List<MemberPointRankingResponse>> getPointRanking() {
+		return new ResponseEntity<>(memberService.getPointRanking(), HttpStatus.OK);
 	}
 }
