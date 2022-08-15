@@ -35,9 +35,6 @@ import lombok.RequiredArgsConstructor;
 public class GameController {
 	private final GameService gameService;
 
-	@Value("${spring.api.secretKey}")
-	private String apiKey;
-
 	@GetMapping
 	@ApiOperation(value = "모든 경기 정보 조회", notes = "모든 경기 정보 조회\n"
 		+ "Status 관련 설명\n"
@@ -60,13 +57,11 @@ public ResponseEntity<List<GameResponse>> findGames() {
 
 	@PutMapping("/{id}")
 	@ApiOperation(value = "해당 경기 정보 업데이트", notes = "해당 경기 정보 업데이트")
-	public ResponseEntity<GameResponse> modify(@PathVariable Long id,
+	public ResponseEntity<GameResponse> modify (@PathVariable Long id,
 		@ApiParam(value = "경기 api Id", required = true, example = "867946") @RequestParam String apiId) {
-		GameResponse gameResponse;
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("id", apiId);
+		GameResponse gameResponse = null;
 		try {
-			gameResponse = gameService.update(id, apiResponseToJson(params));
+			gameResponse = gameService.update(id, apiId);
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
@@ -76,12 +71,10 @@ public ResponseEntity<List<GameResponse>> findGames() {
 	@PostMapping
 	@ApiOperation(value = "경기 정보 삽입", notes = "리그와 시즌 별 경기 정보 삽입")
 	public ResponseEntity<String> insert(@RequestBody GameApiParameterRequest gameApiParameterRequest) {
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		params.add("league", gameApiParameterRequest.getLeagueApiId());
-		params.add("season", gameApiParameterRequest.getSeason());
-		params.add("timezone", "Asia/Seoul");
+		String leagueApiId = gameApiParameterRequest.getLeagueApiId();
+		String season = gameApiParameterRequest.getSeason();
 		try {
-			gameService.insert(apiResponseToJson(params));
+			gameService.insert(leagueApiId, season);
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
@@ -136,7 +129,7 @@ public ResponseEntity<List<GameResponse>> findGames() {
 	}
 
 	@GetMapping("/date")
-	@ApiOperation(value = "리그와 날짜 별 경기 정보 조회", notes = "리그와 날짜 별 경기 정보 조회\n"
+	@ApiOperation(value = "날짜 별 경기 정보 조회", notes = "날짜 별 경기 정보 조회\n"
 		+ "Status 관련 설명\n"
 		+ "TBD : 경기 일정 미정\n"
 		+ "NS : 경기 시작 전\n"
@@ -144,26 +137,5 @@ public ResponseEntity<List<GameResponse>> findGames() {
 		+ "FT : 경기 종료\n")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByDay(date), HttpStatus.OK);
-	}
-
-	private String apiResponseToJson(MultiValueMap<String, String> params) {
-		ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-			.codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(-1)) // to unlimited memory size
-			.build();
-		WebClient webClient = WebClient.builder()
-			.exchangeStrategies(exchangeStrategies)
-			.baseUrl("https://v3.football.api-sports.io")
-			.defaultHeaders(httpHeaders -> {
-				httpHeaders.add("x-rapidapi-key", apiKey);
-				httpHeaders.add("x-rapidapi-host", "v3.football.api-sports.io");
-			})
-			.build();
-		return webClient
-			.get()
-			.uri(uriBuilder -> uriBuilder.path("/fixtures").queryParams(params).build())
-			.exchange()
-			.block()
-			.bodyToMono(String.class)
-			.block();
 	}
 }
