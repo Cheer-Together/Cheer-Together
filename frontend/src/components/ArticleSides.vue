@@ -51,6 +51,7 @@ import axios from 'axios'
 import { ref } from "vue"
 const onairStore = useOnAirStore()
 const news = ref([])
+const todayMatches = ref({})
 let loadnews = []
 
 
@@ -63,8 +64,6 @@ if (dd < 10) {dd = '0' + dd}
 const DD = dd.toLocaleString()
 const yyyymmdd = yyyy+mm+DD
 console.log(yyyymmdd)
-const todayMatches = ref({})
-
 let matches = []
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/games/date',
@@ -148,13 +147,7 @@ axios({
 <style>
 .community-side {
   width: 350px;
-  margin-top: 160px;
   margin-left: 80px;
-}
-@media (max-width: 1580px) {
-  .community-side {
-    margin-top: 120px;
-  }
 }
 .article-list { 
   text-overflow: ellipsis; 

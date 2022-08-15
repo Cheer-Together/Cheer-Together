@@ -1,6 +1,7 @@
 <template>
   <div v-if="loaded" style="display: flex; height: 40px; margin-bottom: 5px;">
-    <div style="height: 40px; width:40px; margin-right: 6px; background-color:aquamarine;">
+    <div style="height: 40px; width:40px; margin-right: 6px;">
+      <img :src="commentLogo" style="height:40px; width:40px;">
     </div>
     <div style="font-size:13px; margin-left: 2px;">
       <div style="color:#8D8D8D; display: flex;">
@@ -32,6 +33,7 @@ const replyNickName = ref('')
 const replyCreatedDate = ref('')
 const loginUserId = jwt_decode(sessionStorage.getItem('token')).sub
 const loaded = ref(false)
+const commentLogo = ref(require("../assets/image/로고.png"))
 
 const createdTime = new Date(props.reply.createDate)
 let yy = createdTime.getFullYear()
@@ -49,6 +51,9 @@ axios({
   method: 'GET', 
 }).then(res => {
   replyNickName.value = res.data.nickname
+  if (res.data.favoriteTeamList.length > 0) {
+    commentLogo.value = res.data.favoriteTeamList[0].logo
+  }
   loaded.value = true
 }).catch(err => {
   console.log(err)
