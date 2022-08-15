@@ -4,7 +4,7 @@ import cheertogether from "@/api/cheertogether";
 import Swal from "sweetalert2";
 import router from "@/router/index.js";
 import jwt_decode from "jwt-decode";
-import { createRoom, getRoomInfo } from "@/api/room";
+import { createRoom, getRoomInfo, getPopularRooms } from "@/api/room";
 import { ref } from "vue";
 
 export const useCommunityStore = defineStore("community", {
@@ -42,6 +42,7 @@ export const useAccountStore = defineStore("account", {
   state: () => ({
     loginDialog: false,
     isLogin: sessionStorage.getItem("token") ?? false,
+    socialLoginRefresh: false,
     emailDoubleChecked: false,
     emailAuthCodeChecked: false,
     emailAuthCode: "AAAAAAAAAAA",
@@ -421,6 +422,11 @@ export const useAccountStore = defineStore("account", {
       let userId = jwt_decode(token);
       this.profileId = userId;
       this.userProfile(userId);
+      this.socialLoginRefresh = true;
+      router.push({name:'MainPage'});
+    },
+    socialLoginRefreshComplete() {
+      this.socialLoginRefresh = false;
     },
     logoutAccount() {
       sessionStorage.removeItem("token");
@@ -609,18 +615,26 @@ export const useScheduleStore = defineStore("schedule", {
 });
 export const useOnAirStore = defineStore("onair", {
   state: () => ({
-    rooms: [],
+    allRooms: [],
+    currentRooms: [],
     makeRoomDialog: false,
   }),
+  persist: true,
   actions: {
     moveOnairPage() {
       axios({
         url: cheertogether.room.rooms(),
         method: "GET",
       })
-        .then((res) => {
-          this.rooms = res.data;
-          router.push({ name: "Onair", params: { leaguename: "모든 응원방 목록" } });
+
+        .then(res => {
+          this.allRooms = res.data
+          this.currentRooms = res.data
+          router.push({name: 'Onair', params: {leaguename: '모든 응원방 목록'}})
+        })
+        .catch(err => {
+          console.log(err)
+
         })
         .catch((err) => {
           console.log(err);
@@ -650,9 +664,12 @@ export const useOnAirStore = defineStore("onair", {
             url: cheertogether.room.roomsLeague(item.id),
             method: "GET",
           })
-            .then((res) => {
-              this.rooms = res.data;
-              router.push({ name: "Onair", params: { leaguename: `${item.league}` } });
+
+            .then(res => {
+              this.allRooms = res.data
+              this.currentRooms = res.data
+              router.push({name: 'Onair' , params: {leaguename: `${item.league}`} })
+
             })
             .catch((err) => {
               console.log(err);
@@ -699,6 +716,42 @@ export const useOnAirStore = defineStore("onair", {
           }
         });
       }
+    },
+
+    searchRooms(searchData){
+        if(searchData.text){
+          axios({
+            url: cheertogether.room.search(),
+            method: 'GET',
+            params: {
+              keyword: searchData.text,
+              type: searchData.category
+            }
+          })
+          .then((res) => {
+            let trueRes = []
+            for(let searchedRoom of res.data){
+              for(let room of this.currentRooms){
+                if(searchedRoom.roomId === room.roomId){
+                  trueRes.push(searchedRoom)
+                }
+              }
+            }
+            this.currentRooms = trueRes
+            router.go()
+          })
+        }  
+    },
+
+    selectMatch(gameId){
+      axios({
+        url: cheertogether.room.searchGame(gameId),
+        method: 'GET'
+      })
+      .then((res) => {
+        this.currentRooms = res.data
+        router.go()
+      })
     },
 
     makeRoomDialogToggle() {
@@ -896,6 +949,7 @@ export const useRoomStore = defineStore("room", {
         status: "PRIVATE",
       },
     ],
+    popularRooms: [],
     playTeams: {
       id: 31,
       home: {
@@ -922,8 +976,9 @@ export const useRoomStore = defineStore("room", {
       apiId: 867946,
       leagueApiId: 39,
     },
-    homeGoal: [],
-    awayGoal: [],
+    goal: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
+    homeGoalPoint : 0,
+    awayGoalPoint : 0,
     isClickSettingButton: false,
     isClickBillboard: false,
     isClickGameInfo: false,
@@ -941,6 +996,8 @@ export const useRoomStore = defineStore("room", {
     predictDate: "",
     predictDay: "",
     predictTime: "",
+    
+    gamePredictionDeadline: "",
   }),
   actions: {
     getRooms() {
@@ -978,6 +1035,17 @@ export const useRoomStore = defineStore("room", {
       );
     },
 
+    async getPopularRooms(){
+      await getPopularRooms(
+        (res) => {
+          this.popularRooms = res.data;
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
+    },
+
     getPlayTeams(gameId) {
       /* 
     GET: 경기 정보를 불러옴
@@ -992,6 +1060,10 @@ export const useRoomStore = defineStore("room", {
       })
         .then((res) => {
           console.log(res.data);
+          let date = new Date(res.data.kickoff);
+          date.setTime(date.getTime() + 10 * 60000);
+          this.gamePredictionDeadline = date;
+
           this.playTeams = res.data;
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
@@ -1031,22 +1103,32 @@ export const useRoomStore = defineStore("room", {
         .then((res) => {
           this.gameInfo = [];
           this.gameInfoHalf = [];
-          this.homeGoal = [];
-          this.awayGoal = [];
+          this.goal = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
+
+          this.homeGoalPoint = 0
+          this.awayGoalPoint = 0
+
           res.data.response.reverse().forEach((e) => {
-            if (e.type == "Goal") {
-              if (e.team.id == this.playTeams.home.apiId) {
-                this.homeGoal.push(e);
-              } else {
-                this.awayGoal.push(e);
-              }
+            if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
+              this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
+              this.homeGoalPoint = this.homeGoalPoint + 1
+            }
+            else if (e.type === "Goal") {
+              this.goal[this.awayGoalPoint]["awayGoal"] = e.player.name;
+              this.awayGoalPoint = this.awayGoalPoint + 1
             }
             if (e.time.elapsed <= 45) {
               this.gameInfo.push(e);
-            } else {
+            } 
+            else {
               this.gameInfoHalf.push(e);
             }
+
+
           });
+
+          this.goal.homeGoal = this.homeGoal
+          this.goal.awayGoal = this.awayGoal
         })
         .catch((err) => {
           console.log(err);
@@ -1083,6 +1165,7 @@ export const useRoomStore = defineStore("room", {
 export const useGamePredictionStore = defineStore("gamePrediction", {
   state: () => {
     return {
+      predictedPoint: 0,
       team1_point: 0,
       team1_count: 0,
       team2_point: 0,
@@ -1095,4 +1178,73 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
   persist: {
     storage: localStorage,
   },
+  actions: {
+    distributePoints() {
+      const home = useRoomStore().playTeams.homeScore;
+      const away = useRoomStore().playTeams.awayScore;
+
+      if(this.predictedPoint >= 1) {
+        if(home > away) {
+          const perPoint = ((this.team1_point + this.team2_point) / this.team1_count) * this.predictedPoint;
+          for(let member of this.team1_predict_list) {
+            if(member == useAccountStore().profileId) {
+              axios({
+                url: cheertogether.members.plusPoint(member),
+                method: "PUT",
+                data: { point: perPoint },
+              })
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
+                });
+              })
+              .catch(e => console.log(e));
+              break;
+            }
+          }
+        } else if(home < away) {
+          const perPoint = ((this.team1_point + this.team2_point) / this.team2_count) * this.predictedPoint;
+          for (let member of this.team2_predict_list) {
+            if (member == useAccountStore().profileId) {
+              axios({
+                url: cheertogether.members.plusPoint(member),
+                method: "PUT",
+                data: { point: perPoint },
+              })
+                .then(() => {
+                  Swal.fire({
+                    icon: "success",
+                    title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
+                  });
+                })
+                .catch((e) => console.log(e));
+              break;
+            }
+          }
+        } else {
+          axios({
+            url: cheertogether.members.plusPoint(this.useAccountStore().profileId),
+            method: "PUT",
+            data: { point: this.predictedPoint },
+          })
+            .then(() => {
+              Swal.fire({
+                icon: "success",
+                title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
+              });
+            })
+            .catch((e) => console.log(e));
+        }
+      }
+      this.predictedPoint = 0;
+      this.team1_point = 0;
+      this.team1_count = 0;
+      this.team2_point = 0;
+      this.team2_count = 0;
+      this.team1_predict_list = [];
+      this.team2_predict_list = [];
+      this.isPredictedList = [];
+    }
+  }
 });

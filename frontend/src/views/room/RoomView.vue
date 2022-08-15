@@ -21,6 +21,7 @@
         
         <!-- 승부 예측 -->
         <div class="game-prediction" v-if="roomStore.isClickPredictButton">
+          <div style="font-size: 30px;">예측 종료</div>
           <!-- 승부 예측 시간 -->
           <div style="font-size: 16px;">
             {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
@@ -63,7 +64,7 @@
               </div>
             </div>  
           </div>
-          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted">
+          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted && this.validateTime()">
             <!--  -->
             <div>
               <input class="predict-input" type="number" v-model="team1_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(1)">
@@ -88,7 +89,6 @@
             레이아웃
           </div>
         </div>
-      -->
       </div>
       
       <!-- 스크린 -->
@@ -109,6 +109,7 @@
             :key="sub.stream.connection.connectionId"
             :stream-manager="sub"
             @click="updateMainVideoStreamManager(sub)"
+            @forceOut="forceOut"
           />
         </div>
 
@@ -246,49 +247,115 @@
             경기 정보
           </div>
         </div>
+
         <!-- 전광판 -->
-        <div v-if="roomStore.isClickBillboard" style="position: relative;">
-          <div class="room-game-billboard-header" @click="roomStore.isClickBillboard = false">
-            <v-icon>
+        <div class="room-game-billboard" v-if="roomStore.isClickBillboard">
+          <!-- 닫기 버튼 -->
+          <div class="room-game-billboard-header">
+            <v-icon id="close-button" @click="roomStore.isClickBillboard = false">
               mdi-close
             </v-icon>
           </div>
-          <div class="room-game-billboard">
-            <div>
-              <div style="float:left; width:45%; text-align:right; ">
-                {{roomStore.playTeams.home.hanName}}
-                <img :src="roomStore.playTeams.home.logo" alt="" width="16"> 
-                {{roomStore.playTeams.homeScore}}
-              </div>
-              <div style="float:left; width:10%; text-align:center">vs</div>
-              <div style="float:left; width:45%; text-align:left">
-                {{roomStore.playTeams.awayScore}}
-                <img :src="roomStore.playTeams.away.logo" alt="" width="16"> 
-                {{roomStore.playTeams.away.hanName}}
+
+          <!-- 경기 정보 -->
+          <div class="room-game-billboard-section">
+            <!-- 홈 -->
+            <div class="room-game-billboard-team" style="flex-direction: row-reverse;">
+              <img :src="roomStore.playTeams.home.logo" class="room-game-billboard-team-logo">
+              <div style="height: 50px; padding-top:10px; margin-right:5px;">
+                {{ roomStore.playTeams.home.hanName }}
               </div>
             </div>
-            <div>
-              <div style="float:left; width:40%">
-                <div v-for="(homeGoal, i) in roomStore.homeGoal" :key="i">
-                  {{homeGoal.player.name}}
-                </div>
+            <!-- 킥오프 + 경기장 -->
+            <div class="room-game-billboard-team-vs">
+              <div class="room-game-billboard-score">
+                {{ roomStore.homeGoalPoint }}
               </div>
-              <div style="float:left; width:20%">
-                <div>
-                  {{roomStore.playTeams.stadium}}
-                </div>
-                <div>
-                  {{roomStore.playTeams.kickoff}}
-                </div>
+
+              <div class="room-game-billboard-time">
+                {{ roomStore.predictTime }}
               </div>
-              <div style="float:left; width:40%">
-                <div v-for="(awayGoal, i) in roomStore.awayGoal" :key="i">
-                  {{awayGoal.player.name}}
-                </div>
+
+              <div class="room-game-billboard-score">
+                {{ roomStore.awayGoalPoint }}
+              </div>
+            </div>
+
+            <!-- 어웨이 -->
+            <div class="room-game-billboard-team">
+              <img :src="roomStore.playTeams.away.logo" class="room-game-billboard-team-logo">
+              <div style="height: 50px; padding-top:10px; margin-right:5px;">
+                {{ roomStore.playTeams.away.hanName }}
+
               </div>
             </div>
           </div>
+          <div>
+            <div class="room-game-billboard-stadium">
+              {{ roomStore.playTeams.stadium }}
+            </div>
+          </div>
+
+          <!-- 골 넣은 사람들 -->
+          <div class="room-game-billboard-footer">
+            <div v-for="(goal, i) in roomStore.goal" :key="i" >
+              <!-- 둘 다 있을 경우 -->
+              <div v-if="goal.homeGoal && goal.awayGoal" style="width: 100%; display:flex;">
+                <div class="room-game-billboard-footer-goal-player" style="flex-direction: row-reverse;">
+                  <v-icon style="margin-left: 5px;">
+                    mdi-soccer
+                  </v-icon>
+                  {{ goal.homeGoal}}
+                </div>
+
+                <div style="width: 6px text-align:center;">
+                ㅣ
+                </div>
+                <div class="room-game-billboard-footer-goal-player">
+                  <v-icon style="margin-right: 5px;">
+                    mdi-soccer
+                  </v-icon>
+                  {{ goal.awayGoal}}
+                </div>
+              </div>
+
+              <!-- 홈만 있을 경우 -->
+              <div v-if="goal.homeGoal && !goal.awayGoal" style="width: 100%; display:flex;">
+                <div class="room-game-billboard-footer-goal-player" style="flex-direction: row-reverse;">
+                  <v-icon style="margin-left: 5px;">
+                    mdi-soccer
+                  </v-icon>
+                  {{ goal.homeGoal}}
+                </div>
+
+                <div style="width: 6px text-align:center;">
+                ㅣ
+                </div>
+                <div class="room-game-billboard-footer-goal-player">
+                </div>
+              </div>
+
+              <!-- 어웨이만 있을 경우 -->
+              <div v-if="!goal.homeGoal && goal.awayGoal" style="width: 100%; display:flex;">
+                <div class="room-game-billboard-footer-goal-player" style="flex-direction: row-reverse;">
+
+                </div>
+
+                <div style="width: 6px text-align:center;">
+                ㅣ
+                </div>
+                <div class="room-game-billboard-footer-goal-player">
+                  <v-icon style="margin-right: 5px;">
+                    mdi-soccer
+                  </v-icon>
+                  {{ goal.awayGoal}}
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
+
         <!-- 경기 정보 -->
         <div v-if="roomStore.isClickGameInfo" style="position: relative;">
           <div class="room-game-info-header" @click="roomStore.isClickGameInfo = false">
@@ -453,8 +520,6 @@
             {{ roomStore.gameInfo.response }}
           </div>
         </div>
-
-
       </div>
 
       <!-- 채팅 내용 창 -->
@@ -475,6 +540,8 @@
     <div v-if="roomStore.isClickChatting == 'b'" class="match-screen-chatting-area2" >
 
     </div>
+
+
   </div>
 </template>
 <script>
@@ -484,6 +551,7 @@ import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
+import { updateRoomHeadCount } from '@/api/room.js';
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -584,7 +652,7 @@ export default {
       this.session.on("streamCreated", ({ stream }) => {
         const subscriber = this.session.subscribe(stream);
         this.subscribers.push(subscriber);
-        if(this.isSessionManager) {
+        if(this.isSessionManager == true) {
           this.session
           .signal({
             data: (this.team1_point) + "/" + (this.team1_count) + "/" + (this.team2_point) + "/" + (this.team2_count),
@@ -597,6 +665,7 @@ export default {
           .catch((error) => {
             console.error(error);
           });
+          this.updateRoomHeadCount(this.subscribers.length+1);
         }
       });
 
@@ -642,7 +711,7 @@ export default {
         this.team2_count = parseInt(receive[4]);
         const memberId = parseInt(receive[5]);
         
-        if(this.isSessionManager) {
+        if(this.isSessionManager == true) {
           if(team == 1) {
             useGamePredictionStore().team1_predcit_list.push(memberId);
           } else if(team == 2) {
@@ -658,6 +727,13 @@ export default {
         useGamePredictionStore().team1_count = parseInt(receive[1]);
         useGamePredictionStore().team2_point = parseInt(receive[2]);
         useGamePredictionStore().team2_count = parseInt(receive[3]);
+      });
+
+      this.session.on("signal:force-out", (event) => {
+        console.log(event.data);
+        if(event.data === this.myUserName){
+          this.leaveSession();
+        }
       });
 
       // --- Connect to the session with a valid user token ---
@@ -715,10 +791,11 @@ export default {
       useGamePredictionStore().team2_point = 0;
       useGamePredictionStore().team2_count = 0;
 
-      if(this.isSessionManager){
+      if(this.isSessionManager == true){
         useGamePredictionStore().team1_predict_list = [];
         useGamePredictionStore().team2_predict_list = [];
       }
+      this.updateRoomHeadCount(this.subscribers.length+1);
 
       window.removeEventListener("beforeunload", this.leaveSession);
       this.$router.push({ name: "MainPage" });
@@ -847,6 +924,23 @@ export default {
       this.message = "";
     },
 
+    forceOut(clientData) {
+      console.log(clientData + this.isSessionManager);
+      if(this.isSessionManager == false) return;
+      this.session
+        .signal({
+          data: clientData,
+          to: [],
+          type: "force-out",
+        })
+        .then(() => {
+          console.log("force-out successfully requested");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
     sendGamePrediction(team) {
       let pointToSend;
       if(team == 1) {
@@ -878,6 +972,7 @@ export default {
             console.error(error);
           });
         useRoomStore().subtractPoint(useAccountStore().profileId, team, pointToSend);
+        useGamePredictionStore().predictedPoint = pointToSend;
         this.team1_pointToSend = 0;
         this.team2_pointToSend = 0;
         useGamePredictionStore().isPredictedList.push(this.mySessionId);
@@ -892,6 +987,10 @@ export default {
       if(this.team2_pointToSend > this.myPoint) {
         this.team2_pointToSend = this.myPoint;
       }
+    },
+
+    validateTime() {
+      return (new Date() <= this.roomStore.gamePredictionDeadline);
     },
     
     toggleMic(){
@@ -915,11 +1014,22 @@ export default {
       this.cam = !this.cam;
     },
     getGameInfo() {
-      if(this.roomStore.playTeams.status == "FT"){
+      if(this.roomStore.playTeams.status == "FT") {
+        this.gamePredictionStore.distributePoints();
         clearInterval(this.loading);
       }
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
       // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
+    },
+    updateRoomHeadCount(number){
+      updateRoomHeadCount(this.sessionInfo.roomId, number,
+        () => {
+          console.log("HeadCount Successfully updated");
+        },
+        (err) => {
+          console.log(err)
+        }
+      );
     }
   },
 };
@@ -1266,32 +1376,6 @@ export default {
   font-family: var(--bold-font);
   font-size: 18px;
 }
-.room-game-billboard-header {
-  position: absolute;
-  width: 279px;
-  height: 10px;
-  background-color: #ffffff;
-  top: 1px;
-  right: 20px;
-  z-index: 10;
-  padding-left: 260px;
-}
-.room-game-billboard-header:hover {
-  cursor: pointer;
-}
-.room-game-billboard {
-  position: absolute;
-  min-width: 700px;
-  height: 300px;
-  border: 1px solid grey;
-  overflow-y: auto;
-  margin-right: 50px;
-  border-radius: 10px;
-  background-color: #ffffff;
-  left: -460px;
-  padding-top: 10px;
-
-}
 #goal-player {
   font-size: 16px;
   position: relative;
@@ -1316,5 +1400,84 @@ export default {
   position: absolute;
   top: 15px;
 }
+
+/* 전광판 */
+.room-game-billboard {
+  width: 700px;
+  background-color: #3B4151;
+  color: white;
+  position: absolute;
+  top: 40px;
+  right: 0;
+}
+.room-game-billboard-header {
+  width: 100%;
+  height: 25px;
+  text-align: end;
+  background-color: #3B4151;
+  color: white;
+}
+#close-button:hover {
+  cursor: pointer;
+}
+.room-game-billboard-section {
+  width: 100%;
+  height: 80px;
+  padding: 10px;
+  background-color: #3B4151;
+  display: flex;
+}
+.room-game-billboard-team{
+  width: 300px;
+  height: 40px;
+  display: flex;
+  font-size: 20px;
+  vertical-align: middle;
+  font-family: var(--bold-font);
+  padding-top: 15px;
+}
+.room-game-billboard-team-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
+.room-game-billboard-team-vs {
+  width: 180px;
+  height: 70px;
+  display: flex;
+}
+.room-game-billboard-score {
+  width: 50px;
+  padding-top: 15px;
+  font-size: 40px;
+  font-family: var(--bold-font);
+  text-align: center;
+}
+.room-game-billboard-time {
+  font-family: var(--bold-font);
+  width: calc(100% - 100px);
+  margin: 20px 0;
+  text-align: center;
+  color: white;
+}
+.room-game-billboard-stadium {
+  text-align: center;
+  width: 150px;
+  margin: 0 auto;
+  height: 30px;
+  color: #ecf0f5;
+  font-family: var(--bold-font);
+}
+.room-game-billboard-footer {
+  margin: 15px 40px 0 40px ;
+  padding: 10px 0 0 0;
+  border-top: 1px solid #ffffff;
+}
+.room-game-billboard-footer-goal-player {
+  width: calc(50% - 3px);
+  height: 24px;
+  display: flex;
+}
+
 </style>
 
