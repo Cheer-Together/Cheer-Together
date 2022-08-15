@@ -92,6 +92,7 @@ watch(category, () => {
       method: 'GET', 
     }).then(res => {
       articles.value = res.data
+      page.value = 1
       pagedArticles.value = articles.value.slice(0, 15)
       pageLength.value = parseInt((articles.value.length-1)/15)+1
     }).catch(err => {
@@ -102,6 +103,7 @@ watch(category, () => {
       method: 'GET', 
     }).then(res => {
       articles.value = res.data
+      page.value = 1
       pagedArticles.value = articles.value.slice(0, 15)
       pageLength.value = parseInt((articles.value.length-1)/15)+1
     }).catch(err => {
@@ -109,7 +111,9 @@ watch(category, () => {
     })
   }
 })
-
+watch(page, () => {
+  pagedArticles.value = articles.value.slice(15*(page.value-1), 15*page.value)
+})
 
 const items = [
   {title: '전체보기', apiId: false},
