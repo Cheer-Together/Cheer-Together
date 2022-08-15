@@ -454,21 +454,6 @@ export const useAccountStore = defineStore("account", {
         title: "성공적으로 로그아웃 되었습니다.",
       });
     },
-    findPassword(email) {
-      axios({
-        url: cheertogether.members.findPassword(),
-        method: "GET",
-        params: {
-          email: email,
-        },
-      })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     isNewMember() {
       Swal.fire({
         icon: "success",

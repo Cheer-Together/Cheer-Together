@@ -60,9 +60,6 @@
         v-model="dialog3"
       >
         <v-card>
-          <v-card-title>
-            <span>에러 표시용 모달</span>
-          </v-card-title>
           <v-card-text>
             {{errorText}}
           </v-card-text>
@@ -130,6 +127,7 @@
 import { ref,watchEffect } from 'vue'
 import { useAccountStore } from "@/store"
 import router from '@/router/index.js'
+import axios from 'axios'
 const accountStore = useAccountStore()
 const dialog3 = ref(false) // 에러 발생시 모달
 const findPasswordModal = ref(false)
@@ -156,7 +154,24 @@ function passwordModalBtn() {
   findPasswordModal.value = true
 }
 function findPasswordBtn() {
-  accountStore.findPassword(findPasswordEmail.value)
+  findPasswordModal.value = false
+  axios({
+    url: 'https://i7b204.p.ssafy.io/cheertogether/members/find/password',
+    method: "GET",
+    params: {
+      email: findPasswordEmail.value,
+    },
+  })
+  .then((res) => {
+    console.log(res.data)
+    dialog3.value = true
+    errorText.value = '해당 이메일로 임시 비밀번호를 전송했습니다.'
+  })
+  .catch((err) => {
+    console.log(err)
+    dialog3.value = true
+    errorText.value = '올바른 이메일인지 확인해주세요.'
+  })
   findPasswordEmail.value = ''
 }
 watchEffect(() => {
