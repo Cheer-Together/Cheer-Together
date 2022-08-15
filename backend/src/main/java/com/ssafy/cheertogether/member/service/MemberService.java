@@ -58,22 +58,18 @@ public class MemberService implements UserDetailsService {
 		Member member = Member.from(memberJoinRequest);
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
 		if (!memberJoinRequest.getFavoriteLeagueList().isEmpty()) {
-			favoriteLeagueList.addAll(memberJoinRequest
-				.getFavoriteLeagueList()
+			favoriteLeagueList.addAll(memberJoinRequest.getFavoriteLeagueList()
 				.stream()
-				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository
-					.findLeagueByApiId(leagueApiId)
+				.map(leagueApiId -> FavoriteLeague.from(member, leagueRepository.findLeagueByApiId(leagueApiId)
 					.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		member.setFavoriteLeagueList(favoriteLeagueList);
 		List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
 		if (!memberJoinRequest.getFavoriteTeamList().isEmpty()) {
-			favoriteTeamList.addAll(memberJoinRequest
-				.getFavoriteTeamList()
+			favoriteTeamList.addAll(memberJoinRequest.getFavoriteTeamList()
 				.stream()
-				.map(teamApiId -> FavoriteTeam.from(member, teamRepository
-					.findTeamByApiId(teamApiId)
+				.map(teamApiId -> FavoriteTeam.from(member, teamRepository.findTeamByApiId(teamApiId)
 					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
@@ -118,20 +114,17 @@ public class MemberService implements UserDetailsService {
 		favoriteLeagueRepository.deleteFavoriteLeagueByMember_Id(findMember.getId());
 		List<FavoriteLeague> favoriteLeagueList = new ArrayList<>();
 		if (!memberModifyRequest.getFavoriteLeagueList().isEmpty()) {
-			favoriteLeagueList.addAll(memberModifyRequest
-				.getFavoriteLeagueList()
+			favoriteLeagueList.addAll(memberModifyRequest.getFavoriteLeagueList()
 				.stream()
-				.map(leagueApiId -> FavoriteLeague.from(findMember,
-					leagueRepository.findLeagueByApiId(leagueApiId)
-						.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
+				.map(leagueApiId -> FavoriteLeague.from(findMember, leagueRepository.findLeagueByApiId(leagueApiId)
+					.orElseThrow(() -> new IllegalArgumentException(MISMATCH_APIID_ERROR_MESSAGE))))
 				.collect(Collectors.toList()));
 		}
 		findMember.setFavoriteLeagueList(favoriteLeagueList);
 		favoriteTeamRepository.deleteFavoriteTeamByMember_Id(findMember.getId());
 		List<FavoriteTeam> favoriteTeamList = new ArrayList<>();
 		if (!memberModifyRequest.getFavoriteTeamList().isEmpty()) {
-			favoriteTeamList.addAll(memberModifyRequest
-				.getFavoriteTeamList()
+			favoriteTeamList.addAll(memberModifyRequest.getFavoriteTeamList()
 				.stream()
 				.map(teamApiId -> FavoriteTeam.from(findMember, teamRepository.findTeamByApiId(teamApiId)
 					.orElseThrow(() -> new IllegalArgumentException(TeamConstant.MISMATCH_APIID_ERROR_MESSAGE))))
@@ -159,13 +152,10 @@ public class MemberService implements UserDetailsService {
 	}
 
 	private String getTempPassword(int size) {
-		char[] charSet = new char[] {
-			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-			'V', 'W', 'X', 'Y', 'Z',
-			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
-			'v', 'w', 'x', 'y', 'z',
-			'!', '@', '#', '$', '%', '^', '&'};
+		char[] charSet = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
+			'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a',
+			'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+			'w', 'x', 'y', 'z', '!', '@', '#', '$', '%', '^', '&'};
 		StringBuilder sb = new StringBuilder();
 		SecureRandom sr = new SecureRandom();
 		sr.setSeed(new Date().getTime());
@@ -183,7 +173,7 @@ public class MemberService implements UserDetailsService {
 	public void confirmPassword(Long id, MemberModifyPasswordRequest request) {
 		Member member = memberRepository.findById(id)
 			.orElseThrow(() -> new IllegalArgumentException(NOT_FOUND_MEMBER_ERROR_MESSAGE));
-		if(!member.confirmPassword(request.getCurPassword())) {
+		if (!member.confirmPassword(request.getCurPassword())) {
 			throw new IllegalArgumentException(MISMATCH_PASSWORD_ERROR_MESSAGE);
 		}
 	}

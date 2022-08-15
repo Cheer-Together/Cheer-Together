@@ -10,6 +10,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import com.ssafy.cheertogether.game.domain.Game;
 import com.ssafy.cheertogether.room.dto.RoomCreateRequest;
 import com.ssafy.cheertogether.room.dto.RoomModifyRequest;
@@ -22,6 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,8 +44,12 @@ public class Room {
 	private String managerId;
 	private String sessionId;
 
+	@ColumnDefault("1")
+	private Integer headCount;
+
 	@Builder
-	public Room(Long id, Game game, String name, RoomStatus status, String password, String managerId, String sessionId) {
+	public Room(Long id, Game game, String name, RoomStatus status, String password, String managerId,
+		String sessionId) {
 		this.id = id;
 		this.game = game;
 		this.name = name;
@@ -67,5 +75,9 @@ public class Room {
 		name = roomModifyRequest.getName();
 		status = roomModifyRequest.getStatus();
 		password = roomModifyRequest.getPassword();
+	}
+
+	public void updateHeadCount(int headCount) {
+		this.headCount = headCount;
 	}
 }
