@@ -34,6 +34,7 @@ if (accountStore.isLogin) {
   accountStore.profileId = decoded.value.sub;
   accountStore.userProfile(decoded.value.sub);
 }
+accountStore.getPointRanking();
 
 // 리그데이터 불러오기
 leagueStore.leaguesAll();

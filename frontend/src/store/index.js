@@ -75,6 +75,8 @@ export const useAccountStore = defineStore("account", {
     },
     profileId: false,
     isChangePasswordModal: false,
+
+    pointRanking: []
   }),
   getters: {},
   actions: {
@@ -459,7 +461,25 @@ export const useAccountStore = defineStore("account", {
         icon: "success",
         title: "회원가입에 성공했습니다.",
       })
-      this.signupAlarm = false
+        .then((res) => {
+          console.log(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getPointRanking() {
+      axios({
+        url: cheertogether.members.getPointRanking(),
+        method: 'GET',
+      })
+      .then((res) => {
+        this.pointRanking = [];
+        res.data.forEach((member) => {
+          this.pointRanking.push({ id: member.id, email: member.email, nickname: member.nickname, point: member.point });
+        });
+      })
+      .catch((err) => console.log(err));
     }
   },
 });
@@ -1141,12 +1161,13 @@ export const useRoomStore = defineStore("room", {
         method: "PUT",
         data: { point: pointToSend },
       })
-        .then(() =>
+        .then(() => {
           Swal.fire({
             icon: "success",
             title: team + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
-          })
-        )
+          });
+          this.useAccountStore().profile.point -= pointToSend;
+        })
         .catch((e) => console.log(e));
     },
     update(id, apiId) {
