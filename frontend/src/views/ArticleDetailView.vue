@@ -24,7 +24,7 @@
           </div>
           <a style="font-size:14px">{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
         </div>
-        <div v-if="userEmail==maincontent.memberResponse.email" class="community-detail-btns">
+        <div v-if="userEmail==maincontent.memberResponse.email||userRole=='ADMIN'" class="community-detail-btns">
           <div @click="modifyArticle()" class="word-link">
             <v-icon size="20px">
               mdi-pencil
@@ -42,7 +42,7 @@
       <div style="margin: 10px">
         {{maincontent.content}}
       </div>
-      <div style="height:50px; margin-top: 30px;">
+      <div style="height:50px; margin-top: 50px;">
         <div @click="likeArticle" class="like-btn">
           <v-icon size="35px" color="white">
             mdi-thumb-up
@@ -53,7 +53,7 @@
         <input type="text" v-model="commentText" maxlength="30" placeholder=" 여기에 댓글을 달아주세요." class="community-detail-commentcontent">
         <v-btn @click="writeReply" style="height:34px; margin-left:20px">댓글작성</v-btn>
       </div>
-      <ArticleDetailComment v-for="reply in maincontent.replyResponseList" :key="reply.id" :reply="reply"/>
+      <ArticleDetailComment v-for="reply in maincontent.replyResponseList" :key="reply.id" :reply="reply" :userRole="userRole"/>
     </div>
     <ArticleSides/>
   </div>
@@ -146,6 +146,7 @@ const check3 = ref(false)
 const check4 = ref(false)
 const check5 = ref(false)
 const userEmail = ref('')
+const userRole = ref('')
 const loginUserId = jwt_decode(sessionStorage.getItem('token')).sub
 
 axios({
@@ -173,6 +174,7 @@ axios({
   method: 'GET',
 }).then(res =>{
   userEmail.value = res.data.email
+  userRole.value = res.data.role
 }).catch(err => {
   console.log(err)
 })
@@ -208,8 +210,7 @@ function likeArticle() {
         icon: 'error',
         title: '좋아요 에러'
       })
-    }
-    
+    } 
   })
 }
 function deleteArticle() {
@@ -309,7 +310,7 @@ function writeReply() {
 .community-detail-header {
   display:flex;
   height:38px;
-  margin:0;
+  margin:10px;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #bcbcbc;
@@ -319,10 +320,14 @@ function writeReply() {
   align-items: center;
   justify-content: space-between;
   height:36px;
-  margin:10px 0 10px 0;
+  margin:20px 0 20px 0;
 }
 .community-detail-writecomment {
-  display:flex; align-items: center; width:790px; height:36px; margin: 20px 10px 25px;
+  display:flex; 
+  align-items: center; 
+  width:790px; 
+  height:36px; 
+  margin: 40px 10px 45px;
 }
 .community-detail-commentcontent {
   width:650px;

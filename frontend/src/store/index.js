@@ -41,6 +41,7 @@ export const useCommunityStore = defineStore("community", {
 export const useAccountStore = defineStore("account", {
   state: () => ({
     loginDialog: false,
+    loginDialogMsg : '같이 집관에 오신 것을 환영합니다.',
     isLogin: sessionStorage.getItem("token") ?? false,
     socialLoginRefresh: false,
     emailDoubleChecked: false,
@@ -234,6 +235,10 @@ export const useAccountStore = defineStore("account", {
         })
         .catch((err) => {
           console.log(err);
+          Swal.fire({
+            icon: 'warning',
+            title: '회원가입에 실패했습니다.'
+          });
         });
     },
 
@@ -405,10 +410,24 @@ export const useAccountStore = defineStore("account", {
           decoded.value = jwt_decode(res.data);
           this.profileId = decoded.value.sub;
           this.userProfile(decoded.value.sub);
-          router.push({ name: "MainPage" });
+          Swal.fire({
+            icon: "success",
+            title: "성공적으로 로그인 되었습니다.",
+          });
         })
         .catch((err) => {
-          console.log(err);
+          if (err.response.status=='500') {
+            Swal.fire({
+              icon: 'warning',
+              title: '아이디와 비밀번호를 다시 확인해 주세요'
+            })
+          } else {
+            console.log(err)
+            Swal.fire({
+              icon: 'error',
+              title: '로그인 실패'
+            })
+          }
         });
     },
     kakaoLogin() {
@@ -679,43 +698,35 @@ export const useOnAirStore = defineStore("onair", {
     },
 
     enterRoom(roomId) {
-      if (!sessionStorage.getItem("token")) {
-        Swal.fire({
-          title: "로그인이 필요합니다",
-          icon: "warning",
-        });
-        console.log(sessionStorage.getItem("token"));
-      } else {
-        axios({
-          url: cheertogether.room.enterRoom(roomId),
-          method: "GET",
-        }).then((res) => {
-          if (res.data.status === "PUBLIC") {
-            router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
-          } else if (res.data.status === "PRIVATE") {
-            Swal.fire({
-              title: "비밀번호를 입력하세요",
-              icon: "info",
-              input: "password",
-              inputPlaceholder: "********",
-              inputAttributes: {
-                maxlength: 10,
-                autocapitalize: "off",
-                autocorrect: "off",
-              },
-            }).then((pw) => {
-              if (pw.value === res.data.password) {
-                router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
-              } else {
-                Swal.fire({
-                  title: "비밀번호가 틀렸습니다",
-                  icon: "error",
-                });
-              }
-            });
-          }
-        });
-      }
+      axios({
+        url: cheertogether.room.enterRoom(roomId),
+        method: "GET",
+      }).then((res) => {
+        if (res.data.status === "PUBLIC") {
+          router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+        } else if (res.data.status === "PRIVATE") {
+          Swal.fire({
+            title: "비밀번호를 입력하세요",
+            icon: "info",
+            input: "password",
+            inputPlaceholder: "********",
+            inputAttributes: {
+              maxlength: 10,
+              autocapitalize: "off",
+              autocorrect: "off",
+            },
+          }).then((pw) => {
+            if (pw.value === res.data.password) {
+              router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+            } else {
+              Swal.fire({
+                title: "비밀번호가 틀렸습니다",
+                icon: "error",
+              });
+            }
+          });
+        }
+      });
     },
 
     searchRooms(searchData){
