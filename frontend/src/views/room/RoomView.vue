@@ -21,6 +21,7 @@
         
         <!-- 승부 예측 -->
         <div class="game-prediction" v-if="roomStore.isClickPredictButton">
+          <div style="font-size: 30px;">예측 종료</div>
           <!-- 승부 예측 시간 -->
           <div style="font-size: 16px;">
             {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
@@ -63,7 +64,7 @@
               </div>
             </div>  
           </div>
-          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted">
+          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted && this.validateTime()">
             <!--  -->
             <div>
               <input class="predict-input" type="number" v-model="team1_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(1)">
@@ -649,7 +650,7 @@ export default {
       this.session.on("streamCreated", ({ stream }) => {
         const subscriber = this.session.subscribe(stream);
         this.subscribers.push(subscriber);
-        if(this.isSessionManager) {
+        if(this.isSessionManager == true) {
           this.session
           .signal({
             data: (this.team1_point) + "/" + (this.team1_count) + "/" + (this.team2_point) + "/" + (this.team2_count),
@@ -707,7 +708,7 @@ export default {
         this.team2_count = parseInt(receive[4]);
         const memberId = parseInt(receive[5]);
         
-        if(this.isSessionManager) {
+        if(this.isSessionManager == true) {
           if(team == 1) {
             useGamePredictionStore().team1_predcit_list.push(memberId);
           } else if(team == 2) {
@@ -780,7 +781,7 @@ export default {
       useGamePredictionStore().team2_point = 0;
       useGamePredictionStore().team2_count = 0;
 
-      if(this.isSessionManager){
+      if(this.isSessionManager == true){
         useGamePredictionStore().team1_predict_list = [];
         useGamePredictionStore().team2_predict_list = [];
       }
@@ -943,6 +944,7 @@ export default {
             console.error(error);
           });
         useRoomStore().subtractPoint(useAccountStore().profileId, team, pointToSend);
+        useGamePredictionStore().predictedPoint = pointToSend;
         this.team1_pointToSend = 0;
         this.team2_pointToSend = 0;
         useGamePredictionStore().isPredictedList.push(this.mySessionId);
@@ -957,6 +959,10 @@ export default {
       if(this.team2_pointToSend > this.myPoint) {
         this.team2_pointToSend = this.myPoint;
       }
+    },
+
+    validateTime() {
+      return (new Date() <= this.roomStore.gamePredictionDeadline);
     },
     
     toggleMic(){
@@ -980,12 +986,14 @@ export default {
       this.cam = !this.cam;
     },
     getGameInfo() {
-      if(this.roomStore.playTeams.status == "FT"){
+      if(this.roomStore.playTeams.status == "FT") {
+        this.gamePredictionStore.distributePoints();
         clearInterval(this.loading);
       }
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
       // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
-    }
+    },
+    
   },
 };
 </script>
