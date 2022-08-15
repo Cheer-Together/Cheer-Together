@@ -13,7 +13,7 @@
         ></v-select>
       </div>
       <div>
-        <v-btn @click="writeButton()" style="height:40px; margin-left:20px">글 작성하기</v-btn>
+        <v-btn @click="writeButton()" style="height:40px; margin-left:20px; color:white; font-family: 'MICEGothic Bold';" color=#2e6afd>글 작성하기</v-btn>
       </div>
     </div>
     <div class="community-list-header">
@@ -24,7 +24,7 @@
     <ArticleListItem v-for="article in pagedArticles" :key="article.id" :article="article"/>
     <div class="community-list-search">
       <input v-model="searchString" type="text" placeholder=" 검색할 내용을 입력하세요." class="community-list-searchbar">
-      <v-btn @click="searchBtn" style="height:34px; margin-left:20px">검색</v-btn>
+      <v-btn @click="searchBtn" style="height:34px; margin-left:20px; color:white; font-family: 'MICEGothic Bold';" color=#2e6afd>검색</v-btn>
     </div>
     <div>
       <v-pagination
@@ -161,6 +161,7 @@ const headers = [
   text-align: center;
   align-items: center;
   border-bottom: 1px solid #bcbcbc;
+  font-family: 'MICEGothic Bold';
 }
 .community-list-search {
   display:flex;
