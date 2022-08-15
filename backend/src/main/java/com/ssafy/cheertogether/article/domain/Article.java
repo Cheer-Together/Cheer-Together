@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,6 +49,7 @@ public class Article {
 	private League league;
 
 	private String title;
+
 	@Column(columnDefinition = "TEXT")
 	private String content;
 	private Timestamp createDate;
@@ -57,7 +59,7 @@ public class Article {
 	private Long unlike;
 	@ColumnDefault("0")
 	private Long hit;
-	@OneToMany(mappedBy = "article")
+	@OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
 	@JsonManagedReference
 	private List<Reply> replyList = new ArrayList<>();
 
