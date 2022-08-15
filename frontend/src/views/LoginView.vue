@@ -13,6 +13,11 @@
               <div class="login-dialog-logo">
                 <img :src="loginLogo" class="login-logo">
               </div>
+              <button @click="accountStore.loginDialog = false" style="position:absolute; top:0; right:0;">
+                <v-icon>
+                  mdi-close-box
+                </v-icon>
+              </button>
               <div class="login-dialog-info">
                 <p>{{accountStore.loginDialogMsg}}</p>
               </div>
@@ -85,6 +90,11 @@
               <div class="password-dialog-top">
                 <p>비밀번호를 재설정합니다.</p>
               </div>
+              <button @click="findPasswordModal = false" style="position:absolute; top:0; right:0;">
+                <v-icon>
+                  mdi-close-box
+                </v-icon>
+              </button>
               <div class="password-dialog-info">
                 <a>가입하신 계정의 이메일을 입력해 주세요</a>
               </div>

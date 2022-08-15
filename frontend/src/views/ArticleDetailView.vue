@@ -75,6 +75,11 @@
               <div style="margin-bottom:20px; font-size: 22px;">
                 <p>신고하실 사유를 모두 선택해주세요.</p>
               </div>
+              <button @click="reportModal = false" style="position:absolute; top:0; right:0;">
+                <v-icon>
+                  mdi-close-box
+                </v-icon>
+              </button>
               <v-checkbox v-model="check1" label="음담패설" color="error" density="compact" hide-details></v-checkbox>
               <v-checkbox v-model="check2" label="혐오스러운 내용 혹은 혐오 발언" color="error" density="compact" hide-details></v-checkbox>
               <v-checkbox v-model="check3" label="악의적인 내용" color="error" density="compact" hide-details></v-checkbox>
