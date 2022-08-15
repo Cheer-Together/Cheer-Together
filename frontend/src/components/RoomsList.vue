@@ -29,6 +29,7 @@ const rooms = onairStore.currentRooms
   width: 1600px;
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 100px;
 }
 .rooms-list-items {
   width: 380px;

@@ -48,6 +48,7 @@ const scheduleStore = useScheduleStore();
 .schedule-page{
   margin-top: 130px;
   margin-left: 470px;
+  margin-bottom: 100px;
 }
 
 .schedule-page-leagues {
