@@ -148,7 +148,6 @@ function socialSignupBtn() {
       icon: 'success',
       title: '가입되었습니다!',
     })
-    router.push({name:'MainPage'})
   })
   .catch(err => {
     console.log(err)
@@ -173,7 +172,6 @@ axios({
           icon: 'success',
           title: '성공적으로 로그인 되었습니다.',
         })
-        router.push({name:'MainPage'})
       } else {
         socialSignupEmail.value = res.data.email
       }
