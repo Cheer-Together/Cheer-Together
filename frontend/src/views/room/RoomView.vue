@@ -228,6 +228,17 @@
             응원가 켜기
           </div>
         </div>
+        <!--응원가 플레이어-->
+        <div style="flex-grow:1" v-if="roomStore.roomInfo.managerId==accountStore.profileId">
+          <audio ref="audio" controls>
+            <source :src="roomStore.cheeringSong">
+          </audio>
+          <select v-model="onePick" @change="changeSong($event)">
+            <option v-for="song in roomStore.songList" :value="song.file" :key="song.id">
+              {{song.name}}
+            </option>
+          </select>
+        </div>
       </div>
     </div>
 
@@ -601,6 +612,7 @@ export default {
       isPredicted: false,
   
       bullhorn: false,
+      onePick: "0"
     };
   },
   mounted() {
@@ -745,6 +757,14 @@ export default {
           this.leaveSession();
         }
       });
+
+      this.session.on("signal:cheering-song", (event) => {
+        console.log(event.data);
+        this.roomStore.cheeringSong = event.data;
+        this.$refs.audio.pause();
+        this.$refs.audio.load();
+        this.$refs.audio.play();
+      })
 
       // --- Connect to the session with a valid user token ---
 
@@ -1058,6 +1078,26 @@ export default {
           console.log(err)
         }
       );
+    },
+    changeSong(event){
+      console.log(event.target.value);
+      this.roomStore.cheeringSong=event.target.value;
+      this.$refs.audio.pause();
+      this.$refs.audio.load();
+      this.$refs.audio.play();
+      this.session
+        .signal({
+          data: this.roomStore.cheeringSong,
+          to: [],
+          type: "cheering-song",
+        })
+        .then(() => {
+          console.log("응원가 공유 성공");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(this.roomStore.cheeringSong);
     }
   },
 };
