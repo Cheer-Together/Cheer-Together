@@ -16,7 +16,7 @@ public class GameSchedule {
 	private final GameService gameService;
 
 	@Scheduled(cron = "0 0/15 * * * *")
-	public void gameLiveUpdate(){
+	public void gameLiveUpdate() {
 		gameService.updateLiveGames(LocalDateTime.now());
 		System.out.println(LocalDateTime.now());
 	}

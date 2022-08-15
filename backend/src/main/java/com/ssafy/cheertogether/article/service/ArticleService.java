@@ -45,15 +45,15 @@ public class ArticleService {
 	private final ReplyRepository replyRepository;
 
 	public void regist(ArticleRegisterRequest articleRegisterRequest, String jwtToken) {
-		Article article = Article.from(articleRegisterRequest, findMemberByJwtToken(jwtToken), leagueRepository.findLeagueByApiId(articleRegisterRequest.getLeagueApiId()).get());
+		Article article = Article.from(articleRegisterRequest, findMemberByJwtToken(jwtToken),
+			leagueRepository.findLeagueByApiId(articleRegisterRequest.getLeagueApiId()).get());
 		article.setCreateDate();
 		articleRepository.save(article);
 	}
 
 	@Transactional(readOnly = true)
 	public List<ArticleResponse> findAll() {
-		return articleRepository
-			.findAll(Sort.by(Sort.Direction.DESC, "id"))
+		return articleRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
 			.stream()
 			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
@@ -61,8 +61,7 @@ public class ArticleService {
 
 	@Transactional(readOnly = true)
 	public List<ArticleResponse> findByHeader(Long leagueApiId) {
-		return articleRepository
-			.findArticlesByLeague_ApiId(leagueApiId, Sort.by(Sort.Direction.DESC, "id"))
+		return articleRepository.findArticlesByLeague_ApiId(leagueApiId, Sort.by(Sort.Direction.DESC, "id"))
 			.stream()
 			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
@@ -70,8 +69,8 @@ public class ArticleService {
 
 	@Transactional(readOnly = true)
 	public List<ArticleResponse> findAllSearchByTitleContent(String keyword) {
-		return articleRepository
-			.findArticlesByTitleContainingOrContentContaining(keyword, keyword, Sort.by(Sort.Direction.DESC, "id"))
+		return articleRepository.findArticlesByTitleContainingOrContentContaining(keyword, keyword,
+				Sort.by(Sort.Direction.DESC, "id"))
 			.stream()
 			.map(article -> new ArticleResponse(article))
 			.collect(Collectors.toList());
@@ -91,16 +90,14 @@ public class ArticleService {
 	}
 
 	public void delete(Long articleId) {
-		articleRepository
-			.delete(findArticleByArticleId(articleId));
+		articleRepository.delete(findArticleByArticleId(articleId));
 	}
 
 	public Long likes(Long articleId, String jwtToken) {
 		Long memberId = Long.parseLong(jwtTokenProvider.getMemberId(jwtToken));
-		likesRepository.findLikesByArticle_IdAndMember_Id(articleId, memberId)
-			.ifPresent(likes -> {
-				throw new AlreadyLikesUnlikeException();
-			});
+		likesRepository.findLikesByArticle_IdAndMember_Id(articleId, memberId).ifPresent(likes -> {
+			throw new AlreadyLikesUnlikeException();
+		});
 		Article article = findArticleByArticleId(articleId);
 		article.uplikes();
 		Likes likes = new Likes();
@@ -112,12 +109,10 @@ public class ArticleService {
 
 	public Long unLike(Long articleId, String jwtToken) {
 		Long memberId = Long.parseLong(jwtTokenProvider.getMemberId(jwtToken));
-		unLikeRepository.findUnLikeByArticle_IdAndMember_Id(articleId, memberId)
-			.ifPresent(unLike -> {
-				throw new AlreadyLikesUnlikeException();
-			});
-		Article article = articleRepository
-			.findById(articleId)
+		unLikeRepository.findUnLikeByArticle_IdAndMember_Id(articleId, memberId).ifPresent(unLike -> {
+			throw new AlreadyLikesUnlikeException();
+		});
+		Article article = articleRepository.findById(articleId)
 			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
 		article.unlike();
 		UnLike unLike = new UnLike();
@@ -151,14 +146,12 @@ public class ArticleService {
 	}
 
 	private Member findMemberByJwtToken(String jwtToken) {
-		return memberRepository
-			.findById(Long.parseLong(jwtTokenProvider.getMemberId(jwtToken)))
+		return memberRepository.findById(Long.parseLong(jwtTokenProvider.getMemberId(jwtToken)))
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_EMAIL_ERROR_MESSAGE));
 	}
 
 	private Article findArticleByArticleId(Long articleId) {
-		return articleRepository
-			.findById(articleId)
+		return articleRepository.findById(articleId)
 			.orElseThrow(() -> new IllegalArgumentException(MISSMATCH_ID_ERROR_MESSAGE));
 	}
 }
