@@ -20,9 +20,11 @@
             <input type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)">
             <button @click.prevent="onAirStore.searchRooms(searchData)"><v-icon>mdi-magnify</v-icon></button>
           </div>
-
-          <div>
-            <p>경기 목록</p>
+          <!-- 경기 목록 별로 정렬 -->
+          <div class="select-live-match">
+            <select name="liveMatch" @change="changeMatch()">
+              <option :value="match.id" v-for="match in items" :key="match.id">{{ match.title }}</option>
+            </select>
           </div>
 
           <button @click="onAirStore.makeRoomDialogToggle()" class="onair-header-make-room" v-if="accountStore.isLogin">방만들기</button>
@@ -44,17 +46,33 @@ import SideBar from "../components/SideBar.vue"
 import RoomsList from "../components/RoomsList.vue"
 import OnAirMakeModal from "../components/OnAirMakeModal.vue"
 import { useOnAirStore, useAccountStore } from "@/store"
+import { useGamesStore } from  '@/store/modules/game.js'
 
+ 
 const onAirStore = useOnAirStore()
 const accountStore = useAccountStore()
 const searchData = {
   text : '',
   category : 'name'
 }
-const changeCategory = () => {
-  const selectMenu = document.querySelector('select')
-  searchData.category = selectMenu.options[document.querySelector("select").selectedIndex].value
+const liveMatchData = {
+  id: ''
 }
+const changeCategory = () => {
+  const selectMenu = document.querySelector('.select-league select')
+  searchData.category = selectMenu.options[document.querySelector(".select-league select").selectedIndex].value
+}
+
+const changeMatch = () => {
+  const selectMenu = document.querySelector('.select-live-match select')
+  liveMatchData.id = selectMenu.options[document.querySelector(".select-live-match select").selectedIndex].value
+  onAirStore.selectMatch(liveMatchData.id)
+}
+
+let items = useGamesStore().liveGames
+
+
+
 
 </script>
 

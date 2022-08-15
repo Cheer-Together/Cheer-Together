@@ -41,6 +41,7 @@ export default {
     rooms: () => HOST + ROOMS, // 모든 응원방 검색
     roomsLeague: (leagueApiId) => HOST + ROOMS + 'league/' + `${leagueApiId}`,
     enterRoom: (roomId) => HOST + ROOMS + `${roomId}`,
-    search: () => HOST + ROOMS + 'search/'
+    search: () => HOST + ROOMS + 'search/',
+    searchGame: (gameId) => HOST + ROOMS + 'game/' + `${gameId}`
   }
 }

@@ -760,8 +760,18 @@ export const useOnAirStore = defineStore('onair', {
             this.currentRooms = trueRes
             router.go()
           })
-        }
-      
+        }  
+    },
+
+    selectMatch(gameId){
+      axios({
+        url: cheertogether.room.searchGame(gameId),
+        method: 'GET'
+      })
+      .then((res) => {
+        this.currentRooms = res.data
+        router.go()
+      })
     },
 
     makeRoomDialogToggle() {
