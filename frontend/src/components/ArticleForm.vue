@@ -81,7 +81,7 @@ function completeButton() {
   })
   .then(res => {
     console.log(res.data)
-    router.push({name:'Article'})
+    router.go()
   })
   .catch(err => {
     console.log(err)
