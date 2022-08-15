@@ -1,7 +1,8 @@
 <template>
   <div v-if="streamManager" class="cam-range">
-    <ov-video :stream-manager="streamManager" class="cam"/>
-    <div class="cam-user-name">
+    <ov-video :stream-manager="streamManager" class="cam" />
+    <div class="cam-user-name" @click="onEmit()">
+      <!-- 이름 클릭하면 방장일 경우 강퇴 조치 -->
       {{ clientData }}
     </div>
   </div>
@@ -33,13 +34,16 @@ export default {
       const { connection } = this.streamManager.stream;
       return JSON.parse(connection.data);
     },
+    onEmit() {
+      this.$emit("forceOut", this.clientData);
+    },
   },
 };
 </script>
 
 <style scoped>
 .cam-range {
-  position:relative
+  position: relative;
 }
 .cam {
   width: 240px;
@@ -52,7 +56,6 @@ export default {
 }
 
 .cam-user-name {
-
   font-size: 20px;
   font-family: var(--bold-font);
   /* position: absolute;
@@ -60,6 +63,5 @@ export default {
   right: 10px; */
   display: none;
   text-align: center;
-
 }
 </style>

@@ -2,8 +2,6 @@ package com.ssafy.cheertogether.member.dto;
 
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 import com.ssafy.cheertogether.member.domain.Role;
 
 import lombok.Getter;

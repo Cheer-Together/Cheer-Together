@@ -1,5 +1,6 @@
 package com.ssafy.cheertogether.member.domain;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -51,8 +52,10 @@ public class Member implements UserDetails {
 
 	private String myInfo;
 
-	@ColumnDefault("0")
+	@ColumnDefault("20")
 	private Integer point;
+
+	private LocalDateTime recentLogin;
 
 	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
 	@JsonManagedReference
@@ -79,7 +82,7 @@ public class Member implements UserDetails {
 			.password(memberJoinRequest.getPassword())
 			.role(memberJoinRequest.getRole())
 			.myInfo(memberJoinRequest.getMyInfo())
-			.point(0)
+			.point(20)
 			.build();
 	}
 
@@ -89,7 +92,7 @@ public class Member implements UserDetails {
 			.nickname(oauth2JoinRequest.getNickname())
 			.role(oauth2JoinRequest.getRole())
 			.myInfo(oauth2JoinRequest.getMyInfo())
-			.point(0)
+			.point(20)
 			.build();
 	}
 
@@ -167,6 +170,15 @@ public class Member implements UserDetails {
 		this.point -= point;
 		if (this.point < 0) {
 			this.point = 0;
+		}
+	}
+
+	public void checkAttendance() {
+		LocalDateTime now = LocalDateTime.now();
+		if (recentLogin == null || (now.getYear() != recentLogin.getYear() || now.getMonth() != recentLogin.getMonth()
+			|| now.getDayOfMonth() != recentLogin.getDayOfMonth())) {
+			this.point += 20;
+			this.recentLogin = now;
 		}
 	}
 }

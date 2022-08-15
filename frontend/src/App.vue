@@ -14,6 +14,7 @@ import {
 import { useGamesStore } from "@/store/modules/game";
 import jwt_decode from "jwt-decode";
 import { ref } from "vue";
+import router from "./router";
 
 const accountStore = useAccountStore();
 const leagueStore = useLeagueStore();
@@ -33,6 +34,10 @@ if (accountStore.isLogin) {
   console.log(decoded.value.sub);
   accountStore.profileId = decoded.value.sub;
   accountStore.userProfile(decoded.value.sub);
+}
+if (accountStore.socialLoginRefresh) {
+  accountStore.socialLoginRefreshComplete()
+  router.go()
 }
 
 // 리그데이터 불러오기
