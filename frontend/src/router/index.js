@@ -5,7 +5,6 @@ import ScheduleView from '../views/ScheduleView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
 import SignupView from '../views/SignupView.vue'
 import OnAirRoomView from '../views/OnAirRoomView.vue'
-import MatchScreenView from '../views/MatchScreenView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import MyPageEditView from '../views/MyPageEditView.vue'
 import SocialSignupView from '../views/SocialSignupView'
@@ -51,11 +50,6 @@ const routes = [
     path: '/onair/:leaguename',
     name: 'Onair',
     component: OnAirRoomView
-  },
-  {
-    path: '/matchscreen',
-    name: 'MatchScreen',
-    component: MatchScreenView
   },
   {
     path: '/mypage/:userid',
