@@ -1314,7 +1314,7 @@ export default {
 /* 하단 캠 */
 #video-container {
   margin-top: 10px;
-  background-color: #7F5283;
+  /* background-color: #7F5283; */
   height: 190px;
   margin-right: 60px;
   display: flex;
