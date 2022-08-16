@@ -82,6 +82,7 @@ router.beforeEach((to, from, next) => {
 
   const isAuthRequired = authPages.includes(to.name)
   if (isAuthRequired && !token) {
+    accountStore.loginDialogMsg = '로그인이 필요한 서비스입니다.'
     accountStore.loginDialogToggle()
   } else {
     next()

@@ -234,10 +234,9 @@ export const useAccountStore = defineStore("account", {
       })
         .then(() => {
           Swal.fire({
-            icon: "success",
-            title: "성공적으로 회원가입 되었습니다.",
+            icon: 'success',
+            title: '성공적으로 회원가입 되었습니다.'
           });
-          this.signupAlarm = true
           router.push({ name: "MainPage" });
         })
         .catch((err) => {
@@ -393,6 +392,7 @@ export const useAccountStore = defineStore("account", {
       if (!sessionStorage.getItem("token")) {
         if (this.loginDialog) {
           this.loginDialog = false;
+          this.loginDialogMsg = '같이 집관에 오신 것을 환영합니다.'
         } else {
           this.loginDialog = true;
         }
@@ -451,6 +451,7 @@ export const useAccountStore = defineStore("account", {
       } else {
         this.profile["profileImage"] = require("../assets/image/로고.png");
       }
+      router.push({ name: "MainPage" })
     },
     logoutAccount() {
       sessionStorage.removeItem("token");
@@ -460,18 +461,6 @@ export const useAccountStore = defineStore("account", {
         icon: "success",
         title: "성공적으로 로그아웃 되었습니다.",
       });
-    },
-    isNewMember() {
-      Swal.fire({
-        icon: "success",
-        title: "회원가입에 성공했습니다.",
-      })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     getPointRanking() {
       axios({
