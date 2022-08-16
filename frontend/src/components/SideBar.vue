@@ -62,10 +62,12 @@
     </div>
 
     <!-- 명예의 전당 -->
-    <div style="background-color:#ffebb0; padding:10px; font-size:11px">
-      <b style="font-size:15px">🏆 명예의 전당 🏆</b>
-      <div v-for="(m, index) in accountStore.pointRanking" :key="m.id" @click="router.push({name:'Mypage', params:{userid: m.id}})">
-        {{index + 1}}위 {{m.nickname}} ({{m.point}}개)
+    <div class="hall-of-fame">
+      <b style="font-size:16px; font-family: var(--bold-font);">🏆 명예의 전당 🏆</b>
+      <div v-for="(m, index) in accountStore.pointRanking" :key="m.id" @click="router.push({name:'Mypage', params:{userid: m.id}})" class="hall-of-fame-rank">
+        <span v-if="index === 0">👑</span>
+        <span v-else>{{index + 1}}위</span> 
+        {{m.nickname}} ({{m.point}}개)
       </div>
     </div>
   </div>
@@ -78,6 +80,7 @@ import router from '@/router/index.js'
 const onairStore = useOnAirStore()
 const scheduleStore = useScheduleStore()
 const accountStore = useAccountStore()
+
 
 </script>
 
@@ -147,7 +150,7 @@ const accountStore = useAccountStore()
 }
 .sideBar-item:hover {
   color: #ffffff;
-  cursor: default;
+  cursor: pointer;
 }
 .sideBar-item {
   overflow: hidden;
@@ -166,6 +169,27 @@ const accountStore = useAccountStore()
 .sideBar-item:hover:after {
   height: 100%;
   width: 135%;
+}
+/* 명예의 전당 */
+.hall-of-fame {
+  background-color:#ffebb0;
+  margin: 30px 0 0 0;
+  padding:10px;
+  font-size:11px;
+  text-align: center;
+  /* 아래로 내리는거 - 고정*/
+  /* min-width: 209px;
+  position: fixed;
+  bottom: 10px; */
+
+}
+.hall-of-fame-rank {
+  font-size: 12px;
+  margin: 3px 0 0 40px;
+  text-align: start;
+}
+.hall-of-fame-rank:hover {
+  cursor: pointer;
 }
 @media (max-width: 1580px) {
 .sideBar {
