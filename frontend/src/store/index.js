@@ -1302,11 +1302,28 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
                 });
               })
               .catch(e => console.log(e));
+              flag = true;
               break;
             }
           }
+
+          if(!flag) {
+            for (let member of this.team2_predict_list) {
+              if (member == useAccountStore().profileId) {
+                Swal.fire({
+                  icon: "success",
+                  title: "승부예측 실패 🥲 \n" + perPoint + "개 축구공을 잃었습니다!",
+                });
+                break;
+              }
+            }
+          }
         } else if(home < away) {
-          const perPoint = ((this.team1_point + this.team2_point) / this.team2_count) * this.predictedPoint;
+          let perPoint = ((this.team1_point + this.team2_point) / this.team2_point) * this.predictedPoint;
+          if (this.team2_point == 0) {
+            perPoint = this.predictedPoint;
+          }
+          let flag = false;
           for (let member of this.team2_predict_list) {
             if (member == useAccountStore().profileId) {
               axios({
@@ -1314,39 +1331,78 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
                 method: "PUT",
                 data: { point: perPoint },
               })
-                .then(() => {
-                  Swal.fire({
-                    icon: "success",
-                    title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
-                  });
-                })
-                .catch((e) => console.log(e));
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
+                });
+              })
+              .catch((e) => console.log(e));
+              flag = true;
               break;
             }
           }
+          if(!flag) { 
+            for (let member of this.team1_predict_list) {
+              if (member == useAccountStore().profileId) {
+                Swal.fire({
+                  icon: "success",
+                  title: "승부예측 실패 🥲 \n" + perPoint + "개 축구공을 잃었습니다!",
+                });
+                break;
+              }
+            }
+          }
         } else {
-          axios({
-            url: cheertogether.members.plusPoint(this.useAccountStore().profileId),
-            method: "PUT",
-            data: { point: this.predictedPoint },
-          })
-            .then(() => {
-              Swal.fire({
-                icon: "success",
-                title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
-              });
-            })
-            .catch((e) => console.log(e));
+          let flag = false;
+          for(let member of this.team1_predict_list) {
+            if(member == useAccountStore().profileId) {
+              axios({
+                url: cheertogether.members.plusPoint(useAccountStore().profileId),
+                method: "PUT",
+                data: { point: this.predictedPoint },
+              })
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
+                });
+              })
+              .catch((e) => console.log(e));
+              flag = true;
+              break;
+            }
+          }
+
+          if(!flag) {
+            for (let member of this.team2_predict_list) {
+              if (member == useAccountStore().profileId) {
+                axios({
+                  url: cheertogether.members.plusPoint(useAccountStore().profileId),
+                  method: "PUT",
+                  data: { point: this.predictedPoint },
+                })
+                  .then(() => {
+                    Swal.fire({
+                      icon: "success",
+                      title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
+                    });
+                  })
+                  .catch((e) => console.log(e));
+                break;
+              }
+            }
+          }
         }
       }
-      this.predictedPoint = 0;
-      this.team1_point = 0;
-      this.team1_count = 0;
-      this.team2_point = 0;
-      this.team2_count = 0;
-      this.team1_predict_list = [];
-      this.team2_predict_list = [];
-      this.isPredictedList = [];
+      //this.predictedPoint = 0;
+      // this.team1_point = 0;
+      // this.team1_count = 0;
+      // this.team2_point = 0;
+      // this.team2_count = 0;
+      // this.team1_predict_list = [];
+      // this.team2_predict_list = [];
+      // this.isPredictedList = [];
     }
   }
 });
