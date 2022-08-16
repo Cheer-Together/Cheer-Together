@@ -1149,8 +1149,14 @@ export const useRoomStore = defineStore("room", {
 
           this.playTeams = res.data;
           this.getGameInfo(res.data.apiId);
-          this.getCheeringSongList(getTeamId(res.data.home.apiId));
+          getTeamId(res.data.home.apiId).then((res) => {
+            this.getCheeringSongList(res);
+          });
+          getTeamId(res.data.away.apiId).then((res) => {
+            this.getCheeringSongList(res);
+          });
           this.getCheeringSongList(getTeamId(res.data.away.apiId));
+
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
 
