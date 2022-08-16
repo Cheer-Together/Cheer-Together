@@ -457,6 +457,7 @@ export const useAccountStore = defineStore("account", {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("isSocialLogin");
       this.isLogin = false;
+      router.go()
       Swal.fire({
         icon: "success",
         title: "성공적으로 로그아웃 되었습니다.",
@@ -706,12 +707,14 @@ export const useOnAirStore = defineStore("onair", {
       }).then((res) => {
         if (res.data.status === "PUBLIC") {
           if(!sessionStorage.getItem('token')){
+            this.loginDialogMsg = '로그인이 필요한 서비스입니다.'
             useAccountStore().loginDialogToggle()
           } else {
             router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
           }
         } else if (res.data.status === "PRIVATE") {
           if(!sessionStorage.getItem('token')){
+            this.loginDialogMsg = '로그인이 필요한 서비스입니다.'
             useAccountStore().loginDialogToggle()
           } else {
             Swal.fire({
@@ -1256,7 +1259,7 @@ export const useRoomStore = defineStore("room", {
             icon: "success",
             title: team + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
           });
-          this.useAccountStore().profile.point -= pointToSend;
+          useAccountStore().profile.point -= pointToSend;
         })
         .catch((e) => console.log(e));
     },
@@ -1306,7 +1309,7 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
     };
   },
   persist: {
-    storage: localStorage,
+    storage: sessionStorage,
   },
   actions: {
     distributePoints() {
@@ -1315,7 +1318,12 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
 
       if(this.predictedPoint >= 1) {
         if(home > away) {
-          const perPoint = ((this.team1_point + this.team2_point) / this.team1_count) * this.predictedPoint;
+          let perPoint = ((this.team1_point + this.team2_point) / this.team1_point) * this.predictedPoint;
+          if(this.team1_point == 0) {
+            perPoint = this.predictedPoint;
+          }
+          let flag = false;
+
           for(let member of this.team1_predict_list) {
             if(member == useAccountStore().profileId) {
               axios({
@@ -1330,11 +1338,28 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
                 });
               })
               .catch(e => console.log(e));
+              flag = true;
               break;
             }
           }
+
+          if(!flag) {
+            for (let member of this.team2_predict_list) {
+              if (member == useAccountStore().profileId) {
+                Swal.fire({
+                  icon: "success",
+                  title: "승부예측 실패 🥲 \n" + perPoint + "개 축구공을 잃었습니다!",
+                });
+                break;
+              }
+            }
+          }
         } else if(home < away) {
-          const perPoint = ((this.team1_point + this.team2_point) / this.team2_count) * this.predictedPoint;
+          let perPoint = ((this.team1_point + this.team2_point) / this.team2_point) * this.predictedPoint;
+          if (this.team2_point == 0) {
+            perPoint = this.predictedPoint;
+          }
+          let flag = false;
           for (let member of this.team2_predict_list) {
             if (member == useAccountStore().profileId) {
               axios({
@@ -1342,39 +1367,78 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
                 method: "PUT",
                 data: { point: perPoint },
               })
-                .then(() => {
-                  Swal.fire({
-                    icon: "success",
-                    title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
-                  });
-                })
-                .catch((e) => console.log(e));
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
+                });
+              })
+              .catch((e) => console.log(e));
+              flag = true;
               break;
             }
           }
+          if(!flag) { 
+            for (let member of this.team1_predict_list) {
+              if (member == useAccountStore().profileId) {
+                Swal.fire({
+                  icon: "success",
+                  title: "승부예측 실패 🥲 \n" + perPoint + "개 축구공을 잃었습니다!",
+                });
+                break;
+              }
+            }
+          }
         } else {
-          axios({
-            url: cheertogether.members.plusPoint(this.useAccountStore().profileId),
-            method: "PUT",
-            data: { point: this.predictedPoint },
-          })
-            .then(() => {
-              Swal.fire({
-                icon: "success",
-                title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
-              });
-            })
-            .catch((e) => console.log(e));
+          let flag = false;
+          for(let member of this.team1_predict_list) {
+            if(member == useAccountStore().profileId) {
+              axios({
+                url: cheertogether.members.plusPoint(useAccountStore().profileId),
+                method: "PUT",
+                data: { point: this.predictedPoint },
+              })
+              .then(() => {
+                Swal.fire({
+                  icon: "success",
+                  title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
+                });
+              })
+              .catch((e) => console.log(e));
+              flag = true;
+              break;
+            }
+          }
+
+          if(!flag) {
+            for (let member of this.team2_predict_list) {
+              if (member == useAccountStore().profileId) {
+                axios({
+                  url: cheertogether.members.plusPoint(useAccountStore().profileId),
+                  method: "PUT",
+                  data: { point: this.predictedPoint },
+                })
+                  .then(() => {
+                    Swal.fire({
+                      icon: "success",
+                      title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
+                    });
+                  })
+                  .catch((e) => console.log(e));
+                break;
+              }
+            }
+          }
         }
       }
-      this.predictedPoint = 0;
-      this.team1_point = 0;
-      this.team1_count = 0;
-      this.team2_point = 0;
-      this.team2_count = 0;
-      this.team1_predict_list = [];
-      this.team2_predict_list = [];
-      this.isPredictedList = [];
+      //this.predictedPoint = 0;
+      // this.team1_point = 0;
+      // this.team1_count = 0;
+      // this.team2_point = 0;
+      // this.team2_count = 0;
+      // this.team1_predict_list = [];
+      // this.team2_predict_list = [];
+      // this.isPredictedList = [];
     }
   }
 });

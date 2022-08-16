@@ -94,7 +94,7 @@ const myLogout = () => {
   border-radius: 50px;
 }
 .navBar-profile-nickname {
-  max-width: 120px;
+  max-width: 200px;
   text-align: start;
   margin-left: 7px;
   font-size: 20px;
@@ -122,7 +122,7 @@ const myLogout = () => {
 }
 .navBar-item-login {
   display: flex;
-  width: 190px;
+  width: 260px;
   height: 100px;
   align-items: center;
   font-size: 20px;
