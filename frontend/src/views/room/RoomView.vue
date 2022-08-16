@@ -229,7 +229,7 @@
           </div>
         </div>
         <!--응원가 플레이어-->
-        <div style="flex-grow:1" v-if="roomStore.roomInfo.managerId==accountStore.profileId">
+        <div style="flex-grow:1" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
           <audio ref="audio" controls>
             <source :src="roomStore.cheeringSong">
           </audio>
