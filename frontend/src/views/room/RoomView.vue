@@ -993,11 +993,11 @@ export default {
         if(team == 1) {
           this.gamePredictionStore.team1_point += pointToSend;
           this.gamePredictionStore.team1_count++;
-          this.gamePredictionStore.team1_predict_list.push(this.mySessionId);
+          this.gamePredictionStore.team1_predict_list.push(this.accountStore.profileId);
         } else if(team == 2) {
           this.gamePredictionStore.team2_point += pointToSend;
           this.gamePredictionStore.team2_count++;
-          this.gamePredictionStore.team2_predict_list.push(this.mySessionId);
+          this.gamePredictionStore.team2_predict_list.push(this.accountStore.profileId);
         }
 
         this.session
