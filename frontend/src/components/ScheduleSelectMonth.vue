@@ -5,34 +5,34 @@
     </h1>
     <div class="schedule-page-month-select">
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p class="item-active">22년 8월</p>
+        <p :class="{'item-active' : $route.params.month=== '8'}">22년 8월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>9월</p>
+        <p :class="{'item-active' : $route.params.month=== '9'}">9월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>10월</p>
+        <p :class="{'item-active' : $route.params.month=== '10'}">10월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>11월</p>
+        <p :class="{'item-active' : $route.params.month=== '11'}">11월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>12월</p>
+        <p :class="{'item-active' : $route.params.month=== '12'}">12월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>23년 1월</p>
+        <p :class="{'item-active' : $route.params.month=== '1'}">23년 1월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>2월</p>
+        <p :class="{'item-active' : $route.params.month=== '2'}">2월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>3월</p>
+        <p :class="{'item-active' : $route.params.month=== '3'}">3월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>4월</p>
+        <p :class="{'item-active' : $route.params.month=== '4'}">4월</p>
       </div>
       <div class="schedule-page-month-item" @click="scheduleStore.clickMonth(leagueParam, $event)">
-        <p>5월</p>
+        <p :class="{'item-active' : $route.params.month=== '5'}">5월</p>
       </div>
     </div>
   </div>

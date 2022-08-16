@@ -5,8 +5,12 @@
     <div class="onair-page">
       <!-- 헤더 -->
       <div class="onair-header">
-        <div>
-          <h1>실시간 응원방 - {{ $route.params.leaguename }}</h1>
+        <div class="onair-header-title-and-logo">
+          <div class="onair-header-title">실시간 집관 - {{ $route.params.leaguename }} </div>
+          <img :src="fetchLeagueLogo($route.params.leaguename)" class="onair-header-logo">
+        </div>
+        <div class="onair-after-search-text" v-if="onAirStore.isSearched === true">
+          '{{ onAirStore.searchWord }}' 에 대한 검색 결과입니다.
         </div>
         <div class="onair-header-boxes">
           <!-- 검색 도구 -->
@@ -23,6 +27,7 @@
           <!-- 경기 목록 별로 정렬 -->
           <div class="select-live-match">
             <select name="liveMatch" @change="changeMatch()">
+              <option value="none" class="select-none"> ======= 선택 =======</option>
               <option :value="match.id" v-for="match in items" :key="match.id">{{ match.title }}</option>
             </select>
           </div>
@@ -45,12 +50,14 @@ import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import RoomsList from "../components/RoomsList.vue"
 import OnAirMakeModal from "../components/OnAirMakeModal.vue"
-import { useOnAirStore, useAccountStore } from "@/store"
-import { useGamesStore } from  '@/store/modules/game.js'
+import { useOnAirStore, useAccountStore, useLeagueStore } from "@/store"
+import { watch } from 'vue'
+import { useRoute } from "vue-router"
 
  
 const onAirStore = useOnAirStore()
 const accountStore = useAccountStore()
+const leagueStore = useLeagueStore() // eslint-disable-line no-unused-vars
 const searchData = {
   text : '',
   category : 'name'
@@ -58,6 +65,7 @@ const searchData = {
 const liveMatchData = {
   id: ''
 }
+const items = JSON.parse(sessionStorage.getItem('AllLiveGames'))
 const changeCategory = () => {
   const selectMenu = document.querySelector('.select-league select')
   searchData.category = selectMenu.options[document.querySelector(".select-league select").selectedIndex].value
@@ -69,8 +77,25 @@ const changeMatch = () => {
   onAirStore.selectMatch(liveMatchData.id)
 }
 
-let items = useGamesStore().liveGames
+const fetchLeagueLogo = (leaguename) => {
+  for(let league of leagueStore.leagues){
+    if(league.hanName === leaguename){
+      return league.logo
+    } else if (league.hanName === '세리에' && leaguename === '세리에 A'){
+      return league.logo
+    } else if (league.hanName === '리그앙' && leaguename === '리그 1'){
+      return league.logo
+    } else if (league.hanName === 'K리그' && leaguename === 'K리그 1'){
+      return league.logo
+    }
+  }
+}
 
+const route = useRoute()
+
+watch(route, () => {
+  onAirStore.isSearched = false
+})
 
 
 
@@ -86,6 +111,21 @@ let items = useGamesStore().liveGames
   align-items: center;
   justify-content: space-between;
   width: 1600px;
+}
+
+.onair-header-title-and-logo{
+  display: flex;
+}
+.onair-header-title {
+  font-size: 32px;
+  font-weight: bold;
+  padding-top: 5px;
+  margin-right: 10px;
+}
+
+.onair-header-logo {
+  width: 60px;
+  height: 60px;
 }
 
 .onair-header-boxes {
@@ -113,6 +153,10 @@ let items = useGamesStore().liveGames
 
 .search-box select {
   margin : 3px;
+}
+
+.select-none {
+  text-align: center;
 }
 
 @media (max-width: 1580px) {

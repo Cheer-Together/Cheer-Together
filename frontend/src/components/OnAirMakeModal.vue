@@ -12,6 +12,11 @@
               <div class="makeroom-dialog-info">
                 <a>방 만들기</a>
               </div>
+              <button @click="onAirStore.makeRoomDialog = false" style="position:absolute; top:0; right:0;">
+                <v-icon>
+                  mdi-close-box
+                </v-icon>
+              </button>
               <div style="width: 340px; margin-top: 25px">
                 <v-select
                   v-model="game"
@@ -37,6 +42,7 @@
                   type="password"
                   placeholder="비밀번호"
                   class="makeroom-dialog-textinput"
+                  :disabled="roomStatus2"
                 />
                 <div
                   style="
@@ -70,23 +76,13 @@
                     roomStatus,
                     roomPassword,
                     managerId
-                  )
+                  ), onAirStore.makeRoomDialog = false
                 "
               >
                 같이 집관
               </v-btn>
             </div>
           </v-card-text>
-
-          <v-card-actions>
-            <v-btn
-              color="primary"
-              text
-              @click="onAirStore.makeRoomDialogToggle()"
-            >
-              Close
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
 
@@ -106,7 +102,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useOnAirStore, useAccountStore } from "@/store/index.js";
 import { useGamesStore } from "@/store/modules/game.js";
 const onAirStore = useOnAirStore();
@@ -116,7 +112,14 @@ const game = ref("");
 const managerId = useAccountStore().profileId;
 const roomTitle = ref("");
 const roomPassword = ref("");
-const roomStatus = ref("");
+const roomStatus = ref(false);
+const roomStatus2 = ref(true);
+watch(roomStatus, () => {
+  roomStatus2.value = !roomStatus.value
+  if (!roomStatus.value) {
+    roomPassword.value = ""
+  }
+})
 const items = useGamesStore().liveGames;
 </script>
 

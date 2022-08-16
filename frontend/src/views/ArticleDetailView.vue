@@ -24,7 +24,8 @@
             <div style="height:36px; width:36px; margin:0 10px 0 10px;">
               <img :src="writerLogo" style="height:36px; width:36px;">
             </div>
-            <a style="font-size:14px">{{maincontent.memberResponse.nickname}} | {{createdDate}}</a>
+            <a @click="toUserDetail(maincontent.memberResponse.id)" class="word-link" style="font-size:14px; margin-right:5px;">{{maincontent.memberResponse.nickname}}</a>
+            <a> | {{createdDate}}</a>
           </div>
           <div v-if="userEmail==maincontent.memberResponse.email||userRole=='ADMIN'" class="community-detail-btns">
             <div @click="modifyArticle()" class="word-link">
@@ -310,7 +311,10 @@ function writeReply() {
       title: '댓글 다는 중 에러 발생'
     })
   })
-} 
+}
+function toUserDetail(id) {
+  router.push({name: 'Mypage', params: { userid: id }})
+}
 </script>
 
 <style>

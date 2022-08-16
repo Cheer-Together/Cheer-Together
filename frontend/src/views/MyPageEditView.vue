@@ -30,9 +30,9 @@
           v-model="accountStore.isChangePasswordModal"
         >
           <template v-slot:activator="{ props }" >
-            <div v-bind="props" class="change-password-button">
+            <v-btn style="font-family: var(--bold-font);" v-bind="props" class="change-password-button">
               비밀번호 변경
-            </div>
+            </v-btn>
           </template>
           <!-- 모달 창 -->
           <ChangePasswordModal/>
@@ -50,7 +50,7 @@
         </div>
       </div>
       <!-- 좋아하는 리그 -->
-      <div class="mypagedeit-range" style="height:182px;">
+      <div class="mypagedeit-range" style="height:230px;">
         <div class="mypagedeit-range-title">
           좋아하는 리그
           <v-dialog
@@ -65,23 +65,23 @@
             <FavoriteLeagueModal/>
           </v-dialog>
           <div v-if="accountStore.profile.favoriteLeagueList.length !== 0" class="mypagedeit-favorite-league">
-            <div class="mypagedeit-favorite-league-item">
-              <img :src="accountStore.profile.favoriteLeagueList[0].logo" class="mypagedeit-favorite-league-image">
-              <div class="mypagedeit-favorite-league-item-title">
+            <div class="mypagedeit-favorite-league-item" style="margin-left:0px;">
+              <img :src="accountStore.profile.favoriteLeagueList[0].logo" class="mypagedeit-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteLeagueList[0].hanName }}
               </div>
             </div>
 
             <div class="mypagedeit-favorite-league-item" v-if="accountStore.profile.favoriteLeagueList.length >= 2" >
-              <img :src="accountStore.profile.favoriteLeagueList[1].logo" class="mypagedeit-favorite-league-image">
-              <div class="mypagedeit-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteLeagueList[1].logo" class="mypagedeit-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteLeagueList[1].hanName }}
               </div>
             </div>
 
             <div class="mypagedeit-favorite-league-item" v-if="accountStore.profile.favoriteLeagueList.length == 3" >
-              <img :src="accountStore.profile.favoriteLeagueList[2].logo" class="mypagedeit-favorite-league-image">
-              <div class="mypagedeit-favorite-league-item-title">
+              <img :src="accountStore.profile.favoriteLeagueList[2].logo" class="mypagedeit-favorite-league-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-league-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteLeagueList[2].hanName }}
               </div>
             </div>
@@ -90,7 +90,7 @@
       </div>
 
       <!-- 좋아하는 팀 -->
-      <div class="mypagedeit-range" style="height:182px;">
+      <div class="mypagedeit-range" style="height:230px;">
         <div class="mypagedeit-range-title">
           좋아하는 팀    
           <v-dialog
@@ -105,37 +105,37 @@
             <FavoriteTeamModal/>
           </v-dialog>
           <div v-if="accountStore.profile.favoriteTeamList.length !== 0" class="mypagedeit-favorite-team">
-            <div class="mypagedeit-favorite-team-item">
-              <img :src="accountStore.profile.favoriteTeamList[0].logo" class="mypagedeit-favorite-team-image">
-              <div class="mypagedeit-favorite-team-item-title">
+            <div class="mypagedeit-favorite-team-item" style="margin-left:0px;">
+              <img :src="accountStore.profile.favoriteTeamList[0].logo" class="mypagedeit-favorite-team-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-team-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[0].hanName }}
               </div>
             </div>
 
             <div class="mypagedeit-favorite-team-item" v-if="accountStore.profile.favoriteTeamList.length >= 2" >
-              <img :src="accountStore.profile.favoriteTeamList[1].logo" class="mypagedeit-favorite-team-image">
-              <div class="mypagedeit-favorite-team-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[1].logo" class="mypagedeit-favorite-team-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-team-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[1].hanName }}
               </div>
             </div>
 
             <div class="mypagedeit-favorite-team-item" v-if="accountStore.profile.favoriteTeamList.length >= 3" >
-              <img :src="accountStore.profile.favoriteTeamList[2].logo" class="mypagedeit-favorite-team-image">
-              <div class="mypagedeit-favorite-team-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[2].logo" class="mypagedeit-favorite-team-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-team-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[2].hanName }}
               </div>
             </div>
 
             <div class="mypagedeit-favorite-team-item" v-if="accountStore.profile.favoriteTeamList.length >= 4" >
-              <img :src="accountStore.profile.favoriteTeamList[3].logo" class="mypagedeit-favorite-team-image">
-              <div class="mypagedeit-favorite-team-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[3].logo" class="mypagedeit-favorite-team-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-team-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[3].hanName }}
               </div>
             </div>
 
             <div class="mypagedeit-favorite-team-item" v-if="accountStore.profile.favoriteTeamList.length == 5" >
-              <img :src="accountStore.profile.favoriteTeamList[4].logo" class="mypagedeit-favorite-team-image">
-              <div class="mypagedeit-favorite-team-item-title">
+              <img :src="accountStore.profile.favoriteTeamList[4].logo" class="mypagedeit-favorite-team-image" style="width:100px; height:100px; object-fit: contain;">
+              <div class="mypagedeit-favorite-team-item-title" style="font-size:16px; width:100px;">
                 {{ accountStore.profile.favoriteTeamList[4].hanName }}
               </div>
             </div>
@@ -145,12 +145,12 @@
 
       <!-- 회원 수정 -->
       <div class="mypagedeit-range-bottom">
-        <button class="mypagedeit-submit-button"  @click="router.push({name:'MainPage'})">
+        <v-btn class="mypagedeit-submit-button"  @click="router.push({name:'MainPage'})" style="height:50px; font-size:21px;">
           이전
-        </button>
-        <button class="mypagedeit-submit-button next" @click="changeUserInfo(myNickname)">
+        </v-btn>
+        <v-btn class="mypagedeit-submit-button next" @click="changeUserInfo(myNickname)" style="height:50px; font-size:21px; color:white;">
           저장
-        </button>
+        </v-btn>
       </div>
     </div>
   </div>
@@ -279,7 +279,7 @@ const changeUserInfo = (myNickname) => {
   border: 1px solid #D9D9D9;
   white-space: pre-wrap;
   padding: 0 10px;
-
+  resize: none;
 }
 .mypagedeit-range-introduce{
   height: 233px; 
@@ -300,7 +300,8 @@ const changeUserInfo = (myNickname) => {
   width: 70px;
   height: 12px;
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
+  font-family: var(--bold-font);
 }
 .mypagedeit-favorite-team {
   width: 420px;
@@ -316,9 +317,10 @@ const changeUserInfo = (myNickname) => {
 }
 .mypagedeit-favorite-team-item-title {
   width: 70px;
-  height: 12px;
+  height: 16px;
   text-align: center;
-  font-size: 12px;
+  font-size: 16px;
+  font-family: var(--bold-font);
 }
 .mypagedeit-range-bottom {
   width: 420px;

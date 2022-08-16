@@ -13,24 +13,24 @@
     </div>
     <!-- 리그 선택 영역 -->
     <div class="favorite-team-modal-select-buttons">
-      <div v-for="bigleague in leagueStore.leagues" :key="bigleague.apiId" class="favorite-team-modal-select-button" @click="changeLeague(bigleague.hanName)">
+      <v-btn v-for="bigleague in leagueStore.leagues" :key="bigleague.apiId" class="favorite-team-modal-select-button" @click="changeLeague(bigleague.hanName)">
         <p v-if="leagueStore.selectFavoriteTeam == bigleague.hanName" class="active-button"> {{ bigleague.hanName }} </p >
         <p v-else class="passive-button"> {{ bigleague.hanName }} </p >
         
        
-      </div>
+      </v-btn>
     </div>
     <!-- 리그 영역 -->
     <div v-for="leagueSelected in leagueStore.leagues" :key="leagueSelected.apiId">
       <div class="favorite-team-modal-teams-section-area" v-if="leagueSelected.hanName == leagueStore.selectFavoriteTeam">
         <div class="favorite-team-modal-teams-section">
           <div v-for="LeagueSelectedTeam in leagueSelected.teamList" :key="LeagueSelectedTeam.id" class="favorite-team-modal-team" @click="addSelectTeam(LeagueSelectedTeam)">
-            <img :src="LeagueSelectedTeam.logo" width="80" height="80">
-            <div>{{ LeagueSelectedTeam.hanName }}</div>
+            <img :src="LeagueSelectedTeam.logo" width="80" >
+            <div style="font-family: var(--bold-font);">{{ LeagueSelectedTeam.hanName }}</div>
           </div>
 
         </div>
-        <div v-if="accountStore.profile.favoriteTeamList.length !== 0" style="height: 200px;">
+        <div v-if="accountStore.profile.favoriteTeamList.length !== 0" style="height: 130px;">
 
         </div>
       </div>
@@ -73,7 +73,7 @@
         </div>
       </div>
 
-      <button class="save-button" @click="leagueStore.favoriteTeam = false">저장</button>
+      <v-btn style="color:white;" class="save-button" @click="leagueStore.favoriteTeam = false">저장</v-btn>
     </div>
   </v-card>
 </template>
@@ -133,7 +133,7 @@ const changeLeague = (name) => {
     display: none; 
 }
 .favorite-team-modal-header {
-  width: 600px;
+  width: 700px;
   height: 150px;
   border-bottom: 1px solid black;
   z-index: 2;
@@ -155,8 +155,8 @@ const changeLeague = (name) => {
   
 }
 .favorite-team-modal-select-buttons {
-  width: 600px;
-  height: 100px;
+  width: 700px;
+  height: 120px;
   display: flex;
   padding: 0px 75px;
   flex-wrap: wrap;
@@ -167,7 +167,7 @@ const changeLeague = (name) => {
   z-index: 2;
 }
 .favorite-team-modal-select-button {
-  width: 100px;
+  width: 133px;
   height: 30px;
   font-size: 18px;
   margin: 10px 25px;
@@ -176,13 +176,14 @@ const changeLeague = (name) => {
 
 }
 .favorite-team-modal-teams-section {
-  width: 600px;
+  width: 700px;
   min-height: 600px;
+  max-height: 600px;
   display: flex;
   flex-wrap: wrap;
-  padding: 0px 50px;
+  padding: 0px 30px;
   font-size: 14px;
-  margin-top: 250px;
+  margin-top: 290px;
 }
 .favorite-team-modal-teams-section-area {
   overflow-y: scroll;
@@ -194,31 +195,37 @@ const changeLeague = (name) => {
     display: none; 
 }
 .favorite-team-modal-team {
-  width: 80px;
-  height: 100px;
-  margin: 10px;
+  width: 100px;
+  margin: 14px;
   text-align: center;
+}
+.favorite-team-modal-team:hover {
+  transform: scale(1.1);
+  cursor: pointer;
 }
 .favorite-team-modal-footer {
   border-top: 1px solid black;
   position: fixed;
   display: flex;
-  width: 600px;
-  bottom: 0;
+  width: 700px;
+  bottom: 0px;
   background-color: white;
+  height: 130px;
 }
 .favorite-team-modal-footer-item {
-  margin: 10px 10px 30px 10px;
+  margin: 17px 10px 30px 10px;
 }
 .favorite-team-modal-footer-image {
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  margin-left: 15px;
+
 }
 .favorite-team-modal-footer-item-title {
-  width: 70px;
+  width: 90px;
   height: 12px;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
+  font-family: var(--bold-font);
 }
 .save-button {
   position: absolute;
@@ -234,12 +241,16 @@ const changeLeague = (name) => {
   background-color: var(--main-color);
   color: white;
   border-radius: 5px;
+  width: 133px;
+  height: 35px;
+  padding-top: 4px;
 }
 .passive-button {
   background-color: var(--sub-color);
-  border: 1px solid var(--main-color);
   color: var(--main-color);
   border-radius: 5px;
-
+  width: 133px;
+  height: 35px;
+  padding-top: 4px;
 }
 </style>
