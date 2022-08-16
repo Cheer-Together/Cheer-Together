@@ -230,7 +230,7 @@
         </v-btn>
 
         <!--응원가 플레이어-->
-        <div style="height:54px; display:flex;" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
+        <div style="height:54px; display:flex;" v-show="roomStore.roomInfo?.managerId==accountStore.profileId">
           <audio ref="audio" controls>
             <source :src="roomStore.cheeringSong">
           </audio>
