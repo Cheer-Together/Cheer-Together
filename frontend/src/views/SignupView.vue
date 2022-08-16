@@ -100,7 +100,7 @@
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="signup-range-input" maxlength="40" v-model="credentialsSignup.nickname">
+          <input type="text" class="signup-range-input" maxlength="10" v-model="credentialsSignup.nickname">
         </div>
       </div>
 
@@ -141,7 +141,7 @@
           본인 소개
         </div>
         <div style="position: relative;">
-          <textarea cols="21" rows="5" class="signup-range-input-introduce" v-model="credentialsSignup.myInfo"></textarea>
+          <textarea cols="21" rows="5" maxlength="180" class="signup-range-input-introduce" v-model="credentialsSignup.myInfo"></textarea>
         </div>
       </div>
       <!-- 좋아하는 리그 -->
