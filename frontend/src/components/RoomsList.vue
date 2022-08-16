@@ -1,6 +1,12 @@
 <template>
   <div class="rooms-list-page">
     <div class="rooms-list-section">
+      <div v-if="isNoRoom" class="room-list-nothing">
+        <div class="room-list-nothing-content">
+          <p style="margin-top:40px">검색 조건에 해당하는 방이 없습니다</p>
+          <p style="margin-top:30px">방을 개설하시면 같이 집관 하실 수 있습니다</p>
+        </div>
+      </div>
       <div class="rooms-list-items" v-for="room in rooms" :key="room.id" @click="onairStore.enterRoom(room.roomId)">
         <div class="room-item-title">{{ room.name }}</div>
         <!-- <div>
@@ -14,10 +20,15 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useOnAirStore } from '../store/index.js'
 
 const onairStore = useOnAirStore();
 const rooms = onairStore.currentRooms
+const isNoRoom = ref(false)
+if (rooms.length==0) {
+  isNoRoom.value = true
+}
 
 </script>
 
@@ -41,6 +52,18 @@ const rooms = onairStore.currentRooms
   cursor: pointer;
   border-radius: 5px;
 }
+.room-list-nothing {
+  width: 100%;
+  height: 200px;
+  background-color: var(--sub-color);
+}
+.room-list-nothing-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 24px;
+}
 .room-item-title {
   position: relative;
   top: 195px;
@@ -59,6 +82,9 @@ const rooms = onairStore.currentRooms
   }
   .rooms-list-section {
     width: 1300px;
+  }
+  .room-list-nothing-content{
+    font-size: 20px;
   }
   .rooms-list-items {
     width: 300px;
