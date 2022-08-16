@@ -67,6 +67,9 @@ const route = useRoute()
   text-align: center;
   cursor: pointer;
 }
+.schedule-page-league-items:hover {
+  opacity: 0.5;
+}
 
 .league-active {
   color: var(--main-color)

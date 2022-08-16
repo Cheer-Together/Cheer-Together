@@ -136,6 +136,7 @@ else {
   text-align: center;
 }
 .rooms-list-section-item:hover {
+  opacity: 0.5;
   cursor: pointer;
 }
 .rooms-list-section-thumbnail {
@@ -183,6 +184,7 @@ else {
 }
 .rooms-list-section-item-title {
   font-size: 16px;
+  font-weight: bold;
   width: 375px;
   height: 24px;
   padding: 2px 0 0 10px;

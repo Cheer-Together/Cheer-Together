@@ -63,7 +63,7 @@
 
     <!-- 명예의 전당 -->
     <div class="hall-of-fame">
-      <b style="font-size:16px; font-family: var(--bold-font);">🏆 명예의 전당 🏆</b>
+      <b style="font-size:17px; font-family: var(--bold-font);">🏆 명예의 전당 🏆</b>
       <div v-for="(m, index) in accountStore.pointRanking" :key="m.id" @click="router.push({name:'Mypage', params:{userid: m.id}})" class="hall-of-fame-rank">
         <span v-if="index === 0">👑</span>
         <span v-else>{{index + 1}}위</span> 
@@ -177,7 +177,7 @@ const route = useRoute()
   background-color:#ffebb0;
   margin: 30px 0 0 0;
   padding:10px;
-  font-size:11px;
+  font-size:14px;
   text-align: center;
   /* 아래로 내리는거 - 고정*/
   /* min-width: 209px;
@@ -186,12 +186,13 @@ const route = useRoute()
 
 }
 .hall-of-fame-rank {
-  font-size: 12px;
+  font-size: 13px;
   margin: 3px 0 0 40px;
   text-align: start;
 }
 .hall-of-fame-rank:hover {
   cursor: pointer;
+  font-weight: bold;
 }
 @media (max-width: 1580px) {
 .sideBar {

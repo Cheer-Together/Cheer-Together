@@ -9,7 +9,7 @@
       <div v-if="accountStore.isLogin" class="navBar-item-login">
         <img :src="accountStore.profile.profileImage" class="navBar-profile-image">
         <div class="navBar-profile-nickname">
-          {{ accountStore.profile.nickname}}
+          {{ accountStore.profile.nickname }}
         </div>
           <v-icon class="navBar-profile-icon" @click="navbarStore.isClickProfile = !navbarStore.isClickProfile">
             mdi-chevron-down
@@ -18,13 +18,13 @@
 
       <!-- 로그인 드롭다운 -->
       <div v-if="navbarStore.isClickProfile" class="navBar-profile-dropdown">
-        <div @click="router.push({ name:'Mypage', params: { userid: accountStore.profileId } })">
+        <div @click="router.push({ name:'Mypage', params: { userid: accountStore.profileId } })" class="navbar-profile-dropdown-btn">
           <v-icon>
             mdi-account-circle
           </v-icon>
           내정보
         </div>
-        <div @click="myLogout">
+        <div @click="myLogout" class="navbar-profile-dropdown-btn">
           <v-icon>
             mdi-logout
           </v-icon>
@@ -60,7 +60,7 @@ navbarStore.isClickProfile = false
 
 const myLogout = () => {
   navbarStore.isClickProfile = false
-  accountStore.logoutAccount()
+  accountStore.logoutAccount();
 }
 </script>
 
@@ -85,6 +85,9 @@ const myLogout = () => {
 
 }
 .navBar-logo:hover {
+  cursor: pointer;
+}
+.navBar-namelogo:hover {
   cursor: pointer;
 }
 .navBar-profile-image {
@@ -143,7 +146,7 @@ const myLogout = () => {
   right: 30px;
   top: 80px;
   border: 1px solid #ecf0f5;
-  color: #5f60639b;
+  color: #4747489b;
   background-color: #ffffff;
   border-radius: 10px;
   z-index: 2;
@@ -161,6 +164,7 @@ const myLogout = () => {
 }
 .navBar-profile-dropdown div:hover {
   cursor: pointer;
+  font-weight: bold;
 }
 
 @media (max-width: 1580px) {

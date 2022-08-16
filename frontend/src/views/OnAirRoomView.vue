@@ -27,7 +27,7 @@
           <!-- 경기 목록 별로 정렬 -->
           <div class="select-live-match">
             <select name="liveMatch" @change="changeMatch()">
-              <option value="none" class="select-none"> ======= 선택 =======</option>
+              <option value="none" class="select-none"> ===== 경기 선택 =====</option>
               <option :value="match.id" v-for="match in items" :key="match.id">{{ match.title }}</option>
             </select>
           </div>
@@ -156,12 +156,16 @@ watch(route, () => {
 }
 
 .onair-header-make-room{
+  font-size: 17px;
   width: 100px;
   height: 60px;
   border-radius: 10px;
   margin: 0 20px;
   text-align: center;
   background-color: #BDF9CD;
+}
+.onair-header-make-room:hover {
+  opacity: 0.5;
 }
 
 .search-box{
@@ -172,6 +176,9 @@ watch(route, () => {
 
 .search-box select {
   margin : 3px;
+}
+.select-live-match {
+  padding: 20px;
 }
 
 .select-none {
