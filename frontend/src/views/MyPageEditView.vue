@@ -19,7 +19,7 @@
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="mypagedeit-range-input" v-model="myNickname" :placeholder="myNickname" maxlength="40">
+          <input type="text" class="mypagedeit-range-input" v-model="myNickname" :placeholder="myNickname" maxlength="10">
         </div>
       </div>
 
@@ -46,7 +46,7 @@
           본인 소개
         </div>
         <div style="position: relative;">
-          <textarea cols="21" rows="5" class="mypagedeit-range-input-introduce" v-model="accountStore.profile.myInfo"></textarea>
+          <textarea cols="21" rows="5" maxlength="180" class="mypagedeit-range-input-introduce" v-model="accountStore.profile.myInfo"></textarea>
         </div>
       </div>
       <!-- 좋아하는 리그 -->
