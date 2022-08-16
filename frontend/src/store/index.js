@@ -73,7 +73,7 @@ export const useAccountStore = defineStore("account", {
       role: "",
       point: "",
     },
-    profileId: false,
+    profileId: "",
     isChangePasswordModal: false,
 
     pointRanking: []
@@ -1249,6 +1249,13 @@ export const useRoomStore = defineStore("room", {
         });
     },
     subtractPoint(memberId, team, pointToSend) {
+      let teamName;
+      if(team == 1) {
+        teamName = useRoomStore().playTeams.home.hanName;
+      } else if(team == 2) {
+        teamName = useRoomStore().playTeams.away.hanName;
+      }
+      
       axios({
         url: cheertogether.members.subtractPoint(memberId),
         method: "PUT",
@@ -1257,7 +1264,7 @@ export const useRoomStore = defineStore("room", {
         .then(() => {
           Swal.fire({
             icon: "success",
-            title: team + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
+            title: teamName + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
           });
           useAccountStore().profile.point -= pointToSend;
         })
@@ -1315,16 +1322,22 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
     distributePoints() {
       const home = useRoomStore().playTeams.homeScore;
       const away = useRoomStore().playTeams.awayScore;
+      let plusPoint = 0;
 
       if(this.predictedPoint >= 1) {
+        let list1 = this.team1_predict_list[0].split(",");
+        console.log("list1 : " + list1);
+        let list2 = this.team2_predict_list[0].split(",");
+        console.log("list2 : " + list2);
+
         if(home > away) {
-          let perPoint = ((this.team1_point + this.team2_point) / this.team1_point) * this.predictedPoint;
+          let perPoint = parseInt(((this.team1_point + this.team2_point) / this.team1_point) * this.predictedPoint);
           if(this.team1_point == 0) {
             perPoint = this.predictedPoint;
           }
           let flag = false;
 
-          for(let member of this.team1_predict_list) {
+          for(let member of list1) {
             if(member == useAccountStore().profileId) {
               axios({
                 url: cheertogether.members.plusPoint(member),
@@ -1339,28 +1352,29 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
               })
               .catch(e => console.log(e));
               flag = true;
+              plusPoint = perPoint;
               break;
             }
           }
 
           if(!flag) {
-            for (let member of this.team2_predict_list) {
+            for (let member of list2) {
               if (member == useAccountStore().profileId) {
                 Swal.fire({
                   icon: "success",
-                  title: "승부예측 실패 🥲 \n" + perPoint + "개 축구공을 잃었습니다!",
+                  title: "승부예측 실패 🥲 \n" + this.predictedPoint + "개 축구공을 잃었습니다!",
                 });
                 break;
               }
             }
           }
         } else if(home < away) {
-          let perPoint = ((this.team1_point + this.team2_point) / this.team2_point) * this.predictedPoint;
+          let perPoint = parseInt(((this.team1_point + this.team2_point) / this.team2_point) * this.predictedPoint);
           if (this.team2_point == 0) {
             perPoint = this.predictedPoint;
           }
           let flag = false;
-          for (let member of this.team2_predict_list) {
+          for (let member of list2) {
             if (member == useAccountStore().profileId) {
               axios({
                 url: cheertogether.members.plusPoint(member),
@@ -1375,15 +1389,16 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
               })
               .catch((e) => console.log(e));
               flag = true;
+              plusPoint = perPoint;
               break;
             }
           }
           if(!flag) { 
-            for (let member of this.team1_predict_list) {
+            for (let member of list1) {
               if (member == useAccountStore().profileId) {
                 Swal.fire({
                   icon: "success",
-                  title: "승부예측 실패 🥲 \n" + perPoint + "개 축구공을 잃었습니다!",
+                  title: "승부예측 실패 🥲 \n" + this.predictedPoint + "개 축구공을 잃었습니다!",
                 });
                 break;
               }
@@ -1391,7 +1406,7 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
           }
         } else {
           let flag = false;
-          for(let member of this.team1_predict_list) {
+          for(let member of list1) {
             if(member == useAccountStore().profileId) {
               axios({
                 url: cheertogether.members.plusPoint(useAccountStore().profileId),
@@ -1406,12 +1421,13 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
               })
               .catch((e) => console.log(e));
               flag = true;
+              plusPoint = this.predictedPoint;
               break;
             }
           }
 
           if(!flag) {
-            for (let member of this.team2_predict_list) {
+            for (let member of list2) {
               if (member == useAccountStore().profileId) {
                 axios({
                   url: cheertogether.members.plusPoint(useAccountStore().profileId),
@@ -1425,6 +1441,7 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
                     });
                   })
                   .catch((e) => console.log(e));
+                plusPoint = this.predictedPoint;
                 break;
               }
             }
@@ -1439,6 +1456,7 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
       // this.team1_predict_list = [];
       // this.team2_predict_list = [];
       // this.isPredictedList = [];
+      return plusPoint;
     }
   }
 });
