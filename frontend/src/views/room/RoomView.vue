@@ -398,7 +398,9 @@
       <div id="video-container" v-if="roomStore.isClickLayout">
           <user-video
             :stream-manager="publisher"
+             v-bind:isSessionManager="isSessionManager"
             @click="updateMainVideoStreamManager(publisher)"
+            
           />
           <user-video
             v-for="sub in subscribers"
@@ -560,7 +562,6 @@
     </div>
     <!-- 얘는 그냥 사라질 때 자연스러운 효과를 위한 영역 신경 안써도 됩니다. -->
     <div v-if="roomStore.isClickChatting == 'b'" class="match-screen-chatting-area2" >
-
     </div>
 
 
