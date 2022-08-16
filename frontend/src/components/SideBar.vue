@@ -20,27 +20,27 @@
     </div>
     <!-- 프리미어리그 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '프리미어리그'}">프리미어리그</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '프리미어리그' && route.matched[0].name === 'Onair'}">프리미어리그</p>
     </div>
     <!-- 라리가 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '라리가'}">라리가</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '라리가' && route.matched[0].name === 'Onair'}">라리가</p>
     </div>
     <!-- 세리에 A -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '세리에 A'}">세리에 A</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '세리에 A' && route.matched[0].name === 'Onair'}">세리에 A</p>
     </div>
     <!-- 분데스리가 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '분데스리가'}">분데스리가</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '분데스리가' && route.matched[0].name === 'Onair'}">분데스리가</p>
     </div>
     <!-- 리그 1 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '리그 1'}">리그 1</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '리그 1' && route.matched[0].name === 'Onair'}">리그 1</p>
     </div>
     <!-- K리그 1 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === 'K리그 1'}">K리그 1</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === 'K리그 1' && route.matched[0].name === 'Onair'}">K리그 1</p>
     </div>
     <!-- 경기 일정 -->
     <div class="sideBar-item" @click="scheduleStore.moveSchedulePage('2022-08')">
@@ -77,10 +77,12 @@
 import { useAccountStore, useOnAirStore } from '../store/index.js'
 import { useScheduleStore } from '../store/index.js'
 import router from '@/router/index.js'
+import { useRoute } from 'vue-router'
 const onairStore = useOnAirStore()
 const scheduleStore = useScheduleStore()
 const accountStore = useAccountStore()
 
+const route = useRoute()
 
 </script>
 
