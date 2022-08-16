@@ -167,8 +167,6 @@ import { useLeagueStore } from "@/store"
 import router from '@/router'
 import { ref } from "vue";
 
-// import Swal from 'sweetalert2'
-
 const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()
 
