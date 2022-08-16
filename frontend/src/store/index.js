@@ -1230,7 +1230,7 @@ export const useRoomStore = defineStore("room", {
             icon: "success",
             title: team + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
           });
-          this.useAccountStore().profile.point -= pointToSend;
+          useAccountStore().profile.point -= pointToSend;
         })
         .catch((e) => console.log(e));
     },
@@ -1273,7 +1273,7 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
     };
   },
   persist: {
-    storage: localStorage,
+    storage: sessionStorage,
   },
   actions: {
     distributePoints() {
@@ -1282,7 +1282,12 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
 
       if(this.predictedPoint >= 1) {
         if(home > away) {
-          const perPoint = ((this.team1_point + this.team2_point) / this.team1_count) * this.predictedPoint;
+          let perPoint = ((this.team1_point + this.team2_point) / this.team1_point) * this.predictedPoint;
+          if(this.team1_point == 0) {
+            perPoint = this.predictedPoint;
+          }
+          let flag = false;
+
           for(let member of this.team1_predict_list) {
             if(member == useAccountStore().profileId) {
               axios({
