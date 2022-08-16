@@ -218,7 +218,7 @@ function likeArticle() {
       Swal.fire({
         icon: 'warning',
         title: '좋아요 실패! 😾',
-        title: '이미 좋아요를 누른 게시글입니다.',
+        text: '이미 좋아요를 누른 게시글입니다.',
         confirmButtonText: '확인'
       })
     } else {
