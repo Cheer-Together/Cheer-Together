@@ -9,7 +9,7 @@
     <div style="width:100px">
       <p>{{createdDate}}</p>
     </div>
-    <div style="width:130px">
+    <div @click="toUserDetail(article.memberResponse.id)" class="article-list" style="width:130px">
       <p>{{article.memberResponse.nickname}}</p>
     </div>
     <div style="width:80px">
@@ -43,6 +43,9 @@ if (createdTime.getDate()==now.getDate() && createdTime.getMonth()==now.getMonth
 }
 function toArticleDetail(id) {
   router.push({name: 'ArticleDetail', params: { articleid: id }})
+}
+function toUserDetail(id) {
+  router.push({name: 'Mypage', params: { userid: id }})
 }
 </script>
 
