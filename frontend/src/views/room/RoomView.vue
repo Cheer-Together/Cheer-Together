@@ -515,11 +515,11 @@
         </v-btn>
 
         <!--응원가 플레이어-->
-        <div style="height:54px; display:flex;" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
+        <div style="height:54px; display:flex;">
           <audio ref="audio" controls>
             <source :src="roomStore.cheeringSong">
           </audio>
-          <select v-model="onePick" @change="changeSong($event)" style="margin: 5px 0 0 10px;">
+          <select v-show="roomStore.roomInfo.managerId==accountStore.profileId" v-model="onePick" @change="changeSong($event)" style="margin: 5px 0 0 10px;">
             <option v-for="song in roomStore.songList" :value="song.file" :key="song.id">
              <div clas="select-item">{{ song.name }}</div>
             </option>
