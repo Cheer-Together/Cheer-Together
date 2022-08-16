@@ -621,6 +621,18 @@ export const useScheduleStore = defineStore("schedule", {
         router.push({ name: "Month", params: { month: `${activeMonth}` } });
       });
     },
+    clickMonthAtMainPage(leagueId, alteredDate, activeMonth, leagueName) {
+      // 월별로 잘라서 담아주기
+      axios({
+        url: cheertogether.game.gamesLeagueMonth(`${leagueId}`),
+        method: "GET",
+        params: { date: alteredDate },
+      }).then((res) => {
+        (this.gamesMonth = []), (this.gamesMonth = res.data);
+        // month parameter 담아서 라우터 이동
+        router.push({ name: "Month", params: {leaguename: `${leagueName}`, month: `${activeMonth}` } });
+      });
+    },
   },
 });
 export const useOnAirStore = defineStore("onair", {

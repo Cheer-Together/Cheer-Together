@@ -1,5 +1,5 @@
 <template>
-  <div style="display:flex;">
+  <div class="room" :style="{ backgroundImage: 'url(' + myImg + ')' }">
     <!-- 세션 정보가 잘못 되었을 때 -->
     <div id="noSession" v-if="!mySessionId">세션 정보가 잘못 되었습니다.</div>
     <!-- 세션 정보가 잘 되었을 때 -->
@@ -18,7 +18,26 @@
             {{subscribers.length + 1}}
           </div>
         </div>
-        
+
+        <!-- 버튼들 -->
+        <div style="display:flex">
+
+          <v-btn class="match-screen-layout" @click="clickBillboard" style="background-color: #5F45FF">
+            전광판
+          </v-btn>
+          <v-btn class="match-screen-layout" @click="clickGamePrediction" style="background-color: #cb99c5">
+            승부예측
+          </v-btn>
+          <v-btn class="match-screen-layout" @click="clickGameInfo" style="background-color: #f0d264">
+            경기정보
+          </v-btn>
+
+          <!-- 레이아웃 -->
+          <v-btn class="match-screen-layout" @click="clickLayoutButton">
+            레이아웃
+          </v-btn>
+        </div>
+
         <!-- 승부 예측 -->
         <div class="game-prediction" v-if="roomStore.isClickPredictButton">
           <div v-if="!this.isValidateTime" style="font-size: 30px;">예측 종료</div>
@@ -80,186 +99,6 @@
             </div>
           </div>
         </div>
-
-        <div style="display:flex">
-          <v-btn class="match-screen-layout" @click="clickGamePrediction">
-            승부예측
-          </v-btn>
-          <!-- 레이아웃 -->
-          <v-btn class="match-screen-layout" @click="clickLayoutButton">
-            레이아웃
-          </v-btn>
-        </div>
-      </div>
-      
-      <!-- 스크린 -->
-        <div style="margin: 0 auto;" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}">
-      <!-- 비디오 컴포넌트 사이즈 조절 필요 
-            영상 시청하기 위해서는 CORS 설정 필요 -->
-          <GameVideo :stream_url="this.stream_urls" id="video-section" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}" />
-        </div>
-
-      <!-- 캠 레이아웃 -->
-      <div id="video-container" v-if="roomStore.isClickLayout">
-          <user-video
-            :stream-manager="publisher"
-            @click="updateMainVideoStreamManager(publisher)"
-          />
-          <user-video
-            v-for="sub in subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-            @forceOut="forceOut"
-          />
-        </div>
-
-      <!-- 푸터 -->
-      <div class="match-screen-footer">
-
-        <!-- 나가기 -->
-        <v-btn class="button-range" style="width: 160px;" @click="clickLeaveSessionButton">
-          <div class="icon-range">
-            <v-icon size="40">
-              mdi-exit-run
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            <span style="color: red;">나가기</span>
-          </div>
-        </v-btn>
-
-        <!-- 채팅 -->
-        <!-- 채팅창이 켜져있을 때 -->
-        <v-btn class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === 'a'">
-          <div class="icon-range">
-            <v-icon size="40">
-              mdi-chat-processing-outline
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            채팅 <span style="color: red;">끄기</span>
-          </div>
-        </v-btn>
-
-        <!-- 채팅창이 꺼져있을 때 -->
-        <v-btn class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === '' || roomStore.isClickChatting === 'b'">
-          <div class="icon-range">
-            <v-icon size="40">
-              mdi-chat-processing
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            채팅 보기
-          </div>
-        </v-btn>
-
-        <!-- 비디오 -->
-        <!-- 비디오가 켜져있을 때 -->
-        <v-btn class="button-range" @click="toggleCam" v-if="!cam">
-          <div class="icon-range">
-            <v-icon size="40">
-              mdi-video-outline
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            비디오 <span style="color: red;">끄기</span>
-          </div>
-        </v-btn>
-
-        <!-- 비디오가 꺼져있을 때 -->
-        <v-btn class="button-range" @click="toggleCam" v-else>
-          <div class="icon-range">
-            <v-icon size="40" color="red">
-              mdi-video-off-outline
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            비디오 켜기
-          </div>
-        </v-btn>
-
-        <!-- 마이크 -->
-        <!-- 마이크가 켜져있을 때 -->
-        <v-btn class="button-range" @click="toggleMic" v-if="!mic">
-          <div class="icon-range">
-            <v-icon size="40">
-              mdi-microphone
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            마이크 <span style="color: red;">끄기</span>
-          </div>
-        </v-btn>
-
-        <!-- 마이크가 꺼져있을 때 -->
-        <v-btn class="button-range" @click="toggleMic" v-else>
-          <div class="icon-range">
-            <v-icon size="40" color="red">
-              mdi-microphone-off
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            마이크 켜기
-          </div>
-        </v-btn>
-
-        <!-- 응원가 -->
-        <!-- 응원가가 켜져있을 때 -->
-        <v-btn class="button-range" @click="toggleBullhorn" v-if="!bullhorn">
-          <div class="icon-range">
-            <v-icon size="40">
-              mdi-bullhorn-outline
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            응원가 <span style="color: red;">끄기</span>
-          </div>
-        </v-btn>
-
-        <!-- 응원가가 꺼져있을 때 -->
-        <v-btn class="button-range" @click="toggleBullhorn" v-else>
-          <div class="icon-range">
-            <v-icon size="40">
-              mdi-bullhorn
-            </v-icon>
-          </div>
-          <div class="button-range-title">
-            응원가 켜기
-          </div>
-        </v-btn>
-
-        <!--응원가 플레이어-->
-        <div style="height:54px; display:flex;" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
-          <audio ref="audio" controls>
-            <source :src="roomStore.cheeringSong">
-          </audio>
-          <select v-model="onePick" @change="changeSong($event)" style="margin: 5px 0 0 10px;">
-            <option v-for="song in roomStore.songList" :value="song.file" :key="song.id">
-             <div clas="select-item">{{ song.name }}</div>
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-
-    <!-- 채팅 -->
-    <div v-if="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
-      <!-- 채팅 헤더 -->
-      <div class="match-screen-chatting-header">
-        <v-icon class="match-screen-chatting-header-setting-button" @click="roomStore.isClickSettingButton = !roomStore.isClickSettingButton, roomStore.isClickBillboard = false, roomStore.isClickGameInfo = false">
-          mdi-cog
-        </v-icon>
-
-        <!-- 드롭 다운 -->
-        <v-btn v-if="roomStore.isClickSettingButton" class="setting-dropdown">
-          <div @click="clickBillboard">
-            전광판
-          </div>
-          <div @click="clickGameInfo">
-            경기 정보
-          </div>
-        </v-btn>
 
         <!-- 전광판 -->
         <div class="room-game-billboard" v-if="roomStore.isClickBillboard">
@@ -370,13 +209,13 @@
         </div>
 
         <!-- 경기 정보 -->
-        <div v-if="roomStore.isClickGameInfo" style="position: relative;">
+        <div v-if="roomStore.isClickGameInfo" class="room-game-info">
           <div class="room-game-info-header" @click="roomStore.isClickGameInfo = false">
             <v-icon>
               mdi-close
             </v-icon>
           </div>
-          <div class="room-game-info" id="room-game-info">
+          <div class="room-game-info-content" id="room-game-info">
             <!-- 후반전 -->
             <div class="room-game-info-title">
               후반전
@@ -534,6 +373,166 @@
           </div>
         </div>
       </div>
+      
+      <!-- 스크린 -->
+      <div style="margin: 0 auto;" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}">
+      <!-- 비디오 컴포넌트 사이즈 조절 필요 
+            영상 시청하기 위해서는 CORS 설정 필요 -->
+        <GameVideo :stream_url="this.stream_urls" id="video-section" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}" />
+      </div>
+      <div class="img-toggle">
+
+      </div>
+
+      <!-- 캠 레이아웃 -->
+      <div id="video-container" v-if="roomStore.isClickLayout">
+          <user-video
+            :stream-manager="publisher"
+            @click="updateMainVideoStreamManager(publisher)"
+          />
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+            @forceOut="forceOut"
+          />
+        </div>
+
+      <!-- 푸터 -->
+      <div class="match-screen-footer">
+
+        <!-- 나가기 -->
+        <v-btn class="button-range" style="width: 160px;" @click="clickLeaveSessionButton">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-exit-run
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            <span style="color: red;">나가기</span>
+          </div>
+        </v-btn>
+
+        <!-- 채팅 -->
+        <!-- 채팅창이 켜져있을 때 -->
+        <v-btn class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === 'a'">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-chat-processing-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            채팅 <span style="color: red;">끄기</span>
+          </div>
+        </v-btn>
+
+        <!-- 채팅창이 꺼져있을 때 -->
+        <v-btn class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === '' || roomStore.isClickChatting === 'b'">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-chat-processing
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            채팅 보기
+          </div>
+        </v-btn>
+
+        <!-- 비디오 -->
+        <!-- 비디오가 켜져있을 때 -->
+        <v-btn class="button-range" @click="toggleCam" v-if="!cam">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-video-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            비디오 <span style="color: red;">끄기</span>
+          </div>
+        </v-btn>
+
+        <!-- 비디오가 꺼져있을 때 -->
+        <v-btn class="button-range" @click="toggleCam" v-else>
+          <div class="icon-range">
+            <v-icon size="40" color="red">
+              mdi-video-off-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            비디오 켜기
+          </div>
+        </v-btn>
+
+        <!-- 마이크 -->
+        <!-- 마이크가 켜져있을 때 -->
+        <v-btn class="button-range" @click="toggleMic" v-if="!mic">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-microphone
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            마이크 <span style="color: red;">끄기</span>
+          </div>
+        </v-btn>
+
+        <!-- 마이크가 꺼져있을 때 -->
+        <v-btn class="button-range" @click="toggleMic" v-else>
+          <div class="icon-range">
+            <v-icon size="40" color="red">
+              mdi-microphone-off
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            마이크 켜기
+          </div>
+        </v-btn>
+
+        <!-- 응원가 -->
+        <!-- 응원가가 켜져있을 때 -->
+        <v-btn class="button-range" @click="toggleBullhorn" v-if="!bullhorn">
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-bullhorn-outline
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            응원가 <span style="color: red;">끄기</span>
+          </div>
+        </v-btn>
+
+        <!-- 응원가가 꺼져있을 때 -->
+        <v-btn class="button-range" @click="toggleBullhorn" v-else>
+          <div class="icon-range">
+            <v-icon size="40">
+              mdi-bullhorn
+            </v-icon>
+          </div>
+          <div class="button-range-title">
+            응원가 켜기
+          </div>
+        </v-btn>
+
+        <!--응원가 플레이어-->
+        <div style="height:54px; display:flex;" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
+          <audio ref="audio" controls>
+            <source :src="roomStore.cheeringSong">
+          </audio>
+          <select v-model="onePick" @change="changeSong($event)" style="margin: 5px 0 0 10px;">
+            <option v-for="song in roomStore.songList" :value="song.file" :key="song.id">
+             <div clas="select-item">{{ song.name }}</div>
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- 채팅 -->
+    <div v-if="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
+      <!-- 채팅 헤더 -->
+      <div class="match-screen-chatting-header">
+      </div>
 
       <!-- 채팅 내용 창 -->
       <div class="match-screen-chatting-section" ref="matchScreenChattingSection" id="match-screen-chatting-section">
@@ -563,6 +562,7 @@ import UserVideo from "@/components/video/UserVideo.vue";
 import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 import sanitizeHTML from "sanitize-html";
+import _ from 'lodash'
 
 import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
 import { updateRoomHeadCount, deleteRoom } from '@/api/room.js';
@@ -616,12 +616,24 @@ export default {
       isValidateTime: false,
   
       bullhorn: false,
-      onePick: "0"
+      onePick: "0",
+
+      backImg : [
+        "https://media.api-sports.io/football/venues/556.png",
+        "https://media.api-sports.io/football/venues/550.png",
+        "https://media.api-sports.io/football/venues/494.png",
+        "https://media.api-sports.io/football/venues/519.png",
+        "https://media.api-sports.io/football/venues/555.png",
+        "https://media.api-sports.io/football/venues/525.png",
+        "https://media.api-sports.io/football/venues/495.png",
+        "https://media.api-sports.io/football/venues/566.png",
+        "https://media.api-sports.io/football/venues/546.png",
+      ],
+      myImg : '',
     };
   },
   mounted() {
     this.mySessionId = this.$route.params.session;
-
     this.inMount();
 
     // 사용한 피니아 변수 초기화
@@ -639,6 +651,8 @@ export default {
 
   methods: {
     async inMount(){
+      // this.myImg = this.backImg[_.sampleSize(_.range(0, 9), 1)];
+      this.myImg = _.sampleSize(this.backImg);
       this.mySessionId = this.$route.params.session;
       this.myUserName = useAccountStore().profile.nickname;
       this.myPoint = useAccountStore().profile.point;
@@ -1097,17 +1111,12 @@ export default {
     clickBillboard() {
       this.roomStore.isClickGameInfo = false,
       this.roomStore.isClickPredictButton = false,
-
-      this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickBillboard = true
+      this.roomStore.isClickBillboard = !this.roomStore.isClickBillboard
     },
     clickGameInfo() {
       this.roomStore.isClickBillboard = false,
       this.roomStore.isClickPredictButton = false,
-
-      this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickGameInfo = true
-      this.cam = !this.cam;
+      this.roomStore.isClickGameInfo = !this.roomStore.isClickGameInfo
     },
     getGameInfo() {
       console.log("받아옴")
@@ -1185,12 +1194,23 @@ export default {
     width: 0px;
   }
 }
+/* 가장 최상단 뷰 */
+.room {
+  display: flex;
+  background-size: cover;
+  height: 1080px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.room::-webkit-scrollbar {
+  width: 1px;
+}
 /* 메인 영역 */
 /* 상단 제목 */
 #session {
   width: 100%;
   height: 830px;
-  margin: 50px 0 0 30px;
+  margin: 40px 0 0 30px;
 }
 .match-screen-header {
   font-family: var(--bold-font);
@@ -1205,15 +1225,16 @@ export default {
 }
 .match-screen-title {
   max-width: 740px;
-  height: 50px;
+  height: 60px;
   padding: 10px 0 10px 10px;
-  /* background-color: #ecf0f5; */
+  background-color: #ecf0f5;
   border-radius: 3px;
   font-size: 28px;
 }
 .match-screen-icon {
-  padding-top: 8px;
-  margin-left: 10px;
+  height: 60px;
+  background-color: #ecf0f5;
+  padding: 13px 10px 0 10px;
   font-size: 25px;
 }
 
@@ -1286,9 +1307,6 @@ export default {
   font-size: 18px;
   padding: 6px;
 }
-.match-screen-layout:first-child {
-  background-color: #5F45FF;
-}
 .match-screen-layout:hover {
   cursor: pointer;
 }
@@ -1302,20 +1320,22 @@ export default {
 /* 하단 캠 */
 #video-container {
   margin-top: 10px;
-  width: 98%;
-  height: 180px;
+  /* background-color: #7F5283; */
+  height: 190px;
   margin-right: 60px;
   display: flex;
+  padding-top: 5px;
 
 }
 
 
 /* 하단 버튼  */
 .match-screen-footer {
-  margin: 50px 0 0 0;
+  margin: 30px 0 0 0;
   display: flex;
   flex-direction: row-reverse;
-  height: 50px;
+  height: 70px;
+  padding: 20px 0 0 0;
 }
 .match-screen-footer > div {
   margin: 0 30px 0 0 ;
@@ -1357,6 +1377,7 @@ export default {
   animation-timing-function: ease-in;
   border: 1px solid #cfd2d6;
   border-radius: 3px;
+  background-color: #FEFBF6;
 }
 .match-screen-chatting-area2 {
   margin-right: 30px;
@@ -1402,6 +1423,7 @@ export default {
   height: 70px;
   border-radius: 20px;
   background-color: var(--sub-color);
+  border: 1px solid #A6D1E6;
   display: flex;
 }
 .chatting-input {
@@ -1427,70 +1449,34 @@ export default {
   color: var(--main-color);
 }
 
-/* 드롭다운 영역 */
-
-.setting-dropdown {
-  position: absolute;
-  right: 10px;
-  top: 30px;
-  width: 200px;
-  height: 50px;
-  /* border: 1px solid grey; */
-  display: flex;
-  border-radius: 10px;
-  background-color: #f0d264;
-  font-family: var(--bold-font);
-  color: white;
-  font-size: 16px;
-}
-.setting-dropdown div {
-  width: 100px;
-  padding-top: 5px ;
-  text-align: center;
-}
-.setting-dropdown div:first-child {
-  background-color: #cb99c5;
-  height: 50px;
-  padding-top: 17px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
-}
-.setting-dropdown div:hover {
-  cursor: pointer;
-}
-.setting-dropdown div:first-child {
-  border-right: 1px solid grey;
-}
-
-/* 드롭다운 경기 정보 */
-
+/*  경기 정보 */
 .room-game-info {
   position: absolute;
+  top: 55px;
+  right: 30px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+  border-radius: 10px;
+  border: 1px solid grey;
+  width: 305px;
+  overflow: hidden;
+  z-index: 10;
+}
+.room-game-info-content {
   min-width: 300px;
   height: 500px;
-  border: 1px solid grey;
   overflow-y: auto;
-  margin-right: 50px;
-  border-radius: 10px;
+  margin: 0 auto;
   background-color: #ffffff;
-  left: -60px;
-  padding-top: 10px;
-box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
 .room-game-info-header {
-  position: absolute;
-  width: 279px;
-  height: 40px;
+  text-align: end;
+  padding: 3px 3px 0 0;
   background-color: #ffffff;
-  top: 1px;
-  right: 20px;
-  z-index: 10;
-  padding-left: 260px;
 }
 .room-game-info-header:hover {
   cursor: pointer;
 }
-.room-game-info::-webkit-scrollbar {
+.room-game-info-content::-webkit-scrollbar {
   width: 1px;
 }
 .room-game-info-item {
@@ -1559,10 +1545,12 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
 /* 전광판 */
 .room-game-billboard {
   width: 700px;
-  background-color: #3B4151;
+  background-color: #5F45FF;
   color: white;
   position: absolute;
-  top: 40px;
+  top: 55px;
+  right: 30px;
+  z-index: 10;
   right: 0;
   box-shadow: rgba(59,65,81, 0.25) 0px 54px 55px, rgba(59,65,81, 0.12) 0px -12px 30px, rgba(59,65,81, 0.12) 0px 4px 6px, rgba(59,65,81, 0.17) 0px 12px 13px, rgba(59,65,81, 0.09) 0px -3px 5px;
 }
@@ -1570,7 +1558,7 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
   width: 100%;
   height: 25px;
   text-align: end;
-  background-color: #3B4151;
+  background-color: #5F45FF;
   color: white;
 }
 #close-button:hover {
@@ -1580,7 +1568,7 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
   width: 100%;
   height: 80px;
   padding: 10px;
-  background-color: #3B4151;
+  background-color: #5F45FF;
   display: flex;
 }
 .room-game-billboard-team{
@@ -1618,7 +1606,7 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
 }
 .room-game-billboard-stadium {
   text-align: center;
-  width: 150px;
+  width: 700px;
   margin: 0 auto;
   height: 30px;
   color: #ecf0f5;
@@ -1684,5 +1672,6 @@ select:disabled {
 .select-item:hover {
   transform: translateX(-300px);
 }
+
 </style>
 
