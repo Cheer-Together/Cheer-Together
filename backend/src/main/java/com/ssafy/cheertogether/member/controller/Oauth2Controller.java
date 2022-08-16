@@ -43,7 +43,7 @@ public class Oauth2Controller {
 		boolean exist = oauth2Service.isExistEmail(email);
 
 		if (exist) {  //바로 로그인
-			Member member = oauth2Service.findMemberByEmail(email);
+			Member member = oauth2Service.login(email);
 			return new ResponseEntity<>(
 				new Oauth2Response(false, jwtTokenProvider.createToken(String.valueOf(member.getId())), email),
 				HttpStatus.OK);
