@@ -40,6 +40,7 @@ a {
 .mainNews-title {
   font-size: 24px;
   padding: 5.5px 0;
+  font-family: var(--bold-font);
 }
 .mainNews-section {
   margin-top: 11px;

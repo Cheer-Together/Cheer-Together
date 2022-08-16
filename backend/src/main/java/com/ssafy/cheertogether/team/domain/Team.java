@@ -31,7 +31,6 @@ public class Team implements Serializable {
 	@JoinColumn(name = "league_id")
 	@JsonBackReference
 	private League league;
-
 	private String name;
 	private String logo;
 	private String code;

@@ -113,7 +113,7 @@ export const useAccountStore = defineStore("account", {
         실패하면
           에러 메시지 표시
       */
-
+      
       axios({
         url: cheertogether.members.emailAuth(),
         method: "GET",
@@ -252,7 +252,7 @@ export const useAccountStore = defineStore("account", {
       /* 
       DELETE: 회원 탈퇴를 진행한다.
         성공하면
-          유저 정보를 profile에 저장한다.
+
         실패하면
 
       */
@@ -262,6 +262,7 @@ export const useAccountStore = defineStore("account", {
       })
         .then((res) => {
           console.log(res.data);
+          this.logoutAccount()
         })
         .catch((err) => {
           console.log(err);
@@ -964,15 +965,16 @@ export const useRoomStore = defineStore("room", {
       },
     ],
     popularRooms: [],
+    popularRoomGames: [],
     playTeams: {
-      id: 31,
+      id: "",
       home: {
         leagueName: "",
         name: "",
         hanName: "",
         logo: "",
         code: "",
-        apiId: 0,
+        apiId: "",
       },
       away: {
         leagueName: "",
@@ -980,15 +982,15 @@ export const useRoomStore = defineStore("room", {
         hanName: "",
         logo: "",
         code: "",
-        apiId: 1,
+        apiId: "",
       },
       kickoff: "",
       stadium: "",
       status: "",
-      homeScore: 0,
-      awayScore: 2,
-      apiId: 867946,
-      leagueApiId: 39,
+      homeScore: "",
+      awayScore: "",
+      apiId: "",
+      leagueApiId: "",
     },
     goal: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
     homeGoalPoint : 0,
@@ -1034,7 +1036,6 @@ export const useRoomStore = defineStore("room", {
           console.log(err);
         });
     },
-
     async getInfo(sessionId) {
       await getRoomInfo(
         sessionId,
@@ -1048,18 +1049,41 @@ export const useRoomStore = defineStore("room", {
         }
       );
     },
-
     async getPopularRooms(){
       await getPopularRooms(
         (res) => {
           this.popularRooms = res.data;
+          this.popularRoomGames = []
+          console.log(res.data)
+          this.getPopularGameInfo(res.data[0].gameId, 0)
+          this.getPopularGameInfo(res.data[1].gameId, 1)
+          this.getPopularGameInfo(res.data[2].gameId, 2)
+          this.getPopularGameInfo(res.data[3].gameId, 3)
         },
         (err) => {
           console.log(err);
         }
       )
     },
+    getPopularGameInfo(gameId, index) {
+      /* 
+    GET: 경기 정보를 불러옴
+      성공하면
 
+      실패하면
+        에러 메시지 표시
+    */
+      axios({
+        url: cheertogether.game.playGameInfo(gameId),
+        method: "GET",
+      })
+        .then((res) => {
+          this.popularRooms[index]["gameInfo"] = res.data
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getPlayTeams(gameId) {
       /* 
     GET: 경기 정보를 불러옴
@@ -1079,6 +1103,7 @@ export const useRoomStore = defineStore("room", {
           this.gamePredictionDeadline = date;
 
           this.playTeams = res.data;
+          this.getGameInfo(res.data.apiId);
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
 
@@ -1094,7 +1119,6 @@ export const useRoomStore = defineStore("room", {
           console.log(err);
         });
     },
-
     getGameInfo(apiId) {
       /* 
       GET: 경기 정보를 불러옴
@@ -1122,7 +1146,7 @@ export const useRoomStore = defineStore("room", {
           this.homeGoalPoint = 0
           this.awayGoalPoint = 0
 
-          res.data.response.reverse().forEach((e) => {
+          res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
             if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
               this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
               this.homeGoalPoint = this.homeGoalPoint + 1
