@@ -118,7 +118,7 @@
       <div class="match-screen-footer">
 
         <!-- 나가기 -->
-        <v-btn class="button-range" style="width: 160px;" @click="leaveSession">
+        <v-btn class="button-range" style="width: 160px;" @click="clickLeaveSessionButton">
           <div class="icon-range">
             <v-icon size="40">
               mdi-exit-run
@@ -818,36 +818,7 @@ export default {
       this.gamePredictionStore.team2_point = 0;
       this.gamePredictionStore.team2_count = 0;
 
-      if(this.isSessionManager == true) {
-        useGamePredictionStore().team1_predict_list = [];
-        useGamePredictionStore().team2_predict_list = [];
-        console.log("I'm SessionManager!!");
-        this.subscribers.forEach(async e => {
-          let userId = JSON.parse(e.stream.connection.data).clientData;
-          console.log("foreach: "+userId);
-          await this.session
-            .signal({
-              data: userId,
-              to: [],
-              type: "force-out",
-            })
-            .then(() => {
-              console.log("force-out successfully requested");
-            })
-            .catch((error) => {
-              console.error(error);
-            });
-        });
-        deleteRoom(this.sessionInfo.roomId,
-          () => {
-            console.log("Room Delete Complete");
-          },
-          (err) => {
-            console.log(err);
-        });
-      } else {
-        this.updateRoomHeadCount(this.subscribers.length+1);
-      }
+
       if (this.session) this.session.disconnect();
       
       this.session = undefined;
@@ -860,6 +831,40 @@ export default {
       this.$router.push({ name: "MainPage" });
     },
 
+    clickLeaveSessionButton(){
+          if(this.isSessionManager == true) {
+            useGamePredictionStore().team1_predict_list = [];
+            useGamePredictionStore().team2_predict_list = [];
+            console.log("I'm SessionManager!!");
+            this.subscribers.forEach(async e => {
+              let userId = JSON.parse(e.stream.connection.data).clientData;
+              console.log("foreach: "+userId);
+              await this.session
+                .signal({
+                  data: userId,
+                  to: [],
+                  type: "force-out",
+                })
+                .then(() => {
+                  console.log("force-out successfully requested");
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            });
+            deleteRoom(this.sessionInfo.roomId,
+              () => {
+                console.log("Room Delete Complete");
+              },
+              (err) => {
+                console.log(err);
+            });
+          } else {
+            this.updateRoomHeadCount(this.subscribers.length+1);
+          }
+
+          this.leaveSession();
+    },
     updateMainVideoStreamManager(stream) {
       if (this.mainStreamManager === stream) return;
       this.mainStreamManager = stream;
