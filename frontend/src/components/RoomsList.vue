@@ -1,6 +1,14 @@
 <template>
   <div class="rooms-list-page">
     <div class="rooms-list-section">
+
+      <div v-if="isNoRoom" class="room-list-nothing">
+        <div class="room-list-nothing-content">
+          <p style="margin-top:40px">검색 조건에 해당하는 방이 없습니다</p>
+          <p style="margin-top:30px">방을 개설하시면 같이 집관 하실 수 있습니다</p>
+        </div>
+      </div>
+
       <div class="rooms-list-section-item" v-for="room in onairStore.currentRooms" :key="room.id" @click="onairStore.enterRoom(room.roomId)">
         <!-- 여기가 썸네일 부분입니다. -->
         <div class="rooms-list-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[0] + ')' }">
@@ -47,12 +55,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useOnAirStore } from '../store/index.js'
 import { useRoute } from "vue-router"
-const route = useRoute()
+import { ref } from "vue";
 
+const route = useRoute()
 const onairStore = useOnAirStore();
+
+const isNoRoom = ref(false)
+if (onairStore.currentRooms.length == 0) {
+  isNoRoom.value = true
+}
+
 const popularThumbnail = [
   "https://media.api-sports.io/football/venues/556.png",
   "https://media.api-sports.io/football/venues/550.png",
@@ -71,6 +85,7 @@ if (route.params.leaguename === '모든 응원방 목록') {
 else {
   onairStore.moveLeagueRooms(route.params.leaguename)
 }
+
 </script>
 
 <style>
@@ -95,6 +110,22 @@ else {
 .private-room {
   text-align: end;
 }
+.room-list-nothing {
+  width: 100%;
+  height: 200px;
+  background-color: var(--sub-color);
+}
+.room-list-nothing-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 24px;
+}
+.room-list-nothing-content{
+    font-size: 20px;
+  }
+
 /* 여기부터 썸네일 css */
 .rooms-list-section-item {
   width: 375px;
