@@ -5,27 +5,27 @@
     <div class="schedule-page">
       <div class="schedule-page-leagues">
         <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
-          <p :class="{'league-active' : $route.params.leaguename === '프리미어리그'}">프리미어리그</p>
+          <p :class="{'league-active' : route.params.leaguename === '프리미어리그'}">프리미어리그</p>
         </div>
 
         <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
-          <p :class="{'league-active' : $route.params.leaguename === '라리가'}">라리가</p>
+          <p :class="{'league-active' : route.params.leaguename === '라리가'}">라리가</p>
         </div>
         
         <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
-          <p :class="{'league-active' : $route.params.leaguename === '세리에 A'}">세리에 A</p>
+          <p :class="{'league-active' : route.params.leaguename === '세리에 A'}">세리에 A</p>
         </div>
 
         <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
-          <p :class="{'league-active' : $route.params.leaguename === '분데스리가'}">분데스리가</p>
+          <p :class="{'league-active' : route.params.leaguename === '분데스리가'}">분데스리가</p>
         </div>
 
         <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
-          <p :class="{'league-active' : $route.params.leaguename === '리그 1'}">리그 1</p>
+          <p :class="{'league-active' : route.params.leaguename === '리그 1'}">리그 1</p>
         </div>
 
         <div class="schedule-page-league-items" @click="scheduleStore.clickLeague">
-          <p :class="{'league-active' : $route.params.leaguename === 'K리그'}">K리그</p>
+          <p :class="{'league-active' : route.params.leaguename === 'K리그'}">K리그</p>
         </div>
       </div>
 
@@ -39,8 +39,9 @@ import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
 import ScheduleSelectMonth from "../components/ScheduleSelectMonth.vue"
 import { useScheduleStore } from  '../store/index.js'
-// import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 const scheduleStore = useScheduleStore();
+const route = useRoute()
 
 </script>
 
