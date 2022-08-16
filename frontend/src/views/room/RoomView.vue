@@ -529,14 +529,14 @@
     </div>
 
     <!-- 채팅 -->
-    <div v-if="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
+    <div v-show="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
       <!-- 채팅 헤더 -->
       <div class="match-screen-chatting-header">
       </div>
 
       <!-- 채팅 내용 창 -->
-      <div class="match-screen-chatting-section" ref="matchScreenChattingSection" id="match-screen-chatting-section">
-        <div v-show="isOpenedChattingWindow" class="chatting-window">
+      <div class="match-screen-chatting-section" id="match-screen-chatting-section">
+        <div id="chattingWindow" class="chatting-window">
           <div id="chatting-content" v-html="chattingContent" style="max-width:222px;"></div>
         </div>
       </div>
@@ -728,16 +728,13 @@ export default {
           }
         }
 
-        // document.getElementById("chatting-content").innerHTML += `<div>${userName}:</div>`;
-        // document.getElementById("chatting-content").innerHTML += `<div style:'word-break:break-all; max-width: 222px;'>${message}<div>`;
-        
-        // var objDiv = document.getElementById("match-screen-chatting-section");
-        // objDiv.scrollTop = objDiv.scrollHeight;
         message = sanitizeHTML(message);
-        this.chattingContent += `<div>${userName}:</div>`;
-        this.chattingContent += `<div style:'word-break:break-all; max-width: 222px;'>${message}<div>`;
+        this.chattingContent += `<div style:'margin-top: 10px;'>${userName}:</div>`;
+        this.chattingContent += `<div style:'word-break:break-all; max-width: 222px; margin-bottom: 10px'>${message}<div>`;
 
-        this.$refs.matchScreenChattingSection.scrollTop = this.$refs.matchScreenChattingSection.scrollHeight
+        // this.chattingWindow.scrollTo({ top: this.chattingWindow.scrollHeight, behavior: 'smooth' })
+        let objDiv = document.getElementById("match-screen-chatting-section");
+        objDiv.scrollTop = objDiv.scrollHeight;
       });
 
       this.session.on("signal:game-prediction", (event) => {
@@ -986,12 +983,16 @@ export default {
       this.roomStore.isClickGameInfo = false
       if (this.roomStore.isClickChatting == '') {
         this.roomStore.isClickChatting = 'a'
+        let objDiv = document.getElementById("match-screen-chatting-section");
+        objDiv.scrollTop = objDiv.scrollHeight;
       }
       else if (this.roomStore.isClickChatting == 'a'){
         this.roomStore.isClickChatting = 'b'
       }
       else {
         this.roomStore.isClickChatting = 'a'
+        let objDiv = document.getElementById("match-screen-chatting-section");
+        objDiv.scrollTop = objDiv.scrollHeight;
       }
     },
 
@@ -1288,10 +1289,10 @@ export default {
     appearance: none;
 }
 .predict-button {
- width: 165px;
- margin-left: 10px;
- background-color: #323236;
- color: white; 
+  width: 165px;
+  margin-left: 10px;
+  background-color: #323236;
+  color: white; 
 }
 
 /* 레이아웃 버튼 */
@@ -1377,7 +1378,8 @@ export default {
   animation-timing-function: ease-in;
   border: 1px solid #cfd2d6;
   border-radius: 3px;
-  background-color: #FEFBF6;
+  background-color: rgba( 255, 255, 255, 0.8 );
+  /* background-color: #FEFBF6; */
 }
 .match-screen-chatting-area2 {
   margin-right: 30px;
@@ -1401,7 +1403,7 @@ export default {
 
 /* 채팅 내용 */
 .match-screen-chatting-section {
-  height: 780px;
+  height: 790px;
   overflow-y: scroll;
   border-bottom: 1px solid #cfd2d6;
   padding: 10px 15px 10px 10px;
