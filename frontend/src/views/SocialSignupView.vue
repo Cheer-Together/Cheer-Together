@@ -215,7 +215,7 @@ axios({
       })
       router.push({name:'MainPage'})
     }
-  }).catch(err => {
+  }).catch(() => {
     router.push({name:'MainPage'})
 }).then(loaded.value = true)
 </script>
