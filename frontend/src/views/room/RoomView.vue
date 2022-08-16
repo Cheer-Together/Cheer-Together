@@ -536,9 +536,9 @@
       </div>
 
       <!-- 채팅 내용 창 -->
-      <div class="match-screen-chatting-section" id="match-screen-chatting-section">
+      <div class="match-screen-chatting-section" ref="matchScreenChattingSection" id="match-screen-chatting-section">
         <div v-show="isOpenedChattingWindow" class="chatting-window">
-          <div id="chatting-content" style="max-width:222px;"></div>
+          <div id="chatting-content" v-html="chattingContent" style="max-width:222px;"></div>
         </div>
       </div>
       <!-- 채팅 입력하는 곳 -->
@@ -562,6 +562,7 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
+import sanitizeHTML from "sanitize-html";
 
 import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
 import { updateRoomHeadCount, deleteRoom } from '@/api/room.js';
@@ -605,6 +606,7 @@ export default {
 
       mic: false,
       cam: false,
+      chattingContent: "",
 
       gamePredictionStore : useGamePredictionStore(),
       myPoint: 0,
@@ -712,12 +714,16 @@ export default {
           }
         }
 
-        document.getElementById("chatting-content").innerHTML += `<div>${userName}:</div>`;
-        document.getElementById("chatting-content").innerHTML += `<div style:'word-break:break-all; max-width: 222px;'>${message}<div>`;
+        // document.getElementById("chatting-content").innerHTML += `<div>${userName}:</div>`;
+        // document.getElementById("chatting-content").innerHTML += `<div style:'word-break:break-all; max-width: 222px;'>${message}<div>`;
         
-        var objDiv = document.getElementById("match-screen-chatting-section");
-        objDiv.scrollTop = objDiv.scrollHeight;
+        // var objDiv = document.getElementById("match-screen-chatting-section");
+        // objDiv.scrollTop = objDiv.scrollHeight;
+        message = sanitizeHTML(message);
+        this.chattingContent += `<div>${userName}:</div>`;
+        this.chattingContent += `<div style:'word-break:break-all; max-width: 222px;'>${message}<div>`;
 
+        this.$refs.matchScreenChattingSection.scrollTop = this.$refs.matchScreenChattingSection.scrollHeight
       });
 
       this.session.on("signal:game-prediction", (event) => {
