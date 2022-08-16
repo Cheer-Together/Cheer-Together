@@ -128,6 +128,7 @@ const moveCarousel = (dir) => {
 .todayMatchList-title {
   font-size: 24px;
   padding: 5.5px 0;
+  font-family: var(--bold-font);
 }
 .todayMatchList-section {
   margin-top: 11px;

@@ -113,7 +113,7 @@ export const useAccountStore = defineStore("account", {
         실패하면
           에러 메시지 표시
       */
-
+      
       axios({
         url: cheertogether.members.emailAuth(),
         method: "GET",
@@ -233,6 +233,10 @@ export const useAccountStore = defineStore("account", {
         },
       })
         .then(() => {
+          Swal.fire({
+            icon: "success",
+            title: "성공적으로 회원가입 되었습니다.",
+          });
           this.signupAlarm = true
           router.push({ name: "MainPage" });
         })
@@ -249,7 +253,7 @@ export const useAccountStore = defineStore("account", {
       /* 
       DELETE: 회원 탈퇴를 진행한다.
         성공하면
-          유저 정보를 profile에 저장한다.
+
         실패하면
 
       */
@@ -259,6 +263,7 @@ export const useAccountStore = defineStore("account", {
       })
         .then((res) => {
           console.log(res.data);
+          this.logoutAccount()
         })
         .catch((err) => {
           console.log(err);
@@ -971,6 +976,7 @@ export const useRoomStore = defineStore("room", {
       },
     ],
     popularRooms: [],
+    popularRoomGames: [],
     playTeams: {
       id: "",
       home: {
@@ -1041,7 +1047,6 @@ export const useRoomStore = defineStore("room", {
           console.log(err);
         });
     },
-
     async getInfo(sessionId) {
       await getRoomInfo(
         sessionId,
@@ -1055,18 +1060,41 @@ export const useRoomStore = defineStore("room", {
         }
       );
     },
-
     async getPopularRooms(){
       await getPopularRooms(
         (res) => {
           this.popularRooms = res.data;
+          this.popularRoomGames = []
+          console.log(res.data)
+          this.getPopularGameInfo(res.data[0].gameId, 0)
+          this.getPopularGameInfo(res.data[1].gameId, 1)
+          this.getPopularGameInfo(res.data[2].gameId, 2)
+          this.getPopularGameInfo(res.data[3].gameId, 3)
         },
         (err) => {
           console.log(err);
         }
       )
     },
+    getPopularGameInfo(gameId, index) {
+      /* 
+    GET: 경기 정보를 불러옴
+      성공하면
 
+      실패하면
+        에러 메시지 표시
+    */
+      axios({
+        url: cheertogether.game.playGameInfo(gameId),
+        method: "GET",
+      })
+        .then((res) => {
+          this.popularRooms[index]["gameInfo"] = res.data
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getPlayTeams(gameId) {
       /* 
     GET: 경기 정보를 불러옴
@@ -1102,7 +1130,6 @@ export const useRoomStore = defineStore("room", {
           console.log(err);
         });
     },
-
     getGameInfo(apiId) {
       /* 
       GET: 경기 정보를 불러옴
