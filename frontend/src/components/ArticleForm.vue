@@ -24,7 +24,7 @@
       <a>{{accountStore.profile.nickname}} | {{ now }}</a>
     </div>
     <div style="width:790px; margin-bottom: 15px;">
-      <textarea v-model="content" placeholder="내용을 입력하세요. 우측 하단을 드래그하여 높이를 변경할 수 있습니다." class="write-content"></textarea>
+      <textarea v-model="content" placeholder="내용을 입력하세요." class="write-content"></textarea>
     </div>
     <div class="write-bottom">
       <v-btn style="height:34px; margin-left:20px; font-family: 'MICEGothic Bold';" @click="communityStore.communityToggle()" class="write-button">취소하기</v-btn>
@@ -158,6 +158,8 @@ function modifyButton() {
 .write-content {
   width:790px;
   height:300px;
+  min-height: 300px;
+  max-height: 500px;
   border-radius:5px;
   border: 1px solid #bcbcbc;
 }
