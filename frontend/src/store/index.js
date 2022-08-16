@@ -1253,6 +1253,13 @@ export const useRoomStore = defineStore("room", {
       });
     },
     getCheeringSongList(teamId) {
+      this.songList = [    
+        {
+        "id": 0,
+        "name": "응원가를 고르세요.",
+        "file": 0
+        },
+      ];
       axios({
         url: cheertogether.cheeringSong.cheeringSong(teamId),
         method: "GET",
