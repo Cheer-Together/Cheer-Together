@@ -8,7 +8,7 @@
 
       <div class="popularMatch-section-item" v-for="(room, i) in roomStore.popularRooms" :key="room.roomId">
         <!-- 여기가 썸네일 부분입니다. -->
-        <div class="popularMatch-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[i] + ')' }">
+        <div @click="onairStore.enterRoom(roomIds[i])" class="popularMatch-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[i] + ')' }">
           <!-- 홈 vs 어웨이  -->
           <!-- 홈 -->
           <div class="popularMatch-section-logo">
@@ -52,8 +52,24 @@
 
 <script setup>
 // import router from '@/router'
-import { useRoomStore } from "@/store"
+import { useOnAirStore, useRoomStore } from "@/store"
+import axios from "axios"
+import { ref } from "vue";
+const onairStore = useOnAirStore()
 const roomStore = useRoomStore()
+const roomIds = ref([])
+let roomIdList = []
+axios({
+  url: "https://i7b204.p.ssafy.io/cheertogether/rooms/popular",
+  method: 'GET',
+}).then(res =>{
+  res.data.forEach((room) => {
+    roomIdList.push(room.roomId)    
+  })
+  roomIds.value = roomIdList
+}).catch(err => {
+  console.log(err)
+})
 
 const popularThumbnail = [
   "https://media.api-sports.io/football/venues/556.png",

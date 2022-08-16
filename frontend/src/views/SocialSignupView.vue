@@ -153,7 +153,6 @@ function socialSignupBtn() {
       },
     })
     .then((res) => {
-      console.log("유저정보 : " + res.data.point);
       accountStore.socialLoginComplete(res)
     })
     .catch((err) => {
@@ -192,7 +191,6 @@ axios({
           },
         })
         .then((res) => {
-          console.log("유저정보 : " + res.data.point);
           accountStore.socialLoginComplete(res)
         })
         .catch((err) => {
