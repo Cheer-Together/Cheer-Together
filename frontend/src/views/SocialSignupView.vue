@@ -207,12 +207,6 @@ axios({
         socialSignupEmail.value = res.data.email
       }
     } else {
-      console.log('응답은 오는데 email이 없음')
-      console.log(res.data)
-      Swal.fire({
-        icon: 'error',
-        title: '이메일을 못받았음.'
-      })
       router.push({name:'MainPage'})
     }
   }).catch(() => {
