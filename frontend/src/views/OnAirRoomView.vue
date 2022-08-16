@@ -86,7 +86,7 @@ const fetchLeagueLogo = (leaguename) => {
       return league.logo
     } else if (league.hanName === 'K리그' && leaguename === 'K리그 1'){
       return league.logo
-    }
+    } else { return require('../assets/image/로고.png') }
   }
 }
 

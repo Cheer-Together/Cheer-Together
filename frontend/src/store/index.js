@@ -645,47 +645,42 @@ export const useOnAirStore = defineStore("onair", {
         .then(res => {
           this.allRooms = res.data
           this.currentRooms = res.data
+          console.log(res.data)
           router.push({name: 'Onair', params: {leaguename: '모든 응원방 목록'}})
+          res.data.forEach((e, idx) => {
+            this.getAllGameInfo(e.gameId, idx)          
+          })
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+
+    moveLeagueRooms(leagueName) {
+      const apiId = {
+        '프리미어리그' : 39,
+        '라리가' : 140,
+        '세리에 A' : 135,
+        '분데스리가' : 78,
+        '리그 1' : 61,
+        'K리그 1' : 292,
+      }
+      axios({
+        url: cheertogether.room.roomsLeague(apiId[leagueName]),
+        method: "GET",
+      })
+        .then(res => {
+          this.allRooms = res.data
+          this.currentRooms = res.data
+          router.push({name: 'Onair' , params: {leaguename: leagueName } })
+          res.data.forEach((e, idx) => {
+            this.getAllGameInfo(e.gameId, idx)          
+          })
 
         })
         .catch((err) => {
           console.log(err);
         });
-    },
-
-    moveLeagueRooms(event) {
-      const leagues = [
-        { id: "39", league: "프리미어리그" },
-        { id: "140", league: "라리가" },
-        { id: "135", league: "세리에 A" },
-        { id: "78", league: "분데스리가" },
-        { id: "61", league: "리그 1" },
-        { id: "292", league: "K리그 1" },
-      ];
-      
-      const toSubtitle = event.target;
-
-      for (let item of leagues) {
-        if (toSubtitle.innerText === item.league) {
-          axios({
-            url: cheertogether.room.roomsLeague(item.id),
-            method: "GET",
-          })
-
-            .then(res => {
-              this.allRooms = res.data
-              this.currentRooms = res.data
-              router.push({name: 'Onair' , params: {leaguename: `${item.league}`} })
-
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        }
-      }
     },
 
     enterRoom(roomId) {
@@ -801,6 +796,27 @@ export const useOnAirStore = defineStore("onair", {
       console.log(data);
       await createRoom(data).then(() => router.push({ name: "Room", params: { session: sessionId } }));
       console.log("CREATED");
+    },
+
+    getAllGameInfo(gameId, index) {
+      /* 
+    GET: 경기 정보를 불러옴
+      성공하면
+
+      실패하면
+        에러 메시지 표시
+    */
+      axios({
+        url: cheertogether.game.playGameInfo(gameId),
+        method: "GET",
+      })
+        .then((res) => {
+          this.currentRooms[index]["gameInfo"] = res.data
+          console.log(this.currentRooms[0])
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 });

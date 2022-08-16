@@ -91,7 +91,7 @@ roomStore.getPopularRooms()
 /* 여기부터 썸네일 css */
 .popularMatch-section-item {
   width: 375px;
-  height: 224px;
+  height: 260px;
   margin: 0 20px 20px 0 ;
   border-radius: 10px;
   overflow: hidden;
@@ -101,7 +101,7 @@ roomStore.getPopularRooms()
 }
 .popularMatch-section-thumbnail {
   width: 375px;
-  height: 200px;
+  height: 230px;
   position: relative;
   padding: 0 auto;
   border: 1px solid #ecf0f5;
@@ -109,7 +109,7 @@ roomStore.getPopularRooms()
 }
 .popularMatch-section-logo {
   width: 100px;
-  height: 140px;
+  height: 170px;
   background-color:rgba(4, 84, 121, 0.8);
   position: absolute;
   top: 20px;

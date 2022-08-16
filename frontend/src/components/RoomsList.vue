@@ -1,13 +1,46 @@
 <template>
   <div class="rooms-list-page">
     <div class="rooms-list-section">
-      <div class="rooms-list-items" v-for="room in rooms" :key="room.id" @click="onairStore.enterRoom(room.roomId)">
-        <div class="room-item-title">{{ room.name }}</div>
-        <!-- <div>
-          <img :src="room.home.logo" alt="">
-          <img :src="room.away.logo" alt="">
-        </div> -->
-        <div v-if="room.status === 'PRIVATE'" class="private-room"><v-icon>mdi-lock</v-icon></div>
+      <div class="rooms-list-section-item" v-for="room in onairStore.currentRooms" :key="room.id" @click="onairStore.enterRoom(room.roomId)">
+        <!-- 여기가 썸네일 부분입니다. -->
+        <div class="rooms-list-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[0] + ')' }">
+          <!-- 홈 vs 어웨이  -->
+          <!-- 홈 -->
+          <div class="rooms-list-section-logo">
+            <img :src="room.gameInfo?.home.logo" alt="" width="50" height="50">
+            <div>
+              {{ room.gameInfo?.home.hanName }} 
+            </div>
+          </div>
+
+          <!-- VS -->
+          <div class="rooms-list-section-logo-vs">
+            VS
+          </div>
+          <!-- 킥오프 -->
+          <div>
+            
+          </div>
+          <!-- 어웨이 -->
+          <div class="rooms-list-section-logo">
+            <img :src="room.gameInfo?.away.logo" alt="" width="50" height="50">
+            <div>
+              {{ room.gameInfo?.away.hanName }}
+            </div>
+          </div>
+          <!-- 경기장 이름 -->
+          <div class="rooms-list-section-stadium">
+            {{ room.gameInfo?.stadium }}
+          </div>
+        </div>
+        <div class="rooms-list-section-item-title">
+          {{ room.name }} 
+          <v-icon style="color:#222222;">
+            mdi-account
+          </v-icon>
+          {{ room.headCount }}
+          <span v-if="room.status === 'PRIVATE'" class="private-room"><v-icon>mdi-lock</v-icon></span>
+        </div>
       </div>
     </div>
   </div>
@@ -15,10 +48,28 @@
 
 <script setup>
 import { useOnAirStore } from '../store/index.js'
+import { useRoute } from "vue-router"
+const route = useRoute()
 
 const onairStore = useOnAirStore();
-const rooms = onairStore.currentRooms
+const popularThumbnail = [
+  "https://media.api-sports.io/football/venues/556.png",
+  "https://media.api-sports.io/football/venues/550.png",
+  "https://media.api-sports.io/football/venues/494.png",
+  "https://media.api-sports.io/football/venues/519.png",
+  "https://media.api-sports.io/football/venues/555.png",
+  "https://media.api-sports.io/football/venues/525.png",
+  "https://media.api-sports.io/football/venues/495.png",
+  "https://media.api-sports.io/football/venues/566.png",
+  "https://media.api-sports.io/football/venues/546.png",
+]
 
+if (route.params.leaguename === '모든 응원방 목록') {
+  onairStore.moveOnairPage
+}
+else {
+  onairStore.moveLeagueRooms(route.params.leaguename)
+}
 </script>
 
 <style>
@@ -32,15 +83,7 @@ const rooms = onairStore.currentRooms
   margin-top: 30px;
   margin-bottom: 100px;
 }
-.rooms-list-items {
-  width: 380px;
-  height: 230px;
-  background-color: aqua;
-  margin-top: 20px;
-  margin-right: 20px;
-  cursor: pointer;
-  border-radius: 5px;
-}
+
 .room-item-title {
   position: relative;
   top: 195px;
@@ -49,9 +92,69 @@ const rooms = onairStore.currentRooms
   font-size: 20px;
 }
 .private-room {
+  text-align: end;
+}
+/* 여기부터 썸네일 css */
+.rooms-list-section-item {
+  width: 375px;
+  height: 260px;
+  margin: 0 20px 20px 0 ;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+}
+.rooms-list-section-item:hover {
+  cursor: pointer;
+}
+.rooms-list-section-thumbnail {
+  width: 375px;
+  height: 230px;
   position: relative;
-  left: 350px;
-  bottom: 24px;
+  padding: 0 auto;
+  border: 1px solid #ecf0f5;
+  background-size: cover;
+}
+.rooms-list-section-logo {
+  width: 100px;
+  height: 170px;
+  background-color:rgba(4, 84, 121, 0.8);
+  position: absolute;
+  top: 20px;
+  right: 88px;
+  padding: 25px 0 0 0;
+  color: white;
+  font-size: 12px;
+}
+.rooms-list-section-logo:first-child {
+  background-color:rgba(121, 4, 4, 0.8);
+  left: 87px;
+
+}
+.rooms-list-section-logo-vs {
+  position: absolute;
+  width: 25px;
+  top: 55px;
+  right: 181px;
+  font-size: 28px;
+  font-family: var(--bold-font);
+  z-index: 2;
+  color: #ffffff;
+}
+.rooms-list-section-stadium {
+  position: absolute;
+  width: 200px;
+  top: 135px;
+  right: 87px;
+  font-size: 16px;
+  font-family: var(--bold-font);
+  color: #ffffff;
+}
+.rooms-list-section-item-title {
+  font-size: 16px;
+  width: 375px;
+  height: 24px;
+  padding: 2px 0 0 10px;
+  text-align: start;
 }
 @media (max-width: 1580px) {
   .rooms-list-page {
