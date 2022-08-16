@@ -620,6 +620,26 @@ export const useScheduleStore = defineStore("schedule", {
         router.push({ name: "Month", params: { month: `${activeMonth}` } });
       });
     },
+    clickMonthAtMainPage(leagueId, activeMonth) {
+      let alteredDate = "";
+      if (activeMonth === "8" || activeMonth === "9") {
+        alteredDate = "2022-0" + activeMonth;
+      } else if (activeMonth === "10" || activeMonth === "11" || activeMonth === "12") {
+        alteredDate = "2022-" + activeMonth;
+      } else if (activeMonth === "1" || activeMonth === "2" || activeMonth === "3" || activeMonth === "4" || activeMonth === "5") {
+        alteredDate = "2023-0" + activeMonth;
+      }
+      // 월별로 잘라서 담아주기
+      axios({
+        url: cheertogether.game.gamesLeagueMonth(`${leagueId}`),
+        method: "GET",
+        params: { date: alteredDate },
+      }).then((res) => {
+        (this.gamesMonth = []), (this.gamesMonth = res.data);
+        // month parameter 담아서 라우터 이동
+        router.push({ name: "Month", params: { month: `${activeMonth}` } });
+      });
+    },
   },
 });
 export const useOnAirStore = defineStore("onair", {
