@@ -19,9 +19,9 @@ export const useGamesStore = defineStore("gameStore", {
               awayLogo: e.away.logo
             });
           });
-          console.log(this.liveGames);
+          
           sessionStorage.setItem('AllLiveGames', JSON.stringify(this.liveGames))
-          console.log(JSON.parse(sessionStorage.getItem('AllLiveGames')))
+          
         },
         (err) => {
           console.log(err);
@@ -40,6 +40,8 @@ export const useGamesStore = defineStore("gameStore", {
               id: e.id,
             });
           });
+          sessionStorage.setItem(`liveGames`+`${leagueCode}`, JSON.stringify(this.liveGames))
+          
         },
         (err) => {
           console.log(err);

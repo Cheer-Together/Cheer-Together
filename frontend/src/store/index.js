@@ -457,6 +457,7 @@ export const useAccountStore = defineStore("account", {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("isSocialLogin");
       this.isLogin = false;
+      router.go()
       Swal.fire({
         icon: "success",
         title: "성공적으로 로그아웃 되었습니다.",
@@ -693,28 +694,38 @@ export const useOnAirStore = defineStore("onair", {
         method: "GET",
       }).then((res) => {
         if (res.data.status === "PUBLIC") {
-          router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+          if(!sessionStorage.getItem('token')){
+            this.loginDialogMsg = '로그인이 필요한 서비스입니다.'
+            useAccountStore().loginDialogToggle()
+          } else {
+            router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+          }
         } else if (res.data.status === "PRIVATE") {
-          Swal.fire({
-            title: "비밀번호를 입력하세요",
-            icon: "info",
-            input: "password",
-            inputPlaceholder: "********",
-            inputAttributes: {
-              maxlength: 10,
-              autocapitalize: "off",
-              autocorrect: "off",
-            },
-          }).then((pw) => {
-            if (pw.value === res.data.password) {
-              router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
-            } else {
-              Swal.fire({
-                title: "비밀번호가 틀렸습니다",
-                icon: "error",
-              });
-            }
-          });
+          if(!sessionStorage.getItem('token')){
+            this.loginDialogMsg = '로그인이 필요한 서비스입니다.'
+            useAccountStore().loginDialogToggle()
+          } else {
+            Swal.fire({
+              title: "비밀번호를 입력하세요",
+              icon: "info",
+              input: "password",
+              inputPlaceholder: "********",
+              inputAttributes: {
+                maxlength: 10,
+                autocapitalize: "off",
+                autocorrect: "off",
+              },
+            }).then((pw) => {
+              if (pw.value === res.data.password) {
+                router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+              } else {
+                Swal.fire({
+                  title: "비밀번호가 틀렸습니다",
+                  icon: "error",
+                });
+              }
+            });            
+          }
         }
       });
     },
@@ -1149,8 +1160,14 @@ export const useRoomStore = defineStore("room", {
 
           this.playTeams = res.data;
           this.getGameInfo(res.data.apiId);
-          this.getCheeringSongList(getTeamId(res.data.home.apiId));
+          getTeamId(res.data.home.apiId).then((res) => {
+            this.getCheeringSongList(res);
+          });
+          getTeamId(res.data.away.apiId).then((res) => {
+            this.getCheeringSongList(res);
+          });
           this.getCheeringSongList(getTeamId(res.data.away.apiId));
+
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
 
@@ -1247,6 +1264,13 @@ export const useRoomStore = defineStore("room", {
       });
     },
     getCheeringSongList(teamId) {
+      this.songList = [    
+        {
+        "id": 0,
+        "name": "응원가를 고르세요.",
+        "file": 0
+        },
+      ];
       axios({
         url: cheertogether.cheeringSong.cheeringSong(teamId),
         method: "GET",
