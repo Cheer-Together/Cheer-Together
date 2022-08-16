@@ -118,7 +118,7 @@
       <div class="match-screen-footer">
 
         <!-- 나가기 -->
-        <div class="button-range" style="width: 150px;" @click="leaveSession">
+        <div class="button-range" style="width: 150px;" @click="clickLeaveSessionButton">
           <div class="icon-range">
             <v-icon size="40">
               mdi-exit-run
@@ -815,6 +815,24 @@ export default {
       useGamePredictionStore().team2_point = 0;
       useGamePredictionStore().team2_count = 0;
 
+      if (this.session) this.session.disconnect();
+      
+      this.session = undefined;
+      this.mainStreamManager = undefined;
+      this.publisher = undefined;
+      this.subscribers = [];
+      this.OV = undefined;
+
+      window.removeEventListener("beforeunload", this.leaveSession);
+      this.$router.push({ name: "MainPage" });
+    },
+
+    updateMainVideoStreamManager(stream) {
+      if (this.mainStreamManager === stream) return;
+      this.mainStreamManager = stream;
+    },
+
+    clickLeaveSessionButton(){
       if(this.isSessionManager == true) {
         useGamePredictionStore().team1_predict_list = [];
         useGamePredictionStore().team2_predict_list = [];
@@ -845,21 +863,8 @@ export default {
       } else {
         this.updateRoomHeadCount(this.subscribers.length+1);
       }
-      if (this.session) this.session.disconnect();
-      
-      this.session = undefined;
-      this.mainStreamManager = undefined;
-      this.publisher = undefined;
-      this.subscribers = [];
-      this.OV = undefined;
 
-      window.removeEventListener("beforeunload", this.leaveSession);
-      this.$router.push({ name: "MainPage" });
-    },
-
-    updateMainVideoStreamManager(stream) {
-      if (this.mainStreamManager === stream) return;
-      this.mainStreamManager = stream;
+      this.leaveSession();
     },
 
     /**
