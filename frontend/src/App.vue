@@ -47,6 +47,13 @@ gameStore.generateTodayGames()
 roomStore.getRooms();
 
 gamesStore.getAllLiveGames();
+gamesStore.getLeagueLiveGames(39);
+gamesStore.getLeagueLiveGames(140);
+gamesStore.getLeagueLiveGames(135);
+gamesStore.getLeagueLiveGames(78);
+gamesStore.getLeagueLiveGames(61);
+gamesStore.getLeagueLiveGames(292);
+
 </script>
 
 <style>
