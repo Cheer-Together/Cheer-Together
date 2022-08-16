@@ -13,9 +13,22 @@
           </div>
           <!-- 닉네임 소개 -->
           <div>
-            <!-- 닉네임 -->
-            <div class="mypage-header-nickname">
-              {{ accountStore.otherProfile.nickname }}
+            <div style="display:flex;">
+              <!-- 닉네임 -->
+              <div class="mypage-header-nickname" >
+                <span v-if="accountStore.pointRanking[0].nickname === accountStore.otherProfile.nickname">👑</span>
+                {{ accountStore.otherProfile.nickname }}
+              </div>
+              <div v-for=" (m, index) in accountStore.pointRanking" :key="m.id">
+                <div class="mypage-header-ranking" v-if="m.nickname === accountStore.otherProfile.nickname">
+                  <v-icon style="margin-right: 5px;">
+                    mdi-crown-outline
+                  </v-icon>
+                  <span>{{ index + 1 }}위</span>
+                 ({{m.point}}개)
+                </div>               
+              </div>
+
             </div>
             <!-- 소개 -->
             <div class="mypage-header-info">
@@ -133,6 +146,10 @@ const withdrawal = () => {
   height: 120px;
   font-size: 17px;
   background-color: var( --sub-color );
+}
+.mypage-header-ranking {
+  margin: 0 0 0 500px;
+  padding: 20px 0 0 0;
 }
 .mypage-header-editinfo {
   margin: 20px 40px 0 0;
