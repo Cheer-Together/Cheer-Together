@@ -1065,6 +1065,7 @@ export default {
       this.cam = !this.cam;
     },
     toggleBullhorn(){
+      this.$refs.audio.muted = !this.$refs.audio.muted;
       this.bullhorn = !this.bullhorn;
     },
     clickBillboard() {
