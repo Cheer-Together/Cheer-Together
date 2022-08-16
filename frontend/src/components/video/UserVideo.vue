@@ -3,7 +3,7 @@
     <ov-video :stream-manager="streamManager" class="cam" />
     <div class="cam-user-name" >
       <!-- 이름 클릭하면 방장일 경우 강퇴 조치 -->
-      {{ clientData }} <span id="emitIcon"  @click="onEmit(clientData)">⛔</span>
+      {{ clientData }} <span id="emitIcon"  @click="onEmit(clientData)" v-if="accountStore.profile.nickname !== clientData">⛔</span>
     </div>
   </div>
 </template>
@@ -11,10 +11,15 @@
 <script>
 import OvVideo from "./OvVideo";
 import Swal from "sweetalert2";
+import { useAccountStore, } from "@/store/index.js";
 
 export default {
   name: "UserVideo",
-
+  data() {
+    return {
+      accountStore : useAccountStore(),
+    }
+  },
   components: {
     OvVideo,
   },
