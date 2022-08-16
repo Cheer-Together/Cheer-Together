@@ -74,7 +74,6 @@
 <script setup>
 import { ref } from "vue";
 import { useGameStore, useLeagueStore, useScheduleStore } from "@/store";
-import router from "@/router/index.js";
 
 const gameStore = useGameStore();
 const leagueStore = useLeagueStore();
@@ -112,8 +111,16 @@ const moveCarousel = (dir) => {
 };
 
 function moveMatchList(league, i) {
-  scheduleStore.clickMonthAtMainPage(league.id, gameStore.month[i]);
-  router.push({ name: "Month", params: { leaguename: league.hanName, month: gameStore.month[i] } });
+  let activeMonth = gameStore.month[i];
+  let alteredDate = "";
+  if (activeMonth == "8" || activeMonth == "9") {
+    alteredDate = "2022-0" + activeMonth;
+  } else if (activeMonth == "10" || activeMonth == "11" || activeMonth == "12") {
+    alteredDate = "2022-" + activeMonth;
+  } else if (activeMonth == "1" || activeMonth == "2" || activeMonth == "3" || activeMonth == "4" || activeMonth === "5") {
+    alteredDate = "2023-0" + activeMonth;
+  }
+  scheduleStore.clickMonthAtMainPage(league.apiId, alteredDate, activeMonth, league.hanName);
 }
 
 
