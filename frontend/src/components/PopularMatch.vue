@@ -12,9 +12,9 @@
           <!-- 홈 vs 어웨이  -->
           <!-- 홈 -->
           <div class="popularMatch-section-logo">
-            <img :src="room.gameInfo.home.logo" alt="" width="50" height="50">
+            <img :src="room.gameInfo?.home.logo" alt="" width="50" height="50">
             <div>
-              {{ room.gameInfo.home.hanName }}
+              {{ room.gameInfo?.home.hanName }}
             </div>
           </div>
 
@@ -28,14 +28,14 @@
           </div>
           <!-- 어웨이 -->
           <div class="popularMatch-section-logo">
-            <img :src="room.gameInfo.away.logo" alt="" width="50" height="50">
+            <img :src="room.gameInfo?.away.logo" alt="" width="50" height="50">
             <div>
-              {{ room.gameInfo.away.hanName }}
+              {{ room.gameInfo?.away.hanName }}
             </div>
           </div>
           <!-- 경기장 이름 -->
           <div class="popularMatch-section-stadium">
-            {{ room.gameInfo.stadium }}
+            {{ room.gameInfo?.stadium }}
           </div>
         </div>
         <div class="popularMatch-section-item-title">

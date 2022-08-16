@@ -216,11 +216,6 @@ axios({
       router.push({name:'MainPage'})
     }
   }).catch(err => {
-    console.log(err)
-    Swal.fire({
-      icon: 'error',
-      title: 'Axios에러.'
-    })
     router.push({name:'MainPage'})
 }).then(loaded.value = true)
 </script>
