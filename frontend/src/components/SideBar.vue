@@ -20,27 +20,27 @@
     </div>
     <!-- 프리미어리그 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('프리미어리그')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '프리미어리그'}">프리미어리그</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '프리미어리그' && route.matched[0].name === 'Onair'}">프리미어리그</p>
     </div>
     <!-- 라리가 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('라리가')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '라리가'}">라리가</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '라리가' && route.matched[0].name === 'Onair'}">라리가</p>
     </div>
     <!-- 세리에 A -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('세리에 A')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '세리에 A'}">세리에 A</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '세리에 A' && route.matched[0].name === 'Onair'}">세리에 A</p>
     </div>
     <!-- 분데스리가 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('분데스리가')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '분데스리가'}">분데스리가</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '분데스리가' && route.matched[0].name === 'Onair'}">분데스리가</p>
     </div>
     <!-- 리그 1 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('리그 1')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '리그 1'}">리그 1</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '리그 1' && route.matched[0].name === 'Onair'}" >리그 1</p>
     </div>
     <!-- K리그 1 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('K리그 1')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === 'K리그 1'}">K리그 1</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === 'K리그 1' && route.matched[0].name === 'Onair'}">K리그 1</p>
     </div>
     <!-- 경기 일정 -->
     <div class="sideBar-item" @click="scheduleStore.moveSchedulePage('2022-08')">
