@@ -35,7 +35,7 @@
           </div>
           <div style="display:flex;">
             <!-- 홈 팀 -->
-            <div class="game-prediction-team">
+            <div class="game-prediction-team" v-bind:style=" isPredictedTeam == 1 ? 'background-color:#db9908' : 'background-color:#323236' ">
               <!-- 홈팀 이미지 -->
               <img :src="roomStore.playTeams.home.logo" class="game-prediction-image" style="margin-right:10px;">
               <div>
@@ -43,7 +43,7 @@
                   {{ roomStore.playTeams.home.hanName }}
                 </div>
                 <div style="font-size:16px;">
-                  {{ gamePredictionStore.team1_point}}, {{ gamePredictionStore.team1_count}} 명
+                  {{ gamePredictionStore.team1_point}} 축구공 ({{ gamePredictionStore.team1_count}} 명)
                 </div>
               </div>
             </div>
@@ -52,7 +52,8 @@
               vs
             </div>
               <!-- 어웨이 팀 -->
-            <div class="game-prediction-team" style="flex-direction: row-reverse">
+            <div class="game-prediction-team" style="flex-direction: row-reverse" 
+              v-bind:style=" isPredictedTeam == 2 ? 'background-color:#db9908' : 'background-color:#323236' ">
               <!-- 어웨이팀 이미지 -->
               <img :src="roomStore.playTeams.away.logo" class="game-prediction-image" style="margin-left:10px;">
               <div>
@@ -60,7 +61,7 @@
                   {{ roomStore.playTeams.away.hanName }}
                 </div>
                 <div style="font-size:16px;">
-                  {{ gamePredictionStore.team2_point}}, {{ gamePredictionStore.team2_count}} 명
+                  {{ gamePredictionStore.team2_point}} 축구공 ({{ gamePredictionStore.team2_count}} 명)
                 </div>
               </div>
             </div>  
@@ -79,16 +80,25 @@
               <button class="predict-button" @click="sendGamePrediction(2)">예측</button>
             </div>
           </div>
+          <div style="display:flex; margin-top:10px; color:orange;" v-if="this.isPredicted">
+            <!--  -->
+            <div v-if="this.isPredictedTeam == 1">
+              예측한 팀 : {{roomStore.playTeams.home.hanName}} ({{gamePredictionStore.predictedPoint}}개)
+            </div>
+            <div v-if="this.isPredictedTeam == 2">
+              예측한 팀 : {{roomStore.playTeams.away.hanName}} ({{gamePredictionStore.predictedPoint}}개)
+            </div>
+          </div>
         </div>
 
         <div style="display:flex">
-          <v-btn class="match-screen-layout" @click="clickGamePrediction">
+          <div class="match-screen-layout" @click="clickGamePrediction">
             승부예측
-          </v-btn>
+          </div>
           <!-- 레이아웃 -->
-          <v-btn class="match-screen-layout" @click="clickLayoutButton">
+          <div class="match-screen-layout" @click="clickLayoutButton">
             레이아웃
-          </v-btn>
+          </div>
         </div>
       </div>
       
@@ -118,7 +128,7 @@
       <div class="match-screen-footer">
 
         <!-- 나가기 -->
-        <v-btn class="button-range" style="width: 160px;" @click="clickLeaveSessionButton">
+        <div class="button-range" style="width: 150px;" @click="leaveSession">
           <div class="icon-range">
             <v-icon size="40">
               mdi-exit-run
@@ -127,11 +137,11 @@
           <div class="button-range-title">
             <span style="color: red;">나가기</span>
           </div>
-        </v-btn>
+        </div>
 
         <!-- 채팅 -->
         <!-- 채팅창이 켜져있을 때 -->
-        <v-btn class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === 'a'">
+        <div class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === 'a'">
           <div class="icon-range">
             <v-icon size="40">
               mdi-chat-processing-outline
@@ -140,10 +150,10 @@
           <div class="button-range-title">
             채팅 <span style="color: red;">끄기</span>
           </div>
-        </v-btn>
+        </div>
 
         <!-- 채팅창이 꺼져있을 때 -->
-        <v-btn class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === '' || roomStore.isClickChatting === 'b'">
+        <div class="button-range" style="width: 170px;" @click="chattingOnOff" v-if="roomStore.isClickChatting === '' || roomStore.isClickChatting === 'b'">
           <div class="icon-range">
             <v-icon size="40">
               mdi-chat-processing
@@ -152,11 +162,11 @@
           <div class="button-range-title">
             채팅 보기
           </div>
-        </v-btn>
+        </div>
 
         <!-- 비디오 -->
         <!-- 비디오가 켜져있을 때 -->
-        <v-btn class="button-range" @click="toggleCam" v-if="!cam">
+        <div class="button-range" @click="toggleCam" v-if="!cam">
           <div class="icon-range">
             <v-icon size="40">
               mdi-video-outline
@@ -165,10 +175,10 @@
           <div class="button-range-title">
             비디오 <span style="color: red;">끄기</span>
           </div>
-        </v-btn>
+        </div>
 
         <!-- 비디오가 꺼져있을 때 -->
-        <v-btn class="button-range" @click="toggleCam" v-else>
+        <div class="button-range" @click="toggleCam" v-else>
           <div class="icon-range">
             <v-icon size="40" color="red">
               mdi-video-off-outline
@@ -177,11 +187,11 @@
           <div class="button-range-title">
             비디오 켜기
           </div>
-        </v-btn>
+        </div>
 
         <!-- 마이크 -->
         <!-- 마이크가 켜져있을 때 -->
-        <v-btn class="button-range" @click="toggleMic" v-if="!mic">
+        <div class="button-range" @click="toggleMic" v-if="!mic">
           <div class="icon-range">
             <v-icon size="40">
               mdi-microphone
@@ -190,10 +200,10 @@
           <div class="button-range-title">
             마이크 <span style="color: red;">끄기</span>
           </div>
-        </v-btn>
+        </div>
 
         <!-- 마이크가 꺼져있을 때 -->
-        <v-btn class="button-range" @click="toggleMic" v-else>
+        <div class="button-range" @click="toggleMic" v-else>
           <div class="icon-range">
             <v-icon size="40" color="red">
               mdi-microphone-off
@@ -202,11 +212,11 @@
           <div class="button-range-title">
             마이크 켜기
           </div>
-        </v-btn>
+        </div>
 
         <!-- 응원가 -->
         <!-- 응원가가 켜져있을 때 -->
-        <v-btn class="button-range" @click="toggleBullhorn" v-if="!bullhorn">
+        <div class="button-range" @click="toggleBullhorn" v-if="!bullhorn">
           <div class="icon-range">
             <v-icon size="40">
               mdi-bullhorn-outline
@@ -215,10 +225,10 @@
           <div class="button-range-title">
             응원가 <span style="color: red;">끄기</span>
           </div>
-        </v-btn>
+        </div>
 
         <!-- 응원가가 꺼져있을 때 -->
-        <v-btn class="button-range" @click="toggleBullhorn" v-else>
+        <div class="button-range" @click="toggleBullhorn" v-else>
           <div class="icon-range">
             <v-icon size="40">
               mdi-bullhorn
@@ -227,16 +237,15 @@
           <div class="button-range-title">
             응원가 켜기
           </div>
-        </v-btn>
-
+        </div>
         <!--응원가 플레이어-->
-        <div style="height:54px; display:flex;" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
+        <div style="flex-grow:1" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
           <audio ref="audio" controls>
             <source :src="roomStore.cheeringSong">
           </audio>
-          <select v-model="onePick" @change="changeSong($event)" style="margin: 5px 0 0 10px;">
+          <select v-model="onePick" @change="changeSong($event)">
             <option v-for="song in roomStore.songList" :value="song.file" :key="song.id">
-             <div clas="select-item">{{ song.name }}</div>
+              {{song.name}}
             </option>
           </select>
         </div>
@@ -247,19 +256,19 @@
     <div v-if="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
       <!-- 채팅 헤더 -->
       <div class="match-screen-chatting-header">
-        <v-icon class="match-screen-chatting-header-setting-button" @click="roomStore.isClickSettingButton = !roomStore.isClickSettingButton, roomStore.isClickBillboard = false, roomStore.isClickGameInfo = false">
+        <v-icon class="match-screen-chatting-header-setting-button" @click="roomStore.isClickSettingButton = !roomStore.isClickSettingButton">
           mdi-cog
         </v-icon>
 
         <!-- 드롭 다운 -->
-        <v-btn v-if="roomStore.isClickSettingButton" class="setting-dropdown">
+        <div v-if="roomStore.isClickSettingButton" class="setting-dropdown">
           <div @click="clickBillboard">
             전광판
           </div>
           <div @click="clickGameInfo">
             경기 정보
           </div>
-        </v-btn>
+        </div>
 
         <!-- 전광판 -->
         <div class="room-game-billboard" v-if="roomStore.isClickBillboard">
@@ -436,7 +445,7 @@
               
               <!-- 교체 -->
               <div v-if="gameInfo.type === 'subst'" class="room-game-info-section">
-                <div style="margin-top: 15px;">
+                <div>
                   <v-icon style="color: green">
                     mdi-arrow-right
                   </v-icon>
@@ -564,7 +573,7 @@ import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
 
 import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
-import { updateRoomHeadCount, deleteRoom } from '@/api/room.js';
+import { updateRoomHeadCount } from '@/api/room.js';
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -611,6 +620,7 @@ export default {
       team1_pointToSend: 0,
       team2_pointToSend: 0,
       isPredicted: false,
+      isPredictedTeam: 0,
       isValidateTime: false,
   
       bullhorn: false,
@@ -639,7 +649,6 @@ export default {
     async inMount(){
       this.mySessionId = this.$route.params.session;
       this.myUserName = useAccountStore().profile.nickname;
-      this.myPoint = useAccountStore().profile.point;
 
       let list = this.gamePredictionStore.isPredictedList;
       for(let predictedSession of list) {
@@ -653,6 +662,7 @@ export default {
       .then(() =>  {
         this.sessionInfo = useRoomStore().roomInfo;
         this.isSessionManager = (this.sessionInfo.managerId == useAccountStore().profileId);
+        this.myPoint = useAccountStore().profile.point;
       });
 
       this.joinSession();
@@ -673,7 +683,9 @@ export default {
         if(this.isSessionManager == true) {
           this.session
           .signal({
-            data: (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count),
+            data: (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) 
+              + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count)
+              + "/" + (this.gamePredictionStore.team1_predict_list) + "/" + (this.gamePredictionStore.team2_predict_list),
             to: [],
             type: "game-prediction-broadcast",
           })
@@ -721,22 +733,13 @@ export default {
       });
 
       this.session.on("signal:game-prediction", (event) => {
-        console.log("Send prediction: " + event);
         let receive = event.data.split("/");
-        let team = parseInt(receive[0]);
-        this.team1_point = parseInt(receive[1]);
-        this.team1_count = parseInt(receive[2]);
-        this.team2_point = parseInt(receive[3]);
-        this.team2_count = parseInt(receive[4]);
-        const memberId = parseInt(receive[5]);
-        
-        if(this.isSessionManager == true) {
-          if(team == 1) {
-            this.gamePredictionStore.team1_predict_list.push(memberId);
-          } else if(team == 2) {
-            this.gamePredictionStore.team2_predict_list.push(memberId);
-          }
-        }
+        this.gamePredictionStore.team1_point = parseInt(receive[0]);
+        this.gamePredictionStore.team1_count = parseInt(receive[1]);
+        this.gamePredictionStore.team2_point = parseInt(receive[2]);
+        this.gamePredictionStore.team2_count = parseInt(receive[3]);
+        this.gamePredictionStore.team1_predict_list = Array(receive[4]);
+        this.gamePredictionStore.team2_predict_list = Array(receive[5]);
       });
 
 
@@ -746,6 +749,8 @@ export default {
         this.gamePredictionStore.team1_count = parseInt(receive[1]);
         this.gamePredictionStore.team2_point = parseInt(receive[2]);
         this.gamePredictionStore.team2_count = parseInt(receive[3]);
+        this.gamePredictionStore.team1_predict_list = Array(receive[4]);
+        this.gamePredictionStore.team2_predict_list = Array(receive[5]);
       });
 
       this.session.on("signal:game-prediction-result", (event) => {
@@ -755,7 +760,6 @@ export default {
       });
 
       this.session.on("signal:force-out", (event) => {
-        console.log(event.data);
         if(event.data === this.myUserName){
           this.leaveSession();
         }
@@ -811,60 +815,28 @@ export default {
 
     leaveSession() {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
-      
-
-      this.gamePredictionStore.team1_point = 0;
-      this.gamePredictionStore.team1_count = 0;
-      this.gamePredictionStore.team2_point = 0;
-      this.gamePredictionStore.team2_count = 0;
-
-
       if (this.session) this.session.disconnect();
-      
+
       this.session = undefined;
       this.mainStreamManager = undefined;
       this.publisher = undefined;
       this.subscribers = [];
       this.OV = undefined;
 
+      this.gamePredictionStore.team1_point = 0;
+      this.gamePredictionStore.team1_count = 0;
+      this.gamePredictionStore.team2_point = 0;
+      this.gamePredictionStore.team2_count = 0;
+
+      this.gamePredictionStore.team1_predict_list = [];
+      this.gamePredictionStore.team2_predict_list = [];
+      
+      this.updateRoomHeadCount(this.subscribers.length+1);
+
       window.removeEventListener("beforeunload", this.leaveSession);
       this.$router.push({ name: "MainPage" });
     },
 
-    clickLeaveSessionButton(){
-          if(this.isSessionManager == true) {
-            useGamePredictionStore().team1_predict_list = [];
-            useGamePredictionStore().team2_predict_list = [];
-            console.log("I'm SessionManager!!");
-            this.subscribers.forEach(async e => {
-              let userId = JSON.parse(e.stream.connection.data).clientData;
-              console.log("foreach: "+userId);
-              await this.session
-                .signal({
-                  data: userId,
-                  to: [],
-                  type: "force-out",
-                })
-                .then(() => {
-                  console.log("force-out successfully requested");
-                })
-                .catch((error) => {
-                  console.error(error);
-                });
-            });
-            deleteRoom(this.sessionInfo.roomId,
-              () => {
-                console.log("Room Delete Complete");
-              },
-              (err) => {
-                console.log(err);
-            });
-          } else {
-            this.updateRoomHeadCount(this.subscribers.length+1);
-          }
-
-          this.leaveSession();
-    },
     updateMainVideoStreamManager(stream) {
       if (this.mainStreamManager === stream) return;
       this.mainStreamManager = stream;
@@ -958,11 +930,6 @@ export default {
       }
     },
     chattingOnOff() {
-      this.roomStore.isClickSettingButton = false,
-      this.roomStore.isClickBillboard = false,
-      this.roomStore.isClickGameInfo = false,
-      this.roomStore.isClickSetting = false,
-
       this.roomStore.isClickGameInfo = false
       if (this.roomStore.isClickChatting == '') {
         this.roomStore.isClickChatting = 'a'
@@ -994,7 +961,7 @@ export default {
     },
 
     forceOut(clientData) {
-      console.log(clientData + " " + this.isSessionManager);
+      console.log(clientData + this.isSessionManager);
       if(this.isSessionManager == false) return;
       this.session
         .signal({
@@ -1013,8 +980,6 @@ export default {
     clickGamePrediction() {
       this.roomStore.isClickPredictButton = !this.roomStore.isClickPredictButton;
       this.isValidateTime = this.validateTime();
-      this.roomStore.isClickBillboard =false;
-      this.roomStore.isClickGameInfo = false;
       console.log(useRoomStore().gamePredictionDeadline);
       console.log(this.validateTime());
       console.log(this.isValidateTime);
@@ -1032,17 +997,20 @@ export default {
         if(team == 1) {
           this.gamePredictionStore.team1_point += pointToSend;
           this.gamePredictionStore.team1_count++;
-          this.gamePredictionStore.team1_predict_list.push(this.accountStore.profileId);
+          this.gamePredictionStore.team1_predict_list.push(parseInt(this.accountStore.profileId));
+          this.isPredictedTeam = 1;
         } else if(team == 2) {
           this.gamePredictionStore.team2_point += pointToSend;
           this.gamePredictionStore.team2_count++;
-          this.gamePredictionStore.team2_predict_list.push(this.accountStore.profileId);
+          this.gamePredictionStore.team2_predict_list.push(parseInt(this.accountStore.profileId));
+          this.isPredictedTeam = 2;
         }
 
         this.session
           .signal({
-            data: team + "/" + (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) 
-              + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count) + "/" + useAccountStore().profileId,
+            data: (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) 
+              + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count)
+              + "/" + (this.gamePredictionStore.team1_predict_list) + "/" + (this.gamePredictionStore.team2_predict_list),
             to: [],
             type: "game-prediction",
           })
@@ -1052,13 +1020,14 @@ export default {
           .catch((error) => {
             console.error(error);
           });
-        this.roomStore.subtractPoint(this.gamePredictionStore.profileId, team, pointToSend);
+        this.roomStore.subtractPoint(this.accountStore.profileId, team, pointToSend);
         this.gamePredictionStore.predictedPoint = pointToSend;
         this.team1_pointToSend = 0;
         this.team2_pointToSend = 0;
         this.gamePredictionStore.isPredictedList.push(this.mySessionId);
         this.isPredicted = true;
         this.myPoint -= pointToSend;
+
       }
     },
 
@@ -1072,7 +1041,6 @@ export default {
     },
 
     validateTime() {
-      console.log("시간:" + useRoomStore().gamePredictionDeadline);
       return (new Date() <= new Date(useRoomStore().gamePredictionDeadline));
     },
     
@@ -1085,20 +1053,13 @@ export default {
       this.cam = !this.cam;
     },
     toggleBullhorn(){
-      this.$refs.audio.muted = !this.$refs.audio.muted;
       this.bullhorn = !this.bullhorn;
     },
     clickBillboard() {
-      this.roomStore.isClickGameInfo = false,
-      this.roomStore.isClickPredictButton = false,
-
       this.roomStore.isClickSettingButton = false
       this.roomStore.isClickBillboard = true
     },
     clickGameInfo() {
-      this.roomStore.isClickBillboard = false,
-      this.roomStore.isClickPredictButton = false,
-
       this.roomStore.isClickSettingButton = false
       this.roomStore.isClickGameInfo = true
       this.cam = !this.cam;
@@ -1113,7 +1074,7 @@ export default {
         if(this.isSessionManager == true) {
           this.session
             .signal({
-              data: this.gamePredictionStore.team1_predict_list + "/" + this.gamePredictionStore.team2_predict_list,
+              data: (this.gamePredictionStore.team1_predict_list) + "/" + (this.gamePredictionStore.team2_predict_list),
               to: [],
               type: "game-prediction-result",
             })
@@ -1124,7 +1085,7 @@ export default {
               console.error(error);
             });
         }
-        this.gamePredictionStore.distributePoints();
+        this.myPoint = this.gamePredictionStore.distributePoints() + this.myPoint;
         clearInterval(this.loading);
       }
     },
@@ -1198,12 +1159,11 @@ export default {
   position: relative;
 }
 .match-screen-title {
-  max-width: 740px;
+  width: 740px;
   height: 50px;
   padding: 10px 0 10px 10px;
-  /* background-color: #ecf0f5; */
+  background-color: #ecf0f5;
   border-radius: 3px;
-  font-size: 28px;
 }
 .match-screen-icon {
   padding-top: 8px;
@@ -1221,9 +1181,8 @@ export default {
   padding: 10px;
   color: white;
   position: absolute;
-  top: 55px;
+  top: 50px;
   right: 30px;
-  box-shadow: rgba(26,26,28, 0.25) 0px 54px 55px, rgba(26,26,28, 0.12) 0px -12px 30px, rgba(26,26,28, 0.12) 0px 4px 6px, rgba(26,26,28, 0.17) 0px 12px 13px, rgba(26,26,28, 0.09) 0px -3px 5px;
 }
 .game-prediction-team {
   width: 275px;
@@ -1271,17 +1230,11 @@ export default {
 .match-screen-layout {
   margin: 10px 30px 0 0;
   width: 100px;
-  height: 40px;
-  background-color: #6698cb;
+  height: 30px;
+  background-color: #ecf0f5;
   text-align: center;
   border-radius: 3px;
   border: 1px solid #54575b;
-  color: white;
-  font-size: 18px;
-  padding: 6px;
-}
-.match-screen-layout:first-child {
-  background-color: #5F45FF;
 }
 .match-screen-layout:hover {
   cursor: pointer;
@@ -1316,29 +1269,27 @@ export default {
 }
 .button-range {
   width: 190px;
-  background-image: linear-gradient(to right, #84fab0 0%, #8fd3f4 51%, #84fab0 100%);
   height: 70px;
+  background-color: #cfd3d8;
   display: flex;
   font-family: var(--bold-font);
   font-size: 20px;
   border-radius: 90px;
-  margin-right: 15px;
+
 }
 .button-range:hover {
   cursor: pointer;
 }
 .icon-range {
-  /* margin: 9px 0 0 9px; */
+  margin: 9px 0 0 9px;
   padding: 4px;
-  background-image: linear-gradient(to right, #a1fdf1 0%, #c2e9fb 51%, #a1fdfd 100%);
-
+  background-color: darkgray;
   width: 50px;
   height: 50px;
   border-radius: 50px;
-  margin: 0px;
 }
 .button-range-title {
-  padding: 3px 0 0 10px;
+  padding: 20px 0 0 10px;
 }
 
 /* 채팅 영역 */
@@ -1392,22 +1343,21 @@ export default {
 }
 .chatting-input-wrap {
   margin: 0 auto;
-  width: 220px;
+  width: 200px;
   height: 70px;
   border-radius: 20px;
   background-color: var(--sub-color);
   display: flex;
 }
 .chatting-input {
-  max-width: 170px;
-  min-width: 170px; 
+  max-width: 150px;
+  min-width: 150px; 
   max-height: 50px;
   min-height: 50px;
   margin: auto 0;
   overflow: auto;
   background: none;
-  padding: 5px 8px;
-  resize: none;
+  padding: 5px;
 }
 .chatting-input:focus {
   outline: none; 
@@ -1427,27 +1377,16 @@ export default {
   position: absolute;
   right: 10px;
   top: 30px;
-  width: 200px;
+  width: 150px;
   height: 50px;
-  /* border: 1px solid grey; */
+  border: 1px solid grey;
   display: flex;
-  border-radius: 10px;
-  background-color: #f0d264;
-  font-family: var(--bold-font);
-  color: white;
-  font-size: 16px;
+  border-radius: 15px;
 }
 .setting-dropdown div {
-  width: 100px;
-  padding-top: 5px ;
+  width: 74px;
+  padding-top: 10px ;
   text-align: center;
-}
-.setting-dropdown div:first-child {
-  background-color: #cb99c5;
-  height: 50px;
-  padding-top: 17px;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
 }
 .setting-dropdown div:hover {
   cursor: pointer;
@@ -1469,7 +1408,7 @@ export default {
   background-color: #ffffff;
   left: -60px;
   padding-top: 10px;
-box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
 }
 .room-game-info-header {
   position: absolute;
@@ -1515,15 +1454,15 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
 }
 .room-game-info-title {
   margin: 10px;
-  font-size: 20px;
+  font-size: 18px;
 }
 .room-game-info-title:first-child {
-  margin-top: 40px;
+  margin-top: 50px;
 }
 .room-game-info-section {
   margin: 5px 0 0 30px;
   font-family: var(--bold-font);
-  font-size: 16px;
+  font-size: 18px;
 }
 #goal-player {
   font-size: 16px;
@@ -1558,7 +1497,6 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
   position: absolute;
   top: 40px;
   right: 0;
-  box-shadow: rgba(59,65,81, 0.25) 0px 54px 55px, rgba(59,65,81, 0.12) 0px -12px 30px, rgba(59,65,81, 0.12) 0px 4px 6px, rgba(59,65,81, 0.17) 0px 12px 13px, rgba(59,65,81, 0.09) 0px -3px 5px;
 }
 .room-game-billboard-header {
   width: 100%;
@@ -1629,54 +1567,5 @@ box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30p
   display: flex;
 }
 
-/* 응원가 */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-audio::-webkit-media-controls-panel {
-  background-image: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 51%, #fbc2eb 100%);
-}
-select {
-  -moz-appearance: none;
-  -webkit-appearance: none;
-  appearance: none;
-
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-
-  color: #444;
-  background-color: #fff;
-
-  padding: .6em 1.4em .5em .8em;
-  margin: 20px;
-
-  border: 1px solid #aaa;
-  border-radius: .5em;
-  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
-  width: 260px;
-}
-select:hover {
-  border-color: #888;
-}
-select:focus {
-  border-color: #aaa;
-  box-shadow: 0 0 1px 3px rgba(59, 153, 252, .7);
-  box-shadow: 0 0 0 3px -moz-mac-focusring;
-  color: #222;
-  outline: none;
-}
-select:disabled {
-  opacity: 0.5;
-}
-.select-item {
-  width: 100%;
-  height: 54px;
-  position: absolute;
-}
-.select-item:hover {
-  transform: translateX(-300px);
-}
 </style>
 
