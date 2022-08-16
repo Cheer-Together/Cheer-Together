@@ -707,14 +707,14 @@ export const useOnAirStore = defineStore("onair", {
       }).then((res) => {
         if (res.data.status === "PUBLIC") {
           if(!sessionStorage.getItem('token')){
-            this.loginDialogMsg = '로그인이 필요한 서비스입니다.'
+            useAccountStore().loginDialogMsg = '로그인이 필요한 서비스입니다.'
             useAccountStore().loginDialogToggle()
           } else {
             router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
           }
         } else if (res.data.status === "PRIVATE") {
           if(!sessionStorage.getItem('token')){
-            this.loginDialogMsg = '로그인이 필요한 서비스입니다.'
+            useAccountStore().loginDialogMsg = '로그인이 필요한 서비스입니다.'
             useAccountStore().loginDialogToggle()
           } else {
             Swal.fire({
