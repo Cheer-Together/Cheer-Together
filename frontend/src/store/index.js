@@ -41,8 +41,9 @@ export const useCommunityStore = defineStore("community", {
 export const useAccountStore = defineStore("account", {
   state: () => ({
     loginDialog: false,
+    loginDialogMsg : '같이 집관에 오신 것을 환영합니다.',
+    signupAlarm: 'false',
     isLogin: sessionStorage.getItem("token") ?? false,
-    socialLoginRefresh: false,
     emailDoubleChecked: false,
     emailAuthCodeChecked: false,
     emailAuthCode: "AAAAAAAAAAA",
@@ -232,10 +233,15 @@ export const useAccountStore = defineStore("account", {
         },
       })
         .then(() => {
+          this.signupAlarm = true
           router.push({ name: "MainPage" });
         })
         .catch((err) => {
           console.log(err);
+          Swal.fire({
+            icon: 'warning',
+            title: '회원가입에 실패했습니다.'
+          });
         });
     },
 
@@ -387,7 +393,6 @@ export const useAccountStore = defineStore("account", {
         }
       }
     },
-
     loginAccount(user) {
       /*
       email과 password를 담은 user: Object를 입력받아 로그인을 시도합니다.
@@ -407,10 +412,24 @@ export const useAccountStore = defineStore("account", {
           decoded.value = jwt_decode(res.data);
           this.profileId = decoded.value.sub;
           this.userProfile(decoded.value.sub);
-          router.push({ name: "MainPage" });
+          Swal.fire({
+            icon: "success",
+            title: "성공적으로 로그인 되었습니다.",
+          });
         })
         .catch((err) => {
-          console.log(err);
+          if (err.response.status=='500') {
+            Swal.fire({
+              icon: 'warning',
+              title: '아이디와 비밀번호를 다시 확인해 주세요'
+            })
+          } else {
+            console.log(err)
+            Swal.fire({
+              icon: 'error',
+              title: '로그인 실패'
+            })
+          }
         });
     },
     kakaoLogin() {
@@ -419,16 +438,14 @@ export const useAccountStore = defineStore("account", {
       const url = "https://kauth.kakao.com/oauth/authorize?client_id=" + decodeURIComponent(API_KEY) + "&redirect_uri=" + decodeURIComponent(REDIRECT_URI) + "&response_type=code";
       window.location.replace(url);
     },
-    socialLoginComplete(token) {
+    socialLoginComplete(res) {
       this.isLogin = true;
-      let userId = jwt_decode(token);
-      this.profileId = userId;
-      this.userProfile(userId);
-      this.socialLoginRefresh = true;
-      router.push({name:'MainPage'});
-    },
-    socialLoginRefreshComplete() {
-      this.socialLoginRefresh = false;
+      this.profile = res.data;
+      if (this.profile.favoriteTeamList.length > 0) {
+        this.profile["profileImage"] = this.profile.favoriteTeamList[0].logo;
+      } else {
+        this.profile["profileImage"] = require("../assets/image/로고.png");
+      }
     },
     logoutAccount() {
       sessionStorage.removeItem("token");
@@ -439,13 +456,10 @@ export const useAccountStore = defineStore("account", {
         title: "성공적으로 로그아웃 되었습니다.",
       });
     },
-    findPassword(email) {
-      axios({
-        url: cheertogether.members.findPassword(),
-        method: "GET",
-        params: {
-          email: email,
-        },
+    isNewMember() {
+      Swal.fire({
+        icon: "success",
+        title: "회원가입에 성공했습니다.",
       })
         .then((res) => {
           console.log(res.data);
@@ -694,43 +708,35 @@ export const useOnAirStore = defineStore("onair", {
     },
 
     enterRoom(roomId) {
-      if (!sessionStorage.getItem("token")) {
-        Swal.fire({
-          title: "로그인이 필요합니다",
-          icon: "warning",
-        });
-        console.log(sessionStorage.getItem("token"));
-      } else {
-        axios({
-          url: cheertogether.room.enterRoom(roomId),
-          method: "GET",
-        }).then((res) => {
-          if (res.data.status === "PUBLIC") {
-            router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
-          } else if (res.data.status === "PRIVATE") {
-            Swal.fire({
-              title: "비밀번호를 입력하세요",
-              icon: "info",
-              input: "password",
-              inputPlaceholder: "********",
-              inputAttributes: {
-                maxlength: 10,
-                autocapitalize: "off",
-                autocorrect: "off",
-              },
-            }).then((pw) => {
-              if (pw.value === res.data.password) {
-                router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
-              } else {
-                Swal.fire({
-                  title: "비밀번호가 틀렸습니다",
-                  icon: "error",
-                });
-              }
-            });
-          }
-        });
-      }
+      axios({
+        url: cheertogether.room.enterRoom(roomId),
+        method: "GET",
+      }).then((res) => {
+        if (res.data.status === "PUBLIC") {
+          router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+        } else if (res.data.status === "PRIVATE") {
+          Swal.fire({
+            title: "비밀번호를 입력하세요",
+            icon: "info",
+            input: "password",
+            inputPlaceholder: "********",
+            inputAttributes: {
+              maxlength: 10,
+              autocapitalize: "off",
+              autocorrect: "off",
+            },
+          }).then((pw) => {
+            if (pw.value === res.data.password) {
+              router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
+            } else {
+              Swal.fire({
+                title: "비밀번호가 틀렸습니다",
+                icon: "error",
+              });
+            }
+          });
+        }
+      });
     },
 
     searchRooms(searchData){
@@ -943,6 +949,10 @@ export const useGameStore = defineStore("game", {
     },
   },
 });
+async function getTeamId(teamApiId) {
+  const response = await axios.get(cheertogether.team.team(teamApiId));
+  return response.data.id;
+}
 export const useRoomStore = defineStore("room", {
   state: () => ({
     roomInfo: undefined,
@@ -966,14 +976,14 @@ export const useRoomStore = defineStore("room", {
     ],
     popularRooms: [],
     playTeams: {
-      id: 31,
+      id: "",
       home: {
         leagueName: "",
         name: "",
         hanName: "",
         logo: "",
         code: "",
-        apiId: 0,
+        apiId: "",
       },
       away: {
         leagueName: "",
@@ -981,15 +991,15 @@ export const useRoomStore = defineStore("room", {
         hanName: "",
         logo: "",
         code: "",
-        apiId: 1,
+        apiId: "",
       },
       kickoff: "",
       stadium: "",
       status: "",
-      homeScore: 0,
-      awayScore: 2,
-      apiId: 867946,
-      leagueApiId: 39,
+      homeScore: "",
+      awayScore: "",
+      apiId: "",
+      leagueApiId: "",
     },
     goal: [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}],
     homeGoalPoint : 0,
@@ -1013,6 +1023,58 @@ export const useRoomStore = defineStore("room", {
     predictTime: "",
     
     gamePredictionDeadline: "",
+
+    cheeringSong : "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FNice%20one%20Sonny.mp3?alt=media&token=949e25e8-33bb-4ae5-9dde-24bfd57e827d",
+    songList : [
+    {
+      "id": 0,
+      "team_id": 18,
+      "target": "손흥민",
+      "name": "응원가를 고르세요.",
+      "file": 0
+    },
+    {
+      "id": 1,
+      "team_id": 18,
+      "target": "손흥민",
+      "name": "Nice one Sonny",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FNice%20one%20Sonny.mp3?alt=media&token=949e25e8-33bb-4ae5-9dde-24bfd57e827d"
+    },
+    {
+      "id": 2,
+      "team_id": 18,
+      "target": "해리 케인",
+      "name": "Are you watching Harry Kane",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FAre%20you%20watching%20Harry%20Kane.mp3?alt=media&token=514a2eb0-300f-4a62-a2bb-8666baf8fa13"
+    },
+    {
+      "id": 3,
+      "team_id": 18,
+      "target": "토트넘",
+      "name": "Come On You Spurs",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FCome%20On%20you%20spurs.mp3?alt=media&token=91246d2d-68d2-407e-86be-891ff2d8e8cf"
+    },
+    {
+      "id": 4,
+      "team_id": 18,
+      "target": "토트넘",
+      "name": "Glory Glory Tottenham Hotspur",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FGlory%20Glory%20Tottenham%20Hotspur.mp3?alt=media&token=bd04eb64-a029-43b9-a326-a11fa3fe8bcd"
+    },
+    {
+      "id": 5,
+      "team_id": 18,
+      "target": "클루셉스키",
+      "name": "Kulusevski Tottenham Song",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FKulusevski%20Tottenham%20Song.mp3?alt=media&token=b4e93468-bb2f-4f06-8470-0bfed9b1b889"
+    },
+    {
+      "id": 6,
+      "team_id": 18,
+      "target": "토트넘",
+      "name": "When the Spurs Go Marching In",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FWhen%20the%20Spurs%20Go%20Marching%20In.mp3?alt=media&token=91307a44-473f-468c-a1d3-d152bc0aa30c"
+    }]
   }),
   actions: {
     getRooms() {
@@ -1080,6 +1142,9 @@ export const useRoomStore = defineStore("room", {
           this.gamePredictionDeadline = date;
 
           this.playTeams = res.data;
+          this.getGameInfo(res.data.apiId);
+          this.getCheeringSongList(getTeamId(res.data.home.apiId));
+          this.getCheeringSongList(getTeamId(res.data.away.apiId));
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
 
@@ -1123,7 +1188,7 @@ export const useRoomStore = defineStore("room", {
           this.homeGoalPoint = 0
           this.awayGoalPoint = 0
 
-          res.data.response.reverse().forEach((e) => {
+          res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
             if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
               this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
               this.homeGoalPoint = this.homeGoalPoint + 1
@@ -1176,6 +1241,17 @@ export const useRoomStore = defineStore("room", {
         this.playTeams = res.data;
       });
     },
+    getCheeringSongList(teamId) {
+      axios({
+        url: cheertogether.cheeringSong.cheeringSong(teamId),
+        method: "GET",
+      }).then((res) => {
+        console.log(res.data);
+        res.data.forEach((e) => {
+          this.songList.push(e);
+        })
+      });
+    }
   },
 });
 export const useGamePredictionStore = defineStore("gamePrediction", {

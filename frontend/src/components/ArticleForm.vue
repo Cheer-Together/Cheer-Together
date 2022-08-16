@@ -13,12 +13,13 @@
         ></v-select>
       </div>
       <div>
-        <input v-model="title" type="text" placeholder=" 제목을 입력하세요." class="write-title">
+        <input v-model="title" type="text" maxlength="25" placeholder=" 제목을 입력하세요." class="write-title">
       </div>
     </div>
 
     <div class="write-author">
-      <div style="width:34px; height:34px; background-color: aquamarine; margin:0 10px 0 10px;">
+      <div style="width:34px; height:34px; margin:0 10px 0 10px;">
+        <img :src="accountStore.profile.profileImage" style="width:34px; height:34px;">
       </div>
       <a>{{accountStore.profile.nickname}} | {{ now }}</a>
     </div>
@@ -26,9 +27,9 @@
       <textarea v-model="content" placeholder="내용을 입력하세요. 우측 하단을 드래그하여 높이를 변경할 수 있습니다." class="write-content"></textarea>
     </div>
     <div class="write-bottom">
-      <v-btn @click="communityStore.communityToggle()" class="write-button">취소하기</v-btn>
-      <v-btn v-if="isModify" @click="modifyButton()" class="write-button">수정완료</v-btn>
-      <v-btn v-else @click="completeButton()" class="write-button">작성완료</v-btn>
+      <v-btn style="height:34px; margin-left:20px; font-family: 'MICEGothic Bold';" @click="communityStore.communityToggle()" class="write-button">취소하기</v-btn>
+      <v-btn style="height:34px; margin-left:20px; color:white; font-family: 'MICEGothic Bold';" color=#2e6afd v-if="isModify" @click="modifyButton()" class="write-button">수정완료</v-btn>
+      <v-btn style="height:34px; margin-left:20px; color:white; font-family: 'MICEGothic Bold';" color=#2e6afd v-else @click="completeButton()" class="write-button">작성완료</v-btn>
     </div>
   </div>
 </template>
@@ -67,30 +68,37 @@ const items = [
 const time = new Date();
 const now = time.toLocaleString();
 function completeButton() {
-  axios({
-    url: "https://i7b204.p.ssafy.io/cheertogether/articles",
-    method: 'POST',
-    data: {
-      content: content.value,
-      leagueApiId: category.value,
-      title: title.value,
-    },
-    params: {
-      jwtToken: sessionStorage.getItem('token')
-    }
-  })
-  .then(res => {
-    console.log(res.data)
-    router.go()
-  })
-  .catch(err => {
-    console.log(err)
+  if (title.value.length < 26&&!title.value=='') {
+    axios({
+      url: "https://i7b204.p.ssafy.io/cheertogether/articles",
+      method: 'POST',
+      data: {
+        content: content.value,
+        leagueApiId: category.value,
+        title: title.value,
+      },
+      params: {
+        jwtToken: sessionStorage.getItem('token')
+      }
+    })
+    .then(res => {
+      console.log(res.data)
+      router.go()
+    })
+    .catch(err => {
+      console.log(err)
+      Swal.fire({
+        icon: 'error',
+        title: '작성 실패'
+      })
+    })
+    communityStore.communityToggle()
+  } else {
     Swal.fire({
       icon: 'error',
-      title: '작성 실패'
+      title: '제목이 올바르지 않습니다.'
     })
-  })
-  communityStore.communityToggle()
+  }
 }
 function modifyButton() {
   axios({

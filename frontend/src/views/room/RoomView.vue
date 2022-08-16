@@ -9,7 +9,7 @@
         <div style="display:flex;">
           <!-- 방 제목 -->
           <div class="match-screen-title">
-            {{ sessionInfo.name }}
+            {{ sessionInfo?.name }}
           </div>
           <div class="match-screen-icon">
             <v-icon  size="40" @click="leaveSession">
@@ -227,6 +227,17 @@
           <div class="button-range-title">
             응원가 켜기
           </div>
+        </div>
+        <!--응원가 플레이어-->
+        <div style="flex-grow:1" v-show="roomStore.roomInfo.managerId==accountStore.profileId">
+          <audio ref="audio" controls>
+            <source :src="roomStore.cheeringSong">
+          </audio>
+          <select v-model="onePick" @change="changeSong($event)">
+            <option v-for="song in roomStore.songList" :value="song.file" :key="song.id">
+              {{song.name}}
+            </option>
+          </select>
         </div>
       </div>
     </div>
@@ -601,6 +612,7 @@ export default {
       isPredicted: false,
   
       bullhorn: false,
+      onePick: "0"
     };
   },
   mounted() {
@@ -617,7 +629,8 @@ export default {
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
     this.roomStore.isClickPredictButton = false
-    this.loading = setInterval(this.getGameInfo(), 60000);
+    this.loading = setInterval(this.getGameInfo, 60000);
+
   },
 
   methods: {
@@ -744,6 +757,14 @@ export default {
           this.leaveSession();
         }
       });
+
+      this.session.on("signal:cheering-song", (event) => {
+        console.log(event.data);
+        this.roomStore.cheeringSong = event.data;
+        this.$refs.audio.pause();
+        this.$refs.audio.load();
+        this.$refs.audio.play();
+      })
 
       // --- Connect to the session with a valid user token ---
 
@@ -1057,6 +1078,26 @@ export default {
           console.log(err)
         }
       );
+    },
+    changeSong(event){
+      console.log(event.target.value);
+      this.roomStore.cheeringSong=event.target.value;
+      this.$refs.audio.pause();
+      this.$refs.audio.load();
+      this.$refs.audio.play();
+      this.session
+        .signal({
+          data: this.roomStore.cheeringSong,
+          to: [],
+          type: "cheering-song",
+        })
+        .then(() => {
+          console.log("응원가 공유 성공");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(this.roomStore.cheeringSong);
     }
   },
 };
