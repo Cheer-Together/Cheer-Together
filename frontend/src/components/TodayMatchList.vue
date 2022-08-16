@@ -22,7 +22,7 @@
           </div>
           <div class="todayMatchList-section-etc">
             더보기
-            <v-icon style="width: 10px; font-size: 20px"> mdi-chevron-right </v-icon>
+            <v-icon @click="moveMatchList(league, i)" style="width: 10px; font-size: 20px"> mdi-chevron-right </v-icon>
           </div>
         </div>
 
@@ -73,10 +73,11 @@
 
 <script setup>
 import { ref } from "vue";
-import { useGameStore, useLeagueStore } from "@/store";
+import { useGameStore, useLeagueStore, useScheduleStore } from "@/store";
 
 const gameStore = useGameStore();
 const leagueStore = useLeagueStore();
+const scheduleStore = useScheduleStore();
 for(let i = 0 ; i < 6 ; i++) {
   gameStore.month[i] = gameStore.today[i].getMonth() + 1;
   gameStore.date[i] = gameStore.today[i].getDate();
@@ -108,6 +109,19 @@ const moveCarousel = (dir) => {
     isActiveCarousel.value = false;
   }
 };
+
+function moveMatchList(league, i) {
+  let activeMonth = gameStore.month[i];
+  let alteredDate = "";
+  if (activeMonth == "8" || activeMonth == "9") {
+    alteredDate = "2022-0" + activeMonth;
+  } else if (activeMonth == "10" || activeMonth == "11" || activeMonth == "12") {
+    alteredDate = "2022-" + activeMonth;
+  } else if (activeMonth == "1" || activeMonth == "2" || activeMonth == "3" || activeMonth == "4" || activeMonth === "5") {
+    alteredDate = "2023-0" + activeMonth;
+  }
+  scheduleStore.clickMonthAtMainPage(league.apiId, alteredDate, activeMonth, league.hanName);
+}
 
 
 
