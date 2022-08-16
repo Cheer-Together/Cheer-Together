@@ -159,16 +159,20 @@ function socialSignupBtn() {
       console.log(err);
     });
   Swal.fire({
-    icon: 'success',
-    title: '성공적으로 로그인 되었습니다.',
-  })
+    icon: "success",
+    title: "안녕하세요! 😊",
+    text: "로그인에 성공하였습니다.",
+    confirmButtonText: "확인",
+  });
   window.location.reload(true)
   })
   .catch(err => {
     console.log(err)
     Swal.fire({
       icon: 'error',
-      title: '가입 실패.'
+      title: '회원 가입 실패! 😨',
+      text: "유효하지 않은 요청입니다.",
+      confirmButtonText: '확인',
     })
   })
 }
@@ -197,9 +201,11 @@ axios({
           console.log(err);
         });
         Swal.fire({
-          icon: 'success',
-          title: '성공적으로 로그인 되었습니다.',
-        })
+          icon: "success",
+          title: "안녕하세요! 😊",
+          text: "로그인에 성공하였습니다.",
+          confirmButtonText: "확인",
+        });
         window.location.reload(true)
       } else {
         socialSignupEmail.value = res.data.email

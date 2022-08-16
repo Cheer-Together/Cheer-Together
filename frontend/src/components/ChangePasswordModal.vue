@@ -89,7 +89,9 @@ const myChangePassword = () => {
     // accountStore.isChangePasswordModal = true
     Swal.fire({
       icon: 'error',
-      title: '올바른 비밀번호가 아닙니다.',
+      title: '실패! 😵',
+      text: '올바른 비밀번호가 아닙니다.',
+      confirmButtonText: '확인'
     })
   }
   else {

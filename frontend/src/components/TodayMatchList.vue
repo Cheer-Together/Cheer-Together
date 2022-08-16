@@ -1,7 +1,7 @@
 <template>
   <div class="todayMatchList">
     <div class="todayMatchList-title-button">
-      <div class="todayMatchList-title">경기 일정</div>
+      <div class="todayMatchList-title">경기 일정 🗓</div>
       <div v-if="isActiveCarousel">
         <button @click="moveCarousel(1)"><v-icon> mdi-checkbox-blank-circle</v-icon></button>
         <button @click="moveCarousel(2)"><v-icon> mdi-checkbox-blank-circle-outline</v-icon></button>
@@ -140,7 +140,7 @@ function moveMatchList(league, i) {
   margin-right: 10px;
 }
 .todayMatchList-title {
-  font-size: 24px;
+  font-size: 30px;
   padding: 5.5px 0;
   font-family: var(--bold-font);
 }
@@ -173,6 +173,9 @@ function moveMatchList(league, i) {
   margin: 10px 0;
   font-size: 16px;
   padding: 4px 2px 0 0;
+}
+.todayMatchList-section-etc:hover {
+  cursor: pointer;
 }
 .todayMatchList-item-section {
   width: 513px;

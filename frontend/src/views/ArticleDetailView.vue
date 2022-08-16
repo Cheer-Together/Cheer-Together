@@ -208,20 +208,26 @@ function likeArticle() {
     console.log(res.data)
     Swal.fire({
       icon: 'success',
-      title: '이 글을 좋아합니다!'
+      title: '게시글 좋아요! 👍',
+      text: '이 글을 좋아합니다.',
+      confirmButtonText: '확인'
     })
   })
   .catch(err => {
     if (err.response.status=='400') {
       Swal.fire({
         icon: 'warning',
-        title: '이미 좋아하는 게시글입니다.'
+        title: '좋아요 실패! 😾',
+        text: '이미 좋아요를 누른 게시글입니다.',
+        confirmButtonText: '확인'
       })
     } else {
       console.log(err)
       Swal.fire({
         icon: 'error',
-        title: '좋아요 에러'
+        title: "좋아요 실패! 😾",
+        text: '유효하지 않은 요청입니다.',
+        confirmButtonText: '확인'
       })
     } 
   })
@@ -266,22 +272,28 @@ function reportArticle() {
       reportModalToggle()
       Swal.fire({
         icon: 'success',
-        title: '신고가 접수되었습니다.'
+        title: '신고 접수! 🚨',
+        text: '게시글 신고가 접수되었습니다.',
+        confirmButtonText: '확인'
       })
     })
     .catch(err => {
       if (err.response.status=='400') {
         reportModalToggle()
         Swal.fire({
-          icon: 'warning',
-          title: '이미 신고가 접수된 게시글입니다.'
+          icon: 'error',
+          title: '신고 실패! 😵',
+          text: '이미 신고가 접수된 게시글입니다.',
+          confirmButtonText: '확인'
         })
       } else {
         console.log(err)
         reportModalToggle()
         Swal.fire({
           icon: 'error',
-          title: '싫어요 전송 실패'
+          title: '싫어요 실패! 😵',
+          text: '유효하지 않은 요청입니다.',
+          confirmButtonText: '확인'
         })
       }
     })
@@ -308,7 +320,9 @@ function writeReply() {
     console.log(err)
     Swal.fire({
       icon: 'error',
-      title: '댓글 다는 중 에러 발생'
+      title: '댓글 작성 실패! 😰',
+      text: '댓글 작성 중 에러가 발생하였습니다.',
+      confirmButtonText: '확인'
     })
   })
 }
@@ -388,5 +402,6 @@ function toUserDetail(id) {
 }
 .like-btn:hover {
   cursor: pointer;
+  opacity: 0.5;
 }
 </style>
