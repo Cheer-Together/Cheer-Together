@@ -63,7 +63,6 @@ let dd = now.getDate()
 if (dd < 10) {dd = '0' + dd}
 const DD = dd.toLocaleString()
 const yyyymmdd = yyyy+mm+DD
-console.log(yyyymmdd)
 let matches = []
 axios({
   url: 'https://i7b204.p.ssafy.io/cheertogether/games/date',
@@ -120,28 +119,6 @@ axios({
   .catch(err => {
     console.log(err)
 })
-// const matches = [
-//   {
-//     id: 0,
-//     teams: ['맨체스터 유나이티드', '토트넘 핫스퍼'],
-//     time: '13:00'
-//   },
-//   {
-//     id: 1,
-//     teams: ['노팅엄 포레스트', '뉴캐슬 유나이티드'],
-//     time: '15:00'
-//   },
-//   {
-//     id: 2,
-//     teams: ['레스터시티', '리버풀'],
-//     time: '20:00'
-//   },
-//   {
-//     id: 3,
-//     teams: ['리즈 유나이티드', '토트넘 핫스퍼'],
-//     time: '23:00'
-//   },
-// ]
 </script>
 
 <style>

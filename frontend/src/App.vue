@@ -30,7 +30,6 @@ if (toke.value) {
 
 // 로그인 유저라면 id값 가져와서 프로필에 저장
 if (accountStore.isLogin) {
-  console.log(decoded.value.sub);
   accountStore.profileId = decoded.value.sub;
   accountStore.userProfile(decoded.value.sub);
 }
