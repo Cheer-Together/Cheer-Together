@@ -89,7 +89,9 @@ function completeButton() {
       console.log(err)
       Swal.fire({
         icon: 'error',
-        title: '작성 실패'
+        title: '실패! 😨',
+        text: '글 작성에 실패하였습니다.',
+        confirmButtonText: "확인"
       })
     })
     communityStore.communityToggle()
@@ -118,7 +120,9 @@ function modifyButton() {
     console.log(err)
     Swal.fire({
       icon: 'error',
-      title: '수정 실패'
+      title: '실패! 😨',
+      text: '글 작성에 실패하였습니다.',
+      confirmButtonText: "확인"
     })
   })
   communityStore.communityToggle()

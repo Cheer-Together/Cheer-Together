@@ -1,7 +1,7 @@
 <template>
   <div class="popularMatch">
     <div class="popularMatch-title">
-      실시간 인기 응원방
+      실시간 인기 응원방 📣
     </div>
     <div class="popularMatch-section">
       <!-- 첫 번째 -->
@@ -91,7 +91,7 @@ roomStore.getPopularRooms()
   margin-bottom: 40px;
 }
 .popularMatch-title {
-  font-size: 24px;
+  font-size: 30px;
   padding: 5.5px 0;
   font-family: var(--bold-font);
 }
@@ -114,6 +114,7 @@ roomStore.getPopularRooms()
 }
 .popularMatch-section-item:hover {
   cursor: pointer;
+  opacity: 0.5;
 }
 .popularMatch-section-thumbnail {
   width: 375px;

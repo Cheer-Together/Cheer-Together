@@ -12,7 +12,7 @@
     <div @click="toUserDetail(article.memberResponse.id)" class="article-list" style="width:130px">
       <p>{{article.memberResponse.nickname}}</p>
     </div>
-    <div style="width:80px">
+    <div style="width:80px" class="article-likes">
       <p>{{article.likes}}</p>
     </div>
   </div>

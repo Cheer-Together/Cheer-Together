@@ -43,8 +43,8 @@ export default {
     },
     onEmit(clientData) {
       Swal.fire({
-        title: '정말 퇴장시키시겠습니까?',
-        text: '닉네임 : ' + clientData,
+        title: '강제 퇴장! 😡',
+        text: clientData + '님을 퇴장시키겠습니까?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
@@ -55,7 +55,7 @@ export default {
         if (result.isConfirmed) {
           this.$emit("forceOut", this.clientData);
           Swal.fire(
-            clientData + '님을 \n 내보냈습니다!',
+            clientData + '님을 \n 퇴장시켰습니다! 🤦',
             '',
             'success'
           )

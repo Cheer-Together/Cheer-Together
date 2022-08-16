@@ -87,11 +87,9 @@ if(leagueName === '프리미어리그'){
   margin: 50px auto;
   width: 1000px;
 }
-
 .schedule-page-season-select {
   text-align: center;
 }
-
 .schedule-page-month-select {
   display: flex;
   width: 1000px;
@@ -105,6 +103,9 @@ if(leagueName === '프리미어리그'){
   text-align: center;
   margin-top: 3px;
   cursor: pointer;
+}
+.schedule-page-month-item:hover {
+  opacity: 0.5;
 }
 
 .schedule-page-month-item .item-active {
