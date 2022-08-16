@@ -25,12 +25,12 @@
             <div class="team-left">
               <p class="left-score" v-if="game.status === 'FT'">{{ game.homeScore }}</p>
               <img :src="game.home.logo" class="team-logo">
-              <p>{{ game.home.hanName }}</p>
+              <p :class="{'winner' : game.homeScore > game.awayScore}">{{ game.home.hanName }}</p>
             </div>
             <div class="team-right">
               <p class="right-score" v-if="game.status === 'FT'">{{ game.awayScore }}</p>
               <img :src="game.away.logo" class="team-logo">
-              <p>{{ game.away.hanName }}</p>
+              <p :class="{'winner' : game.homeScore < game.awayScore}">{{ game.away.hanName }}</p>
             </div>
           </div>
         </div>
@@ -158,5 +158,8 @@ let uniqGameDays = [...set]
   height: 40px;
   justify-content: center;
   align-items: center;
+}
+.winner {
+  font-weight: bold;
 }
 </style>

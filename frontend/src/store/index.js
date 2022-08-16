@@ -538,16 +538,7 @@ export const useScheduleStore = defineStore("schedule", {
     },
 
     clickLeague(event) {
-      // 현재 라우터에 색깔 입히기
-      const activeTag = document.querySelector(".league-active");
-      activeTag.classList.remove("league-active");
       const clickedTag = event.target;
-      clickedTag.classList.add("league-active");
-      // 리그 클릭 시 가장 앞 달로 강제 이동
-      const activeMonthTag = document.querySelector(".item-active");
-      activeMonthTag.classList.remove("item-active");
-      const firstMonthTag = document.querySelector(".schedule-page-month-item p");
-      firstMonthTag.classList.add("item-active");
       // 해당 리그의 8월 정보를 보여준다.
       // state 변경하기
       if (clickedTag.innerText === "프리미어리그") {
@@ -608,12 +599,7 @@ export const useScheduleStore = defineStore("schedule", {
     },
 
     clickMonth(leagueId, event) {
-      // 색 바꾸기
-      if (document.querySelector(".item-active")) {
-        document.querySelector(".item-active").classList.remove("item-active");
-      }
       const clickedTag = event.target;
-      clickedTag.classList.add("item-active");
       const activeMonth = clickedTag.innerText.slice(-3, -1).trim();
       let alteredDate = "";
       if (activeMonth === "8" || activeMonth === "9") {
@@ -641,8 +627,13 @@ export const useOnAirStore = defineStore("onair", {
     allRooms: [],
     currentRooms: [],
     makeRoomDialog: false,
+    isSearched: false,
+    searchWord: ''
   }),
-  persist: true,
+  persist: {
+    paths: ['allRooms', 'currentRooms', 'makeRoomDialog', 'isSearched', 'searchWord']
+  },
+
   actions: {
     moveOnairPage() {
       axios({
@@ -673,13 +664,8 @@ export const useOnAirStore = defineStore("onair", {
         { id: "61", league: "리그 1" },
         { id: "292", league: "K리그 1" },
       ];
-      // 색 입히기
-      if (document.querySelector(".sideBar-subtitle-active")) {
-        const fromSubtitle = document.querySelector(".sideBar-subtitle-active");
-        fromSubtitle.classList.remove("sideBar-subtitle-active");
-      }
+      
       const toSubtitle = event.target;
-      toSubtitle.classList.add("sideBar-subtitle-active");
 
       for (let item of leagues) {
         if (toSubtitle.innerText === item.league) {
@@ -753,7 +739,10 @@ export const useOnAirStore = defineStore("onair", {
               }
             }
             this.currentRooms = trueRes
+            this.isSearched = true
+            this.searchWord = searchData.text
             router.go()
+            
           })
         }  
     },
