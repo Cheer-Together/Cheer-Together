@@ -77,10 +77,12 @@
 import { useAccountStore, useOnAirStore } from '../store/index.js'
 import { useScheduleStore } from '../store/index.js'
 import router from '@/router/index.js'
+import { useRoute } from 'vue-router'
 const onairStore = useOnAirStore()
 const scheduleStore = useScheduleStore()
 const accountStore = useAccountStore()
 
+const route = useRoute()
 
 </script>
 

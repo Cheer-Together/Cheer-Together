@@ -1,5 +1,5 @@
 <template>
-  <div class="room" :style="{ backgroundImage: 'url(' + myImg + ')' }">
+  <div style="display:flex;">
     <!-- 세션 정보가 잘못 되었을 때 -->
     <div id="noSession" v-if="!mySessionId">세션 정보가 잘못 되었습니다.</div>
     <!-- 세션 정보가 잘 되었을 때 -->
@@ -54,7 +54,7 @@
           </div>
           <div style="display:flex;">
             <!-- 홈 팀 -->
-            <div class="game-prediction-team">
+            <div class="game-prediction-team" v-bind:style=" isPredictedTeam == 1 ? 'background-color:#db9908' : 'background-color:#323236' ">
               <!-- 홈팀 이미지 -->
               <img :src="roomStore.playTeams.home.logo" class="game-prediction-image" style="margin-right:10px;">
               <div>
@@ -62,7 +62,7 @@
                   {{ roomStore.playTeams.home.hanName }}
                 </div>
                 <div style="font-size:16px;">
-                  {{ gamePredictionStore.team1_point}}, {{ gamePredictionStore.team1_count}} 명
+                  {{ gamePredictionStore.team1_point}} 축구공 ({{ gamePredictionStore.team1_count}} 명)
                 </div>
               </div>
             </div>
@@ -71,7 +71,8 @@
               vs
             </div>
               <!-- 어웨이 팀 -->
-            <div class="game-prediction-team" style="flex-direction: row-reverse">
+            <div class="game-prediction-team" style="flex-direction: row-reverse"
+              v-bind:style=" isPredictedTeam == 2 ? 'background-color:#db9908' : 'background-color:#323236' ">
               <!-- 어웨이팀 이미지 -->
               <img :src="roomStore.playTeams.away.logo" class="game-prediction-image" style="margin-left:10px;">
               <div>
@@ -79,7 +80,7 @@
                   {{ roomStore.playTeams.away.hanName }}
                 </div>
                 <div style="font-size:16px;">
-                  {{ gamePredictionStore.team2_point}}, {{ gamePredictionStore.team2_count}} 명
+                  {{ gamePredictionStore.team2_point}} 축구공 ({{ gamePredictionStore.team2_count}} 명)
                 </div>
               </div>
             </div>  
@@ -96,6 +97,15 @@
             <div>
               <input class="predict-input" type="number" v-model="team2_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(2)">
               <button class="predict-button" @click="sendGamePrediction(2)">예측</button>
+            </div>
+          </div>
+          <div style="display:flex; margin-top:10px; color:orange;" v-if="this.isPredicted">
+            <!--  -->
+            <div v-if="this.isPredictedTeam == 1">
+              예측한 팀 : {{roomStore.playTeams.home.hanName}} ({{gamePredictionStore.predictedPoint}}개)
+            </div>
+            <div v-if="this.isPredictedTeam == 2">
+              예측한 팀 : {{roomStore.playTeams.away.hanName}} ({{gamePredictionStore.predictedPoint}}개)
             </div>
           </div>
         </div>
@@ -373,10 +383,10 @@
           </div>
         </div>
       </div>
-      
+
       <!-- 스크린 -->
       <div style="margin: 0 auto;" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}">
-      <!-- 비디오 컴포넌트 사이즈 조절 필요 
+      <!-- 비디오 컴포넌트 사이즈 조절 필요
             영상 시청하기 위해서는 CORS 설정 필요 -->
         <GameVideo :stream_url="this.stream_urls" id="video-section" :style="{ height : roomStore.screenHeight, width : roomStore.screenWidth,}" />
       </div>
@@ -531,15 +541,15 @@
     </div>
 
     <!-- 채팅 -->
-    <div v-if="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
+    <div v-show="roomStore.isClickChatting == 'a'" class="match-screen-chatting-area" >
       <!-- 채팅 헤더 -->
       <div class="match-screen-chatting-header">
       </div>
 
       <!-- 채팅 내용 창 -->
       <div class="match-screen-chatting-section" id="match-screen-chatting-section">
-        <div v-show="isOpenedChattingWindow" class="chatting-window">
-          <div id="chatting-content" style="max-width:222px;"></div>
+        <div id="chattingWindow" class="chatting-window">
+          <div id="chatting-content" v-html="chattingContent" style="max-width:222px;"></div>
         </div>
       </div>
       <!-- 채팅 입력하는 곳 -->
@@ -562,6 +572,7 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/video/UserVideo.vue";
 import GameVideo from "@/components/video/GameVideo.vue";
 import axios from "axios";
+import sanitizeHTML from "sanitize-html";
 import _ from 'lodash'
 
 import { useAccountStore, useRoomStore, useGamePredictionStore } from "@/store/index.js";
@@ -606,6 +617,7 @@ export default {
 
       mic: false,
       cam: false,
+      chattingContent: "",
 
       gamePredictionStore : useGamePredictionStore(),
       myPoint: 0,
@@ -633,6 +645,7 @@ export default {
   },
   mounted() {
     this.mySessionId = this.$route.params.session;
+
     this.inMount();
 
     // 사용한 피니아 변수 초기화
@@ -688,7 +701,9 @@ export default {
         if(this.isSessionManager == true) {
           this.session
           .signal({
-            data: (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count),
+            data: (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count)
+              + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count)
+              + "/" + (this.gamePredictionStore.team1_predict_list) + "/" + (this.gamePredictionStore.team2_predict_list),
             to: [],
             type: "game-prediction-broadcast",
           })
@@ -727,31 +742,23 @@ export default {
           }
         }
 
-        document.getElementById("chatting-content").innerHTML += `<div>${userName}:</div>`;
-        document.getElementById("chatting-content").innerHTML += `<div style:'word-break:break-all; max-width: 222px;'>${message}<div>`;
-        
-        var objDiv = document.getElementById("match-screen-chatting-section");
-        objDiv.scrollTop = objDiv.scrollHeight;
+        message = sanitizeHTML(message);
+        this.chattingContent += `<div style:'margin-top: 10px;'>${userName}:</div>`;
+        this.chattingContent += `<div style:'word-break:break-all; max-width: 222px; margin-bottom: 10px'>${message}<div>`;
 
+        // this.chattingWindow.scrollTo({ top: this.chattingWindow.scrollHeight, behavior: 'smooth' })
+        let objDiv = document.getElementById("match-screen-chatting-section");
+        objDiv.scrollTop = objDiv.scrollHeight;
       });
 
       this.session.on("signal:game-prediction", (event) => {
-        console.log("Send prediction: " + event);
         let receive = event.data.split("/");
-        let team = parseInt(receive[0]);
-        this.team1_point = parseInt(receive[1]);
-        this.team1_count = parseInt(receive[2]);
-        this.team2_point = parseInt(receive[3]);
-        this.team2_count = parseInt(receive[4]);
-        const memberId = parseInt(receive[5]);
-        
-        if(this.isSessionManager == true) {
-          if(team == 1) {
-            this.gamePredictionStore.team1_predict_list.push(memberId);
-          } else if(team == 2) {
-            this.gamePredictionStore.team2_predict_list.push(memberId);
-          }
-        }
+        this.gamePredictionStore.team1_point = parseInt(receive[0]);
+        this.gamePredictionStore.team1_count = parseInt(receive[1]);
+        this.gamePredictionStore.team2_point = parseInt(receive[2]);
+        this.gamePredictionStore.team2_count = parseInt(receive[3]);
+        this.gamePredictionStore.team1_predict_list = Array(receive[4]);
+        this.gamePredictionStore.team2_predict_list = Array(receive[5]);
       });
 
 
@@ -761,6 +768,8 @@ export default {
         this.gamePredictionStore.team1_count = parseInt(receive[1]);
         this.gamePredictionStore.team2_point = parseInt(receive[2]);
         this.gamePredictionStore.team2_count = parseInt(receive[3]);
+        this.gamePredictionStore.team1_predict_list = Array(receive[4]);
+        this.gamePredictionStore.team2_predict_list = Array(receive[5]);
       });
 
       this.session.on("signal:game-prediction-result", (event) => {
@@ -770,7 +779,6 @@ export default {
       });
 
       this.session.on("signal:force-out", (event) => {
-        console.log(event.data);
         if(event.data === this.myUserName){
           this.leaveSession();
         }
@@ -826,16 +834,17 @@ export default {
 
     leaveSession() {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
-      
+
 
       this.gamePredictionStore.team1_point = 0;
       this.gamePredictionStore.team1_count = 0;
       this.gamePredictionStore.team2_point = 0;
       this.gamePredictionStore.team2_count = 0;
-
+      this.gamePredictionStore.team1_predict_list = [];
+      this.gamePredictionStore.team2_predict_list = [];
 
       if (this.session) this.session.disconnect();
-      
+
       this.session = undefined;
       this.mainStreamManager = undefined;
       this.publisher = undefined;
@@ -981,12 +990,16 @@ export default {
       this.roomStore.isClickGameInfo = false
       if (this.roomStore.isClickChatting == '') {
         this.roomStore.isClickChatting = 'a'
+        let objDiv = document.getElementById("match-screen-chatting-section");
+        objDiv.scrollTop = objDiv.scrollHeight;
       }
       else if (this.roomStore.isClickChatting == 'a'){
         this.roomStore.isClickChatting = 'b'
       }
       else {
         this.roomStore.isClickChatting = 'a'
+        let objDiv = document.getElementById("match-screen-chatting-section");
+        objDiv.scrollTop = objDiv.scrollHeight;
       }
     },
 
@@ -1047,17 +1060,20 @@ export default {
         if(team == 1) {
           this.gamePredictionStore.team1_point += pointToSend;
           this.gamePredictionStore.team1_count++;
-          this.gamePredictionStore.team1_predict_list.push(this.mySessionId);
+          this.gamePredictionStore.team1_predict_list.push(parseInt(this.accountStore.profileId));
+          this.isPredictedTeam = 1;
         } else if(team == 2) {
           this.gamePredictionStore.team2_point += pointToSend;
           this.gamePredictionStore.team2_count++;
-          this.gamePredictionStore.team2_predict_list.push(this.mySessionId);
+          this.gamePredictionStore.team2_predict_list.push(parseInt(this.accountStore.profileId));
+          this.isPredictedTeam = 2;
         }
 
         this.session
           .signal({
-            data: team + "/" + (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) 
-              + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count) + "/" + useAccountStore().profileId,
+            data: (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count)
+              + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count)
+              + "/" + (this.gamePredictionStore.team1_predict_list) + "/" + (this.gamePredictionStore.team2_predict_list),
             to: [],
             type: "game-prediction",
           })
@@ -1067,7 +1083,7 @@ export default {
           .catch((error) => {
             console.error(error);
           });
-        this.roomStore.subtractPoint(this.gamePredictionStore.profileId, team, pointToSend);
+        this.roomStore.subtractPoint(this.accountStore.profileId, team, pointToSend);
         this.gamePredictionStore.predictedPoint = pointToSend;
         this.team1_pointToSend = 0;
         this.team2_pointToSend = 0;
@@ -1087,7 +1103,6 @@ export default {
     },
 
     validateTime() {
-      console.log("시간:" + useRoomStore().gamePredictionDeadline);
       return (new Date() <= new Date(useRoomStore().gamePredictionDeadline));
     },
     
@@ -1106,12 +1121,17 @@ export default {
     clickBillboard() {
       this.roomStore.isClickGameInfo = false,
       this.roomStore.isClickPredictButton = false,
-      this.roomStore.isClickBillboard = !this.roomStore.isClickBillboard
+
+      this.roomStore.isClickSettingButton = false
+      this.roomStore.isClickBillboard = true
     },
     clickGameInfo() {
       this.roomStore.isClickBillboard = false,
       this.roomStore.isClickPredictButton = false,
-      this.roomStore.isClickGameInfo = !this.roomStore.isClickGameInfo
+
+      this.roomStore.isClickSettingButton = false
+      this.roomStore.isClickGameInfo = true
+      this.cam = !this.cam;
     },
     getGameInfo() {
       console.log("받아옴")
@@ -1123,7 +1143,7 @@ export default {
         if(this.isSessionManager == true) {
           this.session
             .signal({
-              data: this.gamePredictionStore.team1_predict_list + "/" + this.gamePredictionStore.team2_predict_list,
+              data: (this.gamePredictionStore.team1_predict_list) + "/" + (this.gamePredictionStore.team2_predict_list),
               to: [],
               type: "game-prediction-result",
             })
@@ -1134,7 +1154,7 @@ export default {
               console.error(error);
             });
         }
-        this.gamePredictionStore.distributePoints();
+        this.myPoint = this.gamePredictionStore.distributePoints() + this.myPoint;
         clearInterval(this.loading);
       }
     },
@@ -1205,7 +1225,7 @@ export default {
 #session {
   width: 100%;
   height: 830px;
-  margin: 40px 0 0 30px;
+  margin: 50px 0 0 30px;
 }
 .match-screen-header {
   font-family: var(--bold-font);
@@ -1222,14 +1242,13 @@ export default {
   max-width: 740px;
   height: 60px;
   padding: 10px 0 10px 10px;
-  background-color: #ecf0f5;
+  /* background-color: #ecf0f5; */
   border-radius: 3px;
   font-size: 28px;
 }
 .match-screen-icon {
-  height: 60px;
-  background-color: #ecf0f5;
-  padding: 13px 10px 0 10px;
+  padding-top: 8px;
+  margin-left: 10px;
   font-size: 25px;
 }
 
@@ -1283,10 +1302,10 @@ export default {
     appearance: none;
 }
 .predict-button {
- width: 165px;
- margin-left: 10px;
- background-color: #323236;
- color: white; 
+  width: 165px;
+  margin-left: 10px;
+  background-color: #323236;
+  color: white; 
 }
 
 /* 레이아웃 버튼 */
@@ -1372,7 +1391,8 @@ export default {
   animation-timing-function: ease-in;
   border: 1px solid #cfd2d6;
   border-radius: 3px;
-  background-color: #FEFBF6;
+  background-color: rgba( 255, 255, 255, 0.8 );
+  /* background-color: #FEFBF6; */
 }
 .match-screen-chatting-area2 {
   margin-right: 30px;
@@ -1396,7 +1416,7 @@ export default {
 
 /* 채팅 내용 */
 .match-screen-chatting-section {
-  height: 780px;
+  height: 790px;
   overflow-y: scroll;
   border-bottom: 1px solid #cfd2d6;
   padding: 10px 15px 10px 10px;
@@ -1459,6 +1479,7 @@ export default {
 .room-game-info-content {
   min-width: 300px;
   height: 500px;
+  border: 1px solid grey;
   overflow-y: auto;
   margin: 0 auto;
   background-color: #ffffff;

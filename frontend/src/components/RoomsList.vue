@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useOnAirStore } from '../store/index.js'
 import { useRoute } from "vue-router"
 const route = useRoute()
@@ -162,6 +163,9 @@ else {
   }
   .rooms-list-section {
     width: 1300px;
+  }
+  .room-list-nothing-content{
+    font-size: 20px;
   }
   .rooms-list-items {
     width: 300px;

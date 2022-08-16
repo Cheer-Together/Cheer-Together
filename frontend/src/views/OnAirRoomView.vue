@@ -77,6 +77,10 @@ const changeMatch = () => {
 }
 
 const fetchLeagueLogo = (leaguename) => {
+  if(leaguename === '모든 응원방 목록'){
+    return require('../assets/image/로고.png');
+
+  }
   for(let league of leagueStore.leagues){
     if(league.hanName === leaguename){
       return league.logo
