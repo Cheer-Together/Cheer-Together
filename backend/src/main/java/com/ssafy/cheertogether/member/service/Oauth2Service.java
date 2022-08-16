@@ -143,9 +143,11 @@ public class Oauth2Service {
 		return memberRepository.findByEmail(email).isPresent();
 	}
 
-	public Member findMemberByEmail(String email) {
-		return memberRepository.findByEmail(email)
+	public Member login(String email) {
+		Member findMember = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new IllegalArgumentException(MemberConstant.MISMATCH_EMAIL_ERROR_MESSAGE));
+		findMember.checkAttendance();
+		return findMember;
 	}
 
 	public void join(Oauth2JoinRequest oauth2JoinRequest) {

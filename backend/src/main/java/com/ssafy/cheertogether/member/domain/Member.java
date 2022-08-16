@@ -1,6 +1,8 @@
 package com.ssafy.cheertogether.member.domain;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -174,7 +176,9 @@ public class Member implements UserDetails {
 	}
 
 	public void checkAttendance() {
-		LocalDateTime now = LocalDateTime.now();
+		ZoneId zoneId = ZoneId.of("Asia/Seoul");
+		ZonedDateTime zonedDateTime = ZonedDateTime.now(zoneId);
+		LocalDateTime now = zonedDateTime.toLocalDateTime();
 		if (recentLogin == null || (now.getYear() != recentLogin.getYear() || now.getMonth() != recentLogin.getMonth()
 			|| now.getDayOfMonth() != recentLogin.getDayOfMonth())) {
 			this.point += 20;

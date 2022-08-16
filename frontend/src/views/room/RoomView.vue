@@ -21,7 +21,7 @@
         
         <!-- 승부 예측 -->
         <div class="game-prediction" v-if="roomStore.isClickPredictButton">
-          <div v-if="!this.validateTime()" style="font-size: 30px;">예측 종료</div>
+          <div v-if="!this.isValidateTime" style="font-size: 30px;">예측 종료</div>
           <!-- 승부 예측 시간 -->
           <div style="font-size: 16px;">
             {{ roomStore.predictMonth }}.{{ roomStore.predictDate }} {{ roomStore.predictDay }}
@@ -31,7 +31,7 @@
             <span style="font-family: var(--bold-font); color: var(--main-color); font-size: 15px">{{ roomStore.predictTime }}</span>
             {{ roomStore.playTeams.home.hanName }} vs
             {{ roomStore.playTeams.away.hanName }}
-            <span style="float:right">잔여 축구공 : {{ myPoint }}</span>
+            <span style="float:right">내 잔여 축구공 : {{ myPoint }}</span>
           </div>
           <div style="display:flex;">
             <!-- 홈 팀 -->
@@ -65,7 +65,7 @@
               </div>
             </div>  
           </div>
-          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted && this.validateTime()">
+          <div style="display:flex; margin-top:10px;" v-if="!this.isPredicted && this.isValidateTime">
             <!--  -->
             <div>
               <input class="predict-input" type="number" v-model="team1_pointToSend" min="0" :max="myPoint" @blur="setMaxPoint(1)">
@@ -82,7 +82,7 @@
         </div>
 
         <div style="display:flex">
-          <v-btn class="match-screen-layout" @click="roomStore.isClickPredictButton = !roomStore.isClickPredictButton, roomStore.isClickBillboard =false, roomStore.isClickGameInfo = false">
+          <v-btn class="match-screen-layout" @click="clickGamePrediction">
             승부예측
           </v-btn>
           <!-- 레이아웃 -->
@@ -611,6 +611,7 @@ export default {
       team1_pointToSend: 0,
       team2_pointToSend: 0,
       isPredicted: false,
+      isValidateTime: false,
   
       bullhorn: false,
       onePick: "0"
@@ -640,7 +641,7 @@ export default {
       this.myUserName = useAccountStore().profile.nickname;
       this.myPoint = useAccountStore().profile.point;
 
-      let list = useGamePredictionStore().isPredictedList;
+      let list = this.gamePredictionStore.isPredictedList;
       for(let predictedSession of list) {
         if(predictedSession == this.mySessionId) {
           this.isPredicted = true;
@@ -672,7 +673,7 @@ export default {
         if(this.isSessionManager == true) {
           this.session
           .signal({
-            data: (this.useGamePredictionStore.team1_point) + "/" + (this.useGamePredictionStore.team1_count) + "/" + (this.useGamePredictionStore.team2_point) + "/" + (this.useGamePredictionStore.team2_count),
+            data: (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count),
             to: [],
             type: "game-prediction-broadcast",
           })
@@ -720,6 +721,7 @@ export default {
       });
 
       this.session.on("signal:game-prediction", (event) => {
+        console.log("Send prediction: " + event);
         let receive = event.data.split("/");
         let team = parseInt(receive[0]);
         this.team1_point = parseInt(receive[1]);
@@ -730,9 +732,9 @@ export default {
         
         if(this.isSessionManager == true) {
           if(team == 1) {
-            useGamePredictionStore().team1_predict_list.push(memberId);
+            this.gamePredictionStore.team1_predict_list.push(memberId);
           } else if(team == 2) {
-            useGamePredictionStore().team2_predict_list.push(memberId);
+            this.gamePredictionStore.team2_predict_list.push(memberId);
           }
         }
       });
@@ -740,16 +742,16 @@ export default {
 
       this.session.on("signal:game-prediction-broadcast", (event) => {
         let receive = event.data.split("/");
-        useGamePredictionStore().team1_point = parseInt(receive[0]);
-        useGamePredictionStore().team1_count = parseInt(receive[1]);
-        useGamePredictionStore().team2_point = parseInt(receive[2]);
-        useGamePredictionStore().team2_count = parseInt(receive[3]);
+        this.gamePredictionStore.team1_point = parseInt(receive[0]);
+        this.gamePredictionStore.team1_count = parseInt(receive[1]);
+        this.gamePredictionStore.team2_point = parseInt(receive[2]);
+        this.gamePredictionStore.team2_count = parseInt(receive[3]);
       });
 
       this.session.on("signal:game-prediction-result", (event) => {
         let receive = event.data.split("/");
-        useGamePredictionStore().team1_predict_list = receive[0];
-        useGamePredictionStore().team2_predict_list = receive[1];
+        this.gamePredictionStore.team1_predict_list = Array(receive[0]);
+        this.gamePredictionStore.team2_predict_list = Array(receive[1]);
       });
 
       this.session.on("signal:force-out", (event) => {
@@ -811,10 +813,10 @@ export default {
       // --- Leave the session by calling 'disconnect' method over the Session object ---
       
 
-      useGamePredictionStore().team1_point = 0;
-      useGamePredictionStore().team1_count = 0;
-      useGamePredictionStore().team2_point = 0;
-      useGamePredictionStore().team2_count = 0;
+      this.gamePredictionStore.team1_point = 0;
+      this.gamePredictionStore.team1_count = 0;
+      this.gamePredictionStore.team2_point = 0;
+      this.gamePredictionStore.team2_count = 0;
 
       if(this.isSessionManager == true) {
         useGamePredictionStore().team1_predict_list = [];
@@ -1003,6 +1005,16 @@ export default {
         });
     },
 
+    clickGamePrediction() {
+      this.roomStore.isClickPredictButton = !this.roomStore.isClickPredictButton;
+      this.isValidateTime = this.validateTime();
+      this.roomStore.isClickBillboard =false;
+      this.roomStore.isClickGameInfo = false;
+      console.log(useRoomStore().gamePredictionDeadline);
+      console.log(this.validateTime());
+      console.log(this.isValidateTime);
+    },
+
     sendGamePrediction(team) {
       let pointToSend;
       if(team == 1) {
@@ -1013,17 +1025,19 @@ export default {
 
       if (pointToSend && pointToSend > 0) {
         if(team == 1) {
-          useGamePredictionStore().team1_point += pointToSend;
-          useGamePredictionStore().team1_count++;
+          this.gamePredictionStore.team1_point += pointToSend;
+          this.gamePredictionStore.team1_count++;
+          this.gamePredictionStore.team1_predict_list.push(this.mySessionId);
         } else if(team == 2) {
-          useGamePredictionStore().team2_point += pointToSend;
-          useGamePredictionStore().team2_count++;
+          this.gamePredictionStore.team2_point += pointToSend;
+          this.gamePredictionStore.team2_count++;
+          this.gamePredictionStore.team2_predict_list.push(this.mySessionId);
         }
 
         this.session
           .signal({
-            data: team + "/" + (useGamePredictionStore().team1_point) + "/" + (useGamePredictionStore().team1_count) 
-              + "/" + (useGamePredictionStore().team2_point) + "/" + (useGamePredictionStore().team2_count) + "/" + useAccountStore().profileId,
+            data: team + "/" + (this.gamePredictionStore.team1_point) + "/" + (this.gamePredictionStore.team1_count) 
+              + "/" + (this.gamePredictionStore.team2_point) + "/" + (this.gamePredictionStore.team2_count) + "/" + useAccountStore().profileId,
             to: [],
             type: "game-prediction",
           })
@@ -1033,11 +1047,11 @@ export default {
           .catch((error) => {
             console.error(error);
           });
-        useRoomStore().subtractPoint(useAccountStore().profileId, team, pointToSend);
-        useGamePredictionStore().predictedPoint = pointToSend;
+        this.roomStore.subtractPoint(this.gamePredictionStore.profileId, team, pointToSend);
+        this.gamePredictionStore.predictedPoint = pointToSend;
         this.team1_pointToSend = 0;
         this.team2_pointToSend = 0;
-        useGamePredictionStore().isPredictedList.push(this.mySessionId);
+        this.gamePredictionStore.isPredictedList.push(this.mySessionId);
         this.isPredicted = true;
         this.myPoint -= pointToSend;
       }
@@ -1086,12 +1100,15 @@ export default {
     },
     getGameInfo() {
       console.log("받아옴")
+      this.isValidateTime = this.validateTime();
+      this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
+      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
       if(this.roomStore.playTeams.status == "FT") {
         console.log("!!!!!!!finish!!!!!!!!!!!!")
         if(this.isSessionManager == true) {
           this.session
             .signal({
-              data: this.useGamePredictionStore.team1_predict_list + "/" + this.useGamePredictionStore.team2_predict_list,
+              data: this.gamePredictionStore.team1_predict_list + "/" + this.gamePredictionStore.team2_predict_list,
               to: [],
               type: "game-prediction-result",
             })
@@ -1105,8 +1122,6 @@ export default {
         this.gamePredictionStore.distributePoints();
         clearInterval(this.loading);
       }
-      this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
-      // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
     },
     updateRoomHeadCount(number){
       updateRoomHeadCount(this.sessionInfo.roomId, number,
