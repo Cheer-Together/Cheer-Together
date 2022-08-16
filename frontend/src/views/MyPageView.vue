@@ -13,7 +13,7 @@
           </div>
           <!-- 닉네임 소개 -->
           <div>
-            <div style="display:flex;">
+            <div style="display:flex; position:relative;">
               <!-- 닉네임 -->
               <div class="mypage-header-nickname" >
                 <span v-if="accountStore.pointRanking[0].nickname === accountStore.otherProfile.nickname">👑</span>
@@ -25,10 +25,9 @@
                     mdi-crown-outline
                   </v-icon>
                   <span>{{ index + 1 }}위</span>
-                 ({{m.point}}개)
                 </div>               
               </div>
-
+              <div style="position:absolute; right:30px; top: 20px;">({{accountStore.otherProfile.point}}개)</div> 
             </div>
             <!-- 소개 -->
             <div class="mypage-header-info">
