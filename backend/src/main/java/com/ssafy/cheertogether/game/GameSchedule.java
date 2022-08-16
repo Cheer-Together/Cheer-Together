@@ -1,6 +1,8 @@
 package com.ssafy.cheertogether.game;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,7 +19,7 @@ public class GameSchedule {
 
 	@Scheduled(cron = "0 0/15 * * * *")
 	public void gameLiveUpdate(){
-		gameService.updateGameLive(LocalDateTime.now());
+		gameService.updateGameLive(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("Asia/Seoul")).toLocalDateTime());
 	}
 
 	@Scheduled(cron = "0 0/5 * * * *")
