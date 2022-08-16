@@ -93,7 +93,7 @@ router.beforeEach((to, from, next) => {
       router.push({name:'MainPage'})
       Swal.fire({
         icon: 'error',
-        title: '잘못된 접근입니다.'
+        title: '로그인이 필요한 서비스입니다.'
       })
     } else {
       accountStore.loginDialogMsg = '로그인이 필요한 서비스입니다.'

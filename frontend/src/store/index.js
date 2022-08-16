@@ -457,6 +457,7 @@ export const useAccountStore = defineStore("account", {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("isSocialLogin");
       this.isLogin = false;
+      router.go()
       Swal.fire({
         icon: "success",
         title: "성공적으로 로그아웃 되었습니다.",
