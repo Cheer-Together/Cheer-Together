@@ -27,7 +27,7 @@
                   <span>{{ index + 1 }}위</span>
                 </div>               
               </div>
-              <div style="position:absolute; right:30px; top: 20px;">({{accountStore.otherProfile.point}}개)</div> 
+              <div style="position:absolute; right:15px; top: 20px;"> 공: {{accountStore.otherProfile.point}}개</div> 
             </div>
             <!-- 소개 -->
             <div class="mypage-header-info">
@@ -133,7 +133,7 @@ const withdrawal = () => {
 }
 .mypage-header-nickname {
   padding: 7px;
-  width: 300px;
+  width: 310px;
   height: 50px;
   font-size: 32px;
   font-family: var(--bold-font);
