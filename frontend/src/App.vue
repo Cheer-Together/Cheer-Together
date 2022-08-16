@@ -1,5 +1,5 @@
 <template>
-  <RouterView />
+  <RouterView :key="$route.fullPath"/>
   <LoginView />
 </template>
 
@@ -69,7 +69,7 @@ gamesStore.getAllLiveGames();
   --sub-color: #f2f8ff;
   /* --main-color: rgb(78, 167, 235);
   --sub-color: rgb(177, 202, 255); */
-  --active-color: #2ecc71;
+  --active-color: #2e6afd;
   /* 네브 바 */
   --navbar-back-color: #ffffff;
   --navbar-border-color: black;

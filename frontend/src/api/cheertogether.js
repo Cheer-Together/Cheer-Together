@@ -27,6 +27,9 @@ export default {
     leaguesAll: () => HOST + LEAGUES, // 모든 리그 정보 조회
     leaguesNoTeam: () => HOST + LEAGUES + 'noTeam', // 모든 리그 정보 조회 팀x
   },
+  team: {
+    team: (apiId) => HOST + "/teams/" + `${apiId}`
+  },
   news: {
     news: () => HOST +  NEWS // 뉴스 데이터 조회
   },
@@ -38,14 +41,15 @@ export default {
 
     gameInfo: () => 'https://v3.football.api-sports.io/fixtures/events', // 경기 정보
     gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month',
-
+  },
+  cheeringSong: {
+    cheeringSong: (teamId) => HOST + '/cheeringsong/' + `${teamId}`
   },
   room: {
     rooms: () => HOST + ROOMS, // 모든 응원방 검색
     roomsLeague: (leagueApiId) => HOST + ROOMS + 'league/' + `${leagueApiId}`,
     enterRoom: (roomId) => HOST + ROOMS + `${roomId}`,
     search: () => HOST + ROOMS + 'search/',
-    searchGame: (gameId) => HOST + ROOMS + 'game/' + `${gameId}`
-
+    searchGame: (gameId) => HOST + ROOMS + 'game/' + `${gameId}`,
   }
 }

@@ -5,12 +5,45 @@
     </div>
     <div class="popularMatch-section">
       <!-- 첫 번째 -->
-      <div class="popularMatch-section-item" @click="router.push({ name:'MatchScreen', })" v-for="room in roomStore.roomsAll" :key="room.roomId">
-        <div class="popularMatch-section-item-image">
-          <img :src="popularThumbnail.first">
+
+      <div class="popularMatch-section-item" v-for="(room, i) in roomStore.popularRooms" :key="room.roomId">
+        <!-- 여기가 썸네일 부분입니다. -->
+        <div class="popularMatch-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[i] + ')' }">
+          <!-- 홈 vs 어웨이  -->
+          <!-- 홈 -->
+          <div class="popularMatch-section-logo">
+            <img :src="room.gameInfo.home.logo" alt="" width="50" height="50">
+            <div>
+              {{ room.gameInfo.home.hanName }}
+            </div>
+          </div>
+
+          <!-- VS -->
+          <div class="popularMatch-section-logo-vs">
+            VS
+          </div>
+          <!-- 킥오프 -->
+          <div>
+            
+          </div>
+          <!-- 어웨이 -->
+          <div class="popularMatch-section-logo">
+            <img :src="room.gameInfo.away.logo" alt="" width="50" height="50">
+            <div>
+              {{ room.gameInfo.away.hanName }}
+            </div>
+          </div>
+          <!-- 경기장 이름 -->
+          <div class="popularMatch-section-stadium">
+            {{ room.gameInfo.stadium }}
+          </div>
         </div>
         <div class="popularMatch-section-item-title">
-          {{ room.name }}
+          {{ room.name }} 
+          <v-icon style="color:#222222;">
+            mdi-account
+          </v-icon>
+          {{ room.headCount }}
         </div>
       </div>
     </div>
@@ -18,17 +51,23 @@
 </template>
 
 <script setup>
-import router from '@/router'
+// import router from '@/router'
 import { useRoomStore } from "@/store"
 const roomStore = useRoomStore()
 
-const popularThumbnail = {
-  first: require('../assets/image/메인페이지/인기응원방썸네일1.png'),
-  second: require('../assets/image/메인페이지/인기응원방썸네일2.jpg'),
-  third: require('../assets/image/메인페이지/인기응원방썸네일3.jpg'),
-  fourth: require('../assets/image/메인페이지/인기응원방썸네일4.jpg'),
-  fifth: require('../assets/image/메인페이지/인기응원방썸네일5.jpg'),
-}
+const popularThumbnail = [
+  "https://media.api-sports.io/football/venues/556.png",
+  "https://media.api-sports.io/football/venues/550.png",
+  "https://media.api-sports.io/football/venues/494.png",
+  "https://media.api-sports.io/football/venues/519.png",
+  "https://media.api-sports.io/football/venues/555.png",
+  "https://media.api-sports.io/football/venues/525.png",
+  "https://media.api-sports.io/football/venues/495.png",
+  "https://media.api-sports.io/football/venues/566.png",
+  "https://media.api-sports.io/football/venues/546.png",
+]
+
+roomStore.getPopularRooms()
 </script>
 
 <style>
@@ -38,6 +77,7 @@ const popularThumbnail = {
 .popularMatch-title {
   font-size: 24px;
   padding: 5.5px 0;
+  font-family: var(--bold-font);
 }
 .popularMatch-section {
   margin-top: 11px;
@@ -48,9 +88,10 @@ const popularThumbnail = {
   display: flex;
   flex-wrap: wrap;
 }
+/* 여기부터 썸네일 css */
 .popularMatch-section-item {
   width: 375px;
-  height: 220px;
+  height: 224px;
   margin: 0 20px 20px 0 ;
   border-radius: 10px;
   overflow: hidden;
@@ -58,17 +99,55 @@ const popularThumbnail = {
 .popularMatch-section-item:hover {
   cursor: pointer;
 }
-.popularMatch-section-item-image, .popularMatch-section-item-image img {
+.popularMatch-section-thumbnail {
   width: 375px;
-  height: 190px;
+  height: 200px;
+  position: relative;
+  padding: 0 auto;
+  border: 1px solid #ecf0f5;
+  background-size: cover;
+}
+.popularMatch-section-logo {
+  width: 100px;
+  height: 140px;
+  background-color:rgba(4, 84, 121, 0.8);
+  position: absolute;
+  top: 20px;
+  right: 88px;
+  padding: 25px 0 0 0;
+  color: white;
+  font-size: 12px;
+}
+.popularMatch-section-logo:first-child {
+  background-color:rgba(121, 4, 4, 0.8);
+  left: 87px;
+
+}
+.popularMatch-section-logo-vs {
+  position: absolute;
+  width: 25px;
+  top: 55px;
+  right: 181px;
+  font-size: 28px;
+  font-family: var(--bold-font);
+  z-index: 2;
+  color: #ffffff;
+}
+.popularMatch-section-stadium {
+  position: absolute;
+  width: 200px;
+  top: 135px;
+  right: 87px;
+  font-size: 16px;
+  font-family: var(--bold-font);
+  color: #ffffff;
 }
 .popularMatch-section-item-title {
   font-size: 16px;
   width: 375px;
-  height: 30px;
-  background-color: var(--card-color);
-  color: #ffffff;
-  padding-top: 2px;
+  height: 24px;
+  padding: 2px 0 0 10px;
+  text-align: start;
 }
 @media (max-width: 1580px) {
 .popularMatch {

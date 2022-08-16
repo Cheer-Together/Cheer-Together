@@ -159,10 +159,11 @@ function socialSignupBtn() {
     .catch((err) => {
       console.log(err);
     });
-    Swal.fire({
-      icon: 'success',
-      title: '성공적으로 로그인 되었습니다.',
-    })
+  Swal.fire({
+    icon: 'success',
+    title: '성공적으로 로그인 되었습니다.',
+  })
+  window.location.reload(true)
   })
   .catch(err => {
     console.log(err)
@@ -201,6 +202,7 @@ axios({
           icon: 'success',
           title: '성공적으로 로그인 되었습니다.',
         })
+        window.location.reload(true)
       } else {
         socialSignupEmail.value = res.data.email
       }

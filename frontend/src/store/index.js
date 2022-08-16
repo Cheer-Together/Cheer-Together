@@ -113,7 +113,7 @@ export const useAccountStore = defineStore("account", {
         실패하면
           에러 메시지 표시
       */
-
+      
       axios({
         url: cheertogether.members.emailAuth(),
         method: "GET",
@@ -233,7 +233,10 @@ export const useAccountStore = defineStore("account", {
         },
       })
         .then(() => {
-          this.signupAlarm = true
+          Swal.fire({
+            icon: 'success',
+            title: '성공적으로 회원가입 되었습니다.'
+          });
           router.push({ name: "MainPage" });
         })
         .catch((err) => {
@@ -249,7 +252,7 @@ export const useAccountStore = defineStore("account", {
       /* 
       DELETE: 회원 탈퇴를 진행한다.
         성공하면
-          유저 정보를 profile에 저장한다.
+
         실패하면
 
       */
@@ -259,6 +262,7 @@ export const useAccountStore = defineStore("account", {
       })
         .then((res) => {
           console.log(res.data);
+          this.logoutAccount()
         })
         .catch((err) => {
           console.log(err);
@@ -388,6 +392,7 @@ export const useAccountStore = defineStore("account", {
       if (!sessionStorage.getItem("token")) {
         if (this.loginDialog) {
           this.loginDialog = false;
+          this.loginDialogMsg = '같이 집관에 오신 것을 환영합니다.'
         } else {
           this.loginDialog = true;
         }
@@ -446,6 +451,7 @@ export const useAccountStore = defineStore("account", {
       } else {
         this.profile["profileImage"] = require("../assets/image/로고.png");
       }
+      router.push({ name: "MainPage" })
     },
     logoutAccount() {
       sessionStorage.removeItem("token");
@@ -455,18 +461,6 @@ export const useAccountStore = defineStore("account", {
         icon: "success",
         title: "성공적으로 로그아웃 되었습니다.",
       });
-    },
-    isNewMember() {
-      Swal.fire({
-        icon: "success",
-        title: "회원가입에 성공했습니다.",
-      })
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
     },
     getPointRanking() {
       axios({
@@ -544,16 +538,7 @@ export const useScheduleStore = defineStore("schedule", {
     },
 
     clickLeague(event) {
-      // 현재 라우터에 색깔 입히기
-      const activeTag = document.querySelector(".league-active");
-      activeTag.classList.remove("league-active");
       const clickedTag = event.target;
-      clickedTag.classList.add("league-active");
-      // 리그 클릭 시 가장 앞 달로 강제 이동
-      const activeMonthTag = document.querySelector(".item-active");
-      activeMonthTag.classList.remove("item-active");
-      const firstMonthTag = document.querySelector(".schedule-page-month-item p");
-      firstMonthTag.classList.add("item-active");
       // 해당 리그의 8월 정보를 보여준다.
       // state 변경하기
       if (clickedTag.innerText === "프리미어리그") {
@@ -614,12 +599,7 @@ export const useScheduleStore = defineStore("schedule", {
     },
 
     clickMonth(leagueId, event) {
-      // 색 바꾸기
-      if (document.querySelector(".item-active")) {
-        document.querySelector(".item-active").classList.remove("item-active");
-      }
       const clickedTag = event.target;
-      clickedTag.classList.add("item-active");
       const activeMonth = clickedTag.innerText.slice(-3, -1).trim();
       let alteredDate = "";
       if (activeMonth === "8" || activeMonth === "9") {
@@ -647,8 +627,13 @@ export const useOnAirStore = defineStore("onair", {
     allRooms: [],
     currentRooms: [],
     makeRoomDialog: false,
+    isSearched: false,
+    searchWord: ''
   }),
-  persist: true,
+  persist: {
+    paths: ['allRooms', 'currentRooms', 'makeRoomDialog', 'isSearched', 'searchWord']
+  },
+
   actions: {
     moveOnairPage() {
       axios({
@@ -679,13 +664,8 @@ export const useOnAirStore = defineStore("onair", {
         { id: "61", league: "리그 1" },
         { id: "292", league: "K리그 1" },
       ];
-      // 색 입히기
-      if (document.querySelector(".sideBar-subtitle-active")) {
-        const fromSubtitle = document.querySelector(".sideBar-subtitle-active");
-        fromSubtitle.classList.remove("sideBar-subtitle-active");
-      }
+      
       const toSubtitle = event.target;
-      toSubtitle.classList.add("sideBar-subtitle-active");
 
       for (let item of leagues) {
         if (toSubtitle.innerText === item.league) {
@@ -759,7 +739,10 @@ export const useOnAirStore = defineStore("onair", {
               }
             }
             this.currentRooms = trueRes
+            this.isSearched = true
+            this.searchWord = searchData.text
             router.go()
+            
           })
         }  
     },
@@ -949,6 +932,10 @@ export const useGameStore = defineStore("game", {
     },
   },
 });
+async function getTeamId(teamApiId) {
+  const response = await axios.get(cheertogether.team.team(teamApiId));
+  return response.data.id;
+}
 export const useRoomStore = defineStore("room", {
   state: () => ({
     roomInfo: undefined,
@@ -971,6 +958,7 @@ export const useRoomStore = defineStore("room", {
       },
     ],
     popularRooms: [],
+    popularRoomGames: [],
     playTeams: {
       id: "",
       home: {
@@ -1019,6 +1007,58 @@ export const useRoomStore = defineStore("room", {
     predictTime: "",
     
     gamePredictionDeadline: "",
+
+    cheeringSong : "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FNice%20one%20Sonny.mp3?alt=media&token=949e25e8-33bb-4ae5-9dde-24bfd57e827d",
+    songList : [
+    {
+      "id": 0,
+      "team_id": 18,
+      "target": "손흥민",
+      "name": "응원가를 고르세요.",
+      "file": 0
+    },
+    {
+      "id": 1,
+      "team_id": 18,
+      "target": "손흥민",
+      "name": "Nice one Sonny",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FNice%20one%20Sonny.mp3?alt=media&token=949e25e8-33bb-4ae5-9dde-24bfd57e827d"
+    },
+    {
+      "id": 2,
+      "team_id": 18,
+      "target": "해리 케인",
+      "name": "Are you watching Harry Kane",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FAre%20you%20watching%20Harry%20Kane.mp3?alt=media&token=514a2eb0-300f-4a62-a2bb-8666baf8fa13"
+    },
+    {
+      "id": 3,
+      "team_id": 18,
+      "target": "토트넘",
+      "name": "Come On You Spurs",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FCome%20On%20you%20spurs.mp3?alt=media&token=91246d2d-68d2-407e-86be-891ff2d8e8cf"
+    },
+    {
+      "id": 4,
+      "team_id": 18,
+      "target": "토트넘",
+      "name": "Glory Glory Tottenham Hotspur",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FGlory%20Glory%20Tottenham%20Hotspur.mp3?alt=media&token=bd04eb64-a029-43b9-a326-a11fa3fe8bcd"
+    },
+    {
+      "id": 5,
+      "team_id": 18,
+      "target": "클루셉스키",
+      "name": "Kulusevski Tottenham Song",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FKulusevski%20Tottenham%20Song.mp3?alt=media&token=b4e93468-bb2f-4f06-8470-0bfed9b1b889"
+    },
+    {
+      "id": 6,
+      "team_id": 18,
+      "target": "토트넘",
+      "name": "When the Spurs Go Marching In",
+      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FWhen%20the%20Spurs%20Go%20Marching%20In.mp3?alt=media&token=91307a44-473f-468c-a1d3-d152bc0aa30c"
+    }]
   }),
   actions: {
     getRooms() {
@@ -1041,7 +1081,6 @@ export const useRoomStore = defineStore("room", {
           console.log(err);
         });
     },
-
     async getInfo(sessionId) {
       await getRoomInfo(
         sessionId,
@@ -1055,18 +1094,41 @@ export const useRoomStore = defineStore("room", {
         }
       );
     },
-
     async getPopularRooms(){
       await getPopularRooms(
         (res) => {
           this.popularRooms = res.data;
+          this.popularRoomGames = []
+          console.log(res.data)
+          this.getPopularGameInfo(res.data[0].gameId, 0)
+          this.getPopularGameInfo(res.data[1].gameId, 1)
+          this.getPopularGameInfo(res.data[2].gameId, 2)
+          this.getPopularGameInfo(res.data[3].gameId, 3)
         },
         (err) => {
           console.log(err);
         }
       )
     },
+    getPopularGameInfo(gameId, index) {
+      /* 
+    GET: 경기 정보를 불러옴
+      성공하면
 
+      실패하면
+        에러 메시지 표시
+    */
+      axios({
+        url: cheertogether.game.playGameInfo(gameId),
+        method: "GET",
+      })
+        .then((res) => {
+          this.popularRooms[index]["gameInfo"] = res.data
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     getPlayTeams(gameId) {
       /* 
     GET: 경기 정보를 불러옴
@@ -1087,6 +1149,8 @@ export const useRoomStore = defineStore("room", {
 
           this.playTeams = res.data;
           this.getGameInfo(res.data.apiId);
+          this.getCheeringSongList(getTeamId(res.data.home.apiId));
+          this.getCheeringSongList(getTeamId(res.data.away.apiId));
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
 
@@ -1102,7 +1166,6 @@ export const useRoomStore = defineStore("room", {
           console.log(err);
         });
     },
-
     getGameInfo(apiId) {
       /* 
       GET: 경기 정보를 불러옴
@@ -1183,6 +1246,17 @@ export const useRoomStore = defineStore("room", {
         this.playTeams = res.data;
       });
     },
+    getCheeringSongList(teamId) {
+      axios({
+        url: cheertogether.cheeringSong.cheeringSong(teamId),
+        method: "GET",
+      }).then((res) => {
+        console.log(res.data);
+        res.data.forEach((e) => {
+          this.songList.push(e);
+        })
+      });
+    }
   },
 });
 export const useGamePredictionStore = defineStore("gamePrediction", {

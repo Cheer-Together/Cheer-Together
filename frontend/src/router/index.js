@@ -5,7 +5,6 @@ import ScheduleView from '../views/ScheduleView.vue'
 import ArticleDetailView from '../views/ArticleDetailView.vue'
 import SignupView from '../views/SignupView.vue'
 import OnAirRoomView from '../views/OnAirRoomView.vue'
-import MatchScreenView from '../views/MatchScreenView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import MyPageEditView from '../views/MyPageEditView.vue'
 import SocialSignupView from '../views/SocialSignupView'
@@ -53,11 +52,6 @@ const routes = [
     component: OnAirRoomView
   },
   {
-    path: '/matchscreen',
-    name: 'MatchScreen',
-    component: MatchScreenView
-  },
-  {
     path: '/mypage/:userid',
     name: 'Mypage',
     component: MyPageView
@@ -88,6 +82,7 @@ router.beforeEach((to, from, next) => {
 
   const isAuthRequired = authPages.includes(to.name)
   if (isAuthRequired && !token) {
+    accountStore.loginDialogMsg = '로그인이 필요한 서비스입니다.'
     accountStore.loginDialogToggle()
   } else {
     next()
