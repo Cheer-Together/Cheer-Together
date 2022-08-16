@@ -145,7 +145,7 @@
 
       <!-- 회원 수정 -->
       <div class="mypagedeit-range-bottom">
-        <v-btn class="mypagedeit-submit-button"  @click="router.push({name:'MainPage'})" style="height:50px; font-size:21px;">
+        <v-btn class="mypagedeit-submit-button"  @click="router.go(-1)" style="height:50px; font-size:21px;">
           이전
         </v-btn>
         <v-btn class="mypagedeit-submit-button next" @click="changeUserInfo(myNickname)" style="height:50px; font-size:21px; color:white;">
