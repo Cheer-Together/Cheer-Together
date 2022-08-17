@@ -29,7 +29,7 @@ const newsStore = useNewsStore()
 newsStore.getNews('프리미어리그 세리에 A 라리가')
 </script>
 
-<style>
+<style scoped>
 a {
   text-decoration: none;
   color: inherit;
