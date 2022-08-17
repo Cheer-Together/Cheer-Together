@@ -55,8 +55,7 @@
 </template>
 
 <script setup>
-import { useAccountStore } from '@/store'
-import { useNavbarStore } from '@/store'
+import { useAccountStore, useNavbarStore, useOnAirStore } from '@/store'
 import router from '@/router'
 
 const navbarStore = useNavbarStore()
@@ -71,8 +70,6 @@ const myLogout = () => {
   accountStore.logoutAccount();
 }
 
-
-import { useOnAirStore } from '@/store'
 const onAirStore = useOnAirStore()
 
 const searchData = {
@@ -207,7 +204,7 @@ const searchData = {
   height: 18px;
 }
 .navBar-item-login{
-  height: 100px;
+  height: 60px;
 }
 .navBar-profile-nickname {
   font-size: 15px;
