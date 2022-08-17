@@ -129,7 +129,7 @@ else {
 /* 여기부터 썸네일 css */
 .rooms-list-section-item {
   width: 375px;
-  height: 260px;
+  height: 270px;
   margin: 0 20px 35px 0 ;
   border-radius: 10px;
   overflow: hidden;
