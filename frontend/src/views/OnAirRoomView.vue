@@ -78,21 +78,6 @@ const changeMatch = () => {
 
 const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
 const fetchLeagueLogo = (leaguename) => {
-  // if(leaguename === '모든 응원방 목록'){
-  //   return require('../assets/image/로고.png');
-
-  // }
-  // for(let league of leagueStore.leagues){
-  //   if(league.hanName === leaguename){
-  //     return league.logo
-  //   } else if (league.hanName === '세리에' && leaguename === '세리에 A'){
-  //     return league.logo
-  //   } else if (league.hanName === '리그앙' && leaguename === '리그 1'){
-  //     return league.logo
-  //   } else if (league.hanName === 'K리그' && leaguename === 'K리그 1'){
-  //     return league.logo
-  //   }
-  // }
   if(leagues.includes(leaguename)){
     for(let league of leagueStore.leagues){
       if(league.hanName === leaguename){
