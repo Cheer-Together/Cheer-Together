@@ -79,13 +79,15 @@ const popularThumbnail = [
   "https://media.api-sports.io/football/venues/546.png",
 ]
 
+const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
 if (route.params.leaguename === '모든 응원방 목록') {
   onairStore.moveOnairPage
 }
-else {
+else if (leagues.includes(route.params.leaguename)){
   onairStore.moveLeagueRooms(route.params.leaguename)
 }
-
+// eslint-disable-next-line
+else {  } 
 </script>
 
 <style>
@@ -129,8 +131,8 @@ else {
 /* 여기부터 썸네일 css */
 .rooms-list-section-item {
   width: 375px;
-  height: 260px;
-  margin: 0 20px 20px 0 ;
+  height: 270px;
+  margin: 0 20px 35px 0 ;
   border-radius: 10px;
   overflow: hidden;
   text-align: center;
@@ -183,8 +185,8 @@ else {
   color: #ffffff;
 }
 .rooms-list-section-item-title {
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 24px;
+  /* font-weight: bold; */
   width: 375px;
   height: 24px;
   padding: 2px 0 0 10px;

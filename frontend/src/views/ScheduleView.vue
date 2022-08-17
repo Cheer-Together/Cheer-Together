@@ -47,7 +47,7 @@ const route = useRoute()
 
 <style>
 .schedule-page{
-  margin-top: 130px;
+  margin-top: 180px;
   margin-left: 470px;
   margin-bottom: 100px;
 }

@@ -128,8 +128,8 @@ distinguishMonth()
   display: flex;
   flex-direction: row-reverse;
   position: relative;
-  left: 30px;
-  width: 210px;
+  left: 5px;
+  width: 240px;
   height: 35px;
   line-height: 35px;
   text-align: right;
@@ -138,8 +138,8 @@ distinguishMonth()
 .team-right {
   display: flex;
   position: relative;
-  left: 80px;
-  width: 210px;
+  left: 45px;
+  width: 240px;
   height: 35px;
   line-height: 35px;
   text-align: left;

@@ -777,19 +777,13 @@ export const useOnAirStore = defineStore("onair", {
             }
           })
           .then((res) => {
-            let trueRes = []
-            for(let searchedRoom of res.data){
-              for(let room of this.currentRooms){
-                if(searchedRoom.roomId === room.roomId){
-                  trueRes.push(searchedRoom)
-                }
-              }
-            }
-            this.currentRooms = trueRes
-            this.isSearched = true
-            this.searchWord = searchData.text
-            router.go()
-            
+
+            console.log(res.data)
+            this.currentRooms = res.data
+            router.push({name: 'Onair', params: {leaguename: `"${searchData.text}"`}})
+            res.data.forEach((e, idx) => {
+              this.getAllGameInfo(e.gameId, idx)          
+            })
           })
         }  
     },
@@ -893,8 +887,8 @@ export const useNewsStore = defineStore("news", {
             let description = e.description;
             title = title.replaceAll("&apos;", "'");
             title = title.replaceAll("&quot;", '"');
-            description = title.replaceAll("&apos;", "'");
-            description = title.replaceAll("&quot;", '"');
+            description = description.replaceAll("&apos;", "'");
+            description = description.replaceAll("&quot;", '"');
             this.news.push({ link: e.link, title: title, description: description });
           });
         })
