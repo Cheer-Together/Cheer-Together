@@ -19,7 +19,7 @@
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="mypagedeit-range-input" v-model="myNickname" :placeholder="myNickname" maxlength="40">
+          <input type="text" class="mypagedeit-range-input" v-model="myNickname" :placeholder="myNickname" maxlength="10">
         </div>
       </div>
 
@@ -46,7 +46,7 @@
           본인 소개
         </div>
         <div style="position: relative;">
-          <textarea cols="21" rows="5" class="mypagedeit-range-input-introduce" v-model="accountStore.profile.myInfo"></textarea>
+          <textarea cols="21" rows="5" maxlength="180" class="mypagedeit-range-input-introduce" v-model="accountStore.profile.myInfo"></textarea>
         </div>
       </div>
       <!-- 좋아하는 리그 -->
@@ -145,7 +145,7 @@
 
       <!-- 회원 수정 -->
       <div class="mypagedeit-range-bottom">
-        <v-btn class="mypagedeit-submit-button"  @click="router.push({name:'MainPage'})" style="height:50px; font-size:21px;">
+        <v-btn class="mypagedeit-submit-button"  @click="router.go(-1)" style="height:50px; font-size:21px;">
           이전
         </v-btn>
         <v-btn class="mypagedeit-submit-button next" @click="changeUserInfo(myNickname)" style="height:50px; font-size:21px; color:white;">
@@ -166,8 +166,6 @@ import { useAccountStore } from "@/store"
 import { useLeagueStore } from "@/store"
 import router from '@/router'
 import { ref } from "vue";
-
-// import Swal from 'sweetalert2'
 
 const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()

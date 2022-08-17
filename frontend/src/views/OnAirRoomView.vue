@@ -27,7 +27,7 @@
           <!-- 경기 목록 별로 정렬 -->
           <div class="select-live-match">
             <select name="liveMatch" @change="changeMatch()">
-              <option value="none" class="select-none"> ======= 선택 =======</option>
+              <option value="none" class="select-none"> ===== 경기 선택 =====</option>
               <option :value="match.id" v-for="match in items" :key="match.id">{{ match.title }}</option>
             </select>
           </div>
@@ -65,7 +65,6 @@ const searchData = {
 const liveMatchData = {
   id: ''
 }
-const items = JSON.parse(sessionStorage.getItem('AllLiveGames'))
 const changeCategory = () => {
   const selectMenu = document.querySelector('.select-league select')
   searchData.category = selectMenu.options[document.querySelector(".select-league select").selectedIndex].value
@@ -78,6 +77,10 @@ const changeMatch = () => {
 }
 
 const fetchLeagueLogo = (leaguename) => {
+  if(leaguename === '모든 응원방 목록'){
+    return require('../assets/image/로고.png');
+
+  }
   for(let league of leagueStore.leagues){
     if(league.hanName === leaguename){
       return league.logo
@@ -87,12 +90,27 @@ const fetchLeagueLogo = (leaguename) => {
       return league.logo
     } else if (league.hanName === 'K리그' && leaguename === 'K리그 1'){
       return league.logo
-    }
+    } else { return require('../assets/image/로고.png') }
   }
 }
 
 const route = useRoute()
-
+let items = []
+if (route.params.leaguename === '모든 응원방 목록'){
+  items = JSON.parse(sessionStorage.getItem('AllLiveGames'))
+} else if (route.params.leaguename === '프리미어리그'){
+  items = JSON.parse(sessionStorage.getItem('liveGames39'))
+} else if (route.params.leaguename === '라리가'){
+  items = JSON.parse(sessionStorage.getItem('liveGames140'))
+} else if (route.params.leaguename === '세리에 A'){
+  items = JSON.parse(sessionStorage.getItem('liveGames135'))
+} else if (route.params.leaguename === '분데스리가'){
+  items = JSON.parse(sessionStorage.getItem('liveGames78'))
+} else if (route.params.leaguename === '리그 1'){
+  items = JSON.parse(sessionStorage.getItem('liveGames61'))
+} else if (route.params.leaguename === 'K리그 1'){
+  items = JSON.parse(sessionStorage.getItem('liveGames292'))
+} 
 watch(route, () => {
   onAirStore.isSearched = false
 })
@@ -126,6 +144,7 @@ watch(route, () => {
 .onair-header-logo {
   width: 60px;
   height: 60px;
+  object-fit: contain;
 }
 
 .onair-header-boxes {
@@ -137,12 +156,16 @@ watch(route, () => {
 }
 
 .onair-header-make-room{
+  font-size: 17px;
   width: 100px;
   height: 60px;
   border-radius: 10px;
   margin: 0 20px;
   text-align: center;
   background-color: #BDF9CD;
+}
+.onair-header-make-room:hover {
+  opacity: 0.5;
 }
 
 .search-box{
@@ -153,6 +176,9 @@ watch(route, () => {
 
 .search-box select {
   margin : 3px;
+}
+.select-live-match {
+  padding: 20px;
 }
 
 .select-none {

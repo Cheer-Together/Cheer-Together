@@ -1,14 +1,14 @@
 <template>
   <div class="popularMatch">
     <div class="popularMatch-title">
-      실시간 인기 응원방
+      실시간 인기 응원방 📣
     </div>
     <div class="popularMatch-section">
       <!-- 첫 번째 -->
 
       <div class="popularMatch-section-item" v-for="(room, i) in roomStore.popularRooms" :key="room.roomId">
         <!-- 여기가 썸네일 부분입니다. -->
-        <div class="popularMatch-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[i] + ')' }">
+        <div @click="onairStore.enterRoom(roomIds[i])" class="popularMatch-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[i] + ')' }">
           <!-- 홈 vs 어웨이  -->
           <!-- 홈 -->
           <div class="popularMatch-section-logo">
@@ -52,8 +52,24 @@
 
 <script setup>
 // import router from '@/router'
-import { useRoomStore } from "@/store"
+import { useOnAirStore, useRoomStore } from "@/store"
+import axios from "axios"
+import { ref } from "vue";
+const onairStore = useOnAirStore()
 const roomStore = useRoomStore()
+const roomIds = ref([])
+let roomIdList = []
+axios({
+  url: "https://i7b204.p.ssafy.io/cheertogether/rooms/popular",
+  method: 'GET',
+}).then(res =>{
+  res.data.forEach((room) => {
+    roomIdList.push(room.roomId)    
+  })
+  roomIds.value = roomIdList
+}).catch(err => {
+  console.log(err)
+})
 
 const popularThumbnail = [
   "https://media.api-sports.io/football/venues/556.png",
@@ -75,7 +91,7 @@ roomStore.getPopularRooms()
   margin-bottom: 40px;
 }
 .popularMatch-title {
-  font-size: 24px;
+  font-size: 30px;
   padding: 5.5px 0;
   font-family: var(--bold-font);
 }
@@ -91,17 +107,18 @@ roomStore.getPopularRooms()
 /* 여기부터 썸네일 css */
 .popularMatch-section-item {
   width: 375px;
-  height: 224px;
+  height: 260px;
   margin: 0 20px 20px 0 ;
   border-radius: 10px;
   overflow: hidden;
 }
 .popularMatch-section-item:hover {
   cursor: pointer;
+  opacity: 0.5;
 }
 .popularMatch-section-thumbnail {
   width: 375px;
-  height: 200px;
+  height: 230px;
   position: relative;
   padding: 0 auto;
   border: 1px solid #ecf0f5;
@@ -109,7 +126,7 @@ roomStore.getPopularRooms()
 }
 .popularMatch-section-logo {
   width: 100px;
-  height: 140px;
+  height: 170px;
   background-color:rgba(4, 84, 121, 0.8);
   position: absolute;
   top: 20px;

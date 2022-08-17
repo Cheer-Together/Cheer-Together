@@ -11,6 +11,7 @@ import SocialSignupView from '../views/SocialSignupView'
 import RoomVue from '../views/room/RoomView';
 import ScheduleSelectMonth from '../components/ScheduleSelectMonth.vue'
 import { useAccountStore } from "@/store"
+import Swal from 'sweetalert2'
 
 const routes = [
   {
@@ -70,7 +71,10 @@ const routes = [
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
+  routes,
+  scrollBehavior() {
+    return {x: 0, y: 0}
+  }
 })
 
 router.beforeEach((to, from, next) => {
@@ -78,14 +82,46 @@ router.beforeEach((to, from, next) => {
   const token = sessionStorage.getItem('token')
 
   //authPages에 로그인이 필요한 RouterView를 등록하면 됨
-  const authPages = ['ArticleDetail', 'Room', 'Mypage']
+  const authPages = ['ArticleDetail', 'Mypage', 'MypageEdit'] 
+  const restPages = ['Signup',]
 
   const isAuthRequired = authPages.includes(to.name)
+  const isAuthRestricted = restPages.includes(to.name)
+  
   if (isAuthRequired && !token) {
-    accountStore.loginDialogMsg = '로그인이 필요한 서비스입니다.'
-    accountStore.loginDialogToggle()
+    if (from.name==undefined) {
+      router.push({name:'MainPage'})
+      Swal.fire({
+        icon: 'warning',
+        title: '실패! 😧',
+        text: '로그인이 필요한 서비스입니다.',
+        confirmButtonText: '확인',
+      })
+    } else {
+      accountStore.loginDialogMsg = '로그인이 필요한 서비스입니다.'
+      accountStore.loginDialogToggle()
+    }
   } else {
     next()
+  }
+
+  if (isAuthRestricted && token) {
+    if (from.name==undefined) {
+      router.push({name:'MainPage'})
+      Swal.fire({
+        icon: 'error',
+        title: '경고! ⛔️',
+        text: '잘못된 접근입니다.',
+        confirmButtonText: '확인'
+      })
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "경고! ⛔️",
+        text: "잘못된 접근입니다.",
+        confirmButtonText: "확인",
+      });
+    }
   }
 })
 

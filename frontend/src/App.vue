@@ -30,7 +30,6 @@ if (toke.value) {
 
 // 로그인 유저라면 id값 가져와서 프로필에 저장
 if (accountStore.isLogin) {
-  console.log(decoded.value.sub);
   accountStore.profileId = decoded.value.sub;
   accountStore.userProfile(decoded.value.sub);
 }
@@ -47,6 +46,13 @@ gameStore.generateTodayGames()
 roomStore.getRooms();
 
 gamesStore.getAllLiveGames();
+gamesStore.getLeagueLiveGames(39);
+gamesStore.getLeagueLiveGames(140);
+gamesStore.getLeagueLiveGames(135);
+gamesStore.getLeagueLiveGames(78);
+gamesStore.getLeagueLiveGames(61);
+gamesStore.getLeagueLiveGames(292);
+
 </script>
 
 <style>

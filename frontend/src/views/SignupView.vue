@@ -100,7 +100,7 @@
           닉네임
         </div>
         <div style="position: relative;">
-          <input type="text" class="signup-range-input" maxlength="40" v-model="credentialsSignup.nickname">
+          <input type="text" class="signup-range-input" maxlength="10" v-model="credentialsSignup.nickname">
         </div>
       </div>
 
@@ -141,7 +141,7 @@
           본인 소개
         </div>
         <div style="position: relative;">
-          <textarea cols="21" rows="5" class="signup-range-input-introduce" v-model="credentialsSignup.myInfo"></textarea>
+          <textarea cols="21" rows="5" maxlength="180" class="signup-range-input-introduce" v-model="credentialsSignup.myInfo"></textarea>
         </div>
       </div>
       <!-- 좋아하는 리그 -->
@@ -299,13 +299,17 @@ const pushEmail = (email) => {
   if (!accountStore.emailDoubleChecked){
     Swal.fire({
       icon: 'error',
-      title: '이메일 중복을 확인 하세요!',
+      title: '회원가입 실패! 😢',
+      text: '이메일 중복을 확인하세요.',
+      confirmButtonText: '확인'
     })
   }
   else {
     Swal.fire({
       icon: 'success',
-      title: '인증번호를 발송했습니다.',
+      title: '인증메일 발송! 📨',
+      text: '이메일에 인증번호를 발송했습니다.',
+      confirmButtonText: '확인'
     })
     accountStore.isPushEmail = true
     accountStore.emailAuth(email)
@@ -316,31 +320,41 @@ const changeSignUp = (credentialsSignup) => {
   if (!accountStore.emailDoubleChecked) {
     Swal.fire({
       icon: 'error',
-      title: '이메일 중복을 확인 하세요!',
+      title: '회원가입 실패! 😢',
+      text: '이메일 중복을 확인하세요.',
+      confirmButtonText: '확인'
     })
   }
   else if (!accountStore.emailAuthCodeChecked) {
     Swal.fire({
       icon: 'error',
-      title: '인증번호를 입력하세요!',
+      title: '회원가입 실패! 😢',
+      text: '인증번호를 입력하세요.',
+      confirmButtonText: '확인'
     })
   }
   else if (accountStore.isAllowPassword) {
     Swal.fire({
       icon: 'error',
-      title: '비밀번호를 입력하세요!',
+      title: '회원가입 실패! 😢',
+      text: '비밀번호를 입력하세요.',
+      confirmButtonText: '확인'
     })
   }
   else if (accountStore.passwordAccordance != accountStore.passwordAccordance2) {
     Swal.fire({
       icon: 'error',
-      title: '비밀번호가 일치하지 않습니다!',
+      title: '회원가입 실패! 😢',
+      text: '비밀번호 확인이 일치하지 않습니다.',
+      confirmButtonText: '확인'
     })
   }
   else if ( accountStore.isShowPasswordError === true ) {
     Swal.fire({
       icon: 'error',
-      title: '올바르지 않은 비밀번호입니다. 영어, 숫자, 특수문자 조합 8- 20자',
+      title: '회원가입 실패! 😢',
+      text: '올바르지 않은 비밀번호입니다. (영어, 숫자, 특수문자 조합 8~20자)',
+      confirmButtonText: '확인'
     })
   } 
   else {

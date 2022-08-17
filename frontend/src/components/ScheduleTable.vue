@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="schedule-list-items" v-for="day in 31" :key="day">
+    <div class="schedule-list-items" v-for="day in days" :key="day">
       <div class="schedule-date">
         <p>{{ $route.params.month }}월 {{ day }}일</p>
       </div>
@@ -44,7 +44,7 @@
 
 <script setup>
 import { useScheduleStore } from  '../store/index.js'
-// import { onUpdated } from 'vue'
+import { useRoute } from  'vue-router'
 const scheduleStore = useScheduleStore();
 const games = scheduleStore.gamesMonth
 
@@ -59,7 +59,21 @@ for(let game of games){
 let set = new Set(dupGameDays)
 let uniqGameDays = [...set]
 
-
+const route = useRoute()
+const monthOfThirtyOne = ['1', '3', '5', '7', '8', '10', '12']
+const monthOfThirty = ['4', '6', '9', '11']
+const February = '2'
+let days = ''
+const distinguishMonth = () => {
+  if(monthOfThirtyOne.includes(route.params.month)){
+    days = 31
+  } else if (monthOfThirty.includes(route.params.month)){
+    days = 30
+  } else if (route.params.month === February){
+    days = 28
+  }
+}
+distinguishMonth()
 </script>
 
 <style>

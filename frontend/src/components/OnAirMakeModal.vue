@@ -104,7 +104,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { useOnAirStore, useAccountStore } from "@/store/index.js";
-import { useGamesStore } from "@/store/modules/game.js";
+import {useRoute } from 'vue-router'
 const onAirStore = useOnAirStore();
 const dialog2 = ref(false);
 const makeroomLogo = require("../assets/image/로고.png");
@@ -120,7 +120,23 @@ watch(roomStatus, () => {
     roomPassword.value = ""
   }
 })
-const items = useGamesStore().liveGames;
+const route = useRoute()
+let items = []
+if (route.params.leaguename === '모든 응원방 목록'){
+  items = JSON.parse(sessionStorage.getItem('AllLiveGames'))
+} else if (route.params.leaguename === '프리미어리그'){
+  items = JSON.parse(sessionStorage.getItem('liveGames39'))
+} else if (route.params.leaguename === '라리가'){
+  items = JSON.parse(sessionStorage.getItem('liveGames140'))
+} else if (route.params.leaguename === '세리에 A'){
+  items = JSON.parse(sessionStorage.getItem('liveGames135'))
+} else if (route.params.leaguename === '분데스리가'){
+  items = JSON.parse(sessionStorage.getItem('liveGames78'))
+} else if (route.params.leaguename === '리그 1'){
+  items = JSON.parse(sessionStorage.getItem('liveGames61'))
+} else if (route.params.leaguename === 'K리그 1'){
+  items = JSON.parse(sessionStorage.getItem('liveGames292'))
+} 
 </script>
 
 <style scoped>
