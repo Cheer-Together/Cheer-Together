@@ -398,7 +398,7 @@
       <div id="video-container" v-if="roomStore.isClickLayout">
           <user-video
             :stream-manager="publisher"
-             v-bind:isSessionManager="isSessionManager"
+            :isSessionManager="isSessionManager"
             @click="updateMainVideoStreamManager(publisher)"
             
           />
@@ -406,6 +406,7 @@
             v-for="sub in subscribers"
             :key="sub.stream.connection.connectionId"
             :stream-manager="sub"
+            :isSessionManager="isSessionManager"
             @click="updateMainVideoStreamManager(sub)"
             @forceOut="forceOut"
           />
