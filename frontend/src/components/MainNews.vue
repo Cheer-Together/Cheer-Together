@@ -79,5 +79,16 @@ a {
   overflow: hidden; 
   word-break: break-all;
 }
-
+@media (max-width: 1580px) {
+.mainNews {
+  margin-bottom: 76px;
+}
+.mainNews-title {
+  font-size: 25px;
+}
+.mainNews-section {
+  margin-top: 11px;
+  width: 1300px;
+}
+}
 </style>

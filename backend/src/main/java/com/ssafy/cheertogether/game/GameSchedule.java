@@ -19,7 +19,7 @@ public class GameSchedule {
 
 	@Scheduled(cron = "0 0/15 * * * *")
 	public void gameLiveUpdate(){
-		gameService.updateGameLive(ZonedDateTime.of(LocalDateTime.now(), ZoneId.of("Asia/Seoul")).toLocalDateTime());
+		gameService.updateGameLive(LocalDateTime.now().plusHours(9));
 	}
 
 	@Scheduled(cron = "0 0/5 * * * *")
