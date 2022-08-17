@@ -5,7 +5,7 @@
       <img :src="navBarNameLogo" class="navBar-namelogo" @click="router.push({ name:'MainPage', })">
     </div>
 
-    {{!-- 검색 도구 --}}
+    <!-- 검색 도구 -->
     <div class="search-box">
       <input type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)">
       <button @click.prevent="onAirStore.searchRooms(searchData)"><v-icon>mdi-magnify</v-icon></button>
