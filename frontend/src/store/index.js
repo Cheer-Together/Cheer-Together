@@ -100,7 +100,9 @@ export const useAccountStore = defineStore("account", {
       }
       Swal.fire({
         icon: "error",
-        title: "유효한 이메일 형식이 아닙니다.",
+        title: '회원가입 실패! 😭',
+        text: "유효한 이메일 형식이 아닙니다.",
+        confirmButtonText: '확인'
       });
     },
 
@@ -151,19 +153,25 @@ export const useAccountStore = defineStore("account", {
           this.emailDoubleChecked = true;
           Swal.fire({
             icon: "success",
-            title: "중복 확인 완료",
+            title: "중복 확인 성공! 👍",
+            text: "사용 가능한 이메일입니다.",
+            confirmButtonText: "확인",
           });
         })
         .catch((err) => {
           if (err.response.status === 400) {
             Swal.fire({
               icon: "error",
-              title: "이미 가입한 이메일 입니다.",
+              title: "이메일 중복! 😰",
+              text: "이미 존재하는 이메일 입니다.",
+              confirmButtonText: "확인",
             });
           } else {
             Swal.fire({
               icon: "error",
-              title: "일단 400 외의 에러",
+              title: "서버 에러 😥",
+              text: "유효하지 않은 요청입니다.",
+              confirmButtonText: "확인",
             });
           }
         });
@@ -182,12 +190,16 @@ export const useAccountStore = defineStore("account", {
 
         Swal.fire({
           icon: "success",
-          title: "인증 성공",
+          title: "이메일 인증 성공! 🤗",
+          text: "이메일 인증에 성공하였습니다.",
+          confirmButtonText: "확인",
         });
       } else {
         Swal.fire({
           icon: "error",
-          title: "인증 실패",
+          title: "이메일 인증 실패! 😵‍💫",
+          text: "올바른 인증번호를 입력해주세요.",
+          confirmButtonText: "확인",
         });
       }
     },
@@ -235,15 +247,19 @@ export const useAccountStore = defineStore("account", {
         .then(() => {
           Swal.fire({
             icon: 'success',
-            title: '성공적으로 회원가입 되었습니다.'
+            title: '안녕하세요! 🙋‍♂️',
+            text: '회원가입에 성공하였습니다.',
+            confirmButtonText: '확인'
           });
           router.push({ name: "MainPage" });
         })
         .catch((err) => {
           console.log(err);
           Swal.fire({
-            icon: 'warning',
-            title: '회원가입에 실패했습니다.'
+            icon: 'error',
+            title: '실패! 😢',
+            text: '회원가입에 실패하였습니다.',
+            confirmButtonText: '확인'
           });
         });
     },
@@ -290,7 +306,9 @@ export const useAccountStore = defineStore("account", {
           this.isChangePasswordModal = false;
           Swal.fire({
             icon: "success",
-            title: "비밀번호가 변경되었습니다.",
+            title: "성공! 😎",
+            text: "비밀번호가 변경되었습니다.",
+            confirmButtonText: "확인",
           });
         })
         .catch((err) => {
@@ -419,21 +437,27 @@ export const useAccountStore = defineStore("account", {
           this.userProfile(decoded.value.sub);
           Swal.fire({
             icon: "success",
-            title: "성공적으로 로그인 되었습니다.",
+            title: "안녕하세요! 😊",
+            text: "로그인에 성공하였습니다.",
+            confirmButtonText: "확인",
           });
         })
         .catch((err) => {
           if (err.response.status=='500') {
             Swal.fire({
               icon: 'warning',
-              title: '아이디와 비밀번호를 다시 확인해 주세요'
+              title: '로그인 실패! 🥲',
+              text: '아이디와 비밀번호를 다시 확인해 주세요.',
+              confirmButtonText: '확인'
             })
           } else {
             console.log(err)
             Swal.fire({
-              icon: 'error',
-              title: '로그인 실패'
-            })
+              icon: "warning",
+              title: "로그인 실패! 🥲",
+              text: "아이디와 비밀번호를 다시 확인해 주세요.",
+              confirmButtonText: "확인",
+            });
           }
         });
     },
@@ -460,7 +484,9 @@ export const useAccountStore = defineStore("account", {
       router.go()
       Swal.fire({
         icon: "success",
-        title: "성공적으로 로그아웃 되었습니다.",
+        title: "Bye! 👋",
+        text: "로그아웃 되었습니다.",
+        confirmButtonText: "확인",
       });
     },
     getPointRanking() {
@@ -713,8 +739,9 @@ export const useOnAirStore = defineStore("onair", {
             useAccountStore().loginDialogToggle()
           } else {
             Swal.fire({
-              title: "비밀번호를 입력하세요",
-              icon: "info",
+              icon: "question",
+              title: "비공개방 🔐",
+              text: '비밀번호를 입력해주세요.',
               input: "password",
               inputPlaceholder: "********",
               inputAttributes: {
@@ -727,8 +754,10 @@ export const useOnAirStore = defineStore("onair", {
                 router.push({ name: "Room", params: { session: `${res.data.sessionId}` } });
               } else {
                 Swal.fire({
-                  title: "비밀번호가 틀렸습니다",
                   icon: "error",
+                  title: '입장 실패! 😣',
+                  text: "비밀번호가 틀렸습니다.",
+                  confirmButtonText: '확인'
                 });
               }
             });            
@@ -748,19 +777,13 @@ export const useOnAirStore = defineStore("onair", {
             }
           })
           .then((res) => {
-            let trueRes = []
-            for(let searchedRoom of res.data){
-              for(let room of this.currentRooms){
-                if(searchedRoom.roomId === room.roomId){
-                  trueRes.push(searchedRoom)
-                }
-              }
-            }
-            this.currentRooms = trueRes
-            this.isSearched = true
-            this.searchWord = searchData.text
-            router.go()
-            
+
+            console.log(res.data)
+            this.currentRooms = res.data
+            router.push({name: 'Onair', params: {leaguename: `"${searchData.text}"`}})
+            res.data.forEach((e, idx) => {
+              this.getAllGameInfo(e.gameId, idx)          
+            })
           })
         }  
     },
@@ -864,8 +887,8 @@ export const useNewsStore = defineStore("news", {
             let description = e.description;
             title = title.replaceAll("&apos;", "'");
             title = title.replaceAll("&quot;", '"');
-            description = title.replaceAll("&apos;", "'");
-            description = title.replaceAll("&quot;", '"');
+            description = description.replaceAll("&apos;", "'");
+            description = description.replaceAll("&quot;", '"');
             this.news.push({ link: e.link, title: title, description: description });
           });
         })
@@ -1280,7 +1303,9 @@ export const useRoomStore = defineStore("room", {
         .then(() => {
           Swal.fire({
             icon: "success",
-            title: teamName + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!⚽️",
+            title: '승부 예측 성공! ⚽️',
+            text: teamName + "팀에 " + pointToSend + "개의 축구공을 걸었습니다!",
+            confirmButtonText: '확인'
           });
           useAccountStore().profile.point -= pointToSend;
         })
@@ -1363,7 +1388,9 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
               .then(() => {
                 Swal.fire({
                   icon: "success",
-                  title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
+                  title: '승부 예측 성공! 🎉',
+                  text: "축하드립니다." + perPoint + "개 축구공을 획득하셨습니다!",
+                  confirmButtonText: '확인'
                 });
               })
               .catch(e => console.log(e));
@@ -1377,8 +1404,10 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
             for (let member of list2) {
               if (member == useAccountStore().profileId) {
                 Swal.fire({
-                  icon: "success",
-                  title: "승부예측 실패 🥲 \n" + this.predictedPoint + "개 축구공을 잃었습니다!",
+                  icon: "warning",
+                  title: '승부 예측 실패! 😥',
+                  text: this.predictedPoint + "개 축구공을 잃었습니다.",
+                  confirmButtonText: '확인'
                 });
                 break;
               }
@@ -1400,7 +1429,9 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
               .then(() => {
                 Swal.fire({
                   icon: "success",
-                  title: "🎉 승부예측 성공 🎉\n" + perPoint + "개 축구공 획득!⚽️",
+                  title: "승부 예측 성공! 🎉",
+                  text: "축하드립니다." + perPoint + "개 축구공을 획득하셨습니다!",
+                  confirmButtonText: "확인",
                 });
               })
               .catch((e) => console.log(e));
@@ -1413,8 +1444,10 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
             for (let member of list1) {
               if (member == useAccountStore().profileId) {
                 Swal.fire({
-                  icon: "success",
-                  title: "승부예측 실패 🥲 \n" + this.predictedPoint + "개 축구공을 잃었습니다!",
+                  icon: "warning",
+                  title: "승부 예측 실패! 😥",
+                  text: this.predictedPoint + "개 축구공을 잃었습니다.",
+                  confirmButtonText: "확인",
                 });
                 break;
               }
@@ -1432,7 +1465,8 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
               .then(() => {
                 Swal.fire({
                   icon: "success",
-                  title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
+                  title: '승부 예측 무승부! 🤝',
+                  text: this.predictedPoint + "개 축구공을 돌려받습니다.",
                 });
               })
               .catch((e) => console.log(e));
@@ -1453,7 +1487,8 @@ export const useGamePredictionStore = defineStore("gamePrediction", {
                   .then(() => {
                     Swal.fire({
                       icon: "success",
-                      title: "🎉 무승부 🎉\n" + this.predictedPoint + "개 축구공을 돌려받습니다!⚽️",
+                      title: "승부 예측 무승부! 🤝",
+                      text: this.predictedPoint + "개 축구공을 돌려받습니다.",
                     });
                   })
                   .catch((e) => console.log(e));

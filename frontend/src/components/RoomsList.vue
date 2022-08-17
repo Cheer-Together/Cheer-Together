@@ -1,6 +1,14 @@
 <template>
   <div class="rooms-list-page">
     <div class="rooms-list-section">
+
+      <div v-if="isNoRoom" class="room-list-nothing">
+        <div class="room-list-nothing-content">
+          <p style="margin-top:40px">검색 조건에 해당하는 방이 없습니다</p>
+          <p style="margin-top:30px">방을 개설하시면 같이 집관 하실 수 있습니다</p>
+        </div>
+      </div>
+
       <div class="rooms-list-section-item" v-for="room in onairStore.currentRooms" :key="room.id" @click="onairStore.enterRoom(room.roomId)">
         <!-- 여기가 썸네일 부분입니다. -->
         <div class="rooms-list-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[0] + ')' }">
@@ -47,12 +55,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useOnAirStore } from '../store/index.js'
 import { useRoute } from "vue-router"
-const route = useRoute()
+import { ref } from "vue";
 
+const route = useRoute()
 const onairStore = useOnAirStore();
+
+const isNoRoom = ref(false)
+if (onairStore.currentRooms.length == 0) {
+  isNoRoom.value = true
+}
+
 const popularThumbnail = [
   "https://media.api-sports.io/football/venues/556.png",
   "https://media.api-sports.io/football/venues/550.png",
@@ -65,12 +79,15 @@ const popularThumbnail = [
   "https://media.api-sports.io/football/venues/546.png",
 ]
 
+const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
 if (route.params.leaguename === '모든 응원방 목록') {
   onairStore.moveOnairPage
 }
-else {
+else if (leagues.includes(route.params.leaguename)){
   onairStore.moveLeagueRooms(route.params.leaguename)
 }
+// eslint-disable-next-line
+else {  } 
 </script>
 
 <style>
@@ -95,16 +112,33 @@ else {
 .private-room {
   text-align: end;
 }
+.room-list-nothing {
+  width: 100%;
+  height: 200px;
+  background-color: var(--sub-color);
+}
+.room-list-nothing-content{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 24px;
+}
+.room-list-nothing-content{
+    font-size: 20px;
+  }
+
 /* 여기부터 썸네일 css */
 .rooms-list-section-item {
   width: 375px;
-  height: 260px;
-  margin: 0 20px 20px 0 ;
+  height: 270px;
+  margin: 0 20px 35px 0 ;
   border-radius: 10px;
   overflow: hidden;
   text-align: center;
 }
 .rooms-list-section-item:hover {
+  opacity: 0.5;
   cursor: pointer;
 }
 .rooms-list-section-thumbnail {
@@ -151,7 +185,8 @@ else {
   color: #ffffff;
 }
 .rooms-list-section-item-title {
-  font-size: 16px;
+  font-size: 24px;
+  /* font-weight: bold; */
   width: 375px;
   height: 24px;
   padding: 2px 0 0 10px;

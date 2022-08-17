@@ -27,7 +27,7 @@
                   <span>{{ index + 1 }}위</span>
                 </div>               
               </div>
-              <div style="position:absolute; right:15px; top: 20px;"> 공: {{accountStore.otherProfile.point}}개</div> 
+              <div style="position:absolute; right:15px; top: 20px; font-size:19px;"> 축구공 : {{accountStore.otherProfile.point}}개 ⚽️</div> 
             </div>
             <!-- 소개 -->
             <div class="mypage-header-info">
@@ -44,7 +44,7 @@
             회원정보수정
           </v-btn>
 
-          <v-btn style="color:red; width:140px;" class="mypage-header-editinfo" @click="withdrawal">
+          <v-btn style="color:#f44040; width:140px;" class="mypage-header-editinfo" @click="withdrawal">
             <v-icon >
               mdi-delete-forever
             </v-icon>
@@ -118,6 +118,7 @@ const withdrawal = () => {
 }
 .mypage-header {
   margin: 30px auto;
+  margin-top: 50px;
   width: 1300px;
   height: 350px;
   border-bottom: 1px solid #b6b9ba;
@@ -141,14 +142,15 @@ const withdrawal = () => {
 .mypage-header-info {
   margin-top: 30px;
   padding: 10px;
-  width: 940px;
+  width: 960px;
   height: 120px;
   font-size: 17px;
   background-color: var( --sub-color );
 }
 .mypage-header-ranking {
-  margin: 0 0 0 500px;
+  margin: 0 0 0 420px;
   padding: 20px 0 0 0;
+  font-size: 19px;
 }
 .mypage-header-editinfo {
   margin: 20px 40px 0 0;
@@ -156,7 +158,7 @@ const withdrawal = () => {
   width: 160px;
   height: 37px;
   background-color: blanchedalmond;
-  color: red;
+  color: #f44040;
   border-radius: 30px;
   font-size: 18px;
   text-align: center;
@@ -164,7 +166,7 @@ const withdrawal = () => {
 }
 .mypage-header-editinfo:first-child {
   margin-left: auto;
-  color: black;
+  color: rgb(74, 74, 74);
 }
 .mypage-header-editinfo:hover {
   cursor: pointer;
@@ -172,7 +174,7 @@ const withdrawal = () => {
 .mypage-section {
   margin: 0 auto;
   width: 1300px;
-  height: 700px;
+  height: 610px;
 }
 .mypage-section-favorite-league {
   padding: 10px;

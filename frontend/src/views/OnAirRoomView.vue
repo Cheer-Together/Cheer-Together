@@ -27,7 +27,7 @@
           <!-- 경기 목록 별로 정렬 -->
           <div class="select-live-match">
             <select name="liveMatch" @change="changeMatch()">
-              <option value="none" class="select-none"> ======= 선택 =======</option>
+              <option value="none" class="select-none"> ===== 경기 선택 =====</option>
               <option :value="match.id" v-for="match in items" :key="match.id">{{ match.title }}</option>
             </select>
           </div>
@@ -76,23 +76,21 @@ const changeMatch = () => {
   onAirStore.selectMatch(liveMatchData.id)
 }
 
+const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
 const fetchLeagueLogo = (leaguename) => {
-  if(leaguename === '모든 응원방 목록'){
-    return require('../assets/image/로고.png');
-
+  if(leagues.includes(leaguename)){
+    for(let league of leagueStore.leagues){
+      if(league.hanName === leaguename){
+        return league.logo
+      } else if (league.hanName === '세리에' && leaguename === '세리에 A'){
+        return league.logo
+      } else if (league.hanName === '리그앙' && leaguename === '리그 1'){
+        return league.logo
+      } else if (league.hanName === 'K리그' && leaguename === 'K리그 1'){
+        return league.logo
+      }
   }
-  for(let league of leagueStore.leagues){
-    if(league.hanName === leaguename){
-      return league.logo
-    } else if (league.hanName === '세리에' && leaguename === '세리에 A'){
-      return league.logo
-    } else if (league.hanName === '리그앙' && leaguename === '리그 1'){
-      return league.logo
-    } else if (league.hanName === 'K리그' && leaguename === 'K리그 1'){
-      return league.logo
-    } else { return require('../assets/image/로고.png') }
-  }
-}
+} else { return require('../assets/image/로고.png'); }}
 
 const route = useRoute()
 let items = []
@@ -129,6 +127,7 @@ watch(route, () => {
   align-items: center;
   justify-content: space-between;
   width: 1600px;
+  margin-top: 40px;
 }
 
 .onair-header-title-and-logo{
@@ -156,12 +155,16 @@ watch(route, () => {
 }
 
 .onair-header-make-room{
+  font-size: 17px;
   width: 100px;
   height: 60px;
   border-radius: 10px;
   margin: 0 20px;
   text-align: center;
   background-color: #BDF9CD;
+}
+.onair-header-make-room:hover {
+  opacity: 0.5;
 }
 
 .search-box{
@@ -172,6 +175,9 @@ watch(route, () => {
 
 .search-box select {
   margin : 3px;
+}
+.select-live-match {
+  padding: 20px;
 }
 
 .select-none {

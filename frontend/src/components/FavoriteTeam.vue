@@ -1,7 +1,7 @@
 <template>
   <div class="favoriteTeam">
     <div class="favoriteTeam-title">
-      좋아하는 팀
+      좋아하는 팀 ⚽️
     </div>
     <!-- 로그인이 안되어 있을 때 -->
     <div class="favoriteTeam-section" @click="accountStore.loginDialogToggle()" v-if="!accountStore.isLogin">
@@ -61,7 +61,7 @@ const bgcolor = {
   margin-bottom: 40px;
 }
 .favoriteTeam-title {
-  font-size: 24px;
+  font-size: 30px;
   padding: 5.5px 0;
   font-family: var(--bold-font);
 }
@@ -121,7 +121,7 @@ const bgcolor = {
   margin-bottom: 16px;
 }
 .favoriteTeam-title {
-  font-size: 15px;
+  font-size: 25px;
 }
 .favoriteTeam-section {
   margin-top: 8px;

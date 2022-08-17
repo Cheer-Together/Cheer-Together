@@ -1,7 +1,7 @@
 <template>
   <div class="mainNews">
     <div class="mainNews-title">
-      스포츠 뉴스
+      최신 스포츠 뉴스 📰
     </div>
     <div class="mainNews-section">
       <div class="mainNews-item" v-for="news in newsStore.news" :key="news.id">
@@ -38,7 +38,7 @@ a {
   margin-bottom: 100px;
 }
 .mainNews-title {
-  font-size: 24px;
+  font-size: 30px;
   padding: 5.5px 0;
   font-family: var(--bold-font);
 }
@@ -52,6 +52,9 @@ a {
   margin-bottom: 30px;
   display: flex;
   border-bottom: 1px solid black;
+}
+.mainNews-item:hover {
+  color: rgb(102, 147, 251);
 }
 .mainNews-item-image {
   width: 300px;
@@ -76,5 +79,16 @@ a {
   overflow: hidden; 
   word-break: break-all;
 }
-
+@media (max-width: 1580px) {
+.mainNews {
+  margin-bottom: 76px;
+}
+.mainNews-title {
+  font-size: 25px;
+}
+.mainNews-section {
+  margin-top: 11px;
+  width: 1300px;
+}
+}
 </style>

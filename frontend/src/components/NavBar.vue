@@ -4,12 +4,20 @@
       <img :src="navBarLogo" class="navBar-logo" @click="router.push({ name:'MainPage', })">
       <img :src="navBarNameLogo" class="navBar-namelogo" @click="router.push({ name:'MainPage', })">
     </div>
+
+    <!-- 검색 도구 -->
+    <div class="search-box">
+      <input type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)">
+      <button @click.prevent="onAirStore.searchRooms(searchData)"><v-icon>mdi-magnify</v-icon></button>
+    </div>
+    
+
     <div class="navBar-items">
       <!-- 로그인 -->
       <div v-if="accountStore.isLogin" class="navBar-item-login">
         <img :src="accountStore.profile.profileImage" class="navBar-profile-image">
         <div class="navBar-profile-nickname">
-          {{ accountStore.profile.nickname}}
+          {{ accountStore.profile.nickname }}
         </div>
           <v-icon class="navBar-profile-icon" @click="navbarStore.isClickProfile = !navbarStore.isClickProfile">
             mdi-chevron-down
@@ -18,13 +26,13 @@
 
       <!-- 로그인 드롭다운 -->
       <div v-if="navbarStore.isClickProfile" class="navBar-profile-dropdown">
-        <div @click="router.push({ name:'Mypage', params: { userid: accountStore.profileId } })">
+        <div @click="router.push({ name:'Mypage', params: { userid: accountStore.profileId } })" class="navbar-profile-dropdown-btn">
           <v-icon>
             mdi-account-circle
           </v-icon>
           내정보
         </div>
-        <div @click="myLogout">
+        <div @click="myLogout" class="navbar-profile-dropdown-btn">
           <v-icon>
             mdi-logout
           </v-icon>
@@ -60,31 +68,44 @@ navbarStore.isClickProfile = false
 
 const myLogout = () => {
   navbarStore.isClickProfile = false
-  accountStore.logoutAccount()
+  accountStore.logoutAccount();
 }
+
+
+import { useOnAirStore } from '@/store'
+const onAirStore = useOnAirStore()
+
+const searchData = {
+  text : '',
+  category : 'name'
+}
+
 </script>
 
 <style>
 .navBar {
   width: 100%;
-  height: 100px;
+  height: 120px;
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid var(--navbar-border-color);
   position: fixed;
   background-color: var(--navbar-back-color);
   top: 0;
-  z-index: 1;
+  z-index: 10000;
 }
 .navBar-logo {
   margin-left: 10px;
-  width: 98px;
+  width: 118px;
 }
 .navBar-namelogo {
-  width: 98px;
+  width: 118px;
 
 }
 .navBar-logo:hover {
+  cursor: pointer;
+}
+.navBar-namelogo:hover {
   cursor: pointer;
 }
 .navBar-profile-image {
@@ -123,7 +144,7 @@ const myLogout = () => {
 .navBar-item-login {
   display: flex;
   width: 260px;
-  height: 100px;
+  height: 120px;
   align-items: center;
   font-size: 20px;
 }
@@ -143,7 +164,7 @@ const myLogout = () => {
   right: 30px;
   top: 80px;
   border: 1px solid #ecf0f5;
-  color: #5f60639b;
+  color: #4747489b;
   background-color: #ffffff;
   border-radius: 10px;
   z-index: 2;
@@ -161,6 +182,7 @@ const myLogout = () => {
 }
 .navBar-profile-dropdown div:hover {
   cursor: pointer;
+  font-weight: bold;
 }
 
 @media (max-width: 1580px) {
@@ -185,7 +207,7 @@ const myLogout = () => {
   height: 18px;
 }
 .navBar-item-login{
-  height: 60px;
+  height: 100px;
 }
 .navBar-profile-nickname {
   font-size: 15px;

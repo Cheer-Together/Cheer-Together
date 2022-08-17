@@ -20,27 +20,27 @@
     </div>
     <!-- 프리미어리그 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('프리미어리그')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '프리미어리그'}">프리미어리그</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '프리미어리그' && route.matched[0].name === 'Onair'}">프리미어리그</p>
     </div>
     <!-- 라리가 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('라리가')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '라리가'}">라리가</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '라리가' && route.matched[0].name === 'Onair'}">라리가</p>
     </div>
     <!-- 세리에 A -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('세리에 A')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '세리에 A'}">세리에 A</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '세리에 A' && route.matched[0].name === 'Onair'}">세리에 A</p>
     </div>
     <!-- 분데스리가 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('분데스리가')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '분데스리가'}">분데스리가</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '분데스리가' && route.matched[0].name === 'Onair'}">분데스리가</p>
     </div>
     <!-- 리그 1 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('리그 1')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '리그 1'}">리그 1</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === '리그 1' && route.matched[0].name === 'Onair'}" >리그 1</p>
     </div>
     <!-- K리그 1 -->
     <div class="sideBar-subtitle" @click="onairStore.moveLeagueRooms('K리그 1')">
-      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === 'K리그 1'}">K리그 1</p>
+      <p :class="{'sideBar-subtitle-active' : $route.params.leaguename === 'K리그 1' && route.matched[0].name === 'Onair'}">K리그 1</p>
     </div>
     <!-- 경기 일정 -->
     <div class="sideBar-item" @click="scheduleStore.moveSchedulePage('2022-08')">
@@ -63,7 +63,7 @@
 
     <!-- 명예의 전당 -->
     <div class="hall-of-fame">
-      <b style="font-size:16px; font-family: var(--bold-font);">🏆 명예의 전당 🏆</b>
+      <b style="font-size:17px; font-family: var(--bold-font);">🏆 명예의 전당 🏆</b>
       <div v-for="(m, index) in accountStore.pointRanking" :key="m.id" @click="router.push({name:'Mypage', params:{userid: m.id}})" class="hall-of-fame-rank">
         <span v-if="index === 0">👑</span>
         <span v-else>{{index + 1}}위</span> 
@@ -93,7 +93,7 @@ const route = useRoute()
   height:100%;
   border-right: 1px solid var(--sidebar-border-color);
   position: fixed;
-  top: 100px;
+  top: 120px;
   background-color: var(--navbar-back-color);
 }
 
@@ -177,7 +177,7 @@ const route = useRoute()
   background-color:#ffebb0;
   margin: 30px 0 0 0;
   padding:10px;
-  font-size:11px;
+  font-size:14px;
   text-align: center;
   /* 아래로 내리는거 - 고정*/
   /* min-width: 209px;
@@ -186,12 +186,13 @@ const route = useRoute()
 
 }
 .hall-of-fame-rank {
-  font-size: 12px;
-  margin: 3px 0 0 40px;
+  font-size: 13px;
+  margin: 3px 0 0 20px;
   text-align: start;
 }
 .hall-of-fame-rank:hover {
   cursor: pointer;
+  font-weight: bold;
 }
 @media (max-width: 1580px) {
 .sideBar {

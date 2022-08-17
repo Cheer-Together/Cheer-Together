@@ -73,7 +73,7 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior() {
-    return {x: 0, y: 0}
+    return {top:0}
   }
 })
 
@@ -92,8 +92,10 @@ router.beforeEach((to, from, next) => {
     if (from.name==undefined) {
       router.push({name:'MainPage'})
       Swal.fire({
-        icon: 'error',
-        title: '로그인이 필요한 서비스입니다.'
+        icon: 'warning',
+        title: '실패! 😧',
+        text: '로그인이 필요한 서비스입니다.',
+        confirmButtonText: '확인',
       })
     } else {
       accountStore.loginDialogMsg = '로그인이 필요한 서비스입니다.'
@@ -108,13 +110,17 @@ router.beforeEach((to, from, next) => {
       router.push({name:'MainPage'})
       Swal.fire({
         icon: 'error',
-        title: '잘못된 접근입니다.'
+        title: '경고! ⛔️',
+        text: '잘못된 접근입니다.',
+        confirmButtonText: '확인'
       })
     } else {
       Swal.fire({
-        icon: 'error',
-        title: '잘못된 접근입니다.'
-      })
+        icon: "error",
+        title: "경고! ⛔️",
+        text: "잘못된 접근입니다.",
+        confirmButtonText: "확인",
+      });
     }
   }
 })

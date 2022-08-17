@@ -1,7 +1,7 @@
 <template>
   <div class="todayMatchList">
     <div class="todayMatchList-title-button">
-      <div class="todayMatchList-title">경기 일정</div>
+      <div class="todayMatchList-title">경기 일정 📅</div>
       <div v-if="isActiveCarousel">
         <button @click="moveCarousel(1)"><v-icon> mdi-checkbox-blank-circle</v-icon></button>
         <button @click="moveCarousel(2)"><v-icon> mdi-checkbox-blank-circle-outline</v-icon></button>
@@ -16,13 +16,13 @@
       <!-- 리그 목록-->
       <div class="todayMatchList-section-item" v-for="(league, i) in leagueStore.leaguesNoTeam" :key="league.apiId" :style="{ transform: moveCarouselValue }">
         <!-- 리그 이름 + 더보기 있는 영역 -->
-        <div class="todayMatchList-item-header">
+        <div class="todayMatchList-item-header" @click="moveMatchList(league, i)">
           <div class="todayMatchList-section-title">
             {{ league.hanName }}
           </div>
           <div class="todayMatchList-section-etc">
             더보기
-            <v-icon @click="moveMatchList(league, i)" style="width: 10px; font-size: 20px"> mdi-chevron-right </v-icon>
+            <v-icon style="width: 10px; font-size: 20px"> mdi-chevron-right </v-icon>
           </div>
         </div>
 
@@ -140,7 +140,7 @@ function moveMatchList(league, i) {
   margin-right: 10px;
 }
 .todayMatchList-title {
-  font-size: 24px;
+  font-size: 30px;
   padding: 5.5px 0;
   font-family: var(--bold-font);
 }
@@ -173,6 +173,9 @@ function moveMatchList(league, i) {
   margin: 10px 0;
   font-size: 16px;
   padding: 4px 2px 0 0;
+}
+.todayMatchList-section-etc:hover {
+  cursor: pointer;
 }
 .todayMatchList-item-section {
   width: 513px;
@@ -225,7 +228,7 @@ function moveMatchList(league, i) {
     margin-bottom: 16px;
   }
   .todayMatchList-title {
-    font-size: 15px;
+    font-size: 25px;
   }
   .todayMatchList-section {
     margin-top: 8px;
@@ -233,13 +236,17 @@ function moveMatchList(league, i) {
     font-size: 15px;
   }
   .todayMatchList-item-section {
-    width: 420px;
+    width: 400px;
+    height: 300PX;
   }
   .todayMatchList-item-section-header {
-    width: 418px;
+    width: auto;
   }
   .todayMatchList-item-match {
     font-size: 12px;
+  }
+  .todayMatchList-title-button div {
+    margin-right: 80px;
   }
 }
 </style>

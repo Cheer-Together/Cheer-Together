@@ -4,7 +4,7 @@
     <SideBar/>
     <div class="mypagedeit">
       <!-- 이메일 -->
-      <div class="mypagedeit-range" v-if="!accountStore.emailDoubleChecked">
+      <div class="mypagedeit-range" v-if="!accountStore.emailDoubleChecked" style="margin-top:40px;">
         <div class="mypagedeit-range-title ">
           이메일
         </div>
@@ -166,8 +166,6 @@ import { useAccountStore } from "@/store"
 import { useLeagueStore } from "@/store"
 import router from '@/router'
 import { ref } from "vue";
-
-// import Swal from 'sweetalert2'
 
 const leagueStore = useLeagueStore()
 const accountStore = useAccountStore()

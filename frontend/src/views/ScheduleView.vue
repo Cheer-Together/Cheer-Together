@@ -47,7 +47,7 @@ const route = useRoute()
 
 <style>
 .schedule-page{
-  margin-top: 130px;
+  margin-top: 180px;
   margin-left: 470px;
   margin-bottom: 100px;
 }
@@ -66,6 +66,9 @@ const route = useRoute()
   font-size: 25px;
   text-align: center;
   cursor: pointer;
+}
+.schedule-page-league-items:hover {
+  opacity: 0.5;
 }
 
 .league-active {
