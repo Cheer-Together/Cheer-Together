@@ -13,9 +13,10 @@
     <!-- 로그인이 되어 있을 때 -->
     <div div class="favoriteTeam-section-islogin" @click="accountStore.loginDialogToggle()" v-if="accountStore.isLogin && accountStore.profile.favoriteTeamList.length !== 0">
 
-      <div v-for="team in accountStore.profile.favoriteTeamList" :key="team.apiId" class="main-card" :style="{ backgroundColor: bgcolor[team.leagueName]}">
+      <div v-for="(team, i) in accountStore.profile.favoriteTeamList" :key="team.apiId" class="main-card" :style="{ backgroundColor: bgcolor[team.leagueName]}">
         <img :src="team.logo" alt=""  class="main-card-logo">
         <div>
+          <img :src="liveLogo" width="60" height="40" v-if="this.isLiveTeam(team,i)=='b'" class="live" @click="this.goLiveRoom(team)"/>
           <div class="main-card-teamname">
             {{ team.hanName }}
           </div>
@@ -37,10 +38,74 @@
   </div>
 </template>
 
+<script>
+import { useGamesStore } from "@/store/modules/game";
+import { useOnAirStore } from "@/store"
+
+export default {
+  data() {
+    return {
+      gamesStore: useGamesStore(),
+      onAirStore: useOnAirStore()
+    }
+  },
+  created() {
+    this.gamesStore.getAllLiveGames();
+  },
+  methods: {
+    isLiveTeam(team) {
+      let result = "a";
+      this.gamesStore.liveGames.forEach((res) => {
+        console.log(res);
+        if(res.homeLogo == team.logo || res.awayLogo == team.logo) {
+          result = "b";
+        }
+      })
+      return result;
+    },
+    goLiveRoom(team) {
+      let gameId = "";
+      let leagueName = "";
+      switch(team.leagueName) {
+        case 'Premier League' :
+          leagueName = '프리미어리그';
+          break;
+        case 'La Liga':
+          leagueName = '라리가';
+          break;
+        case 'Ligue 1':
+          leagueName = '리그 1';
+          break;
+        case 'Serie A':
+          leagueName = '세리에 A';
+          break;
+        case 'Bundesliga':
+          leagueName = '분데스리가';
+          break;
+        case 'K League 1':
+          leagueName = 'K리그 1';
+          break;
+      }
+      this.gamesStore.liveGames.forEach((res) => {
+        if(res.homeLogo == team.logo || res.awayLogo == team.logo) {
+          gameId = res.id;
+        }
+      })
+      this.onAirStore.moveLeagueRooms(leagueName).then(() => {
+        this.onAirStore.selectMatchAtHome(gameId);
+        console.log(this.onAirStore.currentRooms);
+      });
+    }
+  }
+}
+</script>
+
 <script setup>
 import router from '@/router'
 import { useAccountStore } from '@/store'
+
 const accountStore = useAccountStore()
+const liveLogo = require('../assets/image/live.png');
 
 if (accountStore.isLogin) {
   accountStore.userProfile(accountStore.profileId)
@@ -86,6 +151,7 @@ const bgcolor = {
   display: flex;
 }
 .main-card {
+  position: relative;
   border: 1px solid black ;
   width: 295px;
   margin: 10px;
@@ -95,7 +161,7 @@ const bgcolor = {
   border-radius: 5px;
   display: flex;
   color: #ecf0f5;
-  padding: 30px 10px 0 10px;
+  padding: 40px 10px 0 10px;
 }
 .main-card-logo {
   width: 80px;
@@ -116,6 +182,13 @@ const bgcolor = {
 .main-card-leaguename {
   font-size: 16px;
 }
+.live {
+  position : absolute;
+  top : 0;
+  right: 10px;
+  cursor: pointer;
+}
+
 @media (max-width: 1580px) {
 .favoriteTeam {
   margin-bottom: 16px;
