@@ -16,6 +16,9 @@
       <p style="font-size: 20px; font-family: 'MICEGothic Bold';">오늘의 경기</p>
       <p class="word-link" @click="onairStore.moveOnairPage" style="font-size: 14px;">자세히 보기</p>
     </div>
+    <div v-if="(todayMatches.length==0)" class="community-matches-nothing">
+      <a style="margin-top:45px">오늘 경기가 없습니다.</a>
+    </div>
     <div v-for="match in todayMatches" :key="match.id" class="community-matches">
       <div class="community-matches-teamname" style="justify-content: flex-end;">
         <a>
@@ -72,7 +75,6 @@ axios({
   }
 })
 .then(res => {
-  let hh = now.getHours()
   let matchHour = 0
   let matchMinute = 0
   let matchDate = new Date()
@@ -81,14 +83,12 @@ axios({
     matchHour = matchDate.getHours()
     matchMinute = matchDate.getMinutes()
     if (matchMinute < 10) {matchMinute = '0' + matchMinute}
-    if (matchHour+1>=hh) {
-      matches.push({
-        id: match.id,
-        teams:[match.home.hanName, match.away.hanName],
-        logos:[match.home.logo, match.away.logo],
-        time: matchHour + ':' + matchMinute,
-      })
-    }
+    matches.push({
+      id: match.id,
+      teams:[match.home.hanName, match.away.hanName],
+      logos:[match.home.logo, match.away.logo],
+      time: matchHour + ':' + matchMinute,
+    }) 
   })
   todayMatches.value = matches.slice(0, 4)
 })
@@ -160,6 +160,15 @@ axios({
   display:flex; 
   width:350px; 
   height:60px;
+}
+.community-matches-nothing {
+  display:flex; 
+  flex-direction: column;
+  font-size: 18px;
+  width:350px; 
+  height:120px;
+  background-color: var( --sub-color );
+  align-items: center;
 }
 .community-matches-teamname {
   display:flex; 
