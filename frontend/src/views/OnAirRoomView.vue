@@ -129,6 +129,7 @@ watch(route, () => {
   align-items: center;
   justify-content: space-between;
   width: 1600px;
+  margin-top: 40px;
 }
 
 .onair-header-title-and-logo{

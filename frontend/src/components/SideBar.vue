@@ -93,7 +93,7 @@ const route = useRoute()
   height:100%;
   border-right: 1px solid var(--sidebar-border-color);
   position: fixed;
-  top: 100px;
+  top: 120px;
   background-color: var(--navbar-back-color);
 }
 
@@ -187,7 +187,7 @@ const route = useRoute()
 }
 .hall-of-fame-rank {
   font-size: 13px;
-  margin: 3px 0 0 40px;
+  margin: 3px 0 0 20px;
   text-align: start;
 }
 .hall-of-fame-rank:hover {
