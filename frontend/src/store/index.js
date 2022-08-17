@@ -481,7 +481,7 @@ export const useAccountStore = defineStore("account", {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("isSocialLogin");
       this.isLogin = false;
-      router.go()
+      router.push({ name: "MainPage" })
       Swal.fire({
         icon: "success",
         title: "Bye! 👋",
