@@ -528,7 +528,7 @@
         </v-btn>
 
         <!--응원가 플레이어-->
-        <div style="height:54px; display:flex;">
+        <div style="height:54px; display:flex; margin-top:10px">
           <audio ref="audio" controls>
             <source :src="roomStore.cheeringSong">
           </audio>
@@ -645,7 +645,7 @@ export default {
         "https://media.api-sports.io/football/venues/546.png",
       ],
       myImg : '',
-      nowPlaySong : "",
+      nowPlaySong : "재생중인 응원가가 없습니다.",
     };
   },
   mounted() {
