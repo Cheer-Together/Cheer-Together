@@ -788,7 +788,7 @@ export const useOnAirStore = defineStore("onair", {
             this.currentRooms = trueRes
             this.isSearched = true
             this.searchWord = searchData.text
-            router.go()
+            // router.go()
             
           })
         }  
@@ -893,8 +893,8 @@ export const useNewsStore = defineStore("news", {
             let description = e.description;
             title = title.replaceAll("&apos;", "'");
             title = title.replaceAll("&quot;", '"');
-            description = title.replaceAll("&apos;", "'");
-            description = title.replaceAll("&quot;", '"');
+            description = description.replaceAll("&apos;", "'");
+            description = description.replaceAll("&quot;", '"');
             this.news.push({ link: e.link, title: title, description: description });
           });
         })

@@ -22,7 +22,7 @@ import MainNews from "../components/MainNews.vue"
 
 <style>
 .mainPage {
-  margin: 130px 0 0 275px;
+  margin: 150px 0 0 275px;
 }
 @media (max-width: 1580px) {
 .mainPage {

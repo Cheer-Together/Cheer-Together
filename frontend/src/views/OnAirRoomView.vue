@@ -90,7 +90,7 @@ const fetchLeagueLogo = (leaguename) => {
       return league.logo
     } else if (league.hanName === 'K리그' && leaguename === 'K리그 1'){
       return league.logo
-    } else { return require('../assets/image/로고.png') }
+    }
   }
 }
 
@@ -129,6 +129,7 @@ watch(route, () => {
   align-items: center;
   justify-content: space-between;
   width: 1600px;
+  margin-top: 40px;
 }
 
 .onair-header-title-and-logo{

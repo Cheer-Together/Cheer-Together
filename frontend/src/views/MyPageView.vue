@@ -118,6 +118,7 @@ const withdrawal = () => {
 }
 .mypage-header {
   margin: 30px auto;
+  margin-top: 50px;
   width: 1300px;
   height: 350px;
   border-bottom: 1px solid #b6b9ba;
@@ -147,8 +148,9 @@ const withdrawal = () => {
   background-color: var( --sub-color );
 }
 .mypage-header-ranking {
-  margin: 0 0 0 500px;
+  margin: 0 0 0 420px;
   padding: 20px 0 0 0;
+  font-size: 19px;
 }
 .mypage-header-editinfo {
   margin: 20px 40px 0 0;
@@ -172,7 +174,7 @@ const withdrawal = () => {
 .mypage-section {
   margin: 0 auto;
   width: 1300px;
-  height: 700px;
+  height: 610px;
 }
 .mypage-section-favorite-league {
   padding: 10px;

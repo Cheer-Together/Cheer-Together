@@ -32,6 +32,7 @@ if (!communityStore.isModify) {
   justify-content: center;
   align-content: flex-start;
   min-width: 1400px;
+  padding-top: 40px;
 }
 @media (max-width: 1580px) {
   .community {

@@ -4,6 +4,7 @@
       <img :src="navBarLogo" class="navBar-logo" @click="router.push({ name:'MainPage', })">
       <img :src="navBarNameLogo" class="navBar-namelogo" @click="router.push({ name:'MainPage', })">
     </div>
+    
     <div class="navBar-items">
       <!-- 로그인 -->
       <div v-if="accountStore.isLogin" class="navBar-item-login">
@@ -67,21 +68,21 @@ const myLogout = () => {
 <style>
 .navBar {
   width: 100%;
-  height: 100px;
+  height: 120px;
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid var(--navbar-border-color);
   position: fixed;
   background-color: var(--navbar-back-color);
   top: 0;
-  z-index: 1;
+  z-index: 10000;
 }
 .navBar-logo {
   margin-left: 10px;
-  width: 98px;
+  width: 118px;
 }
 .navBar-namelogo {
-  width: 98px;
+  width: 118px;
 
 }
 .navBar-logo:hover {
@@ -126,7 +127,7 @@ const myLogout = () => {
 .navBar-item-login {
   display: flex;
   width: 260px;
-  height: 100px;
+  height: 120px;
   align-items: center;
   font-size: 20px;
 }
@@ -189,7 +190,7 @@ const myLogout = () => {
   height: 18px;
 }
 .navBar-item-login{
-  height: 60px;
+  height: 100px;
 }
 .navBar-profile-nickname {
   font-size: 15px;
