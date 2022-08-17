@@ -107,7 +107,7 @@ roomStore.getPopularRooms()
 /* 여기부터 썸네일 css */
 .popularMatch-section-item {
   width: 375px;
-  height: 260px;
+  height: 270px;
   margin: 0 20px 20px 0 ;
   border-radius: 10px;
   overflow: hidden;
@@ -160,18 +160,19 @@ roomStore.getPopularRooms()
   color: #ffffff;
 }
 .popularMatch-section-item-title {
-  font-size: 16px;
+  font-size: 24px;
   width: 375px;
   height: 24px;
   padding: 2px 0 0 10px;
   text-align: start;
+  /* font-family: var(--bold-font); */
 }
 @media (max-width: 1580px) {
 .popularMatch {
   margin-bottom: 16px;
 }
 .popularMatch-title {
-  font-size: 15px;
+  font-size: 25px;
 }
 .popularMatch-section {
   margin-top: 8px;

@@ -121,7 +121,7 @@ const bgcolor = {
   margin-bottom: 16px;
 }
 .favoriteTeam-title {
-  font-size: 15px;
+  font-size: 25px;
 }
 .favoriteTeam-section {
   margin-top: 8px;
