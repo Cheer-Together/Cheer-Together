@@ -160,11 +160,12 @@ roomStore.getPopularRooms()
   color: #ffffff;
 }
 .popularMatch-section-item-title {
-  font-size: 16px;
+  font-size: 24px;
   width: 375px;
   height: 24px;
   padding: 2px 0 0 10px;
   text-align: start;
+  /* font-family: var(--bold-font); */
 }
 @media (max-width: 1580px) {
 .popularMatch {

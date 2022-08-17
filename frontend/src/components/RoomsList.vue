@@ -130,7 +130,7 @@ else {
 .rooms-list-section-item {
   width: 375px;
   height: 260px;
-  margin: 0 20px 20px 0 ;
+  margin: 0 20px 35px 0 ;
   border-radius: 10px;
   overflow: hidden;
   text-align: center;
@@ -183,8 +183,8 @@ else {
   color: #ffffff;
 }
 .rooms-list-section-item-title {
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 24px;
+  /* font-weight: bold; */
   width: 375px;
   height: 24px;
   padding: 2px 0 0 10px;
