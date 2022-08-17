@@ -94,7 +94,7 @@ const route = useRoute()
   border-right: 1px solid var(--sidebar-border-color);
   position: fixed;
   top: 120px;
-  background-color: var(--navbar-back-color);
+  background-color: var(--sidebar-back-color);
 }
 
 .sideBar-item-icon {
@@ -176,13 +176,14 @@ const route = useRoute()
 .hall-of-fame {
   background-color:#ffebb0;
   margin: 30px 0 0 0;
-  padding:10px;
+  padding:20px 10px;
   font-size:14px;
   text-align: center;
   /* 아래로 내리는거 - 고정*/
-  /* min-width: 209px;
+  min-width: 209px;
   position: fixed;
-  bottom: 10px; */
+  bottom: 0px;
+  border-radius: 10px;
 
 }
 .hall-of-fame-rank {

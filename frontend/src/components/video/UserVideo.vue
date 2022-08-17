@@ -3,7 +3,7 @@
     <ov-video :stream-manager="streamManager" class="cam" />
     <div class="cam-user-name" >
       <!-- 이름 클릭하면 방장일 경우 강퇴 조치 -->
-      {{ clientData }} <span id="emitIcon"  @click="onEmit(clientData)" v-if="isSessionManager && accountStore.profile.nickname !== clientData">⛔</span>
+      {{ clientData }} <span id="emitIcon"  @click="onEmit(clientData)" v-if="isSessionManager==true && accountStore.profile.nickname !== clientData">⛔</span>
     </div>
   </div>
 </template>
@@ -32,6 +32,7 @@ export default {
   computed: {
     clientData() {
       const { clientData } = this.getConnectionData();
+      console.log(this.isSessionManager);
       return clientData;
     },
   },

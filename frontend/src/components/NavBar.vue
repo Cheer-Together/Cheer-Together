@@ -88,7 +88,7 @@ const searchData = {
   height: 120px;
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid var(--navbar-border-color);
+  border-bottom: 3px solid var(--navbar-border-color);
   position: fixed;
   background-color: var(--navbar-back-color);
   top: 0;
