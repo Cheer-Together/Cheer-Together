@@ -398,7 +398,7 @@
       <div id="video-container" v-if="roomStore.isClickLayout">
           <user-video
             :stream-manager="publisher"
-             v-bind:isSessionManager="isSessionManager"
+            :isSessionManager="isSessionManager"
             @click="updateMainVideoStreamManager(publisher)"
             
           />
@@ -406,6 +406,7 @@
             v-for="sub in subscribers"
             :key="sub.stream.connection.connectionId"
             :stream-manager="sub"
+            :isSessionManager="isSessionManager"
             @click="updateMainVideoStreamManager(sub)"
             @forceOut="forceOut"
           />
@@ -1127,15 +1128,15 @@ export default {
       this.roomStore.isClickPredictButton = false,
 
       this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickBillboard = true
+      this.roomStore.isClickBillboard = !this.roomStore.isClickBillboard
     },
     clickGameInfo() {
       this.roomStore.isClickBillboard = false,
       this.roomStore.isClickPredictButton = false,
 
       this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickGameInfo = true
-      this.cam = !this.cam;
+      this.roomStore.isClickGameInfo = !this.roomStore.isClickGameInfo
+
     },
     getGameInfo() {
       console.log("받아옴")

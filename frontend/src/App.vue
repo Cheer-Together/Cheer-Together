@@ -78,10 +78,11 @@ gamesStore.getLeagueLiveGames(292);
   --active-color: #2e6afd;
   /* 네브 바 */
   --navbar-back-color: #ffffff;
-  --navbar-border-color: black;
+  /* --navbar-border-color: black; */
+  --navbar-border-color: #f2f8ff;
   /* 사이드 바 */
-  --sidebar-back-color: #ffffff;
-  --sidebar-border-color: black;
+  --sidebar-back-color: #f2f8ff;
+  --sidebar-border-color: #ffffff;
   --bold-font: "MICEGothic Bold";
   /* 카드 */
   --card-color: black;

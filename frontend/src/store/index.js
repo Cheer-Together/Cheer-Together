@@ -446,7 +446,7 @@ export const useAccountStore = defineStore("account", {
           if (err.response.status=='500') {
             Swal.fire({
               icon: 'warning',
-              title: '로그인 실패! 🥲',
+              title: '로그인 실패! 😥',
               text: '아이디와 비밀번호를 다시 확인해 주세요.',
               confirmButtonText: '확인'
             })
@@ -454,7 +454,7 @@ export const useAccountStore = defineStore("account", {
             console.log(err)
             Swal.fire({
               icon: "warning",
-              title: "로그인 실패! 🥲",
+              title: "로그인 실패! 😥",
               text: "아이디와 비밀번호를 다시 확인해 주세요.",
               confirmButtonText: "확인",
             });
@@ -481,7 +481,7 @@ export const useAccountStore = defineStore("account", {
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("isSocialLogin");
       this.isLogin = false;
-      router.go()
+      router.push({ name: "MainPage" })
       Swal.fire({
         icon: "success",
         title: "Bye! 👋",
