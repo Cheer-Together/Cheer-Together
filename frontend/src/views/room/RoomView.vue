@@ -1123,15 +1123,15 @@ export default {
       this.roomStore.isClickPredictButton = false,
 
       this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickBillboard = true
+      this.roomStore.isClickBillboard = !this.roomStore.isClickBillboard
     },
     clickGameInfo() {
       this.roomStore.isClickBillboard = false,
       this.roomStore.isClickPredictButton = false,
 
       this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickGameInfo = true
-      this.cam = !this.cam;
+      this.roomStore.isClickGameInfo = !this.roomStore.isClickGameInfo
+
     },
     getGameInfo() {
       console.log("받아옴")
