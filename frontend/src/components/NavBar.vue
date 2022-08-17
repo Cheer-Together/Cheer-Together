@@ -4,7 +4,14 @@
       <img :src="navBarLogo" class="navBar-logo" @click="router.push({ name:'MainPage', })">
       <img :src="navBarNameLogo" class="navBar-namelogo" @click="router.push({ name:'MainPage', })">
     </div>
+
+    {{!-- 검색 도구 --}}
+    <div class="search-box">
+      <input type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)">
+      <button @click.prevent="onAirStore.searchRooms(searchData)"><v-icon>mdi-magnify</v-icon></button>
+    </div>
     
+
     <div class="navBar-items">
       <!-- 로그인 -->
       <div v-if="accountStore.isLogin" class="navBar-item-login">
@@ -63,6 +70,16 @@ const myLogout = () => {
   navbarStore.isClickProfile = false
   accountStore.logoutAccount();
 }
+
+
+import { useOnAirStore } from '@/store'
+const onAirStore = useOnAirStore()
+
+const searchData = {
+  text : '',
+  category : 'name'
+}
+
 </script>
 
 <style>
