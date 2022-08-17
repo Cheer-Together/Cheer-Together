@@ -187,7 +187,9 @@ const route = useRoute()
 }
 .hall-of-fame-rank {
   font-size: 13px;
-  margin: 3px 0 0 40px;
+  margin-top: 5px;
+  padding-left: 20px;
+  padding-right:20px;
   text-align: start;
 }
 .hall-of-fame-rank:hover {

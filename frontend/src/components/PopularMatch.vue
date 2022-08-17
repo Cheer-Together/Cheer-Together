@@ -171,7 +171,7 @@ roomStore.getPopularRooms()
   margin-bottom: 16px;
 }
 .popularMatch-title {
-  font-size: 15px;
+  font-size: 25px;
 }
 .popularMatch-section {
   margin-top: 8px;
