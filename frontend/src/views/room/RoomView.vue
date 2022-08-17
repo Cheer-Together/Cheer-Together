@@ -861,6 +861,7 @@ export default {
     },
 
     clickLeaveSessionButton(){
+          clearInterval(this.loading)
           if(this.isSessionManager == true) {
             useGamePredictionStore().team1_predict_list = [];
             useGamePredictionStore().team2_predict_list = [];
@@ -1144,6 +1145,7 @@ export default {
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
       this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
       if(this.roomStore.playTeams.status == "FT") {
+        clearInterval(this.loading);
         console.log("!!!!!!!finish!!!!!!!!!!!!")
         if(this.isSessionManager == true) {
           this.session
@@ -1160,7 +1162,6 @@ export default {
             });
         }
         this.myPoint = this.gamePredictionStore.distributePoints() + this.myPoint;
-        clearInterval(this.loading);
       }
     },
     updateRoomHeadCount(number){
