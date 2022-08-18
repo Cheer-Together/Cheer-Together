@@ -253,7 +253,7 @@
                   {{ gameInfo.player.name }}
                 </div>
 
-                <div id="assist-player" v-if="gameInfo.assist.name">
+                <div id="assist-player" v-if="gameInfo.assist?.name">
                   어시 : {{ gameInfo.assist.name }}
                 </div>
               </div>
@@ -662,7 +662,7 @@ export default {
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
     this.roomStore.isClickPredictButton = false
-    this.loading = setInterval(this.getGameInfo, 60000);
+    this.loading = setInterval(this.getGameInfo, 30000);
 
   },
 
