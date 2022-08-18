@@ -1066,7 +1066,7 @@ export const useRoomStore = defineStore("room", {
     isClickBillboard: false,
     isClickGameInfo: false,
     isClickChatting: "",
-    isClickLayout: false,
+    isClickLayout: true,
     isClickSetting: false,
     isClickPredictButton: false,
     screenWidth: "1400px",
