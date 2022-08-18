@@ -789,6 +789,7 @@ export const useOnAirStore = defineStore("onair", {
     },
 
     selectMatch(gameId){
+      this.currentRooms = [];
       axios({
         url: cheertogether.room.searchGame(gameId),
         method: 'GET'
@@ -798,19 +799,8 @@ export const useOnAirStore = defineStore("onair", {
         res.data.forEach((e, idx) => {
           this.getAllGameInfo(e.gameId, idx)          
         })
-        router.go()
       })
     },
-    selectMatchAtHome(gameId){
-      axios({
-        url: cheertogether.room.searchGame(gameId),
-        method: 'GET'
-      })
-      .then((res) => {
-        this.currentRooms = res.data
-      })
-    },
-
     makeRoomDialogToggle() {
       if (this.makeRoomDialog) {
         this.makeRoomDialog = false;
