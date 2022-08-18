@@ -1255,15 +1255,17 @@ export const useRoomStore = defineStore("room", {
           에러 메시지 표시
       */
       axios({
-        url: cheertogether.game.gameInfo(),
-        method: "GET",
-        headers: {
-          "x-rapidapi-host": process.env.VUE_APP_X_RAPIDAPI_HOST,
-          "x-rapidapi-key": process.env.VUE_APP_X_RAPIDAPI_KEY,
-        },
-        params: {
-          fixture: apiId,
-        },
+        // url: cheertogether.game.gameInfo(),
+        // method: "GET",
+        // headers: {
+        //   "x-rapidapi-host": process.env.VUE_APP_X_RAPIDAPI_HOST,
+        //   "x-rapidapi-key": process.env.VUE_APP_X_RAPIDAPI_KEY,
+        // },
+        // params: {
+        //   fixture: apiId,
+        // },
+        url: cheertogether.game.gameInfoTest(apiId), // 시연용 라인
+        method: "GET", // 시연용 라인
       })
         .then((res) => {
           this.gameInfo = [];
@@ -1273,8 +1275,10 @@ export const useRoomStore = defineStore("room", {
           this.homeGoalPoint = 0
           this.awayGoalPoint = 0
 
-          res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
-            if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
+          // res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
+          res.data.reverse().filter((e) => e.type != "Var").forEach((e) => { // 시연용 라인
+            // if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) { 
+            if (e.type === "Goal" && e.team.apiId == this.playTeams.home.apiId) { // 시연용 라인
               this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
               this.homeGoalPoint = this.homeGoalPoint + 1
             }
