@@ -395,7 +395,7 @@
       </div>
 
       <!-- 캠 레이아웃 -->
-      <div id="video-container" v-if="roomStore.isClickLayout">
+      <div id="video-container" v-show="roomStore.isClickLayout">
           <user-video
             :stream-manager="publisher"
             :isSessionManager="isSessionManager"
@@ -651,9 +651,9 @@ export default {
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
-    this.roomStore.isClickLayout = false
-    this.roomStore.screenWidth = '1400px'
-    this.roomStore.screenHeight = '800px'
+    this.roomStore.isClickLayout = true
+    this.roomStore.screenWidth = '1000px'
+    this.roomStore.screenHeight = '610px'
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
