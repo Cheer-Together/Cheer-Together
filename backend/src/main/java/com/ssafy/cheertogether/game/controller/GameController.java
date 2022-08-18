@@ -22,6 +22,7 @@ import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ssafy.cheertogether.game.dto.GameApiParameterRequest;
+import com.ssafy.cheertogether.game.dto.GameDetailResponse;
 import com.ssafy.cheertogether.game.dto.GameResponse;
 import com.ssafy.cheertogether.game.service.GameService;
 
@@ -119,5 +120,11 @@ public class GameController {
 		+ "FT : 경기 종료\n")
 	public ResponseEntity<List<GameResponse>> findGamesByLeagueApiIdAndDateDay(@ApiParam(value = "연월일", required = true, example = "yyyyMMdd") @RequestParam String date) {
 		return new ResponseEntity<>(gameService.findGamesByDay(date), HttpStatus.OK);
+	}
+
+	@GetMapping("/game/{gameId}/detail")
+	@ApiOperation(value = "[테스트용] 경기 상세정보 목록 조회", notes = "DB에서 해당 경기의 상세정보를 모두 조회")
+	public ResponseEntity<List<GameDetailResponse>> findGameDetailsByGameId(@PathVariable Long gameId) {
+		return new ResponseEntity<>(gameService.findGameDetails(gameId), HttpStatus.OK);
 	}
 }

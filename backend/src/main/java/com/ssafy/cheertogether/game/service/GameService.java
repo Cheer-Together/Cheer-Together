@@ -24,10 +24,11 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ssafy.cheertogether.game.domain.Game;
 import com.ssafy.cheertogether.game.domain.GameStatus;
-import com.ssafy.cheertogether.game.dto.GameApiParameterRequest;
+import com.ssafy.cheertogether.game.dto.GameDetailResponse;
 import com.ssafy.cheertogether.game.dto.GameModifyRequest;
 import com.ssafy.cheertogether.game.dto.GameRegisterRequest;
 import com.ssafy.cheertogether.game.dto.GameResponse;
+import com.ssafy.cheertogether.game.repository.GameDetailRepository;
 import com.ssafy.cheertogether.game.repository.GameRepository;
 import com.ssafy.cheertogether.team.domain.Team;
 import com.ssafy.cheertogether.team.repository.TeamRepository;
@@ -40,6 +41,8 @@ import lombok.RequiredArgsConstructor;
 public class GameService {
 	private final GameRepository gameRepository;
 	private final TeamRepository teamRepository;
+	private final GameDetailRepository gameDetailRepository;
+
 	@Value("${spring.api.secretKey}")
 	private String apiKey;
 
@@ -219,5 +222,11 @@ public class GameService {
 			.block()
 			.bodyToMono(String.class)
 			.block();
+	}
+
+	public List<GameDetailResponse> findGameDetails(Long gameId) {
+		return gameDetailRepository.findAllByGameId(gameId).stream()
+			.map(GameDetailResponse::new)
+			.collect(Collectors.toList());
 	}
 }
