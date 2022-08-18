@@ -330,7 +330,7 @@
                   {{ gameInfo.player.name }}
                 </div>
 
-                <div id="assist-player" v-if="gameInfo.assist.name">
+                <div id="assist-player" v-if="gameInfo.assist?.name">
                   어시 : {{ gameInfo.assist.name }}
                 </div>
               </div>
@@ -1143,7 +1143,7 @@ export default {
       console.log("받아옴")
       this.isValidateTime = this.validateTime();
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
-      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
+      // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
       if(this.roomStore.playTeams.status == "FT") {
         clearInterval(this.loading);
         console.log("!!!!!!!finish!!!!!!!!!!!!")
