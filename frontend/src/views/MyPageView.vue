@@ -95,6 +95,7 @@
 <script setup>
 import NavBar from "../components/NavBar.vue"
 import SideBar from "../components/SideBar.vue"
+import Swal from "sweetalert2";
 import router from '@/router'
 import { useAccountStore } from "@/store"
 import { useRoute } from "vue-router"
@@ -106,8 +107,20 @@ accountStore.presentUserProfile(route.params.userid)
 
 // 회원 탈퇴 함수
 const withdrawal = () => {
-
-  accountStore.withdrawal(accountStore.profileId)
+  Swal.fire({
+    title: "탈퇴하시겠습니까? 🤔",
+    text: "한번 탈퇴하면, 되돌릴 수 없습니다.",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "탈퇴",
+    cancelButtonText: "취소",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      accountStore.withdrawal(accountStore.profileId)
+    }
+  });
 }
 </script>
 

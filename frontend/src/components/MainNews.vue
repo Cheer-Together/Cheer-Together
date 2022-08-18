@@ -9,10 +9,10 @@
 
         <div class="mainNews-item-section">
           <div class="mainNews-item-title">
-            <a :href="news.link">{{ news.title }}</a>
+            <a @click="articleBtn(news.link)">{{ news.title }}</a>
           </div>
           <div class="mainNews-item-content">
-            <a :href="news.link">{{ news.description }}</a>
+            <a @click="articleBtn(news.link)">{{ news.description }}</a>
           </div>
 
         </div>
@@ -27,6 +27,9 @@ import { useNewsStore } from "@/store"
 
 const newsStore = useNewsStore()
 newsStore.getNews('프리미어리그 세리에 A 라리가')
+function articleBtn(link) {
+  window.open(link)
+}
 </script>
 
 <style scoped>
@@ -67,6 +70,9 @@ a {
   font-family: 'MICEGothic Bold';
   margin-bottom: 10px;
 }
+.mainNews-item-title:hover {
+  cursor: pointer;
+}
 .mainNews-item-content {
   display: -webkit-box;
   width: 1200px;
@@ -78,6 +84,9 @@ a {
   text-overflow: ellipsis;	
   overflow: hidden; 
   word-break: break-all;
+}
+.mainNews-item-content:hover {
+  cursor: pointer;
 }
 @media (max-width: 1580px) {
 .mainNews {

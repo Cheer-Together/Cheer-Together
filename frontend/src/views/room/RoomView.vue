@@ -528,15 +528,18 @@
         </v-btn>
 
         <!--응원가 플레이어-->
-        <div style="height:54px; display:flex;">
+        <div style="height:54px; display:flex; margin-top:10px">
           <audio ref="audio" controls>
             <source :src="roomStore.cheeringSong">
           </audio>
           <select v-show="roomStore.roomInfo.managerId==accountStore.profileId" v-model="onePick" @change="changeSong($event)" style="margin: 5px 0 0 10px;">
-            <option v-for="song in roomStore.songList" :value="song.file" :key="song.id">
+            <option v-for="(song, i) in roomStore.songList" :value="i" :key="song.name">
              <div clas="select-item">{{ song.name }}</div>
             </option>
           </select>
+          <div v-show="roomStore.roomInfo.managerId!=accountStore.profileId" style="margin: 5px 0 0 10px;" class="nowPlaySong">
+            📀{{ nowPlaySong }}
+          </div>
         </div>
       </div>
     </div>
@@ -642,6 +645,7 @@ export default {
         "https://media.api-sports.io/football/venues/546.png",
       ],
       myImg : '',
+      nowPlaySong : "재생중인 응원가가 없습니다.",
     };
   },
   mounted() {
@@ -786,8 +790,8 @@ export default {
       });
 
       this.session.on("signal:cheering-song", (event) => {
-        console.log(event.data);
-        this.roomStore.cheeringSong = event.data;
+        this.roomStore.cheeringSong = this.roomStore.songList[event.data].file;
+        this.nowPlaySong = this.roomStore.songList[event.data].name;
         this.$refs.audio.pause();
         this.$refs.audio.load();
         this.$refs.audio.play();
@@ -857,6 +861,7 @@ export default {
     },
 
     clickLeaveSessionButton(){
+          clearInterval(this.loading)
           if(this.isSessionManager == true) {
             useGamePredictionStore().team1_predict_list = [];
             useGamePredictionStore().team2_predict_list = [];
@@ -1124,15 +1129,15 @@ export default {
       this.roomStore.isClickPredictButton = false,
 
       this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickBillboard = true
+      this.roomStore.isClickBillboard = !this.roomStore.isClickBillboard
     },
     clickGameInfo() {
       this.roomStore.isClickBillboard = false,
       this.roomStore.isClickPredictButton = false,
 
       this.roomStore.isClickSettingButton = false
-      this.roomStore.isClickGameInfo = true
-      this.cam = !this.cam;
+      this.roomStore.isClickGameInfo = !this.roomStore.isClickGameInfo
+
     },
     getGameInfo() {
       console.log("받아옴")
@@ -1140,6 +1145,7 @@ export default {
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
       this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
       if(this.roomStore.playTeams.status == "FT") {
+        clearInterval(this.loading);
         console.log("!!!!!!!finish!!!!!!!!!!!!")
         if(this.isSessionManager == true) {
           this.session
@@ -1156,7 +1162,6 @@ export default {
             });
         }
         this.myPoint = this.gamePredictionStore.distributePoints() + this.myPoint;
-        clearInterval(this.loading);
       }
     },
     updateRoomHeadCount(number){
@@ -1170,14 +1175,13 @@ export default {
       );
     },
     changeSong(event){
-      console.log(event.target.value);
-      this.roomStore.cheeringSong=event.target.value;
+      this.roomStore.cheeringSong=this.roomStore.songList[event.target.value].file;
       this.$refs.audio.pause();
       this.$refs.audio.load();
       this.$refs.audio.play();
       this.session
         .signal({
-          data: this.roomStore.cheeringSong,
+          data: event.target.value,
           to: [],
           type: "cheering-song",
         })
@@ -1187,7 +1191,6 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      console.log(this.roomStore.cheeringSong);
     }
   },
 };
@@ -1688,6 +1691,14 @@ select:disabled {
 }
 .select-item:hover {
   transform: translateX(-300px);
+}
+.nowPlaySong {
+  border: 1px solid #aaa;
+  border-radius: .5em;
+  box-shadow: 0 1px 0 1px rgba(0,0,0,.04);
+  width: 260px;
+  text-align: center;
+  padding-top: 10px;
 }
 
 </style>
