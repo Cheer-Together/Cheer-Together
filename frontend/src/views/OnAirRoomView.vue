@@ -28,9 +28,10 @@
           <!-- 경기 목록 별로 정렬 -->
           <div class="select-live-match">
             <select name="liveMatch" @change="changeMatch()">
-              <option value="none" class="select-none"> ========= 경기 선택 =========</option>
+              <option value="none" class="select-none"> 경기를 선택하세요</option>
               <option :value="match.id" v-for="match in items" :key="match.id" class="select-option">{{ match.title }}</option>
             </select>
+            <span class="icoArrow"><v-icon>mdi-chevron-down</v-icon></span>
           </div>
 
           <button @click="onAirStore.makeRoomDialogToggle()" class="onair-header-make-room" v-if="accountStore.isLogin">방만들기</button>
@@ -161,9 +162,9 @@ watch(route, () => {
   position: relative;
   margin: auto 20px;
   display: flex;
-  border: 2px solid var(--main-color);
+  border: 2px solid rgb(177, 202, 255);
   border-radius: 4px;
-  background-color: #f2f7ff;
+  background-color: #f2f8ff55;
 }
 
 .onair-search-input {
@@ -220,21 +221,17 @@ watch(route, () => {
   border-radius: 10px;
   margin: 0 20px;
   text-align: center;
-  background-color: #BDF9CD;
+  background-color: #82b3c9;
 }
 .onair-header-make-room:hover {
   opacity: 0.5;
-}
-
-.select-none {
-  text-align: center;
 }
 
 .select-league {
   position: relative;
   width: 110px;
   height: 35px;
-  border-right: 2px solid var(--main-color);
+  border-right: 2px solid rgb(177, 202, 255);
 }
 
 .select-league select {
@@ -250,7 +247,7 @@ watch(route, () => {
 }
 
 .select-league option{
-  background-color: #f2f7ff;
+  background-color: #f2f8ff55;
   color: black;
   padding: 3px 0;
   font-size: 16px;
@@ -270,13 +267,13 @@ watch(route, () => {
 
 .select-live-match {
   position: relative;
-  width: auto;
+  width: 300px;
   height: 39px;
-  border: 2px solid var(--main-color);
+  border: 2px solid rgb(177, 202, 255);
   border-radius: 4px;
   padding: 0px;
   margin: auto 20px;
-  background-color: #f2f7ff;
+  background-color: #f2f8ff55;
 
 }
 
@@ -293,7 +290,7 @@ watch(route, () => {
 }
 
 .select-live-match option{
-  background-color: #f2f7ff;
+  background-color: #f2f8ff55;
   color: black;
   padding: 3px 0;
   font-size: 16px;
