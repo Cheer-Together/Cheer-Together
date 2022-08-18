@@ -97,7 +97,7 @@ function goLiveRoom(team) {
     }
   })
   onAirStore.moveLeagueRooms(leagueName)
-  onAirStore.selectMatchAtHome(gameId);
+  onAirStore.selectMatch(gameId);
   console.log(this.onAirStore.currentRooms);
 }
 </script>
