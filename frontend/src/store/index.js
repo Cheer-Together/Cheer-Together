@@ -795,7 +795,19 @@ export const useOnAirStore = defineStore("onair", {
       })
       .then((res) => {
         this.currentRooms = res.data
+        res.data.forEach((e, idx) => {
+          this.getAllGameInfo(e.gameId, idx)          
+        })
         router.go()
+      })
+    },
+    selectMatchAtHome(gameId){
+      axios({
+        url: cheertogether.room.searchGame(gameId),
+        method: 'GET'
+      })
+      .then((res) => {
+        this.currentRooms = res.data
       })
     },
 
