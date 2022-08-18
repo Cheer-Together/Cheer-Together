@@ -20,6 +20,7 @@ public class TeamResponse {
 	private String logo;
 	private String code;
 	private Long apiId;
+	private String venueLogo;
 
 	public static TeamResponse from(final Team team) {
 		return TeamResponse.teamResponseBuilder()
@@ -30,6 +31,7 @@ public class TeamResponse {
 			.logo(team.getLogo())
 			.code(team.getCode())
 			.apiId(team.getApiId())
+			.venueLogo(team.getVenueLogo())
 			.build();
 	}
 }

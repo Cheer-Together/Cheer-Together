@@ -3,16 +3,14 @@
     <div>
       <img :src="navBarLogo" class="navBar-logo" @click="router.push({ name:'MainPage', })">
       <img :src="navBarNameLogo" class="navBar-namelogo" @click="router.push({ name:'MainPage', })">
-    </div>
-
-    <!-- 검색 도구 -->
-    <div class="search-box">
-      <input type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)">
-      <button @click.prevent="onAirStore.searchRooms(searchData)"><v-icon>mdi-magnify</v-icon></button>
-    </div>
-    
+    </div>   
 
     <div class="navBar-items">
+      <!-- 검색 도구 -->
+      <div class="nav-search-box">
+        <button class="nav-search-btn" @click.prevent="onAirStore.searchRooms(searchData)"><v-icon color="black" dense>mdi-magnify</v-icon></button>
+        <input class="nav-search-input" type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)" placeholder="응원방 제목을 검색하세요">
+      </div>
       <!-- 로그인 -->
       <div v-if="accountStore.isLogin" class="navBar-item-login">
         <img :src="accountStore.profile.profileImage" class="navBar-profile-image">
@@ -128,6 +126,68 @@ const searchData = {
 .navBar-profile-icon:hover {
   cursor: pointer;
 }
+.nav-search-box {
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  margin: 43.5px 30px 43.5px 0; 
+}
+
+/* .nav-search-input {
+  height: 30px;
+  width: 30px;
+  border-style: none;
+  padding: 0px;
+  font-size: 18px;
+  letter-spacing: 2px;
+  outline: none;
+  border-radius: 15px;
+  transition: all .5s ease-in-out;
+  background-color: transparent;
+  padding-right: 30px;
+  color:black;
+} */
+
+.nav-search-input::placeholder {
+  color: gray;
+  font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: 100;
+}
+
+.nav-search-input {
+  width: 300px;
+  height: 30px;
+  border-radius: 0px;
+  background-color: transparent;
+  border-bottom:1px solid var(--main-color);
+  transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+}
+
+.nav-search-btn {
+  width: 30px;
+  height: 30px;
+  border-style: none;
+  font-size: 18px;
+  font-weight: bold;
+  outline: none;
+  cursor: pointer;
+  border-radius: 20px;
+  position: absolute;
+  right: 0px;
+  color:#ffffff ;
+  background-color:transparent;
+  pointer-events: painted;  
+}
+
+.nav-search-btn:focus ~ .nav-search-input {
+  width: 300px;
+  border-radius: 0px;
+  background-color: transparent;
+  border-bottom:1px solid var(--main-color);
+  transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+}
+
 .navBar-items {
   display: flex;
   margin-right: 40px;
