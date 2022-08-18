@@ -133,7 +133,7 @@ const searchData = {
   margin: 43.5px 30px 43.5px 0; 
 }
 
-.nav-search-input {
+/* .nav-search-input {
   height: 30px;
   width: 30px;
   border-style: none;
@@ -146,17 +146,18 @@ const searchData = {
   background-color: transparent;
   padding-right: 30px;
   color:black;
-}
+} */
 
 .nav-search-input::placeholder {
-  color: black;
+  color: gray;
   font-size: 18px;
   letter-spacing: 2px;
   font-weight: 100;
 }
 
-.nav-search-input:focus {
+.nav-search-input {
   width: 300px;
+  height: 30px;
   border-radius: 0px;
   background-color: transparent;
   border-bottom:1px solid var(--main-color);
