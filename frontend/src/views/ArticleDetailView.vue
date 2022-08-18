@@ -237,8 +237,15 @@ function deleteArticle() {
     url: 'https://i7b204.p.ssafy.io/cheertogether/articles/' + route.params.articleid,
     method: 'DELETE',
   }).then(res => {
+    Swal.fire({
+      title: "게시글 삭제! 👍",
+      text: "글을 삭제하였습니다.",
+      icon: "success",
+      confirmButtonText: "확인",
+    });
     console.log(res)
     router.push({name: 'Article'})
+
   }).catch(err => {
     console.log(err)
   })
