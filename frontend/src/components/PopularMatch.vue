@@ -8,7 +8,7 @@
 
       <div class="popularMatch-section-item" v-for="(room, i) in roomStore.popularRooms" :key="room.roomId">
         <!-- 여기가 썸네일 부분입니다. -->
-        <div @click="onairStore.enterRoom(roomIds[i])" class="popularMatch-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[i] + ')' }">
+        <div @click="onairStore.enterRoom(roomIds[i])" class="popularMatch-section-thumbnail" :style="{ backgroundImage: 'url(' + room.gameInfo?.home.venueLogo + ')' }">
           <!-- 홈 vs 어웨이  -->
           <!-- 홈 -->
           <div class="popularMatch-section-logo">
@@ -70,18 +70,6 @@ axios({
 }).catch(err => {
   console.log(err)
 })
-
-const popularThumbnail = [
-  "https://media.api-sports.io/football/venues/556.png",
-  "https://media.api-sports.io/football/venues/550.png",
-  "https://media.api-sports.io/football/venues/494.png",
-  "https://media.api-sports.io/football/venues/519.png",
-  "https://media.api-sports.io/football/venues/555.png",
-  "https://media.api-sports.io/football/venues/525.png",
-  "https://media.api-sports.io/football/venues/495.png",
-  "https://media.api-sports.io/football/venues/566.png",
-  "https://media.api-sports.io/football/venues/546.png",
-]
 
 roomStore.getPopularRooms()
 </script>

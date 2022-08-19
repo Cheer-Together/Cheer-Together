@@ -253,7 +253,7 @@
                   {{ gameInfo.player.name }}
                 </div>
 
-                <div id="assist-player" v-if="gameInfo.assist.name">
+                <div id="assist-player" v-if="gameInfo.assist?.name">
                   어시 : {{ gameInfo.assist.name }}
                 </div>
               </div>
@@ -330,7 +330,7 @@
                   {{ gameInfo.player.name }}
                 </div>
 
-                <div id="assist-player" v-if="gameInfo.assist.name">
+                <div id="assist-player" v-if="gameInfo.assist?.name">
                   어시 : {{ gameInfo.assist.name }}
                 </div>
               </div>
@@ -395,7 +395,7 @@
       </div>
 
       <!-- 캠 레이아웃 -->
-      <div id="video-container" v-if="roomStore.isClickLayout">
+      <div id="video-container" v-show="roomStore.isClickLayout">
           <user-video
             :stream-manager="publisher"
             :isSessionManager="isSessionManager"
@@ -655,14 +655,14 @@ export default {
 
     // 사용한 피니아 변수 초기화
     this.roomStore.isClickChatting = ''
-    this.roomStore.isClickLayout = false
-    this.roomStore.screenWidth = '1400px'
-    this.roomStore.screenHeight = '800px'
+    this.roomStore.isClickLayout = true
+    this.roomStore.screenWidth = '1000px'
+    this.roomStore.screenHeight = '610px'
     this.roomStore.isClickSettingButton = false
     this.roomStore.isClickBillboard = false
     this.roomStore.isClickGameInfo = false
     this.roomStore.isClickPredictButton = false
-    this.loading = setInterval(this.getGameInfo, 60000);
+    this.loading = setInterval(this.getGameInfo, 30000);
 
   },
 
@@ -1143,7 +1143,8 @@ export default {
       console.log("받아옴")
       this.isValidateTime = this.validateTime();
       this.roomStore.getGameInfo(this.roomStore.playTeams.apiId);
-      this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
+      this.roomStore.getPlayTeams(this.roomStore.playTeams.id);
+      // this.roomStore.update(this.roomStore.playTeams.id, this.roomStore.playTeams.apiId);
       if(this.roomStore.playTeams.status == "FT") {
         clearInterval(this.loading);
         console.log("!!!!!!!finish!!!!!!!!!!!!")

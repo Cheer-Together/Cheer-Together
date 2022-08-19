@@ -11,7 +11,7 @@
 
       <div class="rooms-list-section-item" v-for="room in onairStore.currentRooms" :key="room.id" @click="onairStore.enterRoom(room.roomId)">
         <!-- 여기가 썸네일 부분입니다. -->
-        <div class="rooms-list-section-thumbnail" :style="{ backgroundImage: 'url(' + popularThumbnail[0] + ')' }">
+        <div class="rooms-list-section-thumbnail" :style="{ backgroundImage: 'url(' + room.gameInfo?.home.venueLogo + ')' }">
           <!-- 홈 vs 어웨이  -->
           <!-- 홈 -->
           <div class="rooms-list-section-logo">
@@ -66,18 +66,6 @@ const isNoRoom = ref(false)
 if (onairStore.currentRooms.length == 0) {
   isNoRoom.value = true
 }
-
-const popularThumbnail = [
-  "https://media.api-sports.io/football/venues/556.png",
-  "https://media.api-sports.io/football/venues/550.png",
-  "https://media.api-sports.io/football/venues/494.png",
-  "https://media.api-sports.io/football/venues/519.png",
-  "https://media.api-sports.io/football/venues/555.png",
-  "https://media.api-sports.io/football/venues/525.png",
-  "https://media.api-sports.io/football/venues/495.png",
-  "https://media.api-sports.io/football/venues/566.png",
-  "https://media.api-sports.io/football/venues/546.png",
-]
 
 const leagues = ['프리미어리그', '라리가', '세리에 A', '분데스리가', '리그 1', 'K리그 1']
 if (route.params.leaguename === '모든 응원방 목록') {
