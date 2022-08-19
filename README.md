@@ -115,4 +115,5 @@
     - 좋아요 기능
         ![_EA_B2_8C_EC_8B_9C_EB_AC_BC__EC_A7_84_EC_9E_85__EC_A2_8B_EC_95_84_EC_9A_94](/uploads/9785b5d88d68aedb6bc4cd188313042b/_EA_B2_8C_EC_8B_9C_EB_AC_BC__EC_A7_84_EC_9E_85__EC_A2_8B_EC_95_84_EC_9A_94.gif)
     - 최신 스포츠 뉴스 제공
-    - 정렬 및 검색
+    - 게시글 정렬 및 검색
+    - 포인트 랭킹
