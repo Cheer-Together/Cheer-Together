@@ -446,7 +446,7 @@ export const useAccountStore = defineStore("account", {
           if (err.response.status=='500') {
             Swal.fire({
               icon: 'warning',
-              title: '로그인 실패! 🥲',
+              title: '로그인 실패! 😥',
               text: '아이디와 비밀번호를 다시 확인해 주세요.',
               confirmButtonText: '확인'
             })
@@ -454,7 +454,7 @@ export const useAccountStore = defineStore("account", {
             console.log(err)
             Swal.fire({
               icon: "warning",
-              title: "로그인 실패! 🥲",
+              title: "로그인 실패! 😥",
               text: "아이디와 비밀번호를 다시 확인해 주세요.",
               confirmButtonText: "확인",
             });
@@ -789,16 +789,18 @@ export const useOnAirStore = defineStore("onair", {
     },
 
     selectMatch(gameId){
+      this.currentRooms = [];
       axios({
         url: cheertogether.room.searchGame(gameId),
         method: 'GET'
       })
       .then((res) => {
         this.currentRooms = res.data
-        router.go()
+        res.data.forEach((e, idx) => {
+          this.getAllGameInfo(e.gameId, idx)          
+        })
       })
     },
-
     makeRoomDialogToggle() {
       if (this.makeRoomDialog) {
         this.makeRoomDialog = false;
@@ -1054,7 +1056,7 @@ export const useRoomStore = defineStore("room", {
     isClickBillboard: false,
     isClickGameInfo: false,
     isClickChatting: "",
-    isClickLayout: false,
+    isClickLayout: true,
     isClickSetting: false,
     isClickPredictButton: false,
     screenWidth: "1400px",
@@ -1070,57 +1072,14 @@ export const useRoomStore = defineStore("room", {
     
     gamePredictionDeadline: "",
 
-    cheeringSong : "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FNice%20one%20Sonny.mp3?alt=media&token=949e25e8-33bb-4ae5-9dde-24bfd57e827d",
+    cheeringSong : "",
     songList : [
-    {
-      "id": 0,
-      "team_id": 18,
-      "target": "손흥민",
-      "name": "응원가를 고르세요.",
-      "file": 0
-    },
-    {
-      "id": 1,
-      "team_id": 18,
-      "target": "손흥민",
-      "name": "Nice one Sonny",
-      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FNice%20one%20Sonny.mp3?alt=media&token=949e25e8-33bb-4ae5-9dde-24bfd57e827d"
-    },
-    {
-      "id": 2,
-      "team_id": 18,
-      "target": "해리 케인",
-      "name": "Are you watching Harry Kane",
-      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FAre%20you%20watching%20Harry%20Kane.mp3?alt=media&token=514a2eb0-300f-4a62-a2bb-8666baf8fa13"
-    },
-    {
-      "id": 3,
-      "team_id": 18,
-      "target": "토트넘",
-      "name": "Come On You Spurs",
-      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FCome%20On%20you%20spurs.mp3?alt=media&token=91246d2d-68d2-407e-86be-891ff2d8e8cf"
-    },
-    {
-      "id": 4,
-      "team_id": 18,
-      "target": "토트넘",
-      "name": "Glory Glory Tottenham Hotspur",
-      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FGlory%20Glory%20Tottenham%20Hotspur.mp3?alt=media&token=bd04eb64-a029-43b9-a326-a11fa3fe8bcd"
-    },
-    {
-      "id": 5,
-      "team_id": 18,
-      "target": "클루셉스키",
-      "name": "Kulusevski Tottenham Song",
-      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FKulusevski%20Tottenham%20Song.mp3?alt=media&token=b4e93468-bb2f-4f06-8470-0bfed9b1b889"
-    },
-    {
-      "id": 6,
-      "team_id": 18,
-      "target": "토트넘",
-      "name": "When the Spurs Go Marching In",
-      "file": "https://firebasestorage.googleapis.com/v0/b/cheer-together.appspot.com/o/%EC%9D%91%EC%9B%90%EA%B0%80%2F%ED%86%A0%ED%8A%B8%EB%84%98%2FWhen%20the%20Spurs%20Go%20Marching%20In.mp3?alt=media&token=91307a44-473f-468c-a1d3-d152bc0aa30c"
-    }]
+      {
+        "id": 0,
+        "name": "응원가를 고르세요.",
+        "file": 0
+      }
+    ]
   }),
   actions: {
     getRooms() {
@@ -1206,18 +1165,26 @@ export const useRoomStore = defineStore("room", {
         .then((res) => {
           console.log(res.data);
           let date = new Date(res.data.kickoff);
+          let homeApiId = res.data.home.apiId;
+          let awayApiId = res.data.away.apiId;
           date.setTime(date.getTime() + 10 * 60000);
           this.gamePredictionDeadline = date;
-
+          this.songList = [
+            {
+              "id": 0,
+              "name": "응원가를 고르세요.",
+              "file": 0
+            }
+          ];
           this.playTeams = res.data;
           this.getGameInfo(res.data.apiId);
-          getTeamId(res.data.home.apiId).then((res) => {
+          getTeamId(homeApiId).then((res) => {
             this.getCheeringSongList(res);
+            getTeamId(awayApiId).then((res) => {
+              this.getCheeringSongList(res);
+            });
           });
-          getTeamId(res.data.away.apiId).then((res) => {
-            this.getCheeringSongList(res);
-          });
-          this.getCheeringSongList(getTeamId(res.data.away.apiId));
+          
 
           this.predictMonth = res.data.kickoff.substring(5, 7);
           this.predictDate = res.data.kickoff.substring(8, 10);
@@ -1243,15 +1210,17 @@ export const useRoomStore = defineStore("room", {
           에러 메시지 표시
       */
       axios({
-        url: cheertogether.game.gameInfo(),
-        method: "GET",
-        headers: {
-          "x-rapidapi-host": process.env.VUE_APP_X_RAPIDAPI_HOST,
-          "x-rapidapi-key": process.env.VUE_APP_X_RAPIDAPI_KEY,
-        },
-        params: {
-          fixture: apiId,
-        },
+        // url: cheertogether.game.gameInfo(),
+        // method: "GET",
+        // headers: {
+        //   "x-rapidapi-host": process.env.VUE_APP_X_RAPIDAPI_HOST,
+        //   "x-rapidapi-key": process.env.VUE_APP_X_RAPIDAPI_KEY,
+        // },
+        // params: {
+        //   fixture: apiId,
+        // },
+        url: cheertogether.game.gameInfoTest(apiId), // 시연용 라인
+        method: "GET", // 시연용 라인
       })
         .then((res) => {
           this.gameInfo = [];
@@ -1261,8 +1230,10 @@ export const useRoomStore = defineStore("room", {
           this.homeGoalPoint = 0
           this.awayGoalPoint = 0
 
-          res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
-            if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) {
+          // res.data.response.reverse().filter((e) => e.type != "Var").forEach((e) => {
+          res.data.reverse().filter((e) => e.type != "Var").forEach((e) => { // 시연용 라인
+            // if (e.type === "Goal" && e.team.id == this.playTeams.home.apiId) { 
+            if (e.type === "Goal" && e.team.apiId == this.playTeams.home.apiId) { // 시연용 라인
               this.goal[this.homeGoalPoint]["homeGoal"] = e.player.name;
               this.homeGoalPoint = this.homeGoalPoint + 1
             }
@@ -1324,13 +1295,6 @@ export const useRoomStore = defineStore("room", {
       });
     },
     getCheeringSongList(teamId) {
-      this.songList = [    
-        {
-        "id": 0,
-        "name": "응원가를 고르세요.",
-        "file": 0
-        },
-      ];
       axios({
         url: cheertogether.cheeringSong.cheeringSong(teamId),
         method: "GET",

@@ -37,4 +37,5 @@ public class Team implements Serializable {
 	@Column(name = "api_id", unique = true)
 	private Long apiId;
 	private String hanName;
+	private String venueLogo;
 }

@@ -14,22 +14,24 @@
         </div>
         <div class="onair-header-boxes">
           <!-- 검색 도구 -->
-          <div class="search-box">
+          <div class="onair-search-box">
             <div class="select-league">
               <select name="option" @change="changeCategory()">
-                <option value="name">방이름</option>
+                <option value="name">방 제목</option>
                 <option value="managerId">방장아이디</option>
               </select>
+              <span class="icoArrow"><v-icon>mdi-chevron-down</v-icon></span>
             </div>
-            <input type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)">
-            <button @click.prevent="onAirStore.searchRooms(searchData)"><v-icon>mdi-magnify</v-icon></button>
+            <button class="onair-search-btn" @click.prevent="onAirStore.searchRooms(searchData)"><v-icon color="black">mdi-magnify</v-icon></button>
+            <input class="onair-search-input" type="text" v-model="searchData.text" @keyup.enter="onAirStore.searchRooms(searchData)">
           </div>
           <!-- 경기 목록 별로 정렬 -->
           <div class="select-live-match">
             <select name="liveMatch" @change="changeMatch()">
-              <option value="none" class="select-none"> ===== 경기 선택 =====</option>
-              <option :value="match.id" v-for="match in items" :key="match.id">{{ match.title }}</option>
+              <option value="none" class="select-none"> 경기를 선택하세요</option>
+              <option :value="match.id" v-for="match in items" :key="match.id" class="select-option">{{ match.title }}</option>
             </select>
+            <span class="icoArrow"><v-icon>mdi-chevron-down</v-icon></span>
           </div>
 
           <button @click="onAirStore.makeRoomDialogToggle()" class="onair-header-make-room" v-if="accountStore.isLogin">방만들기</button>
@@ -154,6 +156,64 @@ watch(route, () => {
   margin-right: 20px;
 }
 
+.onair-search-box {
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  margin: auto 20px;
+  display: flex;
+  border: 2px solid rgb(177, 202, 255);
+  border-radius: 4px;
+  background-color: #f2f8ff55;
+}
+
+.onair-search-input {
+  height: 30px;
+  width: 30px;
+  border-style: none;
+  padding: 0px;
+  font-size: 18px;
+  letter-spacing: 2px;
+  outline: none;
+  border-radius: 15px;
+  transition: all .5s ease-in-out;
+  background-color: transparent;
+  padding-right: 30px;
+  color:black;
+}
+
+.onair-search-input:focus {
+  width: 300px;
+  border-radius: 0px;
+  background-color: transparent;
+  transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+  margin-top: 2px;
+}
+
+.onair-search-btn {
+  width: 30px;
+  height: 30px;
+  border-style: none;
+  font-size: 18px;
+  font-weight: bold;
+  outline: none;
+  cursor: pointer;
+  border-radius: 20px;
+  position: absolute;
+  right: 0px;
+  color:#ffffff ;
+  background-color:transparent;
+  pointer-events: painted;  
+  margin-top: 2px;
+}
+
+.onair-search-btn:focus ~ .onair-search-input {
+  width: 300px;
+  border-radius: 0px;
+  background-color: transparent;
+  transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
+}
+
 .onair-header-make-room{
   font-size: 17px;
   width: 100px;
@@ -161,28 +221,81 @@ watch(route, () => {
   border-radius: 10px;
   margin: 0 20px;
   text-align: center;
-  background-color: #BDF9CD;
+  background-color: #82b3c9;
 }
 .onair-header-make-room:hover {
   opacity: 0.5;
 }
 
-.search-box{
+.select-league {
+  position: relative;
+  width: 110px;
+  height: 35px;
+  border-right: 2px solid rgb(177, 202, 255);
+}
+
+.select-league select {
+  width: inherit;
+  height: inherit;
+  background: transparent;
+  border: 3px;
+  outline: 0 none;
+  padding: 0 5px;
+  position: relative;
+  z-index: 3;
+  margin-top: 2px;
+}
+
+.select-league option{
+  background-color: #f2f8ff55;
+  color: black;
+  padding: 3px 0;
+  font-size: 16px;
+}
+
+.icoArrow {
+  position: absolute; 
+  top: 0; 
+  right: 0; 
+  z-index: 0; 
+  width: 35px; 
+  height: inherit;
   display: flex;
-  border-radius: 5px;
-  border: 2px solid black;
+  justify-content: center;
+  align-items: center;
 }
 
-.search-box select {
-  margin : 3px;
-}
 .select-live-match {
-  padding: 20px;
+  position: relative;
+  width: 300px;
+  height: 39px;
+  border: 2px solid rgb(177, 202, 255);
+  border-radius: 4px;
+  padding: 0px;
+  margin: auto 20px;
+  background-color: #f2f8ff55;
+
 }
 
-.select-none {
-  text-align: center;
+.select-live-match select {
+  width: inherit;
+  height: inherit;
+  background: transparent;
+  border: 3px transparent;
+  outline: 0 none;
+  padding: 0 5px;
+  position: relative;
+  z-index: 3;
+  
 }
+
+.select-live-match option{
+  background-color: #f2f8ff55;
+  color: black;
+  padding: 3px 0;
+  font-size: 16px;
+}
+
 
 @media (max-width: 1580px) {
   .onair-page {
