@@ -41,6 +41,7 @@ export default {
 
     gameInfo: () => 'https://v3.football.api-sports.io/fixtures/events', // 경기 정보
     gamesLeagueMonth: (leagueId) => HOST + GAMES + `${leagueId}/` + 'month',
+    gameInfoTest: (gameId) => HOST + GAMES + 'game/' + `${gameId}` + '/detail' // 시연용 api 요청
   },
   cheeringSong: {
     cheeringSong: (teamId) => 'https://i7b204.p.ssafy.io/cheertogether/cheeringsong/' + `${teamId}`
