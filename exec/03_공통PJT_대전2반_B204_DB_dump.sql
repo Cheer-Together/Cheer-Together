@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.28, for macos11 (x86_64)
 --
--- Host: i7b204.p.ssafy.io    Database: B204
+-- Host: 127.0.0.1    Database: new_schema
 -- ------------------------------------------------------
--- Server version	8.0.30-0ubuntu0.20.04.2
+-- Server version	8.0.28
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -24,11 +24,11 @@ DROP TABLE IF EXISTS `article`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `article` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` text COLLATE utf8mb4_0900_as_cs,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs,
   `create_date` datetime(6) DEFAULT NULL,
   `hit` bigint DEFAULT '0',
   `likes` bigint DEFAULT '0',
-  `title` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `unlike` bigint DEFAULT '0',
   `league_id` bigint DEFAULT NULL,
   `member_id` bigint DEFAULT NULL,
@@ -46,7 +46,6 @@ CREATE TABLE `article` (
 
 LOCK TABLES `article` WRITE;
 /*!40000 ALTER TABLE `article` DISABLE KEYS */;
-INSERT INTO `article` VALUES (43,'대전 너무 아깝게 졌더라구요...패널티 킥만 아니었으면...','2022-08-18 00:34:02.598000',6,1,'어제 경기 보셨나요??',0,6,115),(44,'ㅋㅋㅋ','2022-08-18 00:34:21.625000',4,1,'어제 경남 패널티킥 레전드',0,6,61),(45,'아 개열받네;','2022-08-18 00:35:31.631000',5,0,'꿀잠 자다가 경기 놓쳤다',0,1,61),(46,'토요일날 황희찬 vs 손흥민 기원합니다\n물론 승리는 토트넘이 해야하지만 ㅎㅎㅎ','2022-08-18 00:38:14.214000',13,2,'이번주 코리안더비랍니다 ??',0,1,123),(47,'얘는 그냥 마인드가 어린놈이기 때문 ㅋㅋ','2022-08-18 01:33:33.863000',10,0,'호날두 노쇼했던 이유',0,1,104),(48,'https://sports.news.naver.com/news?oid=411&aid=0000013878\n이적한대요 제발','2022-08-18 01:57:55.618000',30,4,'넥스트 제라드',0,1,113),(50,'잘부탁드립니다.','2022-08-18 14:57:28.849000',0,0,'안녕하세요',0,1,127),(53,'안녕하세요!!!!','2022-08-18 15:45:38.340000',2,0,'안녕하세요!!!!',0,1,130),(54,'오늘부터 같이 집관!','2022-08-18 22:08:58.912000',0,0,' 반갑습니다.',0,1,136);
 /*!40000 ALTER TABLE `article` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -59,9 +58,9 @@ DROP TABLE IF EXISTS `cheering_song`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cheering_song` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `file` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `target` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `target` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `team_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKptqaqq32hl3yd5hualrk5fxo1` (`team_id`),
@@ -104,7 +103,6 @@ CREATE TABLE `favorite_league` (
 
 LOCK TABLES `favorite_league` WRITE;
 /*!40000 ALTER TABLE `favorite_league` DISABLE KEYS */;
-INSERT INTO `favorite_league` VALUES (216,1,57),(228,1,62),(250,1,3),(251,5,3),(252,6,3),(253,1,63),(263,5,81),(264,6,81),(273,2,90),(274,5,90),(275,5,91),(276,6,91),(280,2,94),(281,5,94),(282,2,95),(283,5,95),(284,1,96),(285,6,97),(286,5,98),(287,2,99),(288,5,99),(291,5,101),(292,1,60),(309,1,105),(310,2,106),(322,2,108),(323,1,108),(324,2,109),(325,3,109),(340,3,110),(341,1,32),(342,6,32),(345,1,112),(346,6,112),(347,1,113),(348,2,113),(349,6,113),(410,1,1),(411,2,1),(426,2,118),(427,5,118),(440,1,123),(458,2,100),(459,5,100),(472,1,104),(473,1,127),(476,1,130),(477,1,131),(484,1,136),(485,4,136),(486,5,136),(487,1,67),(488,3,67),(489,1,115),(490,1,61),(491,3,61);
 /*!40000 ALTER TABLE `favorite_league` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,7 +131,6 @@ CREATE TABLE `favorite_team` (
 
 LOCK TABLES `favorite_team` WRITE;
 /*!40000 ALTER TABLE `favorite_team` DISABLE KEYS */;
-INSERT INTO `favorite_team` VALUES (342,57,12),(350,62,12),(376,3,1),(377,3,14),(378,3,10),(379,3,9),(380,3,16),(381,63,12),(401,90,5),(402,90,10),(403,91,13),(404,91,12),(407,94,5),(408,94,10),(409,95,5),(410,95,10),(411,96,6),(412,97,13),(413,97,14),(414,98,14),(415,98,15),(416,99,3),(417,99,13),(418,99,8),(422,101,15),(423,60,1),(424,60,3),(425,60,13),(443,105,1),(444,105,10),(445,105,14),(446,106,6),(463,108,4),(464,108,10),(465,109,8),(466,109,9),(493,110,8),(494,110,9),(495,32,18),(496,32,14),(501,112,18),(502,113,12),(503,113,18),(504,113,42),(575,1,6),(600,118,2),(601,118,12),(602,118,8),(603,118,9),(604,118,14),(626,123,18),(649,100,18),(650,100,1),(651,100,111),(677,104,4),(678,127,1),(679,127,18),(682,130,1),(683,130,2),(684,131,6),(693,136,1),(694,136,6),(695,136,7),(696,136,12),(697,136,13),(698,67,18),(699,67,79),(700,67,113),(701,67,45),(702,67,75),(703,115,2),(704,115,87),(705,115,18),(706,61,18),(707,61,111);
 /*!40000 ALTER TABLE `favorite_team` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,8 +148,8 @@ CREATE TABLE `game` (
   `home_score` int DEFAULT NULL,
   `kickoff` datetime(6) DEFAULT NULL,
   `league_api_id` bigint DEFAULT NULL,
-  `stadium` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `stadium` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `away_team_api_id` bigint DEFAULT NULL,
   `home_team_api_id` bigint DEFAULT NULL,
   `away_team_id` bigint DEFAULT NULL,
@@ -188,13 +185,13 @@ DROP TABLE IF EXISTS `game_detail`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `game_detail` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `assist_name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `comments` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `detail` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `assist_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `comments` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `detail` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `game_id` bigint DEFAULT NULL,
-  `player_name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `player_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `elapsed` int DEFAULT NULL,
-  `type` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `team_id` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FK30rinewsf0q895godu94jw522` (`team_id`),
@@ -243,9 +240,9 @@ DROP TABLE IF EXISTS `league`;
 CREATE TABLE `league` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `api_id` bigint DEFAULT NULL,
-  `han_name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `logo` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `han_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_as_cs;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -271,7 +268,7 @@ CREATE TABLE `likes` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `article_id` bigint DEFAULT NULL,
   `member_id` bigint DEFAULT NULL,
-  `member_email` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `member_email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKa4vkf1skcfu5r6o5gfb5jf295` (`member_id`),
   KEY `FKkd07lot89tsed4xoo36bumbsx` (`member_email`),
@@ -288,7 +285,6 @@ CREATE TABLE `likes` (
 
 LOCK TABLES `likes` WRITE;
 /*!40000 ALTER TABLE `likes` DISABLE KEYS */;
-INSERT INTO `likes` VALUES (1,44,61,NULL),(2,43,123,NULL),(3,46,61,NULL),(4,48,61,NULL),(6,48,123,NULL),(7,48,127,NULL),(8,46,130,NULL);
 /*!40000 ALTER TABLE `likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -301,12 +297,12 @@ DROP TABLE IF EXISTS `member`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `member` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `my_info` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `nickname` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `profile_image` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `role` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `my_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `profile_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `role` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `point` int DEFAULT NULL,
   `recent_login` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -320,7 +316,6 @@ CREATE TABLE `member` (
 
 LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES (1,'alexryu1105@naver.com','안녕','응어롱','1234qwer!@','blob:http://192.168.31.131:8080/47999230-ada6-49dc-86af-83c948ed3103','ADMIN',40,'2022-08-19 01:56:20.705000'),(2,'tetepiti149111@naver.com','string','string','sGB18U4n&EyxVTbWd$4B','string','USER',0,NULL),(3,'rkxdl@wlqrhks.com','테스트계정','성덕','g!9lz#peFDPBAznnGW@%','blob:http://localhost:8080/ef43d01c-b2dc-4576-a613-dd88227ed028','USER',0,NULL),(4,'rkxdl2@wlqrhks.com','','','eltmzhem1!','.','USER',0,NULL),(6,'rkxdl3@wlqrhks.com','','','wpqkfehlfk1!','.','USER',0,NULL),(32,'choijoohee@naver.com','ㅎㅇ','주희','joohee123@','fff','USER',235,'2022-08-18 04:26:22.388000'),(57,'chwo2ijoohee@gmail.com','hihi','wngml','wngml1@','https://storage.googleapis.com/download/storage/v1/b/cheer-together.appspot.com/o/746de2ae-021a-4408-ab84-9b2709bee1ed_2022-08-10T06:38:55.953?generation=1660113536276588&alt=media','USER',0,NULL),(60,'tetepiti14@naver.com','포스트맨이다맨이야','만들어죠볼께얍','NpiNti4183!@','https://storage.googleapis.com/download/storage/v1/b/cheer-together.appspot.com/o/9f962568-2ba2-4c13-a668-e33934f14cc1_2022-08-10T06:57:53.764?generation=1660114674179373&alt=media','USER',20,'2022-08-18 16:47:01.475000'),(61,'tetepiti144@naver.com','포스트맨이다맨이야2','나김보연아니다','NpiNti4183!@','https://storage.googleapis.com/download/storage/v1/b/cheer-together.appspot.com/o/2a659882-2786-4858-ad5c-bd8e6c50ac01_2022-08-10T08:44:18.266?generation=1660121059515785&alt=media','USER',20,'2022-08-19 04:38:05.671000'),(62,'tetepiti999@naver.com','포스트맨으로 하면 ','만들어죠볼께얍','NpiNti4183!@','https://storage.googleapis.com/download/storage/v1/b/cheer-together.appspot.com/o/d4fa32f6-7158-4bd9-bf64-268dd866df2a_2022-08-10T10:03:45.326?generation=1660125825886450&alt=media','USER',0,NULL),(63,'dddddd@dddddd','string','string','string',NULL,NULL,0,NULL),(67,'tjdejr@tjdejr.com','ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ','우리흥','tjdejr2!',NULL,NULL,40,'2022-08-19 07:54:56.698000'),(68,'string','string','string',NULL,NULL,NULL,0,NULL),(81,'tjdejr2@tjdejr.com','성덕ASDASD','성덕','tjdejr2!',NULL,'USER',0,NULL),(90,'tetepiti14933@naver.com','dfasdf','asdfasdf',NULL,NULL,'USER',0,NULL),(91,'choijoohe2e@kakao.com','ㅇㅇㅇ','주희',NULL,NULL,'USER',0,NULL),(94,'tetepiti14955@naver.com','dfasdf','asdfasdf',NULL,NULL,'USER',0,NULL),(95,'tetepiti132349@naver.com','dfasdf','asdfasdf',NULL,NULL,'USER',0,NULL),(96,'te123349@naver.com','ㄷㅅㄷㅅㄷㅅㄷ','ㅅㄷㅅㄷㅅㄷ',NULL,NULL,'USER',0,NULL),(97,'choijoo12313hee@kakao.com','dd','f',NULL,NULL,'USER',0,NULL),(98,'choijooh111ee@kakao.com','ff','dd',NULL,NULL,'USER',0,NULL),(99,'tetp21iti149@naver.com','asdfasdf','asdfasdf',NULL,NULL,'USER',0,NULL),(100,'tetepiti149@naver.com','ㅎㅇㅎㅇ','미스터로그인마스터','n5rYyBQMtnJ2ZdeAYlYr',NULL,'USER',60,'2022-08-18 11:38:16.536000'),(101,'choijoㅌohee@kakao.com','ㄹㄹㄴ','ㅇ',NULL,NULL,'USER',0,NULL),(104,'niinp28@naver.com','sadfasdfsafaf','농민중의최고는소농민','rkxdl1!',NULL,'USER',20,'2022-08-18 09:37:00.678000'),(105,'tetepiti1444@naver.com','asdf','rkskekfk','NpiNti4183!@',NULL,'USER',0,NULL),(106,'niinp39@naver.com','로봇입니다','준혁봇','rkxdl1!',NULL,'USER',40,'2022-08-17 09:30:20.013000'),(108,'tetepiti188@naver.com','나는신데렐라일레랄이때다싶어덤','이게뜨는가확인','NpiNti4183!@',NULL,'USER',20,NULL),(109,'tetepiti110@naver.com','언더바가사라지지않아','스왈빠이어','NpiNti4183!@',NULL,'USER',20,NULL),(110,'tetepiti11@nnn.ccom','asdfasdf','라우터푸시','NpiNti4183!@',NULL,'USER',20,NULL),(112,'rlarudehd32@naver.com','비밀입니다','몰래왔어요',NULL,NULL,'USER',60,'2022-08-18 10:51:05.895000'),(113,'kwak0568@naver.com','코치입니다.\n새벽에 앤디 캐롤을 보느라 피곤하네요... 후...','코치입니다','1q2w3e4r!',NULL,'USER',80,'2022-08-19 09:15:15.046000'),(115,'joungsu96@gmail.com','종수로컬테스트','리버풀이기자','whdtn0828#',NULL,'USER',640,'2022-08-19 01:03:44.927000'),(118,'tetepiti1411@naver.com','asdf','로그인마스터','NpiNti4183!@',NULL,'USER',20,NULL),(123,'choijoohee@kakao.com','하하','토트넘우승언제해',NULL,NULL,'USER',60,'2022-08-19 01:40:07.572000'),(127,'joungsu9876@naver.com','안녕하세요','크링','whdtn0828#',NULL,'USER',40,'2022-08-18 23:57:11.586000'),(130,'niinp@naver.com','안녕하세요','최준혁','wnsgur1231!',NULL,'USER',40,'2022-08-19 00:42:23.794000'),(131,'khlzzang@daum.net','안녕하세요 혁림입니다.','권혁림',NULL,NULL,'USER',39,'2022-08-19 01:59:54.383000'),(132,'chann585862@naver.com','ㅎㅇㅎㅇ','구경꾼',NULL,NULL,'USER',40,'2022-08-19 02:01:50.271000'),(133,'kci911@hanmail.net','B208 팀원 김찬일 입니다','chanil',NULL,NULL,'USER',0,'2022-08-19 03:55:26.689000'),(136,'tjdejr338@naver.com','성덕','성덕','tjdejr1!',NULL,'USER',40,'2022-08-19 07:04:26.981000');
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -333,7 +328,7 @@ DROP TABLE IF EXISTS `reply`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `reply` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `content` text COLLATE utf8mb4_0900_as_cs,
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs,
   `create_date` datetime(6) DEFAULT NULL,
   `article_id` bigint DEFAULT NULL,
   `member_id` bigint DEFAULT NULL,
@@ -351,7 +346,6 @@ CREATE TABLE `reply` (
 
 LOCK TABLES `reply` WRITE;
 /*!40000 ALTER TABLE `reply` DISABLE KEYS */;
-INSERT INTO `reply` VALUES (1,'그런데 왜 포인트가 620점이시죠?','2022-08-18 00:36:55.441000',43,61),(2,'아쉽긴했어요..','2022-08-18 00:38:48.136000',43,123),(3,'ㅇ아아아아앙','2022-08-18 03:04:15.438000',48,61),(5,'자판기에 레쓰비가 없어','2022-08-18 03:20:40.476000',46,100),(7,'ㅋㅋㅋㅋ잘가고!','2022-08-18 10:38:50.089000',48,123),(8,'헉!','2022-08-18 10:42:02.328000',48,104),(9,'언해피 등장...','2022-08-18 13:35:56.287000',48,1),(10,'반가워요','2022-08-18 22:09:10.402000',53,136);
 /*!40000 ALTER TABLE `reply` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -364,13 +358,13 @@ DROP TABLE IF EXISTS `room`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `room` (
   `id` bigint NOT NULL AUTO_INCREMENT,
-  `manager_id` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `status` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `manager_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `game_id` bigint DEFAULT NULL,
   `match_id` bigint DEFAULT NULL,
-  `session_id` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `session_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `head_count` int DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `FKcd6o2nn7vr0v2gw18wbtmr6eg` (`game_id`),
@@ -384,7 +378,6 @@ CREATE TABLE `room` (
 
 LOCK TABLES `room` WRITE;
 /*!40000 ALTER TABLE `room` DISABLE KEYS */;
-INSERT INTO `room` VALUES (165,'115','리그 1 보시는분 오세요!','','PUBLIC',1497,NULL,'vAtHIBChlq',1),(167,'115','에버튼 응원방 에버튼 팬만!','','PUBLIC',53,NULL,'sYaUceiFgk',7),(168,'115','풀럼 털어버리는 방','','PUBLIC',54,NULL,'frMIAZIZsp',1),(179,'61','123213','123123','PRIVATE',52,NULL,'GVmHEeEyZf',1),(192,'115','123','','PUBLIC',2065,NULL,'KQtrGGKSQi',1),(209,'61','333333','','PUBLIC',2065,NULL,'SyGhUnYOmJ',1),(210,'61','123123','','PUBLIC',2065,NULL,'XMZRYTvlyM',1),(225,'115','123','','PUBLIC',2065,NULL,'qrslwuvoRd',1);
 /*!40000 ALTER TABLE `room` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -398,12 +391,12 @@ DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `api_id` bigint DEFAULT NULL,
-  `code` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `han_name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `logo` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `han_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   `league_id` bigint DEFAULT NULL,
-  `venue_logo` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `venue_logo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_iuh4h8r8n5lmsk0vyu1087h4e` (`api_id`),
   KEY `FK9rk8716asfr76xkn99aa3uvp` (`league_id`),
@@ -432,7 +425,7 @@ CREATE TABLE `un_like` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `article_id` bigint DEFAULT NULL,
   `member_id` bigint DEFAULT NULL,
-  `member_email` varchar(255) COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
+  `member_email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_as_cs DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKo9j3st5js7fpirti9kmroosiw` (`member_id`),
   KEY `FK3bjsnkj5wxdx6aspinkvuap7k` (`member_email`),
@@ -461,4 +454,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-19  9:36:29
+-- Dump completed on 2022-09-02  3:21:39
