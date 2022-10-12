@@ -169,7 +169,7 @@
 - 간단한 회의부터 중요한 회의, 모든것을 노션에 기록하는 습관 📝
 - 의견은 자유롭게!
 - 재밌게, 함께 성장하는 개발하기
-- 머지 리퀘스트 열심히 작성 & 피드백 열심히 하기!
+- 머지 리퀘스트 열심히 작성하고 서로 코드 리뷰 
 <img width="800" alt="스크린샷 2022-10-13 오전 4 03 17" src="https://user-images.githubusercontent.com/60915285/195427955-51e7b2b8-ec0f-4225-8d29-63e458df37ba.png">
 <img width="800" alt="스크린샷 2022-10-13 오전 4 04 08" src="https://user-images.githubusercontent.com/60915285/195427670-f1d7b0f1-4e36-4554-953a-2c00c075c7f2.png">
 <img width="600" alt="스크린샷 2022-10-13 오전 4 04 35" src="https://user-images.githubusercontent.com/60915285/195427335-866764a7-b3ba-4423-ac88-384ec78a42eb.png">
