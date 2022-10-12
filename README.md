@@ -163,6 +163,16 @@
 - [시연 시나리오](https://github.com/Cheer-Together/Cheer-Together/blob/main/exec/04_%EA%B3%B5%ED%86%B5PJT_%EB%8C%80%EC%A0%842%EB%B0%98_B204_%EC%8B%9C%EC%97%B0_%EC%8B%9C%EB%82%98%EB%A6%AC%EC%98%A4.pdf) 
 
 
+<br><br>
+## 개발 문화 💁‍♂️
+- 데일리 스크럼을 매일 진행
+- 간단한 회의부터 중요한 회의, 모든것을 노션에 기록하는 습관 📝
+- 의견은 자유롭게!
+- 재밌게, 함께 성장하는 개발하기
+- 머지 리퀘스트 열심히 작성 & 피드백 열심히 하기!
+<img width="800" alt="스크린샷 2022-10-13 오전 4 03 17" src="https://user-images.githubusercontent.com/60915285/195427955-51e7b2b8-ec0f-4225-8d29-63e458df37ba.png">
+<img width="800" alt="스크린샷 2022-10-13 오전 4 04 08" src="https://user-images.githubusercontent.com/60915285/195427670-f1d7b0f1-4e36-4554-953a-2c00c075c7f2.png">
+<img width="600" alt="스크린샷 2022-10-13 오전 4 04 35" src="https://user-images.githubusercontent.com/60915285/195427335-866764a7-b3ba-4423-ac88-384ec78a42eb.png">
 
 
 
