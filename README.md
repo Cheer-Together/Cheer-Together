@@ -81,54 +81,53 @@
 <br><br>
 
 ## 서비스 구조도 🔍
-<img width="849" alt="image" src="https://user-images.githubusercontent.com/60915285/188927329-3cf2a1a5-1e58-4896-9163-2049ab7cfa5f.png">
+<img width="750" alt="image" src="https://user-images.githubusercontent.com/60915285/188927329-3cf2a1a5-1e58-4896-9163-2049ab7cfa5f.png">
 <br><br>
 
 ## 주요 기능 📚
 
 ### 1. 소셜로그인
-![소셜로긴](https://user-images.githubusercontent.com/60915285/189544140-0e26ce69-2191-4abf-a5df-54f915a86d72.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544140-0e26ce69-2191-4abf-a5df-54f915a86d72.gif">
 일반 로그인 및 카카오 로그인이 가능합니다.
 
 <br><br>
         
 ### 2. 응원방
-![응원화면-사이즈감소](https://user-images.githubusercontent.com/60915285/189544232-a7c59ada-9686-4d4b-a725-71db9e23275c.gif)
-
+<img width="700" src="https://user-images.githubusercontent.com/60915285/223932054-64bbdda6-03de-4ba4-a044-32875e6ba8fa.gif">
 다같이 경기 화면을 보면서 화상으로 응원할 수 있습니다.<br>
 방장이 응원가를 재생하면, 참가자들은 실시간으로 해당 응원가를 들을 수 있습니다.
 
 <br><br>
 
 ### 3. 응원방 - 전광판
-![전광판](https://user-images.githubusercontent.com/60915285/189544287-de42403c-4c30-48b5-93bf-dbb20486d092.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544287-de42403c-4c30-48b5-93bf-dbb20486d092.gif">
 외부 축구 API를 사용하여 실시간으로 경기중인 경기의 정보를 가져옵니다.<br>
 경기 스코어와 골 정보를 확인할 수 있습니다.
 
 <br><br>
 
 ### 4. 응원방 - 승부예측
-![승부예측](https://user-images.githubusercontent.com/60915285/189544282-23bd0402-7276-4a07-8508-fc2be2691ec6.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544282-23bd0402-7276-4a07-8508-fc2be2691ec6.gif">
 승부예측 시스템은 경기 시작 전부터 경기 10분까지 예측할 수 있습니다.<br>
 보유하고 있는 포인트(공)를 원하는 만큼 원하는 팀에 걸 수 있으며, 경기가 종료되면 결과에 따라 배당만큼 돌려받게됩니다.
 
 <br><br>
 
 ### 5. 응원방 - 강제퇴장
-![강제퇴장](https://user-images.githubusercontent.com/60915285/189544280-2bf99a41-5bda-40bd-b92e-63248777c0c1.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544280-2bf99a41-5bda-40bd-b92e-63248777c0c1.gif">
 방장은 방의 참가자들을 강퇴시킬 수 있는 권한을 가지고 있습니다.
 
 <br><br>
 
 ### 6. 응원방 - 채팅
-![채팅](https://user-images.githubusercontent.com/60915285/189544288-b9496177-6e94-4ed5-a95b-9f2f0904e9c1.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544288-b9496177-6e94-4ed5-a95b-9f2f0904e9c1.gif">
 방의 모든 참가자들은 채팅 기능을 사용할 수 있습니다.<br>
 여기에는 비속어 필터링이 존재하여, 비속어가 섞인 채팅을 보내게 되면 '[삭제된 메세지]' 라고 대체되어 보내집니다.
 
 <br><br>
   
 ### 7. 경기 일정 및 결과
-![경기 일정](https://user-images.githubusercontent.com/60915285/189544710-06188f36-3d1a-47c9-bc9e-5debb37c3906.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544710-06188f36-3d1a-47c9-bc9e-5debb37c3906.gif">
 리그별/월별 경기 일정을 제공합니다.<br>
 종료된 경기는 경기에 대한 결과를 제공합니다.
 
@@ -136,14 +135,15 @@
 
 
 ### 8. 경기 일정 - 오늘의 경기
-![경기일정(오늘의경기)](https://user-images.githubusercontent.com/60915285/189544711-ebf86e6e-6c1f-4581-90ee-54cedf9592a3.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544711-ebf86e6e-6c1f-4581-90ee-54cedf9592a3.gif">
 오늘 있을 경기들을 리그별로 제공합니다.
 
 <br><br>
 
         
 ### 9. 커뮤니티
-![커뮤니티 글작성](https://user-images.githubusercontent.com/60915285/189544846-7c464775-a072-4dd8-ad3c-b0568909ae49.gif)
+<img width="700" src="https://user-images.githubusercontent.com/60915285/189544846-7c464775-a072-4dd8-ad3c-b0568909ae49.gif">
+![커뮤니티 글작성]()
 리그별 분류를 가진 커뮤니티가 있습니다.<br>
 오른쪽 위에는 최신 스포츠 뉴스를 제공하고 (네이버 뉴스 api), 아래에는 오늘의 경기를 제공합니다.<br>
 왼쪽 사이드바 아래에는 명예의 전당(포인트 랭킹)을 제공합니다.
