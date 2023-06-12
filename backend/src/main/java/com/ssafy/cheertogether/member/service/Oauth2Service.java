@@ -2,6 +2,10 @@ package com.ssafy.cheertogether.member.service;
 
 import static com.ssafy.cheertogether.league.LeagueConstant.*;
 
+import com.ssafy.cheertogether.member.JwtTokenProvider;
+import com.ssafy.cheertogether.member.domain.RefreshToken;
+import com.ssafy.cheertogether.member.domain.Token;
+import com.ssafy.cheertogether.member.repository.RefreshTokenRepository;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -43,8 +47,12 @@ public class Oauth2Service {
 	private String kakao_redirectUri;
 
 	private final MemberRepository memberRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 	private final LeagueRepository leagueRepository;
 	private final TeamRepository teamRepository;
+
+	private final JwtTokenProvider jwtTokenProvider;
+
 
 	public String getKakaoAccessToken(String code) {
 		String access_Token = "";
@@ -143,11 +151,20 @@ public class Oauth2Service {
 		return memberRepository.findByEmail(email).isPresent();
 	}
 
-	public Member login(String email) {
+	public Token login(String email) {
 		Member findMember = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new IllegalArgumentException(MemberConstant.MISMATCH_EMAIL_ERROR_MESSAGE));
-		findMember.checkAttendance();
-		return findMember;
+		Token token = jwtTokenProvider.createTokens(String.valueOf(findMember.getId()));
+		saveRefreshToken(token.getRefreshToken(), findMember.getId());
+		return token;
+	}
+
+	private void saveRefreshToken(String token, Long userId) {
+		RefreshToken refreshToken = RefreshToken.builder()
+				.token(token)
+				.userId(userId)
+				.build();
+		refreshTokenRepository.save(refreshToken);
 	}
 
 	public void join(Oauth2JoinRequest oauth2JoinRequest) {

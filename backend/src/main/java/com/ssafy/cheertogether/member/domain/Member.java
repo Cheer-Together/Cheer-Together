@@ -103,7 +103,7 @@ public class Member implements UserDetails {
 	}
 
 	public boolean confirmPassword(String password) {
-		return password == null || this.password.equals(password);
+		return this.password.equals(password);
 	}
 
 	public void update(MemberModifyRequest memberModifyRequest) {

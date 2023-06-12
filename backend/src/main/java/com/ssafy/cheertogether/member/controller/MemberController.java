@@ -76,12 +76,12 @@ public class MemberController {
 	public ResponseEntity<String> login(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
 		log.info("email = " + memberLoginRequest.getEmail() + " password = " + memberLoginRequest.getPassword());
 		Token token = memberService.login(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
-		setRefreshTokenCookie(response, token);
+		setRefreshTokenCookie(response, token.getRefreshToken());
 		return new ResponseEntity<>(token.getAccessToken(), HttpStatus.OK);
 	}
 
-	private void setRefreshTokenCookie(HttpServletResponse response, Token token) {
-		Cookie refreshTokenCookie = new Cookie("refreshToken", token.getRefreshToken());
+	private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
+		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
 		refreshTokenCookie.setPath("/");
 		refreshTokenCookie.setMaxAge(60 * 60 * 24 * 14); //2주
