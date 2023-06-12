@@ -3,6 +3,10 @@ package com.ssafy.cheertogether.member.service;
 import static com.ssafy.cheertogether.member.MemberConstant.*;
 import static com.ssafy.cheertogether.league.LeagueConstant.*;
 
+import com.ssafy.cheertogether.member.JwtTokenProvider;
+import com.ssafy.cheertogether.member.domain.RefreshToken;
+import com.ssafy.cheertogether.member.domain.Token;
+import com.ssafy.cheertogether.member.repository.RefreshTokenRepository;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,10 +43,14 @@ import lombok.RequiredArgsConstructor;
 public class MemberService implements UserDetailsService {
 
 	private final MemberRepository memberRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 	private final LeagueRepository leagueRepository;
 	private final FavoriteLeagueRepository favoriteLeagueRepository;
 	private final TeamRepository teamRepository;
 	private final FavoriteTeamRepository favoriteTeamRepository;
+
+	private final JwtTokenProvider jwtTokenProvider;
+
 
 	@Transactional(readOnly = true)
 	public MemberResponse findMember(Long id) {
@@ -84,14 +92,25 @@ public class MemberService implements UserDetailsService {
 	 * @param password 사용자 패스워드
 	 *
 	 */
-	public Long login(String email, String password) {
+	public Token login(String email, String password) {
 		Member findMember = memberRepository.findByEmail(email)
 			.orElseThrow(() -> new IllegalArgumentException(MISMATCH_EMAIL_ERROR_MESSAGE));
 		if (!findMember.confirmPassword(password)) {
 			throw new IllegalArgumentException(MISMATCH_PASSWORD_ERROR_MESSAGE);
 		}
 		findMember.checkAttendance();
-		return findMember.getId();
+
+		Token token = jwtTokenProvider.createTokens(String.valueOf(findMember.getId()));
+		saveRefreshToken(token.getRefreshToken(), findMember.getId());
+		return token;
+	}
+
+	private void saveRefreshToken(String token, Long userId) {
+		RefreshToken refreshToken = RefreshToken.builder()
+				.token(token)
+				.userId(userId)
+				.build();
+		refreshTokenRepository.save(refreshToken);
 	}
 
 	@Override

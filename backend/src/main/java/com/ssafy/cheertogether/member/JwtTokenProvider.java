@@ -1,5 +1,6 @@
 package com.ssafy.cheertogether.member;
 
+import com.ssafy.cheertogether.member.domain.Token;
 import java.util.Base64;
 import java.util.Date;
 
@@ -28,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 public class JwtTokenProvider {
 	@Value("${spring.jwt.secretKey}")
 	private String secretKey;
-	private final long tokenValidTime = 30 * 60 * 1000L;    // 토큰 유효시간 30분
 	private final MemberService memberService;
 
 	@PostConstruct
@@ -38,19 +38,36 @@ public class JwtTokenProvider {
 
 	/**
 	 * JWT 토큰 생성 메서드
-	 * @param email 사용자 이메일
+	 * @param payload 사용자 pk 값
 	 * @return JWT 토큰
 	 */
-	public String createToken(String email) {
-		Claims claims = Jwts.claims().setSubject(email);
+	public Token createTokens(String payload) {
+		String accessToken = createAccessToken(payload);
+		String refreshToken = createRefreshToken(payload);
+		return new Token(accessToken, refreshToken);
+
+	}
+
+	private String createAccessToken(String payload) {
+		long accessTokenValidTime = 60 * 60 * 1000L;  // 토큰 유효시간 1시간
+		return createJwtToken(payload, accessTokenValidTime);
+	}
+
+	private String createRefreshToken(String payload) {
+		long refreshTokenValidTime = 14 * 24 * 60 * 1000L;  // 토큰 유효시간 2주
+		return createJwtToken(payload, refreshTokenValidTime);
+	}
+
+	private String createJwtToken(String payload, long tokenValidTime) {
+		Claims claims = Jwts.claims().setSubject(payload);
 		Date now = new Date();
 
 		return Jwts.builder()
-			.setClaims(claims)
-			.setIssuedAt(now)
-			.setExpiration(new Date(now.getTime() + tokenValidTime))
-			.signWith(SignatureAlgorithm.HS256, secretKey)
-			.compact();
+				.setClaims(claims)
+				.setIssuedAt(now)
+				.setExpiration(new Date(now.getTime() + tokenValidTime))
+				.signWith(SignatureAlgorithm.HS256, secretKey)
+				.compact();
 	}
 
 	/**
@@ -74,8 +91,8 @@ public class JwtTokenProvider {
 
 	/**
 	 * request의 헤더에서 토큰값을 가져온다.
-	 * @param req
-	 * @return
+	 * @param req 서블릿 리퀘스트
+	 * @return 헤더의 토큰값
 	 */
 	public String resolveToken(HttpServletRequest req) {
 		return req.getHeader("Authorization");

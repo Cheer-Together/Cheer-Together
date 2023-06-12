@@ -2,9 +2,12 @@ package com.ssafy.cheertogether.member.controller;
 
 import static com.ssafy.cheertogether.member.MemberConstant.*;
 
+import com.ssafy.cheertogether.member.domain.Token;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ssafy.cheertogether.member.JwtTokenProvider;
 import com.ssafy.cheertogether.member.dto.MemberJoinRequest;
 import com.ssafy.cheertogether.member.dto.MemberLoginRequest;
 import com.ssafy.cheertogether.member.dto.MemberModifyPasswordRequest;
@@ -40,7 +42,6 @@ public class MemberController {
 
 	private final MemberService memberService;
 	private final EmailService emailService;
-	private final JwtTokenProvider jwtTokenProvider;
 
 	@GetMapping("/{id}")
 	@ApiOperation(value = "회원 조회", notes = "회원 단건 조회")
@@ -72,10 +73,19 @@ public class MemberController {
 
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "로그인")
-	public ResponseEntity<String> login(@RequestBody MemberLoginRequest memberLoginRequest) {
+	public ResponseEntity<String> login(@RequestBody MemberLoginRequest memberLoginRequest, HttpServletResponse response) {
 		log.info("email = " + memberLoginRequest.getEmail() + " password = " + memberLoginRequest.getPassword());
-		Long id = memberService.login(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
-		return new ResponseEntity<>(jwtTokenProvider.createToken(String.valueOf(id)), HttpStatus.OK);
+		Token token = memberService.login(memberLoginRequest.getEmail(), memberLoginRequest.getPassword());
+		setRefreshTokenCookie(response, token.getRefreshToken());
+		return new ResponseEntity<>(token.getAccessToken(), HttpStatus.OK);
+	}
+
+	private void setRefreshTokenCookie(HttpServletResponse response, String refreshToken) {
+		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+		refreshTokenCookie.setHttpOnly(true);
+		refreshTokenCookie.setPath("/");
+		refreshTokenCookie.setMaxAge(60 * 60 * 24 * 14); //2주
+		response.addCookie(refreshTokenCookie);
 	}
 
 	@PutMapping("/{id}")
