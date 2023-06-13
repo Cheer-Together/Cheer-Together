@@ -22,10 +22,9 @@ const roomStore = useRoomStore();
 const gamesStore = useGamesStore();
 
 // 로그인 유저인지 확인
-const toke = ref(sessionStorage.getItem("token") ?? "");
 const decoded = ref("");
-if (toke.value) {
-  decoded.value = jwt_decode(toke.value);
+if (accountStore.accessToken != null) {
+  decoded.value = jwt_decode(accountStore.accessToken);
 }
 
 // 로그인 유저라면 id값 가져와서 프로필에 저장

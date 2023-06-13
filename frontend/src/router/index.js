@@ -79,7 +79,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const accountStore = useAccountStore()
-  const token = sessionStorage.getItem('token')
+  const token = accountStore.accessToken
 
   //authPages에 로그인이 필요한 RouterView를 등록하면 됨
   const authPages = ['ArticleDetail', 'Mypage', 'MypageEdit'] 
@@ -88,7 +88,7 @@ router.beforeEach((to, from, next) => {
   const isAuthRequired = authPages.includes(to.name)
   const isAuthRestricted = restPages.includes(to.name)
   
-  if (isAuthRequired && !token) {
+  if (isAuthRequired && token == null) {
     if (from.name==undefined) {
       router.push({name:'MainPage'})
       Swal.fire({
@@ -105,7 +105,7 @@ router.beforeEach((to, from, next) => {
     next()
   }
 
-  if (isAuthRestricted && token) {
+  if (isAuthRestricted && token == null) {
     if (from.name==undefined) {
       router.push({name:'MainPage'})
       Swal.fire({

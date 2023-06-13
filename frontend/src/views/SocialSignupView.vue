@@ -142,8 +142,9 @@ function socialSignupBtn() {
     }
   })
   .then(res => {
-    sessionStorage.setItem('token', res.data)
-    sessionStorage.setItem('isSocialLogin', true)
+    accountStore.accessToken = res.data
+    accountStore.isSocialLogin = true
+    accountStore.isLogin = true;
     let userId = jwt_decode(res.data)
     axios({
       url: 'https://i7b204.p.ssafy.io/cheertogether/members/'+userId,
@@ -184,8 +185,9 @@ axios({
   }).then(res => {
     if (res.data.email) {
       if (!res.data.newMember) {
-        sessionStorage.setItem('token', res.data.token)
-        sessionStorage.setItem('isSocialLogin', true)
+        accountStore.accessToken = res.data.token
+        accountStore.isSocialLogin = true
+        accountStore.isLogin = true;
         let userId = jwt_decode(res.data.token)
         axios({
           url: 'https://i7b204.p.ssafy.io/cheertogether/members/'+userId,
