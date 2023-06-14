@@ -173,7 +173,7 @@ const accountStore = useAccountStore()
 accountStore.userProfile(accountStore.profileId)
 
 let myNickname = ref(accountStore.profile.nickname)
-const isSocialLogin = ref(sessionStorage.getItem("isSocialLogin") ?? false);
+const isSocialLogin = ref(accountStore.isSocialLogin);
 
 const changeUserInfo = (myNickname) => {
     // 사용한 피니아 변수들 감기

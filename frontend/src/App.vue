@@ -1,5 +1,5 @@
 <template>
-  <RouterView :key="$route.fullPath"/>
+  <RouterView :key="$route.fullPath" />
   <LoginView />
 </template>
 
@@ -22,25 +22,23 @@ const roomStore = useRoomStore();
 const gamesStore = useGamesStore();
 
 // 로그인 유저인지 확인
-const toke = ref(sessionStorage.getItem("token") ?? "");
-const decoded = ref("");
-if (toke.value) {
-  decoded.value = jwt_decode(toke.value);
-}
-
 // 로그인 유저라면 id값 가져와서 프로필에 저장
-if (accountStore.isLogin) {
-  accountStore.profileId = decoded.value.sub;
-  accountStore.userProfile(decoded.value.sub);
+const decoded = ref("");
+if (accountStore.accessToken == null) {
+  await accountStore.reissueToken();
 }
+decoded.value = jwt_decode(accountStore.accessToken);
+accountStore.profileId = decoded.value.sub;
+accountStore.userProfile(decoded.value.sub);
+
 accountStore.getPointRanking();
 
 // 리그데이터 불러오기
 leagueStore.leaguesAll();
 leagueStore.getLeaguesNoTeam();
 
-// 경기 일정 데이터 불러오기 
-gameStore.generateTodayGames()
+// 경기 일정 데이터 불러오기
+gameStore.generateTodayGames();
 
 // 응원방 데이터 불러오기
 roomStore.getRooms();
@@ -52,7 +50,6 @@ gamesStore.getLeagueLiveGames(135);
 gamesStore.getLeagueLiveGames(78);
 gamesStore.getLeagueLiveGames(61);
 gamesStore.getLeagueLiveGames(292);
-
 </script>
 
 <style>
