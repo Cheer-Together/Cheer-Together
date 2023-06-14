@@ -25,4 +25,8 @@ public class RefreshToken {
 
     @Column(nullable = false)
     private Long userId;
+
+    public void updateToken(String newToken) {
+        this.token = newToken;
+    }
 }
