@@ -491,7 +491,7 @@ export const useAccountStore = defineStore("account", {
       router.push({ name: "MainPage" });
     },
     logoutAccount() {
-      accessToken = null;
+      this.accessToken = null;
       this.isSocialLogin = false;
       this.isLogin = false;
       router.push({ name: "MainPage" });
@@ -519,6 +519,22 @@ export const useAccountStore = defineStore("account", {
           });
         })
         .catch((err) => console.log(err));
+    },
+    reissueToken() {
+      axios({
+        url: cheertogether.members.reissueToken(),
+        method: "GET",
+      })
+        .then((res) => {
+          this.accessToken = res.data;
+          this.isLogin = true;
+        })
+        .catch(() => {
+          this.accessToken = null;
+          this.isSocialLogin = false;
+          this.isLogin = false;
+          router.push({ name: "MainPage" });
+        });
     },
   },
 });
