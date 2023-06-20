@@ -21,11 +21,13 @@ function setInterceptors(instance) {
       let now = new Date();
       let expiry =
         decoded.exp - Number(now.getTime().toString().substring(0, 10));
-      
-      if(expiry <= 0) {
+
+      if (expiry <= 0) {
         await useAccountStore().reissueToken();
       }
 
+      //액세스 토큰 헤더 설정
+      config.headers.Authorization = useAccountStore().accessToken;
       return config;
     },
     function (error) {
