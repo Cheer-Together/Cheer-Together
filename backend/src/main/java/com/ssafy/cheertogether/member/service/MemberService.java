@@ -180,6 +180,7 @@ public class MemberService implements UserDetailsService {
 
     public void delete(Long id) {
         memberRepository.deleteById(id);
+        refreshTokenRepository.deleteAllByUserId(id);
     }
 
     public String findPassword(String email) {
